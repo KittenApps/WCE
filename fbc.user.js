@@ -11228,4 +11228,14 @@ async function ForBetterClub() {
 	);
 }
 
-ForBetterClub();
+// wait to load addon until window.FUSAM is assigned
+(function(){
+  let storeFUSAM;
+  Object.defineProperty(window,"FUSAM", {
+      set(n){
+          storeFUSAM = n;
+          ForBetterClub();
+      },
+      get(){ return storeFUSAM; }
+  });
+})();
