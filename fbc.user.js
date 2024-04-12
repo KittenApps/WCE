@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name FBC fork
 // @namespace https://www.bondageprojects.com/
-// @version 6.0.0
+// @version 6.0.1
 // @description fork of old fbc
 // @author Sidious (and others)
 // @match https://bondageprojects.elementfx.com/*
@@ -46,6 +46,7 @@ async function ForBetterClub() {
 - restored features removed in 5.9 (this fork is based on 5.8)
 - made it load seperate from FUSAM again (still requires FUSAM for it's API though)
 - updated for r103
+- fix rich profile sticking on the screen after disconnect
 
 5.8
 - Changed discreet mode to allow friend list and main hall backgrounds
@@ -3377,6 +3378,7 @@ async function ForBetterClub() {
 			 * @param {Parameters<typeof ServerDisconnect>} args
 			 */
 			(args, next) => {
+				if (w.fbcDisableRichTextArea) w.fbcDisableRichTextArea();
 				const [, force] = args;
 				args[1] = false;
 				const ret = next(args);
@@ -10809,6 +10811,8 @@ async function ForBetterClub() {
 
 			showOriginalTextArea();
 		}
+
+		w.fbcDisableRichTextArea = disableRichTextArea;
 
 		SDK.hookFunction(
 			"OnlineProfileLoad",
