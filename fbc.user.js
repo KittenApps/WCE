@@ -8,6 +8,7 @@
 // @match https://www.bondageprojects.elementfx.com/*
 // @match https://bondage-europe.com/*
 // @match https://www.bondage-europe.com/*
+// @match http://localhost:*/*
 // @icon data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant none
 // @run-at document-end
