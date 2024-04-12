@@ -11189,7 +11189,9 @@ async function ForBetterClub() {
 }
 
 // wait to load addon until window.FUSAM is assigned
-(function(){
+if (typeof FUSAM === "object" && FUSAM?.present) {
+	ForBetterClub();
+} else {
   let storeFUSAM;
   Object.defineProperty(window, "FUSAM", {
       set(n) {
@@ -11198,4 +11200,4 @@ async function ForBetterClub() {
       },
       get() { return storeFUSAM; }
   });
-})();
+}
