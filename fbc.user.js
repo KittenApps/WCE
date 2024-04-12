@@ -10969,46 +10969,6 @@ async function ForBetterClub() {
 		ChatRoomChatHidden = true;
 	}
 
-	(function () {
-		const sendHeartbeat = () => {
-			/**
-			 * @type {{
-			 * Version: string;
-			 * GameVersion: string;
-			 * InRoom: boolean;
-			 * InPrivate: boolean;
-			 * InTampermonkey: boolean;
-			 * FUSAM: boolean;
-			 * FBCviaFUSAM: boolean;}}
-			 */
-			const payload = {
-				Version: FBC_VERSION,
-				GameVersion,
-				// !! to avoid passing room name to statbot, only presence inside a room or not
-				InRoom: !!Player.LastChatRoom,
-				InPrivate: !!Player.LastChatRoom?.Private,
-				// eslint-disable-next-line camelcase
-				InTampermonkey: typeof GM_info !== "undefined",
-				FUSAM: !!FUSAM.present,
-				FBCviaFUSAM: FUSAM.addons?.FBC?.status === "loaded",
-			};
-			SDK.callOriginal("ServerSend", [
-				"AccountBeep",
-				{
-					BeepType: "Leash",
-					// FBC statbot, which only collects anonymous aggregate version and usage data to justify supporting or dropping support for features
-					MemberNumber: 61197,
-					Message: JSON.stringify(payload),
-					// IsSecret: true to avoid passing room name to statbot
-					IsSecret: true,
-				},
-			]);
-		};
-		setTimeout(sendHeartbeat, 15000);
-		// 5 minutes
-		createTimer(sendHeartbeat, 1000 * 60 * 5);
-	})();
-
 	/**
 	 * @param {string | null} target
 	 * @param {boolean} [limitVisible]
@@ -11231,11 +11191,11 @@ async function ForBetterClub() {
 // wait to load addon until window.FUSAM is assigned
 (function(){
   let storeFUSAM;
-  Object.defineProperty(window,"FUSAM", {
-      set(n){
+  Object.defineProperty(window, "FUSAM", {
+      set(n) {
           storeFUSAM = n;
           ForBetterClub();
       },
-      get(){ return storeFUSAM; }
+      get() { return storeFUSAM; }
   });
 })();
