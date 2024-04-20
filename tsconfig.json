@@ -1,0 +1,15 @@
+{
+	"include": [
+		"node_modules/bc-stubs/bc/**/*.d.ts",
+		"**/*.js",
+		"**/*.ts"
+	],
+	"compilerOptions": {
+		"module": "ES2022",
+		"allowJs": true,
+		"moduleResolution": "node",
+		"noEmit": true,
+		"target": "es2020",
+		"checkJs": true
+	}
+}
