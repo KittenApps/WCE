@@ -3249,7 +3249,6 @@ async function ForBetterClub() {
 			 * @param {Parameters<typeof ServerDisconnect>} args
 			 */
 			(args, next) => {
-				if (w.fbcDisableRichTextArea) w.fbcDisableRichTextArea();
 				const [, force] = args;
 				args[1] = false;
 				const ret = next(args);
@@ -10683,8 +10682,6 @@ async function ForBetterClub() {
 			showOriginalTextArea();
 		}
 
-		w.fbcDisableRichTextArea = disableRichTextArea;
-
 		SDK.hookFunction(
 			"OnlineProfileLoad",
 			HOOK_PRIORITIES.ModifyBehaviourMedium,
@@ -10702,6 +10699,18 @@ async function ForBetterClub() {
 				enableRichTextArea();
 
 				return ret;
+			}
+		);
+
+		SDK.hookFunction(
+			"ServerDisconnect",
+			HOOK_PRIORITIES.ModifyBehaviourMedium,
+			/**
+			 * @param {Parameters<typeof ServerDisconnect>} args
+			 */
+			(args, next) => {
+				disableRichTextArea();
+				return next(args);
 			}
 		);
 
