@@ -43,7 +43,8 @@ async function ForBetterClub() {
 
 	const fbcChangelog = `${FBC_VERSION}
 - improved r103 compatibility
-- removed fps limits/counter (now natively in base game in graphic settings, page 2)
+- removed fps limits/counter (now natively in base game in graphic preferences, page 2)
+- make anti garble bypass (in restrictions preferences) available on all difficulty levels
 
 6.0
 - forked the project by Kitty Stella (129178)
@@ -7328,6 +7329,29 @@ async function ForBetterClub() {
 			CurrentScreenFunctions.Resize = ChatRoomResize;
 			ChatRoomResize(false);
 		}
+
+		// make anti garble bypass (in restrictions preferences) available on all difficulty levels
+		patchFunction(
+			"PreferenceInitPlayer",
+			{ "C.RestrictionSettings.NoSpeechGarble = false;\n\t}": "}" },
+			"make anti garble bypass (in restrictions preferences) available on all difficulty level"
+		);
+		patchFunction(
+			"PreferenceSubscreenRestrictionRun",
+			{ 
+				'DrawCheckbox(500, 625, 64, 64, TextGet("RestrictionNoSpeechGarble"), Player.RestrictionSettings.NoSpeechGarble && !disableButtons, disableButtons);':
+					'DrawCheckbox(500, 625, 64, 64, TextGet("RestrictionNoSpeechGarble"), Player.RestrictionSettings.NoSpeechGarble);'
+			},
+			"make anti garble bypass (in restrictions preferences) available on all difficulty level"
+		);
+		patchFunction(
+			"PreferenceSubscreenRestrictionClick",
+			{ 
+				'if (MouseIn(500, 625, 64, 64) && (Player.GetDifficulty() == 0)) Player.RestrictionSettings.NoSpeechGarble = !Player.RestrictionSettings.NoSpeechGarble;': 
+					'if (MouseIn(500, 625, 64, 64)) Player.RestrictionSettings.NoSpeechGarble = !Player.RestrictionSettings.NoSpeechGarble;'
+			},
+			"make anti garble bypass (in restrictions preferences) available on all difficulty level"
+		);
 	}
 
 	async function alternateArousal() {
