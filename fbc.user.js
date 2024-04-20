@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name FBC fork
 // @namespace https://www.bondageprojects.com/
-// @version 6.0.1
+// @version 6.1
 // @description fork of old fbc
 // @author Sidious (and others)
 // @match https://bondageprojects.elementfx.com/*
@@ -39,7 +39,7 @@ async function ForBetterClub() {
 	"use strict";
 
 	const FBC_VERSION = "6.1";
-	const settingsVersion = 60.1;
+	const settingsVersion = 61;
 
 	const fbcChangelog = `${FBC_VERSION}
 - improved r103 compatibility
