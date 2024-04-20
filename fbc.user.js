@@ -38,23 +38,19 @@
 async function ForBetterClub() {
 	"use strict";
 
-	const FBC_VERSION = "6.0";
-	const settingsVersion = 60;
+	const FBC_VERSION = "6.1";
+	const settingsVersion = 60.1;
 
 	const fbcChangelog = `${FBC_VERSION}
+- improved r103 compatibility
+- removed fps limits/counter (now natively in base game in graphic settings, page 2)
+
+6.0
 - forked the project by Kitty Stella (129178)
 - restored features removed in 5.9 (this fork is based on 5.8)
 - made it load seperate from FUSAM again (still requires FUSAM for it's API though)
 - updated for r103
 - fix rich profile sticking on the screen after disconnect
-
-5.8
-- Changed discreet mode to allow friend list and main hall backgrounds
-- Changed /beep to respect BCX beep restrictions
-
-5.7
-- Added support for R102
-- Changed characters with notes to have cyan FBC version number
 `;
 
 	const SUPPORTED_GAME_VERSIONS = ["R102"];
@@ -814,80 +810,6 @@ async function ForBetterClub() {
 			category: "misc",
 			description:
 				"Share a list of your installed addons with other FBC users in the room, visible via /versions chat command.",
-		},
-		fpsCounter: {
-			label: "Show FPS counter",
-			value: false,
-			/**
-			 * @param {unknown} newValue
-			 */
-			sideEffects: (newValue) => {
-				debug("fpsCounter", newValue);
-			},
-			category: "performance",
-			description:
-				"Shows the current FPS in the top-left corner of the screen.",
-		},
-		limitFPSInBackground: {
-			label: "Limit FPS in background",
-			value: false,
-			/**
-			 * @param {unknown} newValue
-			 */
-			sideEffects: (newValue) => {
-				debug("limitFPSInBackground", newValue);
-			},
-			category: "performance",
-			description:
-				"Limits the FPS to 10 in the background. This is useful for saving resources when you are not interacting with the game.",
-		},
-		limitFPSTo15: {
-			label: "Limit FPS to ~15",
-			value: false,
-			/**
-			 * @param {unknown} newValue
-			 */
-			sideEffects: (newValue) => {
-				debug("limitFPSTo15", newValue);
-				if (newValue) {
-					fbcSettings.limitFPSTo30 = false;
-					fbcSettings.limitFPSTo60 = false;
-				}
-			},
-			category: "performance",
-			description: "Limits the FPS to 15. This is useful for saving resources.",
-		},
-		limitFPSTo30: {
-			label: "Limit FPS to ~30",
-			value: false,
-			/**
-			 * @param {unknown} newValue
-			 */
-			sideEffects: (newValue) => {
-				debug("limitFPSTo30", newValue);
-				if (newValue) {
-					fbcSettings.limitFPSTo15 = false;
-					fbcSettings.limitFPSTo60 = false;
-				}
-			},
-			category: "performance",
-			description: "Limits the FPS to 30. This is useful for saving resources.",
-		},
-		limitFPSTo60: {
-			label: "Limit FPS to ~60",
-			value: false,
-			/**
-			 * @param {unknown} newValue
-			 */
-			sideEffects: (newValue) => {
-				debug("limitFPSTo60", newValue);
-				if (newValue) {
-					fbcSettings.limitFPSTo30 = false;
-					fbcSettings.limitFPSTo15 = false;
-				}
-			},
-			category: "performance",
-			description: "Limits the FPS to 60. This is useful for saving resources.",
 		},
 		buttplugDevices: {
 			label: "Buttplug Devices",
@@ -1908,7 +1830,6 @@ async function ForBetterClub() {
 	registerFunction(blindWithoutGlasses, "blindWithoutGlasses");
 	registerFunction(friendPresenceNotifications, "friendPresenceNotifications");
 	registerFunction(forcedClubSlave, "forcedClubSlave");
-	registerFunction(fpsCounter, "fpsCounter");
 	registerFunction(instantMessenger, "instantMessenger");
 	registerFunction(autoStruggle, "autoStruggle");
 	registerFunction(nicknames, "nicknames");
@@ -2119,56 +2040,6 @@ async function ForBetterClub() {
 					return null;
 				}
 				return next(args);
-			}
-		);
-	}
-
-	function fpsCounter() {
-		let lastFrame = -1;
-
-		/** @type {(ms: number) => number} */
-		const expectedFrameTime = (ms) => (1000 / ms) | 0;
-
-		SDK.hookFunction(
-			"GameRun",
-			HOOK_PRIORITIES.Observe,
-			/**
-			 * @param {Parameters<typeof GameRun>} args
-			 */
-			(args, next) => {
-				const [time] = args;
-				if (lastFrame >= 0 && time > 0) {
-					let ftl = 0;
-					if (fbcSettings.limitFPSInBackground && !document.hasFocus()) {
-						ftl = 10;
-					} else if (fbcSettings.limitFPSTo15) {
-						ftl = 15;
-					} else if (fbcSettings.limitFPSTo30) {
-						ftl = 30;
-					} else if (fbcSettings.limitFPSTo60) {
-						ftl = 60;
-					}
-					if (lastFrame + expectedFrameTime(ftl) > time) {
-						requestAnimationFrame(GameRun);
-						return;
-					}
-				}
-				let frameTime = 10000;
-				if (time > 0) {
-					frameTime = time - lastFrame;
-					lastFrame = time;
-				}
-				next(args);
-				if (time > 0 && fbcSettings.fpsCounter) {
-					DrawTextFit(
-						(Math.round(10000 / frameTime) / 10).toString(),
-						15,
-						12,
-						30,
-						"white",
-						"black"
-					);
-				}
 			}
 		);
 	}
