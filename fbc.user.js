@@ -57,7 +57,7 @@ async function ForBetterClub() {
 - fix rich profile sticking on the screen after disconnect
 `;
 
-	const SUPPORTED_GAME_VERSIONS = ["R102"];
+	const SUPPORTED_GAME_VERSIONS = ["R103"];
 	const CAPABILITIES = /** @type {const} */ (["clubslave", "antigarble"]);
 
 	const w = window;
@@ -75,17 +75,12 @@ async function ForBetterClub() {
 		return;
 	}
 
-	if (typeof FUSAM !== "object" || !FUSAM?.present) {
-		console.warn("FUSAM not found. Skipping load.");
-		return;
-	}
-
 	const SDK = bcModSdk.registerMod(
 		{
 			name: "FBC",
 			version: FBC_VERSION,
 			fullName: "For Better Club",
-			repository: "https://gitlab.com/Sidiousious/bce.git",
+			repository: "https://github.com/KittenApps/fbc-fork.git",
 		},
 		{
 			allowReplace: false,
