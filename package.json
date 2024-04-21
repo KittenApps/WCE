@@ -1,9 +1,12 @@
 {
 	"type": "module",
 	"devDependencies": {
+		"@total-typescript/ts-reset": "^0.5.1",
+		"@types/events": "^3.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
 		"bc-stubs": "^103.0.0",
+		"dexie": "^3.2.7",
 		"typescript": "^5.4.5"
 	}
 }

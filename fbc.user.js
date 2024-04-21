@@ -10000,7 +10000,7 @@ async function ForBetterClub() {
 		}
 
 		const scriptEl = document.createElement("script");
-		scriptEl.src = "https://unpkg.com/dexie@3.2.1/dist/dexie.js";
+		scriptEl.src = "https://unpkg.com/dexie@3.2.7/dist/dexie.js";
 		document.body.appendChild(scriptEl);
 
 		await waitFor(
