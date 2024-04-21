@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name FBC fork
 // @namespace https://www.bondageprojects.com/
-// @version 6.1
+// @version 6.1.1
 // @description fork of old fbc
 // @author Sidious (and others)
 // @match https://bondageprojects.elementfx.com/*
@@ -1677,6 +1677,7 @@ async function ForBetterClub() {
 		}
 	);
 
+	registerFunction(antiGarbleCheat, "antiGarbleCheat");
 	await registerFunction(functionIntegrityCheck, "functionIntegrityCheck");
 	registerFunction(bceStyles, "bceStyles");
 	registerFunction(commonPatches, "commonPatches");
@@ -7329,8 +7330,10 @@ async function ForBetterClub() {
 			CurrentScreenFunctions.Resize = ChatRoomResize;
 			ChatRoomResize(false);
 		}
+	}
 
-		// make anti garble bypass (in restrictions preferences) available on all difficulty levels
+	// make anti garble bypass (in restrictions preferences) available on all difficulty levels
+	function antiGarbleCheat() {
 		patchFunction(
 			"PreferenceInitPlayer",
 			{ "C.RestrictionSettings.NoSpeechGarble = false;\n\t}": "}" },
