@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name FBC fork
 // @namespace https://www.bondageprojects.com/
-// @version 6.1.1
+// @version 6.1.2
 // @description fork of old fbc
 // @author Sidious (and others)
 // @match https://bondageprojects.elementfx.com/*
@@ -41,7 +41,10 @@ async function ForBetterClub() {
 	const FBC_VERSION = "6.1";
 	const settingsVersion = 61;
 
-	const fbcChangelog = `${FBC_VERSION}
+	const fbcChangelog = `${FBC_VERSION} next
+- add button to manual clear and reload the drawing cache of all characters in a chat room
+
+6.1
 - improved r103 compatibility
 - removed fps limits/counter (now natively in base game in graphic preferences, page 2)
 - make anti garble bypass (in restrictions preferences) available on all difficulty levels
@@ -317,6 +320,19 @@ async function ForBetterClub() {
 			category: "performance",
 			description:
 				"Automatically clears the drawing cache every hour, preventing memory usage from growing out of control during long play sessions.",
+		},
+		manualCacheClear: {
+			label: "Adds a clear / reload drawing cache button",
+			value: true, // ToDo: false
+			/**
+			 * @param {unknown} newValue
+			 */
+			sideEffects: (newValue) => {
+				debug("manualCacheClear", newValue);
+			},
+			category: "performance",
+			description:
+				"Adds a button to the chat room menu to clear and reload the drawing cache of all characters, helping to fix buged / non-loaded assets.",
 		},
 		instantMessenger: {
 			label: "Instant messenger",
@@ -1275,6 +1291,9 @@ async function ForBetterClub() {
 					ChatRoomMapViewCharacterIsVisible: "286C447D",
 					ChatRoomMapViewCharacterOnWhisperRange: "B0D08E96",
 					ChatRoomMapViewIsActive: "D181020D",
+					ChatRoomMenuBuild: "F76AEFC3",
+					ChatRoomMenuClick: "600503B8",
+					ChatRoomMenuDraw: "CF17EA43",
 					ChatRoomMessage: "BBD61334",
 					ChatRoomMessageDisplay: "37B5D4F2",
 					ChatRoomRegisterMessageHandler: "C432923A",
@@ -6446,6 +6465,42 @@ async function ForBetterClub() {
 	function cacheClearer() {
 		const cacheClearInterval = 1 * 60 * 60 * 1000;
 
+		SDK.hookFunction(
+			"ChatRoomMenuBuild",
+			HOOK_PRIORITIES.AddBehaviour,
+			/**
+			 * @param {Parameters<typeof ChatRoomMenuBuild>} args
+			 */
+			(args, next) => {
+				const ret = next(args);
+				if (fbcSettings.manualCacheClear) ChatRoomMenuButtons.splice(ChatRoomMenuButtons.indexOf('Cut'), 0, 'clearCache');
+				return ret;
+			}
+		);
+
+		patchFunction(
+			"ChatRoomMenuClick",
+			{
+				"switch (ChatRoomMenuButtons[B]) {": `switch (ChatRoomMenuButtons[B]) {
+					case "clearCache": 
+						bceDoClearCaches();
+						break;`
+			},
+			"manual clearing and reloading of drawing cache"
+		);
+
+		patchFunction(
+			"ChatRoomMenuDraw",
+			{
+				'} else if (name === "Icons") {': `} else if (name === "clearCache") {
+						DrawButton(1005 + Space * Number(idx), 2, Space - 2, 60, "", color, null, "clear and reload the drawing cache of all characters");
+						DrawImage("Icons/Small/Reset.png", 976 + Space * Number(idx) + Space / 2, 4);
+						continue;
+					} else if (name === "Icons") {`
+			},
+			"manual clearing and reloading of drawing cache"
+		);
+
 		w.bceClearCaches = async function () {
 			const start = Date.now();
 			if (
@@ -6460,7 +6515,10 @@ async function ForBetterClub() {
 			if (!fbcSettings.automateCacheClear) {
 				return;
 			}
+			w.bceDoClearCaches();
+		};
 
+		w.bceDoClearCaches = function() {
 			debug("Clearing caches");
 			if (GLDrawCanvas.GL?.textureCache) {
 				GLDrawCanvas.GL.textureCache.clear();
