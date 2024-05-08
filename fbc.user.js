@@ -60,9 +60,7 @@ async function ForBetterClub() {
 	const SUPPORTED_GAME_VERSIONS = ["R103"];
 	const CAPABILITIES = /** @type {const} */ (["clubslave", "antigarble"]);
 
-	const w = window;
-
-	if (w.FBC_VERSION) {
+	if (window.FBC_VERSION) {
 		console.warn("FBC already loaded. Skipping load.");
 		return;
 	}
@@ -89,7 +87,7 @@ async function ForBetterClub() {
 	/** @type {import('./types/bcxExternalInterface').BCX_ModAPI | null} */
 	let BCX = null;
 
-	w.FBC_VERSION = FBC_VERSION;
+	window.FBC_VERSION = FBC_VERSION;
 
 	const DISCORD_INVITE_URL = "https://discord.gg/SHJMjEh9VH";
 	const WEBSITE_URL = "https://sidiousious.gitlab.io/bce/";
@@ -942,7 +940,7 @@ async function ForBetterClub() {
 				debug("no settings", key);
 				fbcBeepNotify(
 					"Welcome to FBC",
-					`Welcome to For Better Club v${w.FBC_VERSION}! As this is your first time using FBC on this account, you may want to check out the settings page for some options to customize your experience. You can find it in the game preferences. Enjoy! In case of problems, you can contact us via Discord at ${DISCORD_INVITE_URL}`
+					`Welcome to For Better Club v${window.FBC_VERSION}! As this is your first time using FBC on this account, you may want to check out the settings page for some options to customize your experience. You can find it in the game preferences. Enjoy! In case of problems, you can contact us via Discord at ${DISCORD_INVITE_URL}`
 				);
 				// @ts-expect-error -- this is fully populated in the loop below
 				settings = {};
@@ -1411,7 +1409,7 @@ async function ForBetterClub() {
 	 * @type {(...args: unknown[]) => void}
 	 */
 	const debug = (...args) => {
-		console.debug("FBC", `${w.FBC_VERSION}:`, ...args);
+		console.debug("FBC", `${window.FBC_VERSION}:`, ...args);
 		pushLog("debug", ...args);
 	};
 
@@ -1419,7 +1417,7 @@ async function ForBetterClub() {
 	 * @type {(...args: unknown[]) => void}
 	 */
 	const logInfo = (...args) => {
-		console.info("FBC", `${w.FBC_VERSION}:`, ...args);
+		console.info("FBC", `${window.FBC_VERSION}:`, ...args);
 		pushLog("info", ...args);
 	};
 
@@ -1427,7 +1425,7 @@ async function ForBetterClub() {
 	 * @type {(...args: unknown[]) => void}
 	 */
 	const logWarn = (...args) => {
-		console.warn("FBC", `${w.FBC_VERSION}:`, ...args);
+		console.warn("FBC", `${window.FBC_VERSION}:`, ...args);
 		pushLog("warn", ...args);
 	};
 
@@ -1435,7 +1433,7 @@ async function ForBetterClub() {
 	 * @type {(...args: unknown[]) => void}
 	 */
 	const logError = (...args) => {
-		console.error("FBC", `${w.FBC_VERSION}:`, ...args);
+		console.error("FBC", `${window.FBC_VERSION}:`, ...args);
 		pushLog("error", ...args);
 	};
 
@@ -1477,7 +1475,7 @@ async function ForBetterClub() {
 
 		ChatRoomAppendChat(div);
 	};
-	w.fbcChatNotify = fbcChatNotify;
+	window.fbcChatNotify = fbcChatNotify;
 
 	/**
 	 * @type {(title: string, text: string) => void}
@@ -1511,7 +1509,7 @@ async function ForBetterClub() {
 		};
 	};
 
-	w.fbcSendAction = (text) => {
+	window.fbcSendAction = (text) => {
 		ServerSend("ChatRoomChat", {
 			Content: "Beep",
 			Type: "Action",
@@ -1530,18 +1528,18 @@ async function ForBetterClub() {
 		});
 	};
 
-	w.fbcSettingValue = (key) => {
+	window.fbcSettingValue = (key) => {
 		if (isDefaultSettingKey(key)) {
 			return fbcSettings[key];
 		}
 		return false;
 	};
 
-	w.bceAnimationEngineEnabled = () => !!fbcSettings.animationEngine;
+	window.bceAnimationEngineEnabled = () => !!fbcSettings.animationEngine;
 
 	// Expressions init method for custom expressions
 	// eslint-disable-next-line camelcase
-	w.bce_initializeDefaultExpression = () => {
+	window.bce_initializeDefaultExpression = () => {
 		// Here to not break customizer script
 	};
 
@@ -1621,7 +1619,7 @@ async function ForBetterClub() {
 		}
 		return print;
 	}
-	w.fbcDebug = fbcDebug;
+	window.fbcDebug = fbcDebug;
 	FUSAM.registerDebugMethod("FBC", fbcDebug);
 
 	/** @type {(func: () => (Promise<unknown> | unknown), label: string) => Promise<void>} */
@@ -1737,7 +1735,7 @@ async function ForBetterClub() {
 	funcsRegistered = "enable";
 
 	// Post ready when in a chat room
-	await fbcNotify(`For Better Club v${w.FBC_VERSION} Loaded`);
+	await fbcNotify(`For Better Club v${window.FBC_VERSION} Loaded`);
 
 	Player.FBC = FBC_VERSION;
 
@@ -1754,7 +1752,7 @@ async function ForBetterClub() {
 		/**
 		 * @param {keyof ReturnType<typeof expectedHashes>} func
 		 * @param {string} hash
-		 * @returns {func is keyof typeof w}
+		 * @returns {func is keyof typeof window}
 		 */
 		function isActiveFunction(func, hash) {
 			return hash !== "SKIP";
@@ -1764,11 +1762,11 @@ async function ForBetterClub() {
 			if (!isActiveFunction(func, hash)) {
 				continue;
 			}
-			if (!w[func]) {
+			if (!window[func]) {
 				logWarn(`Expected function ${func} not found.`);
 				continue;
 			}
-			if (typeof w[func] !== "function") {
+			if (typeof window[func] !== "function") {
 				logWarn(`Expected function ${func} is not a function.`);
 				continue;
 			}
@@ -1834,7 +1832,7 @@ async function ForBetterClub() {
 				const ret = next(args);
 
 				if (DEVS.includes(InformationSheetSelection.MemberNumber)) {
-					const ctx = w.MainCanvas.getContext("2d");
+					const ctx = window.MainCanvas.getContext("2d");
 					if (!ctx) {
 						throw new Error("could not get canvas 2d context");
 					}
@@ -1943,8 +1941,8 @@ async function ForBetterClub() {
 	}
 
 	async function hookBCXAPI() {
-		await waitFor(() => !!w.bcx);
-		BCX = w.bcx?.getModApi("FBC") ?? null;
+		await waitFor(() => !!window.bcx);
+		BCX = window.bcx?.getModApi("FBC") ?? null;
 	}
 
 	async function commands() {
@@ -2345,9 +2343,9 @@ async function ForBetterClub() {
 						`${CharacterNickname(character)} (${
 							character.MemberNumber ?? ""
 						}) club ${character.OnlineSharedSettings?.GameVersion ?? "R0"}${
-							w.bcx?.getCharacterVersion(character.MemberNumber)
+							window.bcx?.getCharacterVersion(character.MemberNumber)
 								? ` BCX ${
-										w.bcx.getCharacterVersion(character.MemberNumber) ?? "?"
+										window.bcx.getCharacterVersion(character.MemberNumber) ?? "?"
 								  }`
 								: ""
 						}${
@@ -2472,16 +2470,16 @@ async function ForBetterClub() {
 				([, v]) => v.category === category && v.value === !!v.value
 			);
 
-		w.PreferenceSubscreenBCESettingsLoad = function () {
+		window.PreferenceSubscreenBCESettingsLoad = function () {
 			currentPageNumber = 0;
 		};
-		w.PreferenceSubscreenBCESettingsExit = function () {
+		window.PreferenceSubscreenBCESettingsExit = function () {
 			bceSaveSettings();
 			PreferenceSubscreen = "";
 			PreferenceMessage = "";
 		};
-		w.PreferenceSubscreenBCESettingsRun = function () {
-			const ctx = w.MainCanvas.getContext("2d");
+		window.PreferenceSubscreenBCESettingsRun = function () {
+			const ctx = window.MainCanvas.getContext("2d");
 			if (!ctx) {
 				logError("Could not get canvas context");
 				return;
@@ -2674,7 +2672,7 @@ async function ForBetterClub() {
 			ctx.textAlign = "center";
 		};
 		// eslint-disable-next-line complexity
-		w.PreferenceSubscreenBCESettingsClick = function () {
+		window.PreferenceSubscreenBCESettingsClick = function () {
 			let y = settingsYStart;
 			if (MouseIn(1815, 75, 90, 90)) {
 				if (currentCategory === null) {
@@ -2876,7 +2874,7 @@ async function ForBetterClub() {
 
 	function automaticReconnect() {
 		const localStoragePasswordsKey = "bce.passwords";
-		w.bceUpdatePasswordForReconnect = () => {
+		window.bceUpdatePasswordForReconnect = () => {
 			let name = "";
 			if (CurrentScreen === "Login") {
 				name = ElementValue("InputName").toUpperCase();
@@ -2894,7 +2892,7 @@ async function ForBetterClub() {
 			localStorage.setItem(localStoragePasswordsKey, JSON.stringify(passwords));
 		};
 
-		w.bceClearPassword = (accountname) => {
+		window.bceClearPassword = (accountname) => {
 			const passwords = /** @type {Passwords} */ (
 				parseJSON(localStorage.getItem(localStoragePasswordsKey))
 			);
@@ -3543,7 +3541,7 @@ async function ForBetterClub() {
 			return results;
 		}
 
-		w.bceMessageReplacements = (msg) => {
+		window.bceMessageReplacements = (msg) => {
 			const words = [msg];
 			let firstStutter = true,
 				inOOC = false;
@@ -3672,9 +3670,9 @@ async function ForBetterClub() {
 			}
 		);
 
-		if (!w.bce_ArousalExpressionStages) {
+		if (!window.bce_ArousalExpressionStages) {
 			// eslint-disable-next-line camelcase
-			w.bce_ArousalExpressionStages = {
+			window.bce_ArousalExpressionStages = {
 				Blush: [
 					{ Expression: "High", Limit: 100 },
 					{ Expression: "Medium", Limit: 60 },
@@ -3790,11 +3788,11 @@ async function ForBetterClub() {
 			}
 			bceExpressionsQueue.push(event);
 		}
-		w.fbcPushEvent = pushEvent;
+		window.fbcPushEvent = pushEvent;
 
-		if (!w.bce_EventExpressions) {
+		if (!window.bce_EventExpressions) {
 			// eslint-disable-next-line camelcase
-			w.bce_EventExpressions = {
+			window.bce_EventExpressions = {
 				PostOrgasm: {
 					Type: POST_ORGASM_EVENT_TYPE,
 					Duration: 20000,
@@ -4375,9 +4373,9 @@ async function ForBetterClub() {
 			};
 		}
 
-		if (!w.bce_ActivityTriggers) {
+		if (!window.bce_ActivityTriggers) {
 			// eslint-disable-next-line camelcase
-			w.bce_ActivityTriggers = [
+			window.bce_ActivityTriggers = [
 				{
 					Event: "Blush",
 					Type: "Activity",
@@ -4899,7 +4897,7 @@ async function ForBetterClub() {
 		}
 
 		registerSocketListener("ChatRoomMessage", (data) => {
-			activityTriggers: for (const trigger of w.bce_ActivityTriggers.filter(
+			activityTriggers: for (const trigger of window.bce_ActivityTriggers.filter(
 				(t) => t.Type === data.Type
 			)) {
 				for (const matcher of trigger.Matchers) {
@@ -4928,13 +4926,13 @@ async function ForBetterClub() {
 								continue;
 							}
 							// Criteria met
-							pushEvent(w.bce_EventExpressions[trigger.Event]);
+							pushEvent(window.bce_EventExpressions[trigger.Event]);
 						} else if (
 							data.Sender === Player.MemberNumber ||
 							dictHasPlayerTarget(data.Dictionary)
 						) {
 							// Lacking criteria, check for presence of player as source or target
-							pushEvent(w.bce_EventExpressions[trigger.Event]);
+							pushEvent(window.bce_EventExpressions[trigger.Event]);
 							break activityTriggers;
 						}
 					}
@@ -5114,15 +5112,15 @@ async function ForBetterClub() {
 				if (args[0] === "list") {
 					fbcChatNotify(
 						displayText(`Available animations: $anims`, {
-							$anims: Object.keys(w.bce_EventExpressions).join(", "),
+							$anims: Object.keys(window.bce_EventExpressions).join(", "),
 						})
 					);
 				}
-				const animation = Object.keys(w.bce_EventExpressions).find(
+				const animation = Object.keys(window.bce_EventExpressions).find(
 					(a) => a.toLowerCase() === args[0]?.toLowerCase()
 				);
 				if (animation) {
-					pushEvent(w.bce_EventExpressions[animation]);
+					pushEvent(window.bce_EventExpressions[animation]);
 				}
 			},
 		});
@@ -5451,7 +5449,7 @@ async function ForBetterClub() {
 				bceExpressionsQueue.filter((a) => a.Type === POST_ORGASM_EVENT_TYPE)
 					.length === 0
 			) {
-				pushEvent(w.bce_EventExpressions.PostOrgasm);
+				pushEvent(window.bce_EventExpressions.PostOrgasm);
 				lastOrgasm = Date.now();
 			}
 
@@ -5684,12 +5682,12 @@ async function ForBetterClub() {
 			}
 
 			// Handle arousal-based expressions
-			outer: for (const t of Object.keys(w.bce_ArousalExpressionStages)) {
+			outer: for (const t of Object.keys(window.bce_ArousalExpressionStages)) {
 				const [exp] = expression(t);
 				/** @type {ExpressionName} */
 				let chosenExpression = null;
 				let expressionChosen = false;
-				for (const face of w.bce_ArousalExpressionStages[t]) {
+				for (const face of window.bce_ArousalExpressionStages[t]) {
 					const limit =
 						face.Limit - (direction === ArousalMeterDirection.Up ? 0 : 1);
 					if (arousal + lastOrgasmAdjustment() >= limit) {
@@ -6044,7 +6042,7 @@ async function ForBetterClub() {
 			"manual clearing and reloading of drawing cache"
 		);
 
-		w.bceClearCaches = async function () {
+		window.bceClearCaches = async function () {
 			const start = Date.now();
 			if (
 				!(await waitFor(
@@ -6058,10 +6056,10 @@ async function ForBetterClub() {
 			if (!fbcSettings.automateCacheClear) {
 				return;
 			}
-			w.bceDoClearCaches();
+			window.bceDoClearCaches();
 		};
 
-		w.bceDoClearCaches = function() {
+		window.bceDoClearCaches = function() {
 			debug("Clearing caches");
 			if (GLDrawCanvas.GL?.textureCache) {
 				GLDrawCanvas.GL.textureCache.clear();
@@ -6082,7 +6080,7 @@ async function ForBetterClub() {
 
 		const clearCaches = () => {
 			if (fbcSettings.automateCacheClear) {
-				w.bceClearCaches();
+				window.bceClearCaches();
 			}
 		};
 
@@ -6760,26 +6758,26 @@ async function ForBetterClub() {
 			(args, nextFunc) => {
 				const ret = nextFunc(args);
 
-				if (w.InputChat) {
+				if (window.InputChat) {
 					/** @type {() => boolean} */
 					const isWhispering = () =>
-						w.InputChat?.value.startsWith("/w ") ||
-						w.InputChat?.value.startsWith("/whisper ") ||
-						!!w.ChatRoomTargetMemberNumber;
+						window.InputChat?.value.startsWith("/w ") ||
+						window.InputChat?.value.startsWith("/whisper ") ||
+						!!window.ChatRoomTargetMemberNumber;
 					if (
-						w.InputChat?.classList.contains(WHISPER_CLASS) &&
+						window.InputChat?.classList.contains(WHISPER_CLASS) &&
 						!isWhispering()
 					) {
-						w.InputChat.classList.remove(WHISPER_CLASS);
+						window.InputChat.classList.remove(WHISPER_CLASS);
 					} else if (fbcSettings.whisperInput && isWhispering()) {
-						w.InputChat?.classList.add(WHISPER_CLASS);
+						window.InputChat?.classList.add(WHISPER_CLASS);
 					}
 					if (Player.ChatSettings?.ColorTheme?.startsWith("Dark")) {
-						if (!w.InputChat.classList.contains(DARK_INPUT_CLASS)) {
-							w.InputChat.classList.add(DARK_INPUT_CLASS);
+						if (!window.InputChat.classList.contains(DARK_INPUT_CLASS)) {
+							window.InputChat.classList.add(DARK_INPUT_CLASS);
 						}
-					} else if (w.InputChat.classList.contains(DARK_INPUT_CLASS)) {
-						w.InputChat.classList.remove(DARK_INPUT_CLASS);
+					} else if (window.InputChat.classList.contains(DARK_INPUT_CLASS)) {
+						window.InputChat.classList.remove(DARK_INPUT_CLASS);
 					}
 				}
 
@@ -7938,7 +7936,7 @@ async function ForBetterClub() {
 			);
 		})();
 
-		w.bceSendToClubSlavery = function () {
+		window.bceSendToClubSlavery = function () {
 			/** @type {ServerChatRoomMessage} */
 			const message = {
 				Type: HIDDEN,
@@ -7959,7 +7957,7 @@ async function ForBetterClub() {
 			DialogLeave();
 		};
 
-		w.bceCanSendToClubSlavery = function () {
+		window.bceCanSendToClubSlavery = function () {
 			const C = CurrentCharacter;
 			if (!C) {
 				return false;
@@ -7970,7 +7968,7 @@ async function ForBetterClub() {
 			);
 		};
 
-		w.bceGotoRoom = (roomName) => {
+		window.bceGotoRoom = (roomName) => {
 			ChatRoomJoinLeash = roomName;
 			DialogLeave();
 			ChatRoomClearAllElements();
@@ -7982,7 +7980,7 @@ async function ForBetterClub() {
 			}
 		};
 
-		w.bceStartClubSlave = async () => {
+		window.bceStartClubSlave = async () => {
 			const managementScreen = "Management";
 
 			if (BCX?.getRuleState("block_club_slave_work")?.isEnforced) {
@@ -8033,11 +8031,11 @@ async function ForBetterClub() {
 				() => CurrentScreen !== managementScreen || !CurrentCharacter
 			);
 
-			w.bceGotoRoom(room);
+			window.bceGotoRoom(room);
 		};
 
-		w.ChatRoombceSendToClubSlavery = w.bceSendToClubSlavery;
-		w.ChatRoombceCanSendToClubSlavery = w.bceCanSendToClubSlavery;
+		window.ChatRoombceSendToClubSlavery = window.bceSendToClubSlavery;
+		window.ChatRoombceCanSendToClubSlavery = window.bceCanSendToClubSlavery;
 
 		await patch;
 	}
@@ -8055,7 +8053,7 @@ async function ForBetterClub() {
 
 	// BcUtil-compatible instant messaging with friends
 	function instantMessenger() {
-		w.bceStripBeepMetadata = (msg) => msg.split("\uf124")[0].trimEnd();
+		window.bceStripBeepMetadata = (msg) => msg.split("\uf124")[0].trimEnd();
 
 		// Build the DOM
 		const container = document.createElement("div");
@@ -9692,7 +9690,7 @@ async function ForBetterClub() {
 					);
 				}
 				if (InformationSheetSelection.BCESeen) {
-					const ctx = w.MainCanvas.getContext("2d");
+					const ctx = window.MainCanvas.getContext("2d");
 					if (!ctx) {
 						throw new Error("could not get canvas 2d context");
 					}
@@ -10527,7 +10525,7 @@ async function ForBetterClub() {
 
 	/** @type {(x: number, y: number, width: number, text: string, align: "left" | "center") => void} */
 	function drawTooltip(x, y, width, text, align) {
-		const canvas = w.MainCanvas.getContext("2d");
+		const canvas = window.MainCanvas.getContext("2d");
 		if (!canvas) {
 			throw new Error("could not get canvas 2d context");
 		}
@@ -10548,7 +10546,7 @@ async function ForBetterClub() {
 	/** @type {(text: string, x: number, y: number, width: number, color: string, backColor?: string) => void} */
 	// eslint-disable-next-line no-undefined
 	function drawTextFitLeft(text, x, y, width, color, backColor = undefined) {
-		const ctx = w.MainCanvas.getContext("2d");
+		const ctx = window.MainCanvas.getContext("2d");
 		if (!ctx) {
 			throw new Error("could not get canvas 2d context");
 		}
@@ -10685,7 +10683,7 @@ async function ForBetterClub() {
 	}
 
 	// Confirm leaving the page to prevent accidental back button, refresh, or other navigation-related disruptions
-	w.addEventListener(
+	window.addEventListener(
 		"beforeunload",
 		(e) => {
 			if (toySyncState.client?.Connected) {
