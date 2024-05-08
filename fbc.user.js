@@ -747,11 +747,13 @@ async function ForBetterClub() {
 			 * @param {unknown} newValue
 			 */
 			sideEffects: (newValue) => {
-				if (newValue) {
-					ChatRoomChatInputRect = [1356, 950, 700, 82];
+				if (newValue) { // ToDo: update for r104
+					ChatRoomChatInputRect = ChatRoomChatInputRect[3] == 82 ? [1356, 950, 700, 82] : [1005, 908, 695, 90];
+					// ChatRoomChatInputRect = [1005, 908, 695, 90];
 				} else {
 					// Default from club
-					ChatRoomChatInputRect = [1456, 950, 900, 82];
+					ChatRoomChatInputRect = ChatRoomChatInputRect[3] == 82 ? [1456, 950, 900, 82] : [1005, 908, 895, 90];
+					// ChatRoomChatInputRect = [1005, 908, 895, 90];
 				}
 				debug("showQuickAntiGarble", newValue);
 			},
