@@ -331,7 +331,7 @@ async function ForBetterClub() {
 		},
 		manualCacheClear: {
 			label: "Adds a clear / reload drawing cache button",
-			value: true, // ToDo: false
+			value: false,
 			/**
 			 * @param {unknown} newValue
 			 */
@@ -1253,7 +1253,6 @@ async function ForBetterClub() {
 					ActivitySetArousalTimer: "1342AFE2",
 					ActivityTimerProgress: "6CD388A7",
 					AppearanceClick: "4C04C15E",
-					AppearanceExit: "AA300341",
 					AppearanceLoad: "4360C485",
 					AppearanceRun: "6EC75705",
 					CharacterAppearanceWardrobeLoad: "A5B63A03",
@@ -1273,7 +1272,6 @@ async function ForBetterClub() {
 					ChatAdminRoomCustomizationClick: "9D859B28", // not relevant: https://gitgud.io/BondageProjects/Bondage-College/-/merge_requests/4917
 					ChatAdminRoomCustomizationProcess: "AF01C65A", // same as above
 					ChatRoomAppendChat: "998F2F98",
-					ChatRoomCharacterItemUpdate: "263DB2F0",
 					ChatRoomCharacterUpdate: "DE2DC592",
 					ChatRoomCharacterViewDrawBackground: "39EFE213",
 					ChatRoomCharacterViewIsActive: "CD8066FA",
@@ -1322,11 +1320,8 @@ async function ForBetterClub() {
 					DrawProcess: "9776CBC2", // works
 					DrawText: "C1BF0F50",
 					DrawTextFit: "F9A1B11E",
-					ElementCreateInput: "EB2A3EC8",
 					ElementCreateTextArea: "AA4AEDE7",
 					ElementIsScrolledToEnd: "1CC4FE11",
-					ElementPosition: "CC4E3C82",
-					ElementRemove: "60809E60",
 					ElementScrollToEnd: "1AC45575",
 					ElementValue: "4F26C62F",
 					FriendListShowBeep: "6C0449BB",
