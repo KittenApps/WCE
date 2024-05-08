@@ -1,5 +1,8 @@
 {
 	"type": "module",
+	"scripts": {
+		"prettier": "npx prettier fbc.user.js --write --trailing-comma es5 --print-width 120"
+	},
 	"devDependencies": {
 		"@total-typescript/ts-reset": "^0.5.1",
 		"@types/events": "^3.0.0",
