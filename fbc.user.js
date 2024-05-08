@@ -249,18 +249,31 @@ async function ForBetterClub() {
 			category: "activities",
 			description: "Shows the numeric value of arousal meters when expanded.",
 		},
-		layeringMenu: {
-			label: "Enable layering menus",
+		allowLayeringOthers: {
+			label: "Enable layering menus on other players",
 			value: false,
 			/**
 			 * @param {unknown} newValue
 			 */
 			sideEffects: (newValue) => {
-				debug("layeringMenu", newValue);
+				debug("layeringOthers", newValue);
 			},
 			category: "appearance",
 			description:
-				"Adds additional options when looking at equipped items or pieces of clothing.",
+				"Let's you edit the layering on items of other players.",
+		},
+		copyColor: {
+			label: "Enable option to copy color to all item's of the same type",
+			value: false,
+			/**
+			 * @param {unknown} newValue
+			 */
+			sideEffects: (newValue) => {
+				debug("copyColor", newValue);
+			},
+			category: "appearance",
+			description:
+				"Enable option to copy color to all item's of the same type.",
 		},
 		extendedWardrobe: {
 			label: "Extended wardrobe slots (96)",
@@ -523,10 +536,6 @@ async function ForBetterClub() {
 			 */
 			sideEffects: (newValue) => {
 				debug("allowLayeringWhileBound", newValue);
-				if (newValue && !fbcSettings.layeringMenu) {
-					fbcSettings.layeringMenu = true;
-					defaultSettings.layeringMenu.sideEffects(true);
-				}
 			},
 			category: "cheats",
 			description:
@@ -1048,7 +1057,6 @@ async function ForBetterClub() {
 				"Alternate Arousal (Replaces Vanilla, requires hybrid/locked arousal meter)":
 					"另一种欲望 (替换原版, 需要混合或锁定欲望条)",
 				"Alternative speech stutter": "另一种言语不清",
-				"Enable layering menus": "开启服装分层选项",
 				"Extended wardrobe slots (96)": "扩展衣柜保存槽 (96个)",
 				"Replace wardrobe list with character previews":
 					"使用角色预览替换衣柜保存列表",
@@ -1086,11 +1094,6 @@ async function ForBetterClub() {
 				"Discreet mode (disable drawing)": "谨慎模式 (禁用绘图)",
 				"Keep tab active (requires refresh)":
 					"保持标签页处于活动状态 (需要刷新)",
-				"Show FPS counter": "显示 FPS 计数器",
-				"Limit FPS in background": "在后台时限制FPS",
-				"Limit FPS to ~15": "限制 FPS 最高为 ~15",
-				"Limit FPS to ~30": "限制 FPS 最高为 ~30",
-				"Limit FPS to ~60": "限制 FPS 最高为 ~60",
 				"Make automatic progress while struggling": "在挣扎时自动增加进度",
 				"Allow leashing without wearing a leashable item (requires leasher to have FBC too)":
 					"允许在不佩戴牵引绳的情况下也可以进行牵引（需要牵引者也安装有FBC）",
@@ -1150,8 +1153,6 @@ async function ForBetterClub() {
 					"['list' 或 表情名称]: 运行一个动画",
 				"['list' or list of poses]: set your pose":
 					"['list' 或 姿势列表]: 设置你的姿势",
-				"Modify layering priority": "修改分层优先级",
-				"Adjust individual layers": "调整单个层",
 				"Load without body parts": "加载时不包括身体部位",
 				"Exclude body parts": "排除身体部位",
 				Gagging: "堵嘴",
@@ -1308,6 +1309,7 @@ async function ForBetterClub() {
 					DialogDraw: "118DB6E4", // works
 					DialogDrawItemMenu: "FCE556C2",
 					DialogLeave: "C37553DC",
+					DialogMenuButtonBuild: "E69567D2",
 					DrawArousalMeter: "BB0755AF",
 					DrawArousalThermometer: "7ED6D822",
 					DrawBackNextButton: "9AF4BA37",
@@ -5841,14 +5843,22 @@ async function ForBetterClub() {
 	async function layeringMenu() {
 		await waitFor(() => !!Player?.AppearanceLayers);
 
-		const canAccessLayeringMenus = () => {
+		patchFunction(
+			"DialogMenuButtonBuild",
+			{
+				"if (Item != null && C.IsPlayer() && Player.CanInteract()) {":
+					"if (Item != null && (C.IsPlayer() || fbcSettingValue('allowLayeringOthers')) && (Player.CanInteract() || fbcSettingValue('allowLayeringWhileBound'))) {",
+			},
+			"Built-in layering menus optiosn for allow on others and allow while bound"
+		);
+
+		const canCopyColor = () => {
 			const c = CharacterGetCurrent();
 			return (
-				fbcSettings.layeringMenu &&
-				(fbcSettings.allowLayeringWhileBound ||
-					(Player.CanInteract() &&
-						c?.FocusGroup?.Name &&
-						!InventoryGroupIsBlocked(c, c.FocusGroup.Name)))
+				fbcSettings.copyColor &&
+				Player.CanInteract() &&
+				c?.FocusGroup?.Name &&
+				!InventoryGroupIsBlocked(c, c.FocusGroup.Name)
 			);
 		};
 
@@ -5873,287 +5883,10 @@ async function ForBetterClub() {
 			.map((a) => a.Name)
 			.filter((a) => !ignoredColorCopiableAssets.includes(a));
 
-		const layerPriority = "bce_LayerPriority";
-
-		/** @type {(C: Character, item?: Item | null) => boolean} */
-		function assetVisible(C, item) {
-			return (
-				!!item && !!C.AppearanceLayers?.find((a) => a.Asset === item.Asset)
-			);
-		}
-
 		/** @type {(C: Character, item?: Item | null) => boolean} */
 		function assetWorn(C, item) {
 			return !!item && !!C.Appearance.find((a) => a === item);
 		}
-
-		/** @type {Record<string, number>} */
-		let layerPriorities = {};
-		let advancedPriorities = false;
-
-		/** @type {(item: Item) => void} */
-		function updateItemPriorityFromLayerPriorityInput(item) {
-			if (item) {
-				if (advancedPriorities) {
-					const priorities = objEntries(layerPriorities);
-					if (!item.Property) {
-						item.Property = { OverridePriority: {} };
-					} else {
-						item.Property.OverridePriority = {};
-					}
-					for (const [layer, priority] of priorities) {
-						// @ts-ignore - typescript isn't smart enough to understand that OverridePriority is an object, where any string key is valid
-						item.Property.OverridePriority[layer] = priority;
-					}
-				} else {
-					const priority = parseInt(ElementValue(layerPriority));
-					if (!item.Property) {
-						item.Property = { OverridePriority: priority };
-					} else {
-						item.Property.OverridePriority = priority;
-					}
-				}
-				CharacterRefresh(preview, false, false);
-			}
-		}
-
-		let prioritySubscreen = false;
-		let layerPage = 0;
-
-		const preview = CharacterLoadSimple(
-			`LayeringPreview-${Player.MemberNumber ?? ""}`
-		);
-
-		/**
-		 * @param {string} layerName
-		 */
-		function layerElement(layerName) {
-			return `${layerPriority}___${layerName}`;
-		}
-
-		patchFunction(
-			"DrawCharacter",
-			{
-				"const OverrideDark = ":
-					"const OverrideDark = C.AccountName.startsWith('LayeringPreview') || ",
-			},
-			"Layering preview affected by blindness"
-		);
-
-		/** @type {(C: Character, FocusItem: Item) => void} */
-		function prioritySubscreenEnter(C, FocusItem) {
-			function getFocusItem() {
-				if (!DialogFocusItem) {
-					throw new Error(
-						"expected DialogFocusItem when entering layering menu"
-					);
-				}
-
-				const item = InventoryGet(preview, DialogFocusItem.Asset.Group.Name);
-				if (!item) {
-					throw new Error("expected focus item when entering layering menu");
-				}
-				return item;
-			}
-
-			DialogFocusItem = FocusItem;
-			prioritySubscreen = true;
-			advancedPriorities = false;
-			if (!C.AppearanceLayers) {
-				logWarn("C.AppearanceLayers is not defined");
-			}
-			const initialValue =
-				C.AppearanceLayers?.find((a) => a.Asset === FocusItem.Asset)
-					?.Priority ?? 0;
-			layerPriorities = {};
-			for (const layer of FocusItem.Asset.Layer) {
-				const layerName = layer.Name;
-				if (!layerName) {
-					continue;
-				}
-				const drawnLayer = C.AppearanceLayers?.find(
-					(a) => a.Asset === FocusItem.Asset && a.Name === layerName
-				);
-				let priority = layer.Priority ?? -1;
-				if (
-					isNonNullObject(FocusItem?.Property?.OverridePriority) &&
-					layerName in FocusItem.Property.OverridePriority
-				) {
-					priority = FocusItem?.Property?.OverridePriority[layerName];
-				}
-				if (drawnLayer) {
-					priority = drawnLayer.Priority ?? priority;
-				}
-				layerPriorities[layerName] = priority;
-				const el = ElementCreateInput(
-					layerElement(layerName),
-					"number",
-					"",
-					"20"
-				);
-				ElementValue(layerElement(layerName), priority.toString());
-				el.setAttribute("data-layer", layerName);
-				el.className = layerPriority;
-				// eslint-disable-next-line no-loop-func -- layerPriorities scope is outside the function, ElementValue and InventoryGet are global functions
-				el.addEventListener("change", () => {
-					layerPriorities[layerName] = parseInt(
-						ElementValue(layerElement(layerName))
-					);
-					updateItemPriorityFromLayerPriorityInput(getFocusItem());
-				});
-			}
-			hideAllLayerElements();
-			if (isNonNullObject(FocusItem?.Property?.OverridePriority)) {
-				advancedPriorities = true;
-			}
-			ElementCreateInput(layerPriority, "number", "", "20");
-			ElementValue(layerPriority, initialValue.toString());
-			layerPage = 0;
-			preview.Appearance = C.Appearance.slice();
-			CharacterRefresh(preview, false, false);
-
-			const priorityInput = document.getElementById(layerPriority);
-			if (!priorityInput) {
-				logWarn("Priority input is not defined");
-				return;
-			}
-			priorityInput.addEventListener("change", () => {
-				updateItemPriorityFromLayerPriorityInput(getFocusItem());
-			});
-		}
-		function prioritySubscreenExit() {
-			prioritySubscreen = false;
-			ElementRemove(layerPriority);
-			document.querySelectorAll(`.${layerPriority}`).forEach((e) => {
-				ElementRemove(e.id);
-			});
-			DialogFocusItem = null;
-		}
-
-		const dialogLeaveFuncs = /** @type {const} */ ([
-			"DialogLeave",
-			"DialogLeaveItemMenu",
-		]);
-		for (const func of dialogLeaveFuncs) {
-			SDK.hookFunction(
-				func,
-				HOOK_PRIORITIES.OverrideBehaviour,
-				/**
-				 * @param {Parameters<typeof DialogLeave> | Parameters<typeof DialogLeaveItemMenu>} args
-				 */
-				// eslint-disable-next-line no-loop-func
-				(args, next) => {
-					if (prioritySubscreen) {
-						prioritySubscreenExit();
-						return;
-					}
-					next(args);
-				}
-			);
-		}
-
-		SDK.hookFunction(
-			"AppearanceExit",
-			HOOK_PRIORITIES.AddBehaviour,
-			/**
-			 * @param {Parameters<typeof AppearanceExit>} args
-			 */
-			(args, next) => {
-				if (CharacterAppearanceMode === "") {
-					ElementRemove(layerPriority);
-				}
-				return next(args);
-			}
-		);
-
-		SDK.hookFunction(
-			"AppearanceLoad",
-			HOOK_PRIORITIES.AddBehaviour,
-			/**
-			 * @param {Parameters<typeof AppearanceLoad>} args
-			 */
-			(args, next) => {
-				const ret = next(args);
-				ElementCreateInput(layerPriority, "number", "", "20");
-				ElementPosition(layerPriority, -1000, -1000, 0);
-				return ret;
-			}
-		);
-
-		SDK.hookFunction(
-			"AppearanceRun",
-			HOOK_PRIORITIES.OverrideBehaviour,
-			/**
-			 * @param {Parameters<typeof AppearanceRun>} args
-			 */
-			(args, next) => {
-				if (prioritySubscreen) {
-					prioritySubscreenDraw();
-					return null;
-				}
-				const ret = next(args);
-				if (fbcSettings.layeringMenu) {
-					const C = CharacterAppearanceSelection;
-					if (!C) {
-						throw new Error(
-							"CharacterAppearanceSelection is not defined in appearance menu"
-						);
-					}
-					const item = C.Appearance.find((a) => a.Asset.Group === C.FocusGroup);
-					if (CharacterAppearanceMode === "Cloth" && assetVisible(C, item)) {
-						DrawButton(
-							110,
-							70,
-							52,
-							52,
-							"",
-							"White",
-							ICONS.LAYERS,
-							displayText("Modify layering priority")
-						);
-					}
-				}
-				return ret;
-			}
-		);
-
-		SDK.hookFunction(
-			"AppearanceClick",
-			HOOK_PRIORITIES.OverrideBehaviour,
-			/**
-			 * @param {Parameters<typeof AppearanceClick>} args
-			 */
-			(args, next) => {
-				if (fbcSettings.layeringMenu) {
-					const C = CharacterAppearanceSelection;
-					if (!C) {
-						throw new Error(
-							"CharacterAppearanceSelection is not defined in appearance menu"
-						);
-					}
-					const item = C.Appearance.find(
-						(a) => a.Asset.Group?.Name === C.FocusGroup?.Name
-					);
-					if (prioritySubscreen) {
-						if (!item) {
-							throw new Error("focus item is not defined in layering menu");
-						}
-						prioritySubscreenClick(C, item);
-						return null;
-					} else if (
-						MouseIn(110, 70, 52, 52) &&
-						CharacterAppearanceMode === "Cloth" &&
-						assetVisible(C, item)
-					) {
-						if (!item) {
-							throw new Error("focus item is not defined in layering menu");
-						}
-						prioritySubscreenEnter(C, item);
-					}
-				}
-				return next(args);
-			}
-		);
 
 		SDK.hookFunction(
 			"DialogDraw",
@@ -6167,7 +5900,7 @@ async function ForBetterClub() {
 				if (
 					DialogMenuMode === "items" &&
 					isCharacter(C) &&
-					canAccessLayeringMenus()
+					canCopyColor()
 				) {
 					if (!C.FocusGroup) {
 						throw new Error("layering button not guarded behind C.FocusGroup");
@@ -6179,10 +5912,7 @@ async function ForBetterClub() {
 								"layering button not guarded behind focus being on a worn item"
 							);
 						}
-						if (
-							colorCopiableAssets.includes(focusItem.Asset.Name) &&
-							Player.CanInteract()
-						) {
+						if (colorCopiableAssets.includes(focusItem.Asset.Name)) {
 							DrawButton(
 								10,
 								832,
@@ -6197,172 +5927,34 @@ async function ForBetterClub() {
 							);
 						}
 					}
-					if (assetVisible(C, focusItem)) {
-						DrawButton(
-							10,
-							948,
-							52,
-							52,
-							"",
-							"White",
-							ICONS.LAYERS,
-							displayText("Modify layering priority")
-						);
-					}
 				}
 				return ret;
 			}
 		);
 
-		/**
-		 * @returns {[number, number, number, number]}
-		 */
-		function priorityAcceptButtonPosition() {
-			return advancedPriorities ? [1715, 75, 90, 90] : [900, 280, 90, 90];
-		}
-
-		function hideAllLayerElements() {
-			const layerNames = Object.keys(layerPriorities);
-			for (let i = 0; i < layerNames.length; i++) {
-				ElementPosition(layerElement(layerNames[i]), -1000, -1000, 0, 0);
-			}
-		}
-
-		const layersPerColumn = 10;
-		const layersPerPage = layersPerColumn * 2;
-		function prioritySubscreenDraw() {
-			DrawCharacter(preview, 1300, 100, 0.9, false);
-
-			const layerNames = Object.keys(layerPriorities);
-			if (layerNames.length > 0) {
-				DrawCheckbox(100, 50, 64, 64, "", advancedPriorities, false, "White");
-				drawTextFitLeft(
-					displayText("Adjust individual layers"),
-					174,
-					82,
-					400,
-					"White",
-					"Black"
-				);
-			}
-			if (advancedPriorities) {
-				DrawButton(1815, 180, 90, 90, "", "White", "Icons/Next.png");
-				drawTextFitLeft(
-					`${layerPage + 1} / ${Math.ceil(layerNames.length / layersPerPage)}`,
-					1715,
-					235,
-					90,
-					"White",
-					"Black"
-				);
-				ElementPosition(layerPriority, -1000, -1000, 0, 0);
-				for (let i = 0; i < layersPerPage && i < layerNames.length; i++) {
-					const layerName = layerNames[i + layerPage * layersPerPage];
-					const x = 200 + Math.floor(i / layersPerColumn) * 500,
-						y = 160 + (i % layersPerColumn) * 70;
-					ElementPosition(layerElement(layerName), x, y, 100);
-					drawTextFitLeft(layerName, x + 50, y, 400, "White", "Black");
-				}
-			} else {
-				// Localization guide: valid options for priorityField can be seen in the "const FIELDS" object above
-				DrawText(displayText(`Set item priority`), 950, 150, "White", "Black");
-				ElementPosition(layerPriority, 950, 230, 100);
-				hideAllLayerElements();
-			}
-			DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png");
-			DrawButton(
-				...priorityAcceptButtonPosition(),
-				"",
-				"White",
-				"Icons/Accept.png",
-				// Localization guide: valid options for priorityField can be seen in the "const FIELDS" object above
-				displayText(`Set priority`)
-			);
-		}
-
-		/**
-		 * @param {Character} C
-		 * @param {Item} focusItem
-		 */
-		function prioritySubscreenClick(C, focusItem) {
-			if (MouseIn(100, 50, 64, 64)) {
-				advancedPriorities = !advancedPriorities;
-			} else if (MouseIn(1815, 75, 90, 90)) {
-				prioritySubscreenExit();
-			} else if (MouseIn(...priorityAcceptButtonPosition())) {
-				savePrioritySubscreenChanges(C, focusItem);
-			} else if (advancedPriorities && MouseIn(1815, 180, 90, 90)) {
-				layerPage++;
-				if (layerPage * layersPerPage >= Object.keys(layerPriorities).length) {
-					layerPage = 0;
-				}
-				hideAllLayerElements();
-			}
-		}
-
-		SDK.hookFunction(
-			"DialogDraw",
-			HOOK_PRIORITIES.OverrideBehaviour,
-			/**
-			 * @param {Parameters<typeof DialogDraw>} args
-			 */
-			(args, next) => {
-				const C = CharacterGetCurrent();
-				if (!C) {
-					throw new Error("CharacterGetCurrent is not defined in DialogDraw");
-				}
-				const focusItem = C.FocusGroup
-					? InventoryGet(C, C.FocusGroup.Name)
-					: null;
-				if (prioritySubscreen) {
-					if (canAccessLayeringMenus()) {
-						if (focusItem) {
-							prioritySubscreenDraw();
-							return null;
-						}
-						prioritySubscreenExit();
-					} else {
-						prioritySubscreenExit();
-					}
-				}
-				return next(args);
-			}
-		);
-
-		SDK.hookFunction(
+		SDK.hookFunction(  //COLOR
 			"DialogClick",
 			HOOK_PRIORITIES.OverrideBehaviour,
 			/**
 			 * @param {Parameters<typeof DialogClick>} args
 			 */
 			(args, next) => {
-				if (!canAccessLayeringMenus()) {
+				if (!canCopyColor()) {
 					return next(args);
 				}
 				const C = CharacterGetCurrent();
 				if (!C) {
 					throw new Error("CharacterGetCurrent is not defined in DialogClick");
 				}
-				const focusItem = C.FocusGroup
-					? InventoryGet(C, C.FocusGroup.Name)
-					: null;
-				if (focusItem) {
-					if (prioritySubscreen) {
-						prioritySubscreenClick(C, focusItem);
-						return null;
-					}
-					if (assetVisible(C, focusItem) && MouseIn(10, 948, 52, 52)) {
-						prioritySubscreenEnter(C, focusItem);
-						return null;
-					} else if (
-						assetWorn(C, focusItem) &&
-						MouseIn(10, 832, 52, 52) &&
-						colorCopiableAssets.includes(focusItem.Asset.Name) &&
-						Player.CanInteract()
-					) {
-						copyColors(C, focusItem);
-						return null;
-					}
+				const focusItem = C.FocusGroup ? InventoryGet(C, C.FocusGroup.Name) : null;
+				if (
+					focusItem &&
+					assetWorn(C, focusItem) &&
+					MouseIn(10, 832, 52, 52) &&
+					colorCopiableAssets.includes(focusItem.Asset.Name)
+				) {
+					copyColors(C, focusItem);
+					return null;
 				}
 				return next(args);
 			}
@@ -6415,15 +6007,6 @@ async function ForBetterClub() {
 					}
 				}
 			}
-		}
-
-		/** @type {(C: Character, focusItem: Item) => void} */
-		function savePrioritySubscreenChanges(C, focusItem) {
-			updateItemPriorityFromLayerPriorityInput(focusItem);
-			debug("updated item", focusItem);
-			CharacterRefresh(C, false, false);
-			ChatRoomCharacterItemUpdate(C, C.FocusGroup?.Name);
-			prioritySubscreenExit();
 		}
 	}
 
