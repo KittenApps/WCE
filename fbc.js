@@ -2259,15 +2259,14 @@ async function settingsPage() {
   const currentDefaultSettings = (category) =>
     objEntries(defaultSettings).filter(([, v]) => v.category === category && v.value === !!v.value);
 
-  window.PreferenceSubscreenBCESettingsLoad = function () {
+  const PreferenceSubscreenBCESettingsLoad = function () {
     currentPageNumber = 0;
   };
-  window.PreferenceSubscreenBCESettingsExit = function () {
+  const PreferenceSubscreenBCESettingsExit = function () {
     bceSaveSettings();
-    PreferenceSubscreen = "";
-    PreferenceMessage = "";
+    PreferenceSubscreenExtensionsClear();
   };
-  window.PreferenceSubscreenBCESettingsRun = function () {
+  const PreferenceSubscreenBCESettingsRun = function () {
     const ctx = window.MainCanvas.getContext("2d");
     if (!ctx) {
       logError("Could not get canvas context");
@@ -2405,7 +2404,7 @@ async function settingsPage() {
     ctx.textAlign = "center";
   };
   // eslint-disable-next-line complexity
-  window.PreferenceSubscreenBCESettingsClick = function () {
+  const PreferenceSubscreenBCESettingsClick = function () {
     let y = settingsYStart;
     if (MouseIn(1815, 75, 90, 90)) {
       if (currentCategory === null) {
@@ -2495,43 +2494,16 @@ async function settingsPage() {
     }
   };
 
-  SDK.hookFunction(
-    "DrawButton",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof DrawButton>} args
-     */
-    (args, next) => {
-      // 7th argument is image URL
-      switch (args[6]) {
-        case "Icons/BCESettings.png":
-          args[6] = ICONS.LOGO;
-          break;
-        default:
-          break;
-      }
-      return next(args);
-    }
-  );
-
-  SDK.hookFunction(
-    "TextGet",
-    HOOK_PRIORITIES.ModifyBehaviourHigh,
-    /**
-     * @param {Parameters<typeof TextGet>} args
-     */
-    (args, next) => {
-      switch (args[0]) {
-        case "HomepageBCESettings":
-          return displayText("FBC Settings");
-        default:
-          return next(args);
-      }
-    }
-  );
-
-  // @ts-ignore - BCESettings is a valid subscreen due to our additions
-  PreferenceSubscreenList.push("BCESettings");
+  PreferenceRegisterExtensionSetting({
+    Identifier: "FBC",
+    ButtonText: displayText("FBC Settings"),
+    Image: ICONS.LOGO,
+    click: PreferenceSubscreenBCESettingsClick,
+    run: PreferenceSubscreenBCESettingsRun,
+    exit: PreferenceSubscreenBCESettingsExit,
+    load: PreferenceSubscreenBCESettingsLoad,
+    unload: () => {}
+  });
 
   /** @type {(e: KeyboardEvent) => void} */
   function keyHandler(e) {

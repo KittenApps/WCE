@@ -28,10 +28,6 @@ declare global {
   var ChatRoombceSendToClubSlavery: () => void;
   var ChatRoombceCanSendToClubSlavery: () => boolean;
   var bceGotoRoom: (room: string) => void;
-  var PreferenceSubscreenBCESettingsLoad: () => void;
-  var PreferenceSubscreenBCESettingsExit: () => void;
-  var PreferenceSubscreenBCESettingsRun: () => void;
-  var PreferenceSubscreenBCESettingsClick: () => void;
   var InterfaceTextGet: (msg: string) => string;
   var bce_ArousalExpressionStages: ArousalExpressionStages;
   var bce_ActivityTriggers: ActivityTrigger[];
