@@ -1201,11 +1201,10 @@ const expectedHashes = (gameVersion) => {
         CraftingClick: "5A1B4ACC", // import / export crafted itemss tested
         CraftingConvertSelectedToItem: "48270B42",
         CraftingRun: "4018E748", // import / export crafted itemss tested
-        DialogClick: "A1B56CDF",
-        DialogDraw: "118DB6E4", // works
         DialogDrawItemMenu: "FCE556C2",
         DialogLeave: "C37553DC",
         DialogMenuButtonBuild: "E69567D2",
+        DialogMenuButtonClick: "E69567D2",
         DrawArousalMeter: "BB0755AF",
         DrawArousalThermometer: "7ED6D822",
         DrawBackNextButton: "9AF4BA37",
@@ -1226,6 +1225,7 @@ const expectedHashes = (gameVersion) => {
         GameRun: "505F7E21", // seems to work fine
         GLDrawResetCanvas: "81214642",
         InformationSheetRun: "4B2D599D", // works
+        InterfaceTextGet: "4B2D599D",
         InventoryGet: "E666F671",
         LoginClick: "EE94BEC7",
         LoginRun: "C3926C4F",
@@ -3316,7 +3316,7 @@ async function automaticExpressions() {
   patchFunction(
     "PreferenceSubscreenArousalRun",
     {
-      'DrawCheckbox(1250, 276, 64, 64, TextGet("ArousalAffectExpression"), Player.ArousalSettings.AffectExpression);': 
+      'DrawCheckbox(1250, 276, 64, 64, TextGet("ArousalAffectExpression"), Player.ArousalSettings.AffectExpression);':
         'DrawCheckbox(1250, 276, 64, 64, TextGet("ArousalAffectExpression"), Player.ArousalSettings.AffectExpression, fbcSettingValue("animationEngine"));',
     },
     "disabling conflicting Player.ArousalSettings.AffectExpression when Animation Engine is active"
@@ -3325,7 +3325,7 @@ async function automaticExpressions() {
   patchFunction(
     "PreferenceSubscreenArousalClick",
     {
-      'Player.ArousalSettings.AffectExpression = !Player.ArousalSettings.AffectExpression;': 
+      "Player.ArousalSettings.AffectExpression = !Player.ArousalSettings.AffectExpression;":
         'Player.ArousalSettings.AffectExpression = !Player.ArousalSettings.AffectExpression && !fbcSettingValue("animationEngine");',
     },
     "disabling conflicting Player.ArousalSettings.AffectExpression when Animation Engine is active"
@@ -5404,18 +5404,8 @@ async function layeringMenu() {
       "if (Item != null && C.IsPlayer() && Player.CanInteract()) {":
         "if (Item != null && (C.IsPlayer() || fbcSettingValue('allowLayeringOthers')) && (Player.CanInteract() || fbcSettingValue('allowLayeringWhileBound'))) {",
     },
-    "Built-in layering menus optiosn for allow on others and allow while bound"
+    "Built-in layering menus options for allow on others and allow while bound"
   );
-
-  const canCopyColor = () => {
-    const c = CharacterGetCurrent();
-    return (
-      fbcSettings.copyColor &&
-      Player.CanInteract() &&
-      c?.FocusGroup?.Name &&
-      !InventoryGroupIsBlocked(c, c.FocusGroup.Name)
-    );
-  };
 
   // Pseudo-items that we do not want to process for color copying
   const ignoredColorCopiableAssets = [
@@ -5441,37 +5431,26 @@ async function layeringMenu() {
   }
 
   SDK.hookFunction(
-    "DialogDraw",
+    "DialogMenuButtonBuild",
     HOOK_PRIORITIES.AddBehaviour,
     /**
-     * @param {Parameters<typeof DialogDraw>} args
+     * @param {Parameters<typeof DialogMenuButtonBuild>} args
      */
     (args, next) => {
       const C = CharacterGetCurrent();
+      // @ts-ignore
       const ret = next(args);
-      if (DialogMenuMode === "items" && isCharacter(C) && canCopyColor()) {
-        if (!C.FocusGroup) {
-          throw new Error("layering button not guarded behind C.FocusGroup");
-        }
+      if (
+        isCharacter(C) &&
+        fbcSettings.copyColor &&
+        Player.CanInteract() &&
+        C?.FocusGroup?.Name &&
+        !InventoryGroupIsBlocked(C, C.FocusGroup.Name)
+      ) {
         const focusItem = InventoryGet(C, C.FocusGroup.Name);
-        if (assetWorn(C, focusItem)) {
-          if (!focusItem) {
-            throw new Error("layering button not guarded behind focus being on a worn item");
-          }
-          if (colorCopiableAssets.includes(focusItem.Asset.Name)) {
-            DrawButton(
-              10,
-              832,
-              52,
-              52,
-              "",
-              "White",
-              ICONS.PAINTBRUSH,
-              displayText(`Copy colors to other $Item`, {
-                $Item: focusItem.Asset.Description.toLowerCase(),
-              })
-            );
-          }
+        if (assetWorn(C, focusItem) && colorCopiableAssets.includes(focusItem.Asset.Name)) {
+          // @ts-ignore
+          DialogMenuButton.push("Paint");
         }
       }
       return ret;
@@ -5479,36 +5458,43 @@ async function layeringMenu() {
   );
 
   SDK.hookFunction(
-    //COLOR
-    "DialogClick",
-    HOOK_PRIORITIES.OverrideBehaviour,
+    "InterfaceTextGet",
+    HOOK_PRIORITIES.AddBehaviour,
     /**
-     * @param {Parameters<typeof DialogClick>} args
+     * @param {Parameters<InterfaceTextGet>} args
      */
     (args, next) => {
-      if (!canCopyColor()) {
-        return next(args);
-      }
-      const C = CharacterGetCurrent();
-      if (!C) {
-        throw new Error("CharacterGetCurrent is not defined in DialogClick");
-      }
-      const focusItem = C.FocusGroup ? InventoryGet(C, C.FocusGroup.Name) : null;
-      if (
-        focusItem &&
-        assetWorn(C, focusItem) &&
-        MouseIn(10, 832, 52, 52) &&
-        colorCopiableAssets.includes(focusItem.Asset.Name)
-      ) {
-        copyColors(C, focusItem);
-        return null;
-      }
+      if (args[0] === "DialogMenuPaint") return "Copy colors to other items of same type";
       return next(args);
     }
   );
 
+  window.fbcCopyColors = copyColors;
+
+  patchFunction(
+    "DialogMenuButtonClick",
+    {
+      'else if (Item && button === "Layering") {': `else if (Item && button === "Paint") {
+          fbcCopyColors(C, Item);
+          return false;
+        }
+
+        else if (Item && button === "Layering") {`,
+    },
+    "Built-in layering menus options for allow on others and allow while bound"
+  );
+
   /** @type {(C: Character, focusItem: Item) => void} */
   function copyColors(C, focusItem) {
+    if (
+      !fbcSettings.copyColor ||
+      !Player.CanInteract() ||
+      InventoryGroupIsBlocked(C, C.FocusGroup.Name) ||
+      !assetWorn(C, focusItem) ||
+      !colorCopiableAssets.includes(focusItem.Asset.Name)
+    )
+      return;
+    console.log("copying color to all: ", focusItem);
     for (const item of C.Appearance) {
       copyColorTo(item);
     }

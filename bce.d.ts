@@ -14,6 +14,7 @@ declare global {
   var fbcPushEvent: (evt: ExpressionEvent) => void;
   var fbcDebug: (copy?: boolean) => Promise<string>;
   var fbcSettingValue: (key: string) => boolean | number | string;
+  var fbcCopyColors: (C: Character, focusItem: Item) => void;
   var bceAnimationEngineEnabled: () => boolean;
   var bce_initializeDefaultExpression: () => void;
   var bceUpdatePasswordForReconnect: () => void;
@@ -31,6 +32,7 @@ declare global {
   var PreferenceSubscreenBCESettingsExit: () => void;
   var PreferenceSubscreenBCESettingsRun: () => void;
   var PreferenceSubscreenBCESettingsClick: () => void;
+  var InterfaceTextGet: (msg: string) => string;
   var bce_ArousalExpressionStages: ArousalExpressionStages;
   var bce_ActivityTriggers: ActivityTrigger[];
   var bce_EventExpressions: { [key: string]: Expression };

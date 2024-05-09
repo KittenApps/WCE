@@ -1,7 +1,7 @@
 {
 	"type": "module",
 	"scripts": {
-		"prettier": "npx prettier fbc.user.js --write --trailing-comma es5 --print-width 120",
+		"prettier": "npx prettier fbc.js --write --trailing-comma es5 --print-width 120",
 		"serve": "npx http-server -p 4000 -c-1 --cors"
 	},
 	"devDependencies": {
