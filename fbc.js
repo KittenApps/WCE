@@ -1,21 +1,4 @@
-// ==UserScript==
-// @name FBC fork
-// @namespace https://www.bondageprojects.com/
-// @version 6.1.2
-// @description fork of old fbc
-// @author Sidious (and others)
-// @match https://bondageprojects.elementfx.com/*
-// @match https://www.bondageprojects.elementfx.com/*
-// @match https://bondage-europe.com/*
-// @match https://www.bondage-europe.com/*
-// @match http://localhost:*/*
-// @icon data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
-// @grant none
-// @run-at document-end
-// ==/UserScript==
-
-/* eslint-disable no-inline-comments */
-// @ts-check
+"use strict";
 
 /**
  *     BCE/FBC
@@ -35,9 +18,10 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-"use strict";
+/* eslint-disable no-inline-comments */
+// @ts-check
 
-await waitFor(() => typeof FUSAM === "object" && FUSAM?.present);
+await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
 export const FBC_VERSION = "6.1";
 const settingsVersion = 61;
@@ -65,8 +49,8 @@ if (window.FBC_VERSION) {
   throw new Error("FBC already loaded. Skipping load.");
 }
 
-if (typeof bcModSdk !== "object" || !bcModSdk) {
-  throw new Error("bcModSdk not found. Skipping load.");
+if (typeof ChatRoomCharacter === "undefined") {
+  throw new Error("Bondage Club not detected. Skipping FBC initialization.");
 }
 
 const SDK = bcModSdk.registerMod(
@@ -116,10 +100,6 @@ const EMBED_TYPE = /** @type {const} */ ({
   None: "",
   Untrusted: "none-img",
 });
-
-if (typeof ChatRoomCharacter === "undefined") {
-  throw new Error("Bondage Club not detected. Skipping FBC initialization.");
-}
 
 /** @type {{ level: "error" | "warn" | "info" | "debug", message: string }[]} */
 const pastLogs = new Array(100);
@@ -1262,6 +1242,8 @@ const expectedHashes = (gameVersion) => {
         OnlineProfileRun: "7F57EF9A",
         PoseSetActive: "22C02050",
         PreferenceInitPlayer: "037AB0BC",
+        PreferenceSubscreenArousalClick: "30C611F9",
+        PreferenceSubscreenArousalRun: "9A8128AF",
         PreferenceSubscreenRestrictionClick: "30C611F9",
         PreferenceSubscreenRestrictionRun: "9A8128AF",
         RelogRun: "10AF5A60",
