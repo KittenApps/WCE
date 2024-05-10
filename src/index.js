@@ -46,6 +46,7 @@ import { automaticExpressions } from './functions/automaticExpressions';
 import { alternateArousal } from './functions/alternateArousal';
 import { autoGhostBroadcast } from './functions/autoGhostBroadcast';
 import { blindWithoutGlasses } from './functions/blindWithoutGlasses';
+import { friendPresenceNotifications } from './functions/friendPresenceNotifications';
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
@@ -103,10 +104,6 @@ export const BCE_LICENSE = "https://gitlab.com/Sidiousious/bce/-/blob/main/LICEN
 export const BCE_MAX_AROUSAL = 99.6;
 export const BCE_MSG = "BCEMsg";
 export const BCX_ORIGINAL_MESSAGE = "BCX_ORIGINAL_MESSAGE";
-export const BEEP_CLICK_ACTIONS = Object.freeze({
-    /** @type {"FriendList"} */
-    FriendList: "FriendList",
-  });
 export const CLOSINGBRACKETINDICATOR = "\\uf130\\u005d";
 export const DARK_INPUT_CLASS = "bce-dark-input";
 export const DEFAULT_WARDROBE_SIZE = 24;
@@ -245,7 +242,7 @@ export function fbcBeepNotify(title, text) {
 /**
  * @type {(text: string, duration?: number, properties?: Partial<ServerBeep>) => Promise<void>}
  */
-const fbcNotify = async (text, duration = 5000, properties = {}) => {
+export const fbcNotify = async (text, duration = 5000, properties = {}) => {
   await waitFor(() => !!Player && new Date(ServerBeep?.Timer || 0) < new Date());
 
   ServerBeep = {
@@ -525,100 +522,6 @@ createTimer(() => {
     sendHello(null, true);
   }
 }, 5000);
-
-async function friendPresenceNotifications() {
-  await waitFor(() => !!Player && ServerSocket && ServerIsConnected);
-
-  function checkFriends() {
-    if (!fbcSettings.friendPresenceNotifications && !fbcSettings.instantMessenger) {
-      return;
-    }
-    if (CurrentScreen === "FriendList" || CurrentScreen === "Relog" || CurrentScreen === "Login") {
-      return;
-    }
-    ServerSend("AccountQuery", { Query: "OnlineFriends" });
-  }
-  createTimer(checkFriends, 20000);
-
-  /** @type {Friend[]} */
-  let lastFriends = [];
-  registerSocketListener("AccountQueryResult", (data) => {
-    if (CurrentScreen === "FriendList" || CurrentScreen === "Relog" || CurrentScreen === "Login") {
-      return;
-    }
-    if (!fbcSettings.friendPresenceNotifications) {
-      return;
-    }
-    if (data.Query !== "OnlineFriends") {
-      return;
-    }
-    const friendMemberNumbers = data.Result.map((f) => f.MemberNumber),
-      offlineFriends = lastFriends.map((f) => f.MemberNumber).filter((f) => !friendMemberNumbers.includes(f)),
-      onlineFriends = friendMemberNumbers.filter((f) => !lastFriends.some((ff) => ff.MemberNumber === f));
-    if (onlineFriends.length) {
-      const list = onlineFriends
-        .map((f) => {
-          const { MemberNumber, MemberName } = data.Result.find((d) => d.MemberNumber === f) ?? {
-            MemberName: "",
-            MemberNumber: -1,
-          };
-          return `${MemberName} (${MemberNumber})`;
-        })
-        .join(", ");
-      if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
-        fbcChatNotify(displayText(`Now online: $list`, { $list: list }));
-      } else {
-        fbcNotify(displayText(`Now online: $list`, { $list: list }), 5000, {
-          ClickAction: BEEP_CLICK_ACTIONS.FriendList,
-        });
-      }
-    }
-    if (fbcSettings.friendOfflineNotifications && offlineFriends.length) {
-      const list = offlineFriends
-        .map((f) => {
-          const { MemberNumber, MemberName } = lastFriends.find((d) => d.MemberNumber === f) ?? {
-            MemberName: "",
-            MemberNumber: -1,
-          };
-          return `${MemberName} (${MemberNumber})`;
-        })
-        .join(", ");
-      if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
-        fbcChatNotify(displayText(`Now offline: $list`, { $list: list }));
-      } else {
-        fbcNotify(displayText(`Now offline: $list`, { $list: list }), 5000, {
-          ClickAction: BEEP_CLICK_ACTIONS.FriendList,
-        });
-      }
-    }
-    lastFriends = data.Result;
-  });
-
-  SDK.hookFunction(
-    "ServerClickBeep",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof ServerClickBeep>} args
-     */
-    (args, next) => {
-      if (
-        ServerBeep.Timer > Date.now() &&
-        MouseIn(CurrentScreen === "ChatRoom" ? 0 : 500, 0, 1000, 50) &&
-        CurrentScreen !== "FriendList"
-      ) {
-        // @ts-ignore - ClickAction is not in the original game, but we specify it above for ServerBeeps
-        switch (ServerBeep.ClickAction) {
-          case BEEP_CLICK_ACTIONS.FriendList:
-            ServerOpenFriendList();
-            return null;
-          default:
-            break;
-        }
-      }
-      return next(args);
-    }
-  );
-}
 
 function itemAntiCheat() {
   /** @type {Map<number, number>} */
