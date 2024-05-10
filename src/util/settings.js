@@ -2,9 +2,8 @@ import { debug, logInfo, logWarn, logError } from './logger';
 import { waitFor, isString, parseJSON, isNonNullObject, objEntries } from './util';
 import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE, sendHello, BCE_MAX_AROUSAL, BCE_COLOR_ADJUSTMENTS_CLASS_NAME, 
   loadExtendedWardrobe, removeCustomEffect, enableLeashing, disableLeashing, toySyncState, fbcBeepNotify,
-  DISCORD_INVITE_URL, beepChangelog } from '../index';
+  DISCORD_INVITE_URL, beepChangelog, settingsVersion } from '../index';
 
-const settingsVersion = 62;
 /**
  * @type {Record<keyof defaultSettings, string | boolean> & {version: number}}
  */
