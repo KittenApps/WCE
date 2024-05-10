@@ -118,3 +118,16 @@ export function parseJSON(jsonString) {
     return null;
   }
 }
+
+/** @type {(word: string) => URL | false} */
+export function bceParseUrl(word) {
+  try {
+    const url = new URL(word);
+    if (!["http:", "https:"].includes(url.protocol)) {
+      return false;
+    }
+    return url;
+  } catch {
+    return false;
+  }
+}
