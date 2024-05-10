@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES, ICONS, fbcChangelog, BCX } from "../index";
+import { SDK, HOOK_PRIORITIES, ICONS, fbcChangelog, BCX } from "..";
 import { waitFor, parseJSON } from "../util/util";
 import { debug, logInfo } from "../util/logger";
 import { fbcSettings } from "../util/settings";

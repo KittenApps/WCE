@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES, patchFunction } from '../index';
+import { SDK, HOOK_PRIORITIES, patchFunction } from '..';
 import { displayText } from '../util/localization';
 import { isNonNullObject } from '../util/util';
 

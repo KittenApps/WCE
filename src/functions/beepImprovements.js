@@ -1,4 +1,4 @@
-import { patchFunction, fbcBeepNotify } from "../index";
+import { patchFunction, fbcBeepNotify } from "..";
 import { displayText } from "../util/localization";
 
 export function beepImprovements() {

@@ -1,4 +1,4 @@
-import { SDK } from '../index';
+import { SDK } from '..';
 import { waitFor, objEntries } from '../util/util';
 import { logInfo, logWarn } from '../util/logger';
 
