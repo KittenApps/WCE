@@ -1,4 +1,4 @@
-import { isString } from '../index';
+import { isString } from './util';
 
 /** @type {{ level: "error" | "warn" | "info" | "debug", message: string }[]} */
 export const pastLogs = new Array(100);

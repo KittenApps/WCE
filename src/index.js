@@ -23,6 +23,7 @@
 // @ts-check
 
 import { debug, logInfo, logWarn, logError, pastLogs } from './util/logger';
+import { waitFor, sleep, isString, isNonNullObject, isChatMessage, isCharacter, isStringOrStringArray, isWardrobe, mustNum, deepCopy, objEntries, parseJSON } from './util/util';
 import { fbcSettings, defaultSettings, bceSaveSettings, settingsLoaded, postSettings, bceLoadSettings, isDefaultSettingKey } from './util/settings';
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
@@ -35,7 +36,7 @@ const fbcChangelog = `${FBC_VERSION} next
 6.1
 - improved r103 compatibility
 - removed fps limits/counter (now natively in base game in graphic preferences, page 2)
-- make anti garble bypass (in restrictions preferences) available on all difficulty levels
+- make anti garble bypass (in restrictions preferences) availa ble on all difficulty levels
 
 6.0
 - forked the project by Kitty Stella (129178)
@@ -783,20 +784,6 @@ async function functionIntegrityCheck() {
       deviatingHashes.push(func);
     }
   }
-}
-
-/**
- * @type {(func: () => boolean, cancelFunc?: () => boolean) => Promise<boolean>}
- */
-export async function waitFor(func, cancelFunc = () => false) {
-  while (!func()) {
-    if (cancelFunc()) {
-      return false;
-    }
-    // eslint-disable-next-line no-await-in-loop
-    await sleep(10);
-  }
-  return true;
 }
 
 function commonPatches() {
@@ -8698,111 +8685,6 @@ function createTimer(cb, intval) {
       return next(args);
     }
   );
-}
-
-/**
- * @param {number} ms
- */
-function sleep(ms) {
-  // eslint-disable-next-line no-promise-executor-return
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-/** @type {(s: unknown) => s is string} */
-export function isString(s) {
-  return typeof s === "string";
-}
-
-/** @type {(o: unknown) => o is Record<string, any>} */
-export function isNonNullObject(o) {
-  return !!o && typeof o === "object" && !Array.isArray(o);
-}
-
-/** @type {(m: unknown) => m is ServerChatRoomMessage} */
-function isChatMessage(m) {
-  return (
-    isNonNullObject(m) &&
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    typeof m.Type === "string" &&
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    typeof m.Content === "string"
-  );
-}
-
-/** @type {(c: unknown) => c is Character} */
-function isCharacter(c) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  return isNonNullObject(c) && typeof c.IsPlayer === "function";
-}
-
-/** @type {(c: unknown) => c is (string | string[])} */
-function isStringOrStringArray(c) {
-  return isString(c) || (Array.isArray(c) && c.every(isString));
-}
-
-/** @type {(o: unknown) => o is ItemBundle[][]} */
-function isWardrobe(o) {
-  return Array.isArray(o) && o.every((b) => isItemBundleArray(b) || b === null);
-}
-
-/** @type {(o: unknown) => o is ItemBundle[]} */
-function isItemBundleArray(o) {
-  return Array.isArray(o) && o.every(isItemBundle);
-}
-
-/** @type {(o: unknown) => o is ItemBundle} */
-function isItemBundle(o) {
-  return (
-    isNonNullObject(o) &&
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    typeof o.Name === "string" &&
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    typeof o.Group === "string"
-  );
-}
-
-/**
- * @param {number} [id]
- * @param {number} [def]
- */
-function mustNum(id, def = -Number.MAX_SAFE_INTEGER) {
-  return id ?? def;
-}
-
-/** @type {<T>(o: T) => T} */
-function deepCopy(o) {
-  // eslint-disable-next-line
-  return structuredClone(o);
-}
-
-/**
- * @template T
- * @param {T} obj
- */
-export function objEntries(obj) {
-  if (!isNonNullObject(obj)) {
-    return [];
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return /** @type {[keyof T, T[keyof T]][]} */ (Object.entries(obj));
-}
-
-/**
- * @template T
- * @param {string | null} jsonString
- * @throws {SyntaxError} If the string to parse is not valid JSON.
- */
-export function parseJSON(jsonString) {
-  if (jsonString === null) {
-    return null;
-  }
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return /** @type {T} */ (/** @type {unknown} */ (JSON.parse(jsonString)));
-  } catch (e) {
-    logError("parsing JSON", e);
-    return null;
-  }
 }
 
 // Confirm leaving the page to prevent accidental back button, refresh, or other navigation-related disruptions
