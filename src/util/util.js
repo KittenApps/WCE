@@ -131,3 +131,16 @@ export function bceParseUrl(word) {
     return false;
   }
 }
+
+/** @type {(text: string, x: number, y: number, width: number, color: string, backColor?: string) => void} */
+// eslint-disable-next-line no-undefined
+export function drawTextFitLeft(text, x, y, width, color, backColor = undefined) {
+  const ctx = window.MainCanvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("could not get canvas 2d context");
+  }
+  const bk = ctx.textAlign;
+  ctx.textAlign = "left";
+  DrawTextFit(text, x, y, width, color, backColor);
+  ctx.textAlign = bk;
+}
