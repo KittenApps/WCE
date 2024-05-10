@@ -45,6 +45,7 @@ import { antiGarbling } from './functions/antiGarbling';
 import { automaticExpressions } from './functions/automaticExpressions';
 import { alternateArousal } from './functions/alternateArousal';
 import { autoGhostBroadcast } from './functions/autoGhostBroadcast';
+import { blindWithoutGlasses } from './functions/blindWithoutGlasses';
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
@@ -524,56 +525,6 @@ createTimer(() => {
     sendHello(null, true);
   }
 }, 5000);
-
-async function blindWithoutGlasses() {
-  await waitFor(() => !!Player && !!Player.Appearance);
-
-  function checkBlindness() {
-    if (!fbcSettings.blindWithoutGlasses) {
-      return;
-    }
-
-    const glasses = [
-        "Glasses1",
-        "Glasses2",
-        "Glasses3",
-        "Glasses4",
-        "Glasses5",
-        "Glasses6",
-        "SunGlasses1",
-        "SunGlasses2",
-        "SunGlassesClear",
-        "CatGlasses",
-        "VGlasses",
-        "GradientSunglasses",
-        "FuturisticVisor",
-        "InteractiveVisor",
-        "InteractiveVRHeadset",
-        "FuturisticMask",
-        "Goggles",
-      ],
-      hasGlasses = !!Player.Appearance.find((a) => glasses.includes(a.Asset.Name));
-
-    if (hasGlasses) {
-      if (removeCustomEffect("BlurLight")) {
-        fbcChatNotify(displayText("Having recovered your glasses you can see again!"));
-      }
-    } else if (addCustomEffect("BlurLight")) {
-      fbcChatNotify(displayText("Having lost your glasses your eyesight is impaired!"));
-    }
-  }
-
-  SDK.hookFunction(
-    "GameRun",
-    HOOK_PRIORITIES.Observe,
-    /**
-     * @param {Parameters<typeof GameRun>} args
-     */ (args, next) => {
-      checkBlindness();
-      return next(args);
-    }
-  );
-}
 
 async function friendPresenceNotifications() {
   await waitFor(() => !!Player && ServerSocket && ServerIsConnected);
@@ -2229,7 +2180,7 @@ function nicknames() {
 }
 
 /** @type {(effect: EffectName) => boolean} */
-function addCustomEffect(effect) {
+export function addCustomEffect(effect) {
   let updated = false;
   const emoticon = Player.Appearance.find((a) => a.Asset.Name === "Emoticon");
   if (!emoticon) {
