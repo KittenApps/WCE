@@ -1,8 +1,10 @@
 {
 	"type": "module",
 	"scripts": {
+		"start": "esbuild src/index.js --bundle --outfile=./dist/fbc.js --format=esm --sourcemap --watch --serve=4000 --servedir=./dist",
+		"build": "esbuild src/index.js --bundle --outfile=./dist/fbc.js --format=esm --sourcemap",
 		"prettier": "npx prettier fbc.js --write --trailing-comma es5 --print-width 120",
-		"serve": "npx http-server -p 4000 -c-1 --cors"
+		"serve": "npx http-server ./dist -p 4000 -c-1 --cors"
 	},
 	"devDependencies": {
 		"@total-typescript/ts-reset": "^0.5.1",
@@ -11,6 +13,7 @@
 		"@typescript-eslint/parser": "^5.62.0",
 		"bc-stubs": "^103.0.0",
 		"dexie": "^3.2.7",
+		"esbuild": "^0.21.1",
 		"typescript": "^5.4.5"
 	}
 }

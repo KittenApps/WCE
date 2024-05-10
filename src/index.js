@@ -64,7 +64,7 @@ const SDK = bcModSdk.registerMod(
     allowReplace: false,
   }
 );
-/** @type {import('./types/bcxExternalInterface').BCX_ModAPI | null} */
+/** @type {import('../types/bcxExternalInterface').BCX_ModAPI | null} */
 let BCX = null;
 
 window.FBC_VERSION = FBC_VERSION;
@@ -8452,17 +8452,17 @@ function toySync() {
 
   const onload = async () => {
     logInfo("Loaded Buttplug.io");
-    /** @type {import('./types/buttplug.io.1.0.17')} */
+    /** @type {import('../types/buttplug.io.1.0.17')} */
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const bp = frame.contentWindow.Buttplug;
 
-    /** @type {import('./types/buttplug.io.1.0.17').ButtplugClient} */
+    /** @type {import('../types/buttplug.io.1.0.17').ButtplugClient} */
     const client = new bp.ButtplugClient("BceToySync");
     client.addListener(
       "deviceadded",
       (
-        /** @type {import('./types/buttplug.io.1.0.17').ButtplugClientDevice} */
+        /** @type {import('../types/buttplug.io.1.0.17').ButtplugClientDevice} */
         device
       ) => {
         debug("Device connected", device);
@@ -8480,7 +8480,7 @@ function toySync() {
     client.addListener(
       "deviceremoved",
       (
-        /** @type {import('./types/buttplug.io.1.0.17').ButtplugClientDevice} */
+        /** @type {import('../types/buttplug.io.1.0.17').ButtplugClientDevice} */
         device
       ) => {
         debug("Device disconnected", device);
