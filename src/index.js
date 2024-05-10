@@ -1,6 +1,7 @@
 "use strict";
 
 /**
+ * @license GPL-3.0-or-later
  *     BCE/FBC
  *  Copyright (C) 2024  Sid
  *

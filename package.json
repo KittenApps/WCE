@@ -1,8 +1,8 @@
 {
 	"type": "module",
 	"scripts": {
-		"start": "esbuild src/index.js --bundle --outfile=./dist/fbc.js --format=esm --sourcemap --watch --serve=4000 --servedir=./dist",
-		"build": "esbuild src/index.js --bundle --outfile=./dist/fbc.js --format=esm --sourcemap",
+		"start": "esbuild src/index.js --bundle --outfile=./dist/fbc.js --format=esm --sourcemap --legal-comments=inline --watch --serve=4000 --servedir=./dist",
+		"build": "esbuild src/index.js --bundle --outfile=./dist/fbc.js --format=esm --sourcemap --legal-comments=inline",
 		"prettier": "npx prettier fbc.js --write --trailing-comma es5 --print-width 120",
 		"serve": "npx http-server ./dist -p 4000 -c-1 --cors"
 	},
