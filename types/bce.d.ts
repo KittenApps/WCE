@@ -1,4 +1,4 @@
-import { ModSDKGlobalAPI } from "./types/bcModSdk";
+import { ModSDKGlobalAPI } from "./bcModSdk";
 
 export {};
 
@@ -34,7 +34,7 @@ declare global {
   var bce_EventExpressions: { [key: string]: Expression };
   var StartBcUtil: () => void;
   var bcx:
-  | import("./types/bcxExternalInterface").BCX_ConsoleInterface
+  | import("./bcxExternalInterface").BCX_ConsoleInterface
   | undefined;
   var fbcDisplayText: (
     original: string,
@@ -71,7 +71,7 @@ declare global {
   // extends BC Character interface with additional FBC properties
   interface Character {
     FBC: string;
-    FBCOtherAddons?: readonly import("./types/bcModSdk").ModSDKModInfo[];
+    FBCOtherAddons?: readonly import("./bcModSdk").ModSDKModInfo[];
     BCEArousal: boolean;
     BCEBlockAntiGarble: boolean;
     BCECapabilities: readonly string[];
@@ -130,7 +130,7 @@ declare global {
     enjoyment?: number;
     activity?: BCEActivity;
     blockAntiGarble: boolean;
-    otherAddons?: readonly import("./types/bcModSdk").ModSDKModInfo[];
+    otherAddons?: readonly import("./bcModSdk").ModSDKModInfo[];
   };
   type SettingsCategory =
     | "performance"
@@ -239,7 +239,7 @@ declare global {
     LastIntensity?: number;
   };
   type FBCToySyncState = {
-    client?: import("./types/buttplug.io.1.0.17").ButtplugClient;
+    client?: import("./buttplug.io.1.0.17").ButtplugClient;
     deviceSettings: Map<string, FBCToySetting>;
   };
 }
