@@ -144,3 +144,17 @@ export function drawTextFitLeft(text, x, y, width, color, backColor = undefined)
   DrawTextFit(text, x, y, width, color, backColor);
   ctx.textAlign = bk;
 }
+
+/** @type {(x: number, y: number, width: number, text: string, align: "left" | "center") => void} */
+export function drawTooltip(x, y, width, text, align) {
+  const canvas = window.MainCanvas.getContext("2d");
+  if (!canvas) {
+    throw new Error("could not get canvas 2d context");
+  }
+  const bak = canvas.textAlign;
+  canvas.textAlign = align;
+  DrawRect(x, y, width, 65, "#FFFF88");
+  DrawEmptyRect(x, y, width, 65, "black", 2);
+  DrawTextFit(text, align === "left" ? x + 3 : x + width / 2, y + 33, width - 6, "black");
+  canvas.textAlign = bak;
+}

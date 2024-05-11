@@ -23,7 +23,7 @@
 // @ts-check
 
 import { debug, logInfo, logWarn, logError, pastLogs } from './util/logger';
-import { waitFor, sleep, isString, isNonNullObject, isChatMessage, objEntries, parseJSON, bceParseUrl } from './util/util';
+import { waitFor, sleep, objEntries, bceParseUrl } from './util/util';
 import { fbcSettings, settingsLoaded, postSettings, bceLoadSettings } from './util/settings';
 import { displayText } from './util/localization';
 import { antiGarbleCheat } from './functions/antiGarbleCheat';
@@ -60,6 +60,7 @@ import { pastProfiles } from './functions/pastProfiles';
 import { pendingMessages } from './functions/pendingMessages';
 import { hideHiddenItemsIcon } from './functions/hideHiddenItemsIcon';
 import { richOnlineProfile } from './functions/richOnlineProfile';
+import { crafting } from './functions/crafting';
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
@@ -963,126 +964,6 @@ function toySync() {
   document.body.appendChild(frame);
 }
 
-async function crafting() {
-  await waitFor(() => Array.isArray(Commands) && Commands.length > 0);
-
-  const importPosition = /** @type {const} */ ([1485, 15, 90, 90]);
-  const exportPosition = /** @type {const} */ ([1585, 15, 90, 90]);
-
-  function importCraft() {
-    FUSAM.modals.open({
-      prompt: displayText("Paste the craft here"),
-      callback: (action, str) => {
-        if (action !== "submit" || !str) {
-          return;
-        }
-        try {
-          const craft = /** @type {CraftingItem} */ (parseJSON(LZString.decompressFromBase64(str)));
-          if (!isNonNullObject(craft)) {
-            logError(craft);
-            throw new Error(`invalid craft type ${typeof craft} ${str}`);
-          }
-          for (const [key, value] of objEntries(craft)) {
-            if (
-              !isString(value) &&
-              !Number.isInteger(value) &&
-              value !== false &&
-              value !== true &&
-              value !== null &&
-              !isNonNullObject(value)
-            ) {
-              logWarn("potentially invalid craft bundle:", key, "was", value);
-            }
-          }
-          CraftingSelectedItem = CraftingConvertItemToSelected(craft);
-          CraftingModeSet("Name");
-        } catch (e) {
-          logError("importing craft", e);
-        }
-      },
-      input: {
-        initial: "",
-        readonly: false,
-        type: "textarea",
-      },
-    });
-  }
-
-  SDK.hookFunction(
-    "CraftingClick",
-    HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof CraftingClick>} args
-     */
-    (args, next) => {
-      switch (CraftingMode) {
-        case "Name":
-          if (MouseIn(...exportPosition)) {
-            FUSAM.modals.open({
-              prompt: displayText("Copy the craft here"),
-              input: {
-                initial: LZString.compressToBase64(JSON.stringify(CraftingConvertSelectedToItem())),
-                readonly: true,
-                type: "textarea",
-              },
-              callback: () => {
-                debug("exported craft");
-              },
-            });
-          } else if (MouseIn(...importPosition)) {
-            importCraft();
-          }
-          break;
-        default:
-          break;
-      }
-      return next(args);
-    }
-  );
-
-  SDK.hookFunction(
-    "CraftingRun",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof CraftingRun>} args
-     */
-    (args, next) => {
-      const ret = next(args);
-      if (CraftingMode === "Name") {
-        DrawButton(...importPosition, displayText("Import"), "white");
-        DrawButton(...exportPosition, displayText("Export"), "white");
-      }
-      return ret;
-    }
-  );
-
-  SDK.hookFunction(
-    "DrawItemPreview",
-    HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof DrawItemPreview>} args
-     */
-    (args, next) => {
-      const ret = next(args);
-      const [item, , x, y] = args;
-      if (item) {
-        const { Craft } = item;
-        if (MouseIn(x, y, DialogInventoryGrid.itemWidth, DialogInventoryGrid.itemHeight) && Craft) {
-          drawTooltip(x, y, DialogInventoryGrid.itemWidth, displayText(Craft.Property), "center");
-          drawTooltip(
-            1000,
-            y - 70,
-            975,
-            `${displayText("Description:")} ${Craft.Description || "<no description>"}`,
-            "left"
-          );
-        }
-      }
-      return ret;
-    }
-  );
-}
-
 function numericArousalMeters() {
   let isExpanded = false;
   let increasing = false;
@@ -1140,20 +1021,6 @@ function numericArousalMeters() {
       return ret;
     }
   );
-}
-
-/** @type {(x: number, y: number, width: number, text: string, align: "left" | "center") => void} */
-export function drawTooltip(x, y, width, text, align) {
-  const canvas = window.MainCanvas.getContext("2d");
-  if (!canvas) {
-    throw new Error("could not get canvas 2d context");
-  }
-  const bak = canvas.textAlign;
-  canvas.textAlign = align;
-  DrawRect(x, y, width, 65, "#FFFF88");
-  DrawEmptyRect(x, y, width, 65, "black", 2);
-  DrawTextFit(text, align === "left" ? x + 3 : x + width / 2, y + 33, width - 6, "black");
-  canvas.textAlign = bak;
 }
 
 /** @type {(cb: () => void, intval: number) => void} */

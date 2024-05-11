@@ -1,5 +1,5 @@
-import { toySyncState, BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL, ICONS, drawTooltip } from "..";
-import { waitFor, objEntries } from "../util/util";
+import { toySyncState, BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL, ICONS } from "..";
+import { waitFor, objEntries, drawTooltip } from "../util/util";
 import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey } from "../util/settings";
 import { displayText } from "../util/localization";
