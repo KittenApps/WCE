@@ -1,4 +1,4 @@
-import { toySyncState } from "./toySync"; 
+import { toySyncState } from "./toySync";
 import { ICONS } from "../util/constants";
 import { waitFor, objEntries, drawTooltip } from "../util/utils";
 import { debug, logWarn, logError } from "../util/logger";
@@ -316,7 +316,7 @@ export async function settingsPage() {
     run: PreferenceSubscreenBCESettingsRun,
     exit: PreferenceSubscreenBCESettingsExit,
     load: PreferenceSubscreenBCESettingsLoad,
-    unload: () => {}
+    unload: () => {},
   });
 
   /** @type {(e: KeyboardEvent) => void} */

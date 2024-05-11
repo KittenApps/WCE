@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES, skippedFunctionality  } from "../util/modding";
+import { SDK, HOOK_PRIORITIES, skippedFunctionality } from "../util/modding";
 import { ICONS } from "../util/constants";
 import { BCX } from "./hookBCXAPI";
 import { waitFor, parseJSON, fbcChatNotify, objEntries } from "../util/utils";

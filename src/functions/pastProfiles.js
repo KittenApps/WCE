@@ -1,6 +1,14 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
-import { waitFor, deepCopy, parseJSON, isCharacter, isNonNullObject, drawTextFitLeft, fbcChatNotify } from "../util/utils";
+import {
+  waitFor,
+  deepCopy,
+  parseJSON,
+  isCharacter,
+  isNonNullObject,
+  drawTextFitLeft,
+  fbcChatNotify,
+} from "../util/utils";
 import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { displayText } from "../util/localization";
 

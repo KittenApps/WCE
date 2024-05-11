@@ -55,8 +55,8 @@ export function sendHello(target = null, requestReply = false) {
 }
 
 export function shareAddons() {
-  waitFor(() => ServerIsConnected && ServerPlayerIsInChatRoom())
-  
+  waitFor(() => ServerIsConnected && ServerPlayerIsInChatRoom());
+
   sendHello(null, true);
 
   createTimer(() => {

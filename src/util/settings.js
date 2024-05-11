@@ -2,10 +2,26 @@ import { sendHello } from "../functions/shareAddons";
 import { toySyncState } from "../functions/toySync";
 import { fbcBeepNotify } from "./hooks";
 import { debug, logInfo, logWarn, logError } from "./logger";
-import { waitFor, sleep, isString, parseJSON, isNonNullObject, objEntries, removeCustomEffect, enableLeashing, disableLeashing } from "./utils";
+import {
+  waitFor,
+  sleep,
+  isString,
+  parseJSON,
+  isNonNullObject,
+  objEntries,
+  removeCustomEffect,
+  enableLeashing,
+  disableLeashing,
+} from "./utils";
 import { loadExtendedWardrobe } from "../functions/extendedWardrobe";
 import { settingsVersion, fbcChangelog } from "./constants";
-import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE, BCE_MAX_AROUSAL, BCE_COLOR_ADJUSTMENTS_CLASS_NAME, DISCORD_INVITE_URL } from "./constants";
+import {
+  DEFAULT_WARDROBE_SIZE,
+  EXPANDED_WARDROBE_SIZE,
+  BCE_MAX_AROUSAL,
+  BCE_COLOR_ADJUSTMENTS_CLASS_NAME,
+  DISCORD_INVITE_URL,
+} from "./constants";
 import { displayText } from "./localization";
 
 /**
