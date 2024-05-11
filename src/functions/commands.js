@@ -1,11 +1,72 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
+import { SDK, HOOK_PRIORITIES, skippedFunctionality  } from "../util/modding";
 import { ICONS } from "../util/constants";
 import { BCX } from "./hookBCXAPI";
-import { waitFor, parseJSON, fbcChatNotify } from "../util/utils";
-import { debug, logInfo } from "../util/logger";
+import { waitFor, parseJSON, fbcChatNotify, objEntries } from "../util/utils";
+import { debug, logInfo, pastLogs } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
-import { fbcChangelog } from "../util/constants";
+import { fbcChangelog, SUPPORTED_GAME_VERSIONS } from "../util/constants";
+import { toySyncState } from "./toySync";
+import { incompleteFunctions } from "../registerFunctions";
+import { deviatingHashes } from "./functionIntegrityCheck";
+
+/**
+ * @param {boolean} [copy] - Whether to copy the report to the clipboard
+ */
+export async function fbcDebug(copy) {
+  /** @type {Map<string, string>} */
+  const info = new Map();
+  info.set("Browser", navigator.userAgent);
+  info.set("Game Version", `${GameVersion}${SUPPORTED_GAME_VERSIONS.includes(GameVersion) ? "" : " (unsupported)"}`);
+  info.set("WebGL Version", GLVersion);
+  info.set("FBC Version", FBC_VERSION);
+  info.set("Loaded via FUSAM", typeof FUSAM === "object" && FUSAM?.addons?.FBC ? "Yes" : "No");
+  info.set(
+    "FBC Enabled Settings",
+    `\n- ${objEntries(fbcSettings)
+      .filter(([k, v]) => v || k === "version")
+      .map(([k, v]) => `${k}: ${v.toString()}`)
+      .join("\n- ")}`
+  );
+  if (toySyncState.client?.Connected) {
+    info.set(
+      "Buttplug.io Devices",
+      toySyncState.client.Devices.map((d) => `${d.Name} (${d.AllowedMessages.join(",")})`).join(", ")
+    );
+  }
+  info.set(
+    "SDK Mods",
+    `\n- ${bcModSdk
+      .getModsInfo()
+      .map((m) => `${m.name} @ ${m.version}`)
+      .join("\n- ")}`
+  );
+  info.set("Incomplete Functions", incompleteFunctions.join(", "));
+  info.set("Modified Functions (non-SDK)", deviatingHashes.join(", "));
+  info.set("Skipped Functionality for Compatibility", `\n- ${skippedFunctionality.join("\n- ")}`);
+  info.set(
+    "Log",
+    pastLogs
+      .filter((v) => v)
+      .map((v) => `[${v.level.toUpperCase()}] ${v.message}`)
+      .join("\n")
+  );
+  const print = Array.from(info)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join("\n");
+  if (copy) {
+    fbcChatNotify(`${print}\n\n**The report has been copied to your clipboard.**`);
+    // Not using FBC's debug() to avoid the report ending up on future reports
+    console.debug(`${print}\n\n**The report has been copied to your clipboard.**`);
+    await navigator.clipboard.writeText(print);
+  }
+  if (skippedFunctionality.length > 0) {
+    fbcChatNotify(
+      "If you are running another addon that modifies the game, but is not listed above, please tell its developer to use https://github.com/Jomshir98/bondage-club-mod-sdk to hook into the game instead. This is a very cheap and easy way for addon developers to almost guarantee compatibility with other addons."
+    );
+  }
+  return print;
+}
 
 /**
  * @param {string | null} target

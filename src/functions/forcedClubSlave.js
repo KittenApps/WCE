@@ -1,6 +1,6 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { BCX } from "./hookBCXAPI";
-import { waitFor, isCharacter } from "../util/utils";
+import { waitFor, isCharacter, fbcSendAction } from "../util/utils";
 import { displayText } from "../util/localization";
 import { logError } from "../util/logger";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
