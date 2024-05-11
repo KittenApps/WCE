@@ -1,4 +1,4 @@
-import { sendHello } from "..";
+import { sendHello } from "../functions/shareAddons";
 import { toySyncState } from "../functions/toySync";
 import { fbcBeepNotify } from "./hooks";
 import { debug, logInfo, logWarn, logError } from "./logger";

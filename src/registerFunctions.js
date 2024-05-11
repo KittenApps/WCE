@@ -40,6 +40,7 @@ import { numericArousalMeters } from "./functions/numericArousalMeters";
 import { appendSocketListenersToInit } from "./functions/appendSocketListenersToInit";
 import { nicknames } from "./functions/nicknames";
 import { hookBCXAPI } from "./functions/hookBCXAPI";
+import { shareAddons } from "./functions/shareAddons";
 import { toySync } from "./functions/toySync";
 
 /** @type {string[]} */
@@ -157,5 +158,6 @@ export async function registerAllFunctions() {
   registerFunction(customContentDomainCheck, "customContentDomainCheck");
   registerFunction(numericArousalMeters, "numericArousalMeters");
   registerFunction(richOnlineProfile, "richOnlineProfile");
+  registerFunction(shareAddons, "shareAddons");
   funcsRegistered = "enable";
 }

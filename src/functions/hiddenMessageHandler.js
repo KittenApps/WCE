@@ -1,4 +1,4 @@
-import { sendHello } from "..";
+import { sendHello } from "./shareAddons";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { waitFor } from "../util/utils";
 import { debug, logWarn } from "../util/logger";
