@@ -273,7 +273,7 @@ async function fbcDebug(copy) {
 window.fbcDebug = fbcDebug;
 FUSAM.registerDebugMethod("FBC", fbcDebug);
 
-registerAllFunctions();
+await registerAllFunctions();
 
 // Post ready when in a chat room
 await fbcNotify(`For Better Club v${window.FBC_VERSION} Loaded`);
