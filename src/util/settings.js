@@ -12,6 +12,7 @@ import {
   removeCustomEffect,
   enableLeashing,
   disableLeashing,
+  fbcChatNotify,
 } from "./utils";
 import { loadExtendedWardrobe } from "../functions/extendedWardrobe";
 import { settingsVersion, fbcChangelog } from "./constants";

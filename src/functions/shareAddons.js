@@ -1,7 +1,7 @@
 import { fbcSettings, settingsLoaded } from "../util/settings";
 import { waitFor } from "../util/utils";
 import { createTimer } from "../util/hooks";
-import { HIDDEN, BCE_MSG, MESSAGE_TYPES } from "../util/constants";
+import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 
 const CAPABILITIES = /** @type {const} */ (["clubslave", "antigarble"]);
 

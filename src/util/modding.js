@@ -1,6 +1,6 @@
 import { deviatingHashes } from "../functions/functionIntegrityCheck";
 import { logWarn } from "./logger";
-import { SUPPORTED_GAME_VERSIONS } from "./constants";
+import { SUPPORTED_GAME_VERSIONS, FBC_VERSION } from "./constants";
 
 export const HOOK_PRIORITIES = /** @type {const} */ ({
   Top: 11,

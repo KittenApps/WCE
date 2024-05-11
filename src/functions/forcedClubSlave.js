@@ -5,6 +5,54 @@ import { displayText } from "../util/localization";
 import { logError } from "../util/logger";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 
+export const bceStartClubSlave = async () => {
+  const managementScreen = "Management";
+
+  if (BCX?.getRuleState("block_club_slave_work")?.isEnforced) {
+    fbcSendAction(
+      displayText(`BCX rules forbid $PlayerName from becoming a Club Slave.`, {
+        $PlayerName: CharacterNickname(Player),
+      })
+    );
+    return;
+  }
+
+  fbcSendAction(
+    displayText(`$PlayerName gets grabbed by two maids and escorted to management to serve as a Club Slave.`, {
+      $PlayerName: CharacterNickname(Player),
+    })
+  );
+
+  if (!ChatRoomData) {
+    logError("ChatRoomData is null in bceStartClubSlave. Was it called outside a chat room?");
+    return;
+  }
+
+  const room = ChatRoomData.Name;
+  ChatRoomClearAllElements();
+  ServerSend("ChatRoomLeave", "");
+  ChatRoomLeashPlayer = null;
+  CommonSetScreen("Room", managementScreen);
+
+  await waitFor(() => !!ManagementMistress);
+  if (!ManagementMistress) {
+    throw new Error("ManagementMistress is missing");
+  }
+
+  PoseSetActive(Player, "Kneel", false);
+
+  // eslint-disable-next-line require-atomic-updates
+  ManagementMistress.Stage = "320";
+  ManagementMistress.CurrentDialog = displayText(
+    "(You get grabbed by a pair of maids and brought to management.) Your owner wants you to be a Club Slave. Now strip."
+  );
+  CharacterSetCurrent(ManagementMistress);
+
+  await waitFor(() => CurrentScreen !== managementScreen || !CurrentCharacter);
+
+  window.bceGotoRoom(room);
+};
+
 export async function forcedClubSlave() {
   const patch = (async function patchDialog() {
     await waitFor(
@@ -123,54 +171,7 @@ export async function forcedClubSlave() {
     }
   };
 
-  window.bceStartClubSlave = async () => {
-    const managementScreen = "Management";
-
-    if (BCX?.getRuleState("block_club_slave_work")?.isEnforced) {
-      fbcSendAction(
-        displayText(`BCX rules forbid $PlayerName from becoming a Club Slave.`, {
-          $PlayerName: CharacterNickname(Player),
-        })
-      );
-      return;
-    }
-
-    fbcSendAction(
-      displayText(`$PlayerName gets grabbed by two maids and escorted to management to serve as a Club Slave.`, {
-        $PlayerName: CharacterNickname(Player),
-      })
-    );
-
-    if (!ChatRoomData) {
-      logError("ChatRoomData is null in bceStartClubSlave. Was it called outside a chat room?");
-      return;
-    }
-
-    const room = ChatRoomData.Name;
-    ChatRoomClearAllElements();
-    ServerSend("ChatRoomLeave", "");
-    ChatRoomLeashPlayer = null;
-    CommonSetScreen("Room", managementScreen);
-
-    await waitFor(() => !!ManagementMistress);
-    if (!ManagementMistress) {
-      throw new Error("ManagementMistress is missing");
-    }
-
-    PoseSetActive(Player, "Kneel", false);
-
-    // eslint-disable-next-line require-atomic-updates
-    ManagementMistress.Stage = "320";
-    ManagementMistress.CurrentDialog = displayText(
-      "(You get grabbed by a pair of maids and brought to management.) Your owner wants you to be a Club Slave. Now strip."
-    );
-    CharacterSetCurrent(ManagementMistress);
-
-    await waitFor(() => CurrentScreen !== managementScreen || !CurrentCharacter);
-
-    window.bceGotoRoom(room);
-  };
-
+  window.bceStartClubSlave = bceStartClubSlave;
   window.ChatRoombceSendToClubSlavery = window.bceSendToClubSlavery;
   window.ChatRoombceCanSendToClubSlavery = window.bceCanSendToClubSlavery;
 

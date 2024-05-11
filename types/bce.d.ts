@@ -28,7 +28,6 @@ declare global {
   var ChatRoombceSendToClubSlavery: () => void;
   var ChatRoombceCanSendToClubSlavery: () => boolean;
   var bceGotoRoom: (room: string) => void;
-  var InterfaceTextGet: (msg: string) => string;
   var bce_ArousalExpressionStages: ArousalExpressionStages;
   var bce_ActivityTriggers: ActivityTrigger[];
   var bce_EventExpressions: { [key: string]: Expression };
@@ -43,6 +42,8 @@ declare global {
   var bceStripBeepMetadata: (text: string) => string;
   var bcModSdk: ModSDKGlobalAPI | undefined;
   var FUSAM: FUSAMPublicAPI | undefined;
+  var InterfaceTextGet: (msg: string) => string;
+
   type FUSAMPublicAPI = {
     present: true;
     addons: Record<string, FUSAMAddonState>;

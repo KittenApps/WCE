@@ -23,7 +23,7 @@
 // @ts-check
 
 import { waitFor, fbcChatNotify, fbcNotify, fbcSendAction } from "./util/utils";
-import { fbcSettings, fbcSettingValue } from "./util/settings";
+import { fbcSettingValue } from "./util/settings";
 import { fbcDisplayText } from "./util/localization";
 import { registerAllFunctions } from "./registerFunctions";
 import { FBC_VERSION } from "./util/constants";
@@ -44,7 +44,6 @@ window.fbcDisplayText = fbcDisplayText;
 window.fbcChatNotify = fbcChatNotify;
 window.fbcSendAction = fbcSendAction;
 window.fbcSettingValue = fbcSettingValue;
-window.bceAnimationEngineEnabled = () => !!fbcSettings.animationEngine;
 // Expressions init method for custom expressions (here to not break customizer script)
 // eslint-disable-next-line camelcase
 window.bce_initializeDefaultExpression = () => {};

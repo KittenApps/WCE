@@ -48,6 +48,8 @@ export async function automaticExpressions() {
     "Resetting blush, eyes, and eyebrows after struggling"
   );
 
+  window.bceAnimationEngineEnabled = () => !!fbcSettings.animationEngine;
+
   SDK.hookFunction(
     "StruggleMinigameStop",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
@@ -55,7 +57,7 @@ export async function automaticExpressions() {
      * @param {Parameters<typeof StruggleMinigameStop>} args
      */
     (args, next) => {
-      if (bceAnimationEngineEnabled()) {
+      if (fbcSettings.animationEngine) {
         // eslint-disable-next-line no-undefined
         StruggleExpressionStore = undefined;
         resetExpressionQueue([GAME_TIMED_EVENT_TYPE], [MANUAL_OVERRIDE_EVENT_TYPE]);
@@ -1515,7 +1517,7 @@ export async function automaticExpressions() {
         }
         return;
       }
-      if (!bceAnimationEngineEnabled()) {
+      if (!fbcSettings.animationEngine) {
         fbcChatNotify(
           displayText(
             "Warning: animation engine in FBC is disabled. Pose may not be synchronized or set. Enable animation engine in FBC settings."
@@ -1574,7 +1576,7 @@ export async function automaticExpressions() {
         !isString(AssetGroup) ||
         (!isString(Expression) && Expression !== null) ||
         !C.IsPlayer() ||
-        !bceAnimationEngineEnabled()
+        !fbcSettings.animationEngine
       ) {
         return next(args);
       }
@@ -1630,7 +1632,7 @@ export async function automaticExpressions() {
           !isCharacter(C) ||
           (!isStringOrStringArray(Pose) && Pose !== null) ||
           !C.IsPlayer() ||
-          !bceAnimationEngineEnabled()
+          !fbcSettings.animationEngine
         ) {
           return next(args);
         }
@@ -1661,7 +1663,7 @@ export async function automaticExpressions() {
       logWarn(`data.Pose in ChatRoomSyncPose for ${data.MemberNumber?.toString()} is not an array`);
       return;
     }
-    if (!bceAnimationEngineEnabled()) {
+    if (!fbcSettings.animationEngine) {
       return;
     }
     if (data.MemberNumber === Player.MemberNumber) {
@@ -1673,7 +1675,7 @@ export async function automaticExpressions() {
     if (data === null || !isNonNullObject(data)) {
       return;
     }
-    if (!bceAnimationEngineEnabled()) {
+    if (!fbcSettings.animationEngine) {
       return;
     }
     if (data.Character?.MemberNumber === Player.MemberNumber) {
@@ -1686,7 +1688,7 @@ export async function automaticExpressions() {
   // This is called once per interval to check for expression changes
   // eslint-disable-next-line complexity
   function CustomArousalExpression() {
-    if (!bceAnimationEngineEnabled() || !Player?.AppearanceLayers) {
+    if (!fbcSettings.animationEngine || !Player?.AppearanceLayers) {
       return;
     }
 

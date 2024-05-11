@@ -3,6 +3,7 @@ import { registerSocketListener } from "./appendSocketListenersToInit";
 import { waitFor } from "../util/utils";
 import { debug, logWarn } from "../util/logger";
 import { HIDDEN, MESSAGE_TYPES } from "../util/constants";
+import { bceStartClubSlave } from "./forcedClubSlave";
 
 export async function hiddenMessageHandler() {
   await waitFor(() => ServerSocket && ServerIsConnected);
