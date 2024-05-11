@@ -1,3 +1,4 @@
 node_modules
 dist/fbc.*
+dist/wce.*
 .DS_Store
