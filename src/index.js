@@ -22,7 +22,7 @@
 /* eslint-disable no-inline-comments */
 // @ts-check
 
-import { debug, logInfo, logWarn, logError, pastLogs } from './util/logger';
+import { debug, logWarn, logError, pastLogs } from './util/logger';
 import { waitFor, sleep, objEntries, bceParseUrl } from './util/util';
 import { fbcSettings, settingsLoaded, postSettings, bceLoadSettings } from './util/settings';
 import { displayText } from './util/localization';
@@ -119,13 +119,10 @@ export const BCE_COLOR_ADJUSTMENTS_CLASS_NAME = "bce-colors";
 export const BCE_LICENSE = "https://gitlab.com/Sidiousious/bce/-/blob/main/LICENSE";
 export const BCE_MAX_AROUSAL = 99.6;
 export const BCE_MSG = "BCEMsg";
-export const BCX_ORIGINAL_MESSAGE = "BCX_ORIGINAL_MESSAGE";
-export const CLOSINGBRACKETINDICATOR = "\\uf130\\u005d";
 export const DARK_INPUT_CLASS = "bce-dark-input";
 export const DEFAULT_WARDROBE_SIZE = 24;
 export const EXPANDED_WARDROBE_SIZE = 96;
 export const HIDDEN = "Hidden";
-export const INPUT_WARN_CLASS = "bce-input-warn";
 export const MESSAGE_TYPES = Object.freeze({
     Activity: "Activity",
     ArousalSync: "ArousalSync",

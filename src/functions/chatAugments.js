@@ -1,7 +1,9 @@
-import { patchFunction, CLOSINGBRACKETINDICATOR, createTimer, processChatAugmentsForLine } from "..";
+import { patchFunction, createTimer, processChatAugmentsForLine } from "..";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 import { bceParseUrl } from "../util/util";
+
+const CLOSINGBRACKETINDICATOR = "\\uf130\\u005d";
 
 export function chatAugments() {
   // CTRL+Enter OOC implementation

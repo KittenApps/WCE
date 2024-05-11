@@ -4,6 +4,7 @@ import { fbcSettings, defaultSettings, bceSaveSettings } from "../util/settings"
 import { displayText } from "../util/localization";
 
 const GAGBYPASSINDICATOR = "\uf123";
+const BCX_ORIGINAL_MESSAGE = "BCX_ORIGINAL_MESSAGE";
 
 export async function antiGarbling() {
   await waitFor(() => !!SpeechGarbleByGagLevel);

@@ -1,4 +1,6 @@
-import { BCE_COLOR_ADJUSTMENTS_CLASS_NAME, DARK_INPUT_CLASS, INPUT_WARN_CLASS, WHISPER_CLASS } from '..';
+import { BCE_COLOR_ADJUSTMENTS_CLASS_NAME, DARK_INPUT_CLASS, WHISPER_CLASS } from '..';
+
+const INPUT_WARN_CLASS = "bce-input-warn";
 
 export function bceStyles() {
   const css = /* CSS */ `
