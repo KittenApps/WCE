@@ -9,3 +9,6 @@
     * [WCE with FUSAM loader](https://wce.netlify.app/wce-fusam-loader.user.js) (recommended): make sure to remove the old FUSAM loader
     * [WCE loader](https://wce.netlify.app/wce-loader.user.js) (without FUSAM): make sure you still load [FUSAM following their introductions](https://sidiousious.gitlab.io/bc-addon-loader/)
 3. Make sure that the old FBC version isn't loaded through FUSAM anymore
+
+
+*these instructions are for r104+ only, for a still with r103 compatible version use the [old loader](https://kittenapps.github.io/fbc-fork/fbc.loader.user.js)*
