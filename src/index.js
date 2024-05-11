@@ -23,7 +23,8 @@
 // @ts-check
 
 import { debug, logWarn, pastLogs } from "./util/logger";
-import { waitFor, sleep, objEntries, bceParseUrl, fbcChatNotify } from "./util/utils";
+import { createTimer } from "./util/hooks";
+import { waitFor, objEntries, bceParseUrl, fbcChatNotify, fbcNotify } from "./util/utils";
 import { fbcSettings, settingsLoaded, fbcSettingValue } from "./util/settings";
 import { displayText, fbcDisplayText } from "./util/localization";
 import { registerAllFunctions, incompleteFunctions } from "./registerFunctions";
@@ -102,36 +103,6 @@ export const patchFunction = (functionName, patches, affectedFunctionality) => {
 };
 
 window.fbcChatNotify = fbcChatNotify;
-
-/**
- * @type {(title: string, text: string) => void}
- */
-export function fbcBeepNotify(title, text) {
-  SDK.callOriginal("ServerAccountBeep", [
-    {
-      MemberNumber: Player.MemberNumber || -1,
-      BeepType: "",
-      MemberName: "FBC",
-      ChatRoomName: title,
-      Private: true,
-      Message: text,
-      ChatRoomSpace: "",
-    },
-  ]);
-}
-
-/**
- * @type {(text: string, duration?: number, properties?: Partial<ServerBeep>) => Promise<void>}
- */
-export const fbcNotify = async (text, duration = 5000, properties = {}) => {
-  await waitFor(() => !!Player && new Date(ServerBeep?.Timer || 0) < new Date());
-
-  ServerBeep = {
-    Timer: Date.now() + duration,
-    Message: text,
-    ...properties,
-  };
-};
 
 window.fbcSendAction = (text) => {
   ServerSend("ChatRoomChat", {
@@ -288,17 +259,6 @@ createTimer(() => {
   }
 }, 5000);
 
-export async function beepChangelog() {
-  await waitFor(() => !!Player?.AccountName);
-  await sleep(5000);
-  fbcBeepNotify(
-    displayText("FBC Changelog"),
-    displayText(`FBC has received significant updates since you last used it. See /fbcchangelog in a chatroom.`)
-  );
-  await waitFor(() => !!document.getElementById("TextAreaChatLog"));
-  fbcChatNotify(`For Better Club (FBC) changelog:\n${fbcChangelog}`);
-}
-
 /** @type {(url: URL) => "img" | "" | "none-img"} */
 function bceAllowedToEmbed(url) {
   const isTrustedOrigin =
@@ -449,25 +409,6 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
     chatMessageElement.appendChild(child);
   }
   chatMessageElement.setAttribute("bce-original-text", originalText);
-}
-
-/** @type {(cb: () => void, intval: number) => void} */
-export function createTimer(cb, intval) {
-  let lastTime = Date.now();
-  SDK.hookFunction(
-    "GameRun",
-    HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof GameRun>} args
-     */ (args, next) => {
-      const ts = Date.now();
-      if (ts - lastTime > intval) {
-        lastTime = ts;
-        cb();
-      }
-      return next(args);
-    }
-  );
 }
 
 // Confirm leaving the page to prevent accidental back button, refresh, or other navigation-related disruptions

@@ -1,4 +1,5 @@
-import { toySyncState, createTimer } from "..";
+import { toySyncState } from "..";
+import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { displayText } from "../util/localization";

@@ -1,4 +1,5 @@
-import { SDK, HOOK_PRIORITIES, fbcBeepNotify } from "..";
+import { SDK, HOOK_PRIORITIES } from "..";
+import { fbcBeepNotify } from "../util/hooks";
 import { waitFor, isWardrobe, parseJSON } from "../util/utils";
 import { logInfo, logError } from "../util/logger";
 import { fbcSettings } from "../util/settings";

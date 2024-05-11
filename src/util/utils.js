@@ -178,6 +178,19 @@ export const fbcChatNotify = (node) => {
   ChatRoomAppendChat(div);
 };
 
+/**
+ * @type {(text: string, duration?: number, properties?: Partial<ServerBeep>) => Promise<void>}
+ */
+export const fbcNotify = async (text, duration = 5000, properties = {}) => {
+  await waitFor(() => !!Player && new Date(ServerBeep?.Timer || 0) < new Date());
+
+  ServerBeep = {
+    Timer: Date.now() + duration,
+    Message: text,
+    ...properties,
+  };
+};
+
 /** @type {(effect: EffectName) => boolean} */
 export function addCustomEffect(effect) {
   let updated = false;

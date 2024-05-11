@@ -1,7 +1,8 @@
-import { SDK, HOOK_PRIORITIES, createTimer, fbcNotify } from "..";
+import { SDK, HOOK_PRIORITIES } from "..";
+import { createTimer } from "../util/hooks";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { fbcSettings } from "../util/settings";
-import { waitFor, fbcChatNotify } from "../util/utils";
+import { waitFor, fbcChatNotify, fbcNotify } from "../util/utils";
 import { displayText } from "../util/localization";
 
 const BEEP_CLICK_ACTIONS = Object.freeze({

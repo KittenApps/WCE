@@ -1,4 +1,5 @@
-import { SDK, HOOK_PRIORITIES, createTimer } from "..";
+import { SDK, HOOK_PRIORITIES } from "..";
+import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 
 export function autoStruggle() {

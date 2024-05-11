@@ -1,9 +1,11 @@
-import { sendHello, toySyncState, fbcBeepNotify, beepChangelog } from "..";
+import { sendHello, toySyncState } from "..";
+import { fbcBeepNotify } from "./hooks";
 import { debug, logInfo, logWarn, logError } from "./logger";
-import { waitFor, isString, parseJSON, isNonNullObject, objEntries, removeCustomEffect, enableLeashing, disableLeashing } from "./utils";
+import { waitFor, sleep, isString, parseJSON, isNonNullObject, objEntries, removeCustomEffect, enableLeashing, disableLeashing } from "./utils";
 import { loadExtendedWardrobe } from "../functions/extendedWardrobe";
-import { settingsVersion } from "./constants";
+import { settingsVersion, fbcChangelog } from "./constants";
 import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE, BCE_MAX_AROUSAL, BCE_COLOR_ADJUSTMENTS_CLASS_NAME, DISCORD_INVITE_URL } from "./constants";
+import { displayText } from "./localization";
 
 /**
  * @type {Record<keyof defaultSettings, string | boolean> & {version: number}}
@@ -808,6 +810,17 @@ export function postSettings() {
   bceSaveSettings();
 
   postSettingsHasRun = true;
+}
+
+async function beepChangelog() {
+  await waitFor(() => !!Player?.AccountName);
+  await sleep(5000);
+  fbcBeepNotify(
+    displayText("FBC Changelog"),
+    displayText(`FBC has received significant updates since you last used it. See /fbcchangelog in a chatroom.`)
+  );
+  await waitFor(() => !!document.getElementById("TextAreaChatLog"));
+  fbcChatNotify(`For Better Club (FBC) changelog:\n${fbcChangelog}`);
 }
 
 export const fbcSettingValue = (key) => {

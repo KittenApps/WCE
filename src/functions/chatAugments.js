@@ -1,7 +1,8 @@
-import { patchFunction, createTimer, processChatAugmentsForLine } from "..";
+import { patchFunction, processChatAugmentsForLine } from "..";
+import { createTimer } from "../util/hooks";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
-import { bceParseUrl, fbcChatNotify } from "../util/utils";
+import { bceParseUrl } from "../util/utils";
 
 const CLOSINGBRACKETINDICATOR = "\\uf130\\u005d";
 

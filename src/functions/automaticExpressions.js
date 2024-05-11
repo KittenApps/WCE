@@ -1,7 +1,8 @@
-import { patchFunction, SDK, HOOK_PRIORITIES, createTimer } from "..";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "..";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { BCX } from "./hookBCXAPI";
 import { waitFor, fbcChatNotify } from "../util/utils";
+import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 import {
   deepCopy,
