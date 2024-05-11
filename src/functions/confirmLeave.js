@@ -1,0 +1,30 @@
+import { toySyncState } from "./toySync";
+import { fbcSettings } from "../util/settings";
+
+export function confirmLeave(){
+   // Confirm leaving the page to prevent accidental back button, refresh, or other navigation-related disruptions
+   window.addEventListener(
+    "beforeunload",
+    (e) => {
+      if (toySyncState.client?.Connected) {
+        // Stop vibrating toys
+        for (const device of toySyncState.client.Devices.filter((d) => d.AllowedMessages.includes(0))) {
+          device.vibrate(0);
+        }
+      }
+      if (fbcSettings.confirmLeave) {
+        e.preventDefault();
+        // @ts-ignore - TS thinks it's private, pffft we don't respect that
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        ServerSocket.io.disconnect();
+        CommonSetScreen("Character", "Relog");
+        ServerSocket.io.connect();
+        return (e.returnValue = "Are you sure you want to leave the club?");
+      }
+      return null;
+    },
+    {
+      capture: true,
+    }
+  );
+}

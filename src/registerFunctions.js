@@ -41,6 +41,7 @@ import { appendSocketListenersToInit } from "./functions/appendSocketListenersTo
 import { nicknames } from "./functions/nicknames";
 import { hookBCXAPI } from "./functions/hookBCXAPI";
 import { shareAddons } from "./functions/shareAddons";
+import { confirmLeave } from "./functions/confirmLeave";
 import { toySync } from "./functions/toySync";
 
 /** @type {string[]} */
@@ -159,5 +160,6 @@ export async function registerAllFunctions() {
   registerFunction(numericArousalMeters, "numericArousalMeters");
   registerFunction(richOnlineProfile, "richOnlineProfile");
   registerFunction(shareAddons, "shareAddons");
+  registerFunction(confirmLeave, "confirmLeave");
   funcsRegistered = "enable";
 }
