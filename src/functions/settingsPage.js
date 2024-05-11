@@ -1,4 +1,4 @@
-import { toySyncState } from "..";
+import { toySyncState } from "./toySync"; 
 import { ICONS } from "../util/constants";
 import { waitFor, objEntries, drawTooltip } from "../util/utils";
 import { debug, logWarn, logError } from "../util/logger";

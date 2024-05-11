@@ -1,9 +1,13 @@
-import { toySyncState } from "..";
 import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { displayText } from "../util/localization";
 import { fbcChatNotify } from "../util/utils";
+
+/** @type {FBCToySyncState} */
+export const toySyncState = {
+  deviceSettings: new Map(),
+};
 
 export function toySync() {
   // Handles synchronizing in-game vibrators with real bluetooth devices via buttplut.io

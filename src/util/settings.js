@@ -1,4 +1,5 @@
-import { sendHello, toySyncState } from "..";
+import { sendHello } from "..";
+import { toySyncState } from "../functions/toySync";
 import { fbcBeepNotify } from "./hooks";
 import { debug, logInfo, logWarn, logError } from "./logger";
 import { waitFor, sleep, isString, parseJSON, isNonNullObject, objEntries, removeCustomEffect, enableLeashing, disableLeashing } from "./utils";

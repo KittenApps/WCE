@@ -29,6 +29,7 @@ import { fbcSettings, settingsLoaded, fbcSettingValue } from "./util/settings";
 import { fbcDisplayText } from "./util/localization";
 import { registerAllFunctions, incompleteFunctions } from "./registerFunctions";
 import { deviatingHashes } from "./functions/functionIntegrityCheck";
+import { toySyncState } from "./functions/toySync";
 import { skippedFunctionality } from "./util/modding";
 import { FBC_VERSION, SUPPORTED_GAME_VERSIONS, HIDDEN, BCE_MSG, MESSAGE_TYPES } from "./util/constants";
 
@@ -45,11 +46,6 @@ if (typeof ChatRoomCharacter === "undefined") {
 }
 
 window.FBC_VERSION = FBC_VERSION;
-
-/** @type {FBCToySyncState} */
-export const toySyncState = {
-  deviceSettings: new Map(),
-};
 
 function blockAntiGarble() {
   return !!(fbcSettings.antiAntiGarble || fbcSettings.antiAntiGarbleStrong || fbcSettings.antiAntiGarbleExtra);
