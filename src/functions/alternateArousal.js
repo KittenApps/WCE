@@ -1,8 +1,9 @@
-import { patchFunction, SDK, HOOK_PRIORITIES, BCE_MAX_AROUSAL, HIDDEN, BCE_MSG, MESSAGE_TYPES } from "..";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "..";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { waitFor, isCharacter } from "../util/utils";
 import { logWarn } from "../util/logger";
 import { fbcSettings } from "../util/settings";
+import { BCE_MAX_AROUSAL, HIDDEN, BCE_MSG, MESSAGE_TYPES } from "../util/constants";
 
 export async function alternateArousal() {
   await waitFor(() => !!ServerSocket && ServerIsConnected);

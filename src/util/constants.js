@@ -1,3 +1,41 @@
+export const FBC_VERSION = "6.2";
+export const settingsVersion = 62;
+export const SUPPORTED_GAME_VERSIONS = ["R104"];
+
+export const fbcChangelog = `${FBC_VERSION} next
+- add button to manual clear and reload the drawing cache of all characters in a chat room
+
+6.1
+- improved r103 compatibility
+- removed fps limits/counter (now natively in base game in graphic preferences, page 2)
+- make anti garble bypass (in restrictions preferences) availa ble on all difficulty levels
+
+6.0
+- forked the project by Kitty Stella (129178)
+- restored features removed in 5.9 (this fork is based on 5.8)
+- made it load seperate from FUSAM again (still requires FUSAM for it's API though)
+- updated for r103
+- fix rich profile sticking on the screen after disconnect
+`;
+
+export const DISCORD_INVITE_URL = "https://discord.gg/SHJMjEh9VH";
+export const WEBSITE_URL = "https://sidiousious.gitlab.io/bce/";
+
+export const BCE_COLOR_ADJUSTMENTS_CLASS_NAME = "bce-colors";
+export const BCE_LICENSE = "https://gitlab.com/Sidiousious/bce/-/blob/main/LICENSE";
+export const BCE_MAX_AROUSAL = 99.6;
+export const BCE_MSG = "BCEMsg";
+export const DARK_INPUT_CLASS = "bce-dark-input";
+export const DEFAULT_WARDROBE_SIZE = 24;
+export const EXPANDED_WARDROBE_SIZE = 96;
+export const HIDDEN = "Hidden";
+export const MESSAGE_TYPES = Object.freeze({
+  Activity: "Activity",
+  ArousalSync: "ArousalSync",
+  Hello: "Hello",
+});
+export const WHISPER_CLASS = "bce-whisper-input";
+
 // ICONS
 export const ICONS = Object.freeze({
   BCE_USER:

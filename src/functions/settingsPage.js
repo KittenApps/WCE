@@ -1,9 +1,10 @@
-import { toySyncState, BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "..";
+import { toySyncState } from "..";
 import { ICONS } from "../util/constants";
 import { waitFor, objEntries, drawTooltip } from "../util/utils";
 import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey } from "../util/settings";
 import { displayText } from "../util/localization";
+import { BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "../util/constants";
 
 // Create settings page
 export async function settingsPage() {
@@ -315,7 +316,7 @@ export async function settingsPage() {
     run: PreferenceSubscreenBCESettingsRun,
     exit: PreferenceSubscreenBCESettingsExit,
     load: PreferenceSubscreenBCESettingsLoad,
-    unload: () => {},
+    unload: () => {}
   });
 
   /** @type {(e: KeyboardEvent) => void} */

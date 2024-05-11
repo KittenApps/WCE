@@ -1,4 +1,4 @@
-import { BCE_COLOR_ADJUSTMENTS_CLASS_NAME, DARK_INPUT_CLASS, WHISPER_CLASS } from "..";
+import { BCE_COLOR_ADJUSTMENTS_CLASS_NAME, DARK_INPUT_CLASS, WHISPER_CLASS } from "../util/constants";
 
 const INPUT_WARN_CLASS = "bce-input-warn";
 

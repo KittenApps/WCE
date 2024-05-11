@@ -1,10 +1,11 @@
-import { SDK, HOOK_PRIORITIES, fbcChangelog } from "..";
+import { SDK, HOOK_PRIORITIES } from "..";
 import { ICONS } from "../util/constants";
 import { BCX } from "./hookBCXAPI";
 import { waitFor, parseJSON } from "../util/utils";
 import { debug, logInfo } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
+import { fbcChangelog } from "../util/constants";
 
 /**
  * @param {string | null} target

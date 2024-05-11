@@ -1,7 +1,8 @@
-import { SDK, HOOK_PRIORITIES, WHISPER_CLASS, DARK_INPUT_CLASS } from "..";
+import { SDK, HOOK_PRIORITIES } from "..";
 import { waitFor, isString, isChatMessage } from "../util/utils";
 import { fbcSettings, defaultSettings, bceSaveSettings } from "../util/settings";
 import { displayText } from "../util/localization";
+import { WHISPER_CLASS, DARK_INPUT_CLASS } from "../util/constants";
 
 const GAGBYPASSINDICATOR = "\uf123";
 const BCX_ORIGINAL_MESSAGE = "BCX_ORIGINAL_MESSAGE";

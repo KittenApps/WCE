@@ -1,7 +1,8 @@
-import { SDK, HOOK_PRIORITIES, DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE, fbcBeepNotify } from "..";
+import { SDK, HOOK_PRIORITIES, fbcBeepNotify } from "..";
 import { waitFor, isWardrobe, parseJSON } from "../util/utils";
 import { logInfo, logError } from "../util/logger";
 import { fbcSettings } from "../util/settings";
+import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE } from "../util/constants";
 
 /**
  * Convert old {@link ItemProperties.Type} remnants into {@link ItemProperties.TypeRecord} in the passed item bundles.

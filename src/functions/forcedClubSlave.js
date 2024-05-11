@@ -1,8 +1,9 @@
-import { SDK, HOOK_PRIORITIES, HIDDEN, BCE_MSG, MESSAGE_TYPES } from "..";
+import { SDK, HOOK_PRIORITIES } from "..";
 import { BCX } from "./hookBCXAPI";
 import { waitFor, isCharacter } from "../util/utils";
 import { displayText } from "../util/localization";
 import { logError } from "../util/logger";
+import { HIDDEN, BCE_MSG, MESSAGE_TYPES } from "../util/constants";
 
 export async function forcedClubSlave() {
   const patch = (async function patchDialog() {

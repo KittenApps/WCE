@@ -1,7 +1,8 @@
-import { sendHello, HIDDEN, MESSAGE_TYPES } from "..";
+import { sendHello } from "..";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { waitFor } from "../util/utils";
 import { debug, logWarn } from "../util/logger";
+import { HIDDEN, MESSAGE_TYPES } from "../util/constants";
 
 export async function hiddenMessageHandler() {
   await waitFor(() => ServerSocket && ServerIsConnected);
