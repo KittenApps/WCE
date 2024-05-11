@@ -1,5 +1,5 @@
 import { SDK, HOOK_PRIORITIES, addCustomEffect, removeCustomEffect } from "..";
-import { waitFor } from "../util/utils";
+import { waitFor, fbcChatNotify } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 

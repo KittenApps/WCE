@@ -3,7 +3,7 @@ import { BCX } from "./hookBCXAPI";
 import { waitFor, isCharacter } from "../util/utils";
 import { displayText } from "../util/localization";
 import { logError } from "../util/logger";
-import { HIDDEN, BCE_MSG, MESSAGE_TYPES } from "../util/constants";
+import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 
 export async function forcedClubSlave() {
   const patch = (async function patchDialog() {

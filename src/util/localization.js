@@ -158,4 +158,4 @@ export function displayText(original, replacements = {}) {
   return text;
 }
 
-window.fbcDisplayText = (original, replacements = {}) => displayText(original, replacements);
+export const fbcDisplayText = (original, replacements = {}) => displayText(original, replacements);

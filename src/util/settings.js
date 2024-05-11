@@ -810,7 +810,7 @@ export function postSettings() {
   postSettingsHasRun = true;
 }
 
-window.fbcSettingValue = (key) => {
+export const fbcSettingValue = (key) => {
   if (isDefaultSettingKey(key)) {
     return fbcSettings[key];
   }

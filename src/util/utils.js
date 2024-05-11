@@ -158,3 +158,22 @@ export function drawTooltip(x, y, width, text, align) {
   DrawTextFit(text, align === "left" ? x + 3 : x + width / 2, y + 33, width - 6, "black");
   canvas.textAlign = bak;
 }
+
+/**
+ * @type {(node: HTMLElement | HTMLElement[] | string) => void}
+ */
+export const fbcChatNotify = (node) => {
+  const div = document.createElement("div");
+  div.setAttribute("class", "ChatMessage bce-notification");
+  div.setAttribute("data-time", ChatRoomCurrentTime());
+  div.setAttribute("data-sender", Player.MemberNumber?.toString());
+  if (typeof node === "string") {
+    div.appendChild(document.createTextNode(node));
+  } else if (Array.isArray(node)) {
+    div.append(...node);
+  } else {
+    div.appendChild(node);
+  }
+
+  ChatRoomAppendChat(div);
+};

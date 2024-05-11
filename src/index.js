@@ -23,9 +23,9 @@
 // @ts-check
 
 import { debug, logWarn, pastLogs } from "./util/logger";
-import { waitFor, sleep, objEntries, bceParseUrl } from "./util/utils";
-import { fbcSettings, settingsLoaded } from "./util/settings";
-import { displayText } from "./util/localization";
+import { waitFor, sleep, objEntries, bceParseUrl, fbcChatNotify } from "./util/utils";
+import { fbcSettings, settingsLoaded, fbcSettingValue } from "./util/settings";
+import { displayText, fbcDisplayText } from "./util/localization";
 import { registerAllFunctions, incompleteFunctions } from "./registerFunctions";
 import { deviatingHashes } from "./functions/functionIntegrityCheck";
 import { FBC_VERSION, fbcChangelog, SUPPORTED_GAME_VERSIONS, HIDDEN, BCE_MSG, MESSAGE_TYPES } from "./util/constants";
@@ -84,6 +84,8 @@ function blockAntiGarble() {
   return !!(fbcSettings.antiAntiGarble || fbcSettings.antiAntiGarbleStrong || fbcSettings.antiAntiGarbleExtra);
 }
 
+window.fbcDisplayText = fbcDisplayText;
+
 /** @type {string[]} */
 const skippedFunctionality = [];
 
@@ -99,24 +101,6 @@ export const patchFunction = (functionName, patches, affectedFunctionality) => {
   SDK.patchFunction(functionName, patches);
 };
 
-/**
- * @type {(node: HTMLElement | HTMLElement[] | string) => void}
- */
-const fbcChatNotify = (node) => {
-  const div = document.createElement("div");
-  div.setAttribute("class", "ChatMessage bce-notification");
-  div.setAttribute("data-time", ChatRoomCurrentTime());
-  div.setAttribute("data-sender", Player.MemberNumber?.toString());
-  if (typeof node === "string") {
-    div.appendChild(document.createTextNode(node));
-  } else if (Array.isArray(node)) {
-    div.append(...node);
-  } else {
-    div.appendChild(node);
-  }
-
-  ChatRoomAppendChat(div);
-};
 window.fbcChatNotify = fbcChatNotify;
 
 /**
@@ -168,6 +152,7 @@ window.fbcSendAction = (text) => {
   });
 };
 
+window.fbcSettingValue = fbcSettingValue;
 window.bceAnimationEngineEnabled = () => !!fbcSettings.animationEngine;
 
 // Expressions init method for custom expressions

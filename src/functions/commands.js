@@ -1,7 +1,7 @@
 import { SDK, HOOK_PRIORITIES } from "..";
 import { ICONS } from "../util/constants";
 import { BCX } from "./hookBCXAPI";
-import { waitFor, parseJSON } from "../util/utils";
+import { waitFor, parseJSON, fbcChatNotify } from "../util/utils";
 import { debug, logInfo } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
