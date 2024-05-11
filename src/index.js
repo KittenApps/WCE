@@ -55,6 +55,7 @@ import { extendedWardrobe } from './functions/extendedWardrobe';
 import { customContentDomainCheck } from './functions/customContentDomainCheck';
 import { discreetMode } from './functions/discreetMode';
 import { autoStruggle } from './functions/autoStruggle';
+import { leashAlways } from './functions/leashAlways';
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
@@ -742,31 +743,6 @@ export function enableLeashing() {
 
 export function disableLeashing() {
   removeCustomEffect("Leash");
-}
-
-async function leashAlways() {
-  await waitFor(() => Player?.Appearance?.some((a) => a.Asset.Name === "Emoticon"));
-  const emoticon = Player.Appearance.find((a) => a.Asset.Name === "Emoticon");
-
-  if (!emoticon) {
-    throw new Error("Could not find emoticon in Player appearance.");
-  }
-
-  if (Array.isArray(emoticon.Asset.AllowEffect)) {
-    emoticon.Asset.AllowEffect.push("Leash");
-  } else {
-    // @ts-ignore - not readonly
-    emoticon.Asset.AllowEffect = ["Leash"];
-  }
-  // @ts-ignore - not readonly
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  emoticon.Asset.AllowEffect.push("BlurLight");
-
-  if (fbcSettings.leashAlways) {
-    enableLeashing();
-  } else {
-    disableLeashing();
-  }
 }
 
 function toySync() {
