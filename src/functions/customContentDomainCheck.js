@@ -1,7 +1,9 @@
-import { sessionCustomOrigins } from "..";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
+
+/** @type {Map<string, "allowed" | "denied">} */
+export const sessionCustomOrigins = new Map();
 
 export function customContentDomainCheck() {
   const trustedOrigins = ["https://fs.kinkop.eu", "https://i.imgur.com"];

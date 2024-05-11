@@ -1,4 +1,4 @@
-import { processChatAugmentsForLine } from "..";
+import { processChatAugmentsForLine } from "./chatAugments";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { BCX } from "./hookBCXAPI";
 import { registerSocketListener } from "./appendSocketListenersToInit";

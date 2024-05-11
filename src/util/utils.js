@@ -119,19 +119,6 @@ export function parseJSON(jsonString) {
   }
 }
 
-/** @type {(word: string) => URL | false} */
-export function bceParseUrl(word) {
-  try {
-    const url = new URL(word);
-    if (!["http:", "https:"].includes(url.protocol)) {
-      return false;
-    }
-    return url;
-  } catch {
-    return false;
-  }
-}
-
 /** @type {(text: string, x: number, y: number, width: number, color: string, backColor?: string) => void} */
 // eslint-disable-next-line no-undefined
 export function drawTextFitLeft(text, x, y, width, color, backColor = undefined) {

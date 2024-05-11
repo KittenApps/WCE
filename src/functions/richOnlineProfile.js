@@ -1,4 +1,4 @@
-import { processChatAugmentsForLine } from "..";
+import { processChatAugmentsForLine } from "./chatAugments";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";

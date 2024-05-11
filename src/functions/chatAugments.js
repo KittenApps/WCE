@@ -1,11 +1,181 @@
-import { processChatAugmentsForLine } from "..";
 import { patchFunction } from "../util/modding";
 import { createTimer } from "../util/hooks";
+import { debug } from "../util/logger";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
-import { bceParseUrl } from "../util/utils";
+import { sessionCustomOrigins } from "./customContentDomainCheck";
 
 const CLOSINGBRACKETINDICATOR = "\\uf130\\u005d";
+const EMBED_TYPE = /** @type {const} */ ({
+  Image: "img",
+  None: "",
+  Untrusted: "none-img",
+});
+
+/** @type {(word: string) => URL | false} */
+function bceParseUrl(word) {
+  try {
+    const url = new URL(word);
+    if (!["http:", "https:"].includes(url.protocol)) {
+      return false;
+    }
+    return url;
+  } catch {
+    return false;
+  }
+}
+
+/** @type {(url: URL) => "img" | "" | "none-img"} */
+function bceAllowedToEmbed(url) {
+  const isTrustedOrigin =
+    [
+      "cdn.discordapp.com",
+      "media.discordapp.com",
+      "i.imgur.com",
+      "tenor.com",
+      "c.tenor.com",
+      "media.tenor.com",
+      "i.redd.it",
+      "puu.sh",
+      "fs.kinkop.eu",
+    ].includes(url.host) || sessionCustomOrigins.get(url.origin) === "allowed";
+
+  if (/\/[^/]+\.(png|jpe?g|gif)$/u.test(url.pathname)) {
+    return isTrustedOrigin ? EMBED_TYPE.Image : EMBED_TYPE.Untrusted;
+  }
+  return EMBED_TYPE.None;
+}
+
+/** @type {(chatMessageElement: Element, scrollToEnd: () => void) => void} */
+export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
+  const newChildren = [];
+  let originalText = "";
+  for (const node of chatMessageElement.childNodes) {
+    if (node.nodeType !== Node.TEXT_NODE) {
+      newChildren.push(node);
+      /** @type {HTMLElement} */
+      // @ts-ignore
+      const el = node;
+      if (el.classList.contains("ChatMessageName") || el.classList.contains("bce-message-Message")) {
+        newChildren.push(document.createTextNode(" "));
+      }
+      continue;
+    }
+    const contents = node.textContent?.trim() ?? "",
+      words = [contents];
+
+    originalText += node.textContent;
+
+    for (let i = 0; i < words.length; i++) {
+      // Handle other whitespace
+      const whitespaceIdx = words[i].search(/[\s\r\n]/u);
+      if (whitespaceIdx >= 1) {
+        words.splice(i + 1, 0, words[i].substring(whitespaceIdx));
+        words[i] = words[i].substring(0, whitespaceIdx);
+      } else if (whitespaceIdx === 0) {
+        words.splice(i + 1, 0, words[i].substring(1));
+        [words[i]] = words[i];
+        newChildren.push(document.createTextNode(words[i]));
+        continue;
+      }
+
+      // Handle url linking
+      const url = bceParseUrl(words[i].replace(/(^\(+|\)+$)/gu, ""));
+      if (url) {
+        // Embed or link
+        /** @type {HTMLElement | Text | null} */
+        let domNode = null;
+        const linkNode = document.createElement("a");
+        newChildren.push(linkNode);
+        const embedType = bceAllowedToEmbed(url);
+        switch (embedType) {
+          case EMBED_TYPE.Image:
+            {
+              const imgNode = document.createElement("img");
+              imgNode.src = url.href;
+              imgNode.alt = url.href;
+              imgNode.onload = scrollToEnd;
+              imgNode.classList.add("bce-img");
+              linkNode.classList.add("bce-img-link");
+              domNode = imgNode;
+            }
+            break;
+          default:
+            domNode = document.createTextNode(url.href);
+            if (embedType !== EMBED_TYPE.None) {
+              const promptTrust = document.createElement("a");
+              // eslint-disable-next-line no-loop-func
+              promptTrust.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // eslint-disable-next-line prefer-destructuring
+                const target = /** @type {HTMLAnchorElement} */ (e.target);
+                FUSAM.modals.open({
+                  prompt: displayText("Do you want to add $origin to trusted origins?", {
+                    $origin: url.origin,
+                  }),
+                  callback: (act) => {
+                    if (act === "submit") {
+                      sessionCustomOrigins.set(url.origin, "allowed");
+
+                      const parent = target.parentElement;
+                      if (!parent) {
+                        throw new Error("clicked promptTrust has no parent");
+                      }
+                      parent.removeChild(target);
+
+                      const name = parent.querySelector(".ChatMessageName");
+                      parent.innerHTML = "";
+                      if (name) {
+                        parent.appendChild(name);
+                        parent.appendChild(document.createTextNode(" "));
+                      }
+
+                      const ogText = parent.getAttribute("bce-original-text");
+                      if (!ogText) {
+                        throw new Error("clicked promptTrust has no original text");
+                      }
+                      parent.appendChild(document.createTextNode(ogText));
+                      processChatAugmentsForLine(chatMessageElement, scrollToEnd);
+                      debug("updated trusted origins", sessionCustomOrigins);
+                    }
+                  },
+                  buttons: {
+                    submit: displayText("Trust this session"),
+                  },
+                });
+              };
+              promptTrust.href = "#";
+              promptTrust.title = displayText("Trust this session");
+              promptTrust.textContent = displayText("(embed)");
+              newChildren.push(document.createTextNode(" "));
+              newChildren.push(promptTrust);
+            }
+            break;
+        }
+        linkNode.href = url.href;
+        linkNode.title = url.href;
+        linkNode.target = "_blank";
+        linkNode.appendChild(domNode);
+      } else if (/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/u.test(words[i])) {
+        const color = document.createElement("span");
+        color.classList.add("bce-color");
+        color.style.background = words[i];
+        newChildren.push(color);
+        newChildren.push(document.createTextNode(words[i]));
+      } else {
+        newChildren.push(document.createTextNode(words[i]));
+      }
+    }
+  }
+  while (chatMessageElement.firstChild) {
+    chatMessageElement.removeChild(chatMessageElement.firstChild);
+  }
+  for (const child of newChildren) {
+    chatMessageElement.appendChild(child);
+  }
+  chatMessageElement.setAttribute("bce-original-text", originalText);
+}
 
 export function chatAugments() {
   // CTRL+Enter OOC implementation
