@@ -14,7 +14,7 @@
 // @run-at document-end
 // ==/UserScript==
 
-var SCRIPT_URL = 'http://localhost:4000/fbc.js';
+var SCRIPT_URL = 'http://localhost:4000/wce.js';
 
 var preloadLink = document.createElement("link");
 preloadLink.href = SCRIPT_URL;

@@ -71,7 +71,7 @@ export function displayText(original, replacements = {}) {
       "Applied looks": "应用外观",
       "Could not parse looks": "无法解析外观",
       "[membernumber] [message]: beep someone": "[用户编号] [消息]: 发送beep",
-      "For Better Club Settings (FBC)": "For Better Club (FBC)设置",
+      "Wholesome Club Extensions (WCE) Settings": "Wholesome Club Extensions (WCE)设置",
       "Join Discord": "加入Discord",
       License: "授权",
       Information: "信息",

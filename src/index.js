@@ -54,6 +54,6 @@ FUSAM.registerDebugMethod("FBC", fbcDebug);
 await registerAllFunctions();
 
 // Post ready when in a chat room
-await fbcNotify(`For Better Club v${window.FBC_VERSION} Loaded`);
+await fbcNotify(`Wholesome Club Extensions v${window.FBC_VERSION} loaded!`);
 
 Player.FBC = FBC_VERSION;

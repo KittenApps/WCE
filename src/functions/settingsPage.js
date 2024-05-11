@@ -87,7 +87,7 @@ export async function settingsPage() {
       return;
     }
     ctx.textAlign = "left";
-    DrawText(displayText("For Better Club Settings (FBC)"), 300, 125, "Black", "Gray");
+    DrawText(displayText("Wholesome Club Extensions (WCE) Settings"), 300, 125, "Black", "Gray");
     DrawButton(...discordInvitePosition, "", "White", "");
     DrawText(
       displayText("Join Discord"),
@@ -309,8 +309,8 @@ export async function settingsPage() {
   };
 
   PreferenceRegisterExtensionSetting({
-    Identifier: "FBC",
-    ButtonText: displayText("FBC Settings"),
+    Identifier: "WCE",
+    ButtonText: displayText("WCE Settings"),
     Image: ICONS.LOGO,
     click: PreferenceSubscreenBCESettingsClick,
     run: PreferenceSubscreenBCESettingsRun,
