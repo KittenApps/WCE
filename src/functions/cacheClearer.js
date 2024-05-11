@@ -1,6 +1,6 @@
 import { patchFunction, SDK, HOOK_PRIORITIES, createTimer } from "..";
 import { fbcSettings } from "../util/settings";
-import { waitFor } from "../util/util";
+import { waitFor } from "../util/utils";
 import { debug } from "../util/logger";
 
 export function cacheClearer() {

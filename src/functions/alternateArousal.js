@@ -1,5 +1,6 @@
-import { patchFunction, SDK, HOOK_PRIORITIES, registerSocketListener, BCE_MAX_AROUSAL, HIDDEN, BCE_MSG, MESSAGE_TYPES } from "..";
-import { waitFor, isCharacter } from "../util/util";
+import { patchFunction, SDK, HOOK_PRIORITIES, BCE_MAX_AROUSAL, HIDDEN, BCE_MSG, MESSAGE_TYPES } from "..";
+import { registerSocketListener } from "./appendSocketListenersToInit";
+import { waitFor, isCharacter } from "../util/utils";
 import { logWarn } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 

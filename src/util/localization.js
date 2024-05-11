@@ -1,4 +1,4 @@
-import { objEntries } from './util';
+import { objEntries } from './utils';
 
 /**
  * @param {string} original - The English message

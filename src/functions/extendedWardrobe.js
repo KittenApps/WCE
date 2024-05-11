@@ -1,5 +1,5 @@
 import { SDK, HOOK_PRIORITIES, DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE, fbcBeepNotify } from "..";
-import { waitFor, isWardrobe, parseJSON } from "../util/util";
+import { waitFor, isWardrobe, parseJSON } from "../util/utils";
 import { logInfo, logError } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 

@@ -2,7 +2,7 @@ import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE, sendHello, BCE_MAX_AROUS
   removeCustomEffect, enableLeashing, disableLeashing, toySyncState, fbcBeepNotify,
   DISCORD_INVITE_URL, beepChangelog, settingsVersion } from '..';
 import { debug, logInfo, logWarn, logError } from './logger';
-import { waitFor, isString, parseJSON, isNonNullObject, objEntries } from './util';
+import { waitFor, isString, parseJSON, isNonNullObject, objEntries } from './utils';
 import { loadExtendedWardrobe } from '../functions/extendedWardrobe';
 
 /**

@@ -1,5 +1,5 @@
 import { SDK, HOOK_PRIORITIES, WHISPER_CLASS, DARK_INPUT_CLASS } from "..";
-import { waitFor, isString, isChatMessage } from "../util/util";
+import { waitFor, isString, isChatMessage } from "../util/utils";
 import { fbcSettings, defaultSettings, bceSaveSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 

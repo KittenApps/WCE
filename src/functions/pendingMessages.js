@@ -1,6 +1,6 @@
 import { SDK, HOOK_PRIORITIES, HIDDEN } from "..";
 import { fbcSettings } from "../util/settings";
-import { isChatMessage } from "../util/util";
+import { isChatMessage } from "../util/utils";
 
 export function pendingMessages() {
   /** @type {(dictionary: Record<string, unknown>[], key: string, value: unknown) => Record<string, unknown>[]} */

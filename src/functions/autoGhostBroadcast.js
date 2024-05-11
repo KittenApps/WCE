@@ -1,5 +1,5 @@
-import { registerSocketListener } from "..";
-import { waitFor } from "../util/util";
+import { registerSocketListener } from "./appendSocketListenersToInit";
+import { waitFor } from "../util/utils";
 import { debug } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 

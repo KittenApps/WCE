@@ -1,5 +1,5 @@
 import { SDK, HOOK_PRIORITIES } from '..';
-import { waitFor } from "../util/util";
+import { waitFor } from "../util/utils";
 import { fbcSettings } from '../util/settings';
 import { debug } from '../util/logger';
 

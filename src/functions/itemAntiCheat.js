@@ -1,7 +1,7 @@
 import { SDK, HOOK_PRIORITIES } from "..";
 import { debug } from "../util/logger";
 import { fbcSettings } from "../util/settings";
-import { deepCopy, mustNum } from "../util/util";
+import { deepCopy, mustNum } from "../util/utils";
 import { displayText } from "../util/localization";
 
 export function itemAntiCheat() {

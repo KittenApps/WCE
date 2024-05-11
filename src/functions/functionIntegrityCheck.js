@@ -1,5 +1,5 @@
 import { SDK } from '..';
-import { waitFor, objEntries } from '../util/util';
+import { waitFor, objEntries } from '../util/utils';
 import { logInfo, logWarn } from '../util/logger';
 import { expectedHashes } from '../util/functionHashes';
 

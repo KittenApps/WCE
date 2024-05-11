@@ -1,5 +1,6 @@
-import { registerSocketListener, sendHello, HIDDEN, MESSAGE_TYPES } from "..";
-import { waitFor } from "../util/util";
+import { sendHello, HIDDEN, MESSAGE_TYPES } from "..";
+import { registerSocketListener } from "./appendSocketListenersToInit";
+import { waitFor } from "../util/utils";
 import { debug, logWarn } from "../util/logger";
 
 export async function hiddenMessageHandler() {

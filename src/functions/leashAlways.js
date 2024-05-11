@@ -1,5 +1,5 @@
 import { enableLeashing, disableLeashing } from "..";
-import { waitFor } from "../util/util";
+import { waitFor } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 
 export async function leashAlways() {

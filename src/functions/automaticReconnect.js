@@ -1,5 +1,6 @@
-import { SDK, HOOK_PRIORITIES, registerSocketListener } from "..";
-import { waitFor, sleep, parseJSON, isString } from "../util/util";
+import { SDK, HOOK_PRIORITIES } from "..";
+import { registerSocketListener } from "./appendSocketListenersToInit";
+import { waitFor, sleep, parseJSON, isString } from "../util/utils";
 import { debug, logWarn } from "../util/logger";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";

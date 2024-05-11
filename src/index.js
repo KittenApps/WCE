@@ -23,46 +23,11 @@
 // @ts-check
 
 import { debug, logWarn, logError, pastLogs } from './util/logger';
-import { waitFor, sleep, objEntries, bceParseUrl } from './util/util';
-import { fbcSettings, settingsLoaded, postSettings, bceLoadSettings } from './util/settings';
+import { waitFor, sleep, objEntries, bceParseUrl } from './util/utils';
+import { fbcSettings, settingsLoaded } from './util/settings';
 import { displayText } from './util/localization';
-import { antiGarbleCheat } from './functions/antiGarbleCheat';
-import { functionIntegrityCheck, deviatingHashes} from './functions/functionIntegrityCheck';
-import { bceStyles } from './functions/bceStyles';
-import { commonPatches } from './functions/commonPatches';
-import { beepImprovements } from './functions/beepImprovements';
-import { commands } from './functions/commands';
-import { settingsPage } from './functions/settingsPage';
-import { lockpickHelp } from './functions/lockpickHelp';
-import { automaticReconnect } from './functions/automaticReconnect';
-import { chatAugments } from './functions/chatAugments';
-import { layeringMenu } from './functions/layeringMenu';
-import { cacheClearer } from './functions/cacheClearer';
-import { chatRoomOverlay } from './functions/chatRoomOverlay';
-import { hiddenMessageHandler } from './functions/hiddenMessageHandler';
-import { privateWardrobe } from './functions/privateWardrobe';
-import { antiGarbling } from './functions/antiGarbling';
-import { automaticExpressions } from './functions/automaticExpressions';
-import { alternateArousal } from './functions/alternateArousal';
-import { autoGhostBroadcast } from './functions/autoGhostBroadcast';
-import { blindWithoutGlasses } from './functions/blindWithoutGlasses';
-import { friendPresenceNotifications } from './functions/friendPresenceNotifications';
-import { itemAntiCheat } from './functions/itemAntiCheat';
-import { forcedClubSlave } from './functions/forcedClubSlave';
-import { leashFix } from './functions/leashFix';
-import { instantMessenger } from './functions/instantMessenger';
-import { extendedWardrobe } from './functions/extendedWardrobe';
-import { customContentDomainCheck } from './functions/customContentDomainCheck';
-import { discreetMode } from './functions/discreetMode';
-import { autoStruggle } from './functions/autoStruggle';
-import { leashAlways } from './functions/leashAlways';
-import { pastProfiles } from './functions/pastProfiles';
-import { pendingMessages } from './functions/pendingMessages';
-import { hideHiddenItemsIcon } from './functions/hideHiddenItemsIcon';
-import { richOnlineProfile } from './functions/richOnlineProfile';
-import { crafting } from './functions/crafting';
-import { numericArousalMeters } from './functions/numericArousalMeters';
-import { toySync } from './functions/toySync';
+import { registerAllFunctions, incompleteFunctions } from './registerFunctions';
+import { deviatingHashes} from './functions/functionIntegrityCheck';
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
@@ -107,8 +72,6 @@ export const SDK = bcModSdk.registerMod(
     allowReplace: false,
   }
 );
-/** @type {import('../types/bcxExternalInterface').BCX_ModAPI | null} */
-export let BCX = null;
 
 window.FBC_VERSION = FBC_VERSION;
 
@@ -153,36 +116,6 @@ export const HOOK_PRIORITIES = /** @type {const} */ ({
   AddBehaviour: 3,
   Observe: 0,
 });
-
-/** @type {[any, any][]} */
-const listeners = [];
-/** @type {typeof ServerSocket.on} */
-export function registerSocketListener(event, cb) {
-  if (!listeners.some((l) => l[1] === cb)) {
-    listeners.push([event, cb]);
-    // @ts-ignore - too lazy to fix
-    return ServerSocket.on(event, cb);
-  }
-  // @ts-ignore - too lazy to fix
-  return null;
-}
-
-function appendSocketListenersToInit() {
-  SDK.hookFunction(
-    "ServerInit",
-    HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ServerInit>} args
-     */
-    (args, next) => {
-      const ret = next(args);
-      for (const [event, cb] of listeners) {
-        ServerSocket.on(event, cb);
-      }
-      return ret;
-    }
-  );
-}
 
 function blockAntiGarble() {
   return !!(fbcSettings.antiAntiGarble || fbcSettings.antiAntiGarbleStrong || fbcSettings.antiAntiGarbleExtra);
@@ -292,8 +225,6 @@ window.bce_initializeDefaultExpression = () => {
   // Here to not break customizer script
 };
 
-/** @type {string[]} */
-const incompleteFunctions = [];
 /**
  * @param {boolean} [copy] - Whether to copy the report to the clipboard
  */
@@ -354,127 +285,12 @@ async function fbcDebug(copy) {
 window.fbcDebug = fbcDebug;
 FUSAM.registerDebugMethod("FBC", fbcDebug);
 
-/** @type {(func: () => (Promise<unknown> | unknown), label: string) => Promise<void>} */
-const registerFunction = async (func, label) => {
-  incompleteFunctions.push(label);
-  try {
-    const ret = func();
-    if (ret instanceof Promise) {
-      await ret;
-    }
-    incompleteFunctions.splice(incompleteFunctions.indexOf(label), 1);
-  } catch (err) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const e = /** @type {Error} */ (err);
-    logError(`Error in ${label}: ${e?.toString()}\n${e?.stack ?? ""}`);
-  }
-};
-
-// Delay game processes until registration is complete
-/** @type {"init" | "enable" | "disable"} */
-let funcsRegistered = "init";
-SDK.hookFunction(
-  "LoginResponse",
-  HOOK_PRIORITIES.Top,
-  /**
-   * @param {Parameters<typeof LoginResponse>} args
-   */ (args, next) => {
-    if (funcsRegistered === "init") {
-      funcsRegistered = "disable";
-    }
-    return next(args);
-  }
-);
-SDK.hookFunction(
-  "LoginStatusReset",
-  HOOK_PRIORITIES.Top,
-  /**
-   * @param {Parameters<typeof LoginStatusReset>} args
-   */ (args, next) => {
-    if (funcsRegistered === "disable") {
-      funcsRegistered = "init";
-    }
-    return next(args);
-  }
-);
-SDK.hookFunction(
-  "GameRun",
-  HOOK_PRIORITIES.Top,
-  /**
-   * @param {Parameters<typeof GameRun>} args
-   */ (args, next) => {
-    if (funcsRegistered === "disable") {
-      GameAnimationFrameId = requestAnimationFrame(GameRun);
-      return null;
-    }
-    return next(args);
-  }
-);
-SDK.hookFunction(
-  "GameRunBackground",
-  HOOK_PRIORITIES.Top,
-  /**
-   * @param {Parameters<typeof GameRunBackground>} args
-   */ (args, next) => {
-    if (funcsRegistered === "disable") return null;
-    return next(args);
-  }
-);
-
-registerFunction(antiGarbleCheat, "antiGarbleCheat");
-await registerFunction(functionIntegrityCheck, "functionIntegrityCheck");
-registerFunction(bceStyles, "bceStyles");
-registerFunction(commonPatches, "commonPatches");
-registerFunction(extendedWardrobe, "extendedWardrobe");
-registerFunction(automaticReconnect, "automaticReconnect");
-registerFunction(hiddenMessageHandler, "hiddenMessageHandler");
-await registerFunction(bceLoadSettings, "bceLoadSettings");
-registerFunction(postSettings, "postSettings");
-registerFunction(appendSocketListenersToInit, "appendSocketListenersToInit");
-debug(fbcSettings);
-registerFunction(discreetMode, "discreetMode");
-registerFunction(beepImprovements, "beepImprovements");
-registerFunction(settingsPage, "settingsPage");
-registerFunction(alternateArousal, "alternateArousal");
-registerFunction(chatAugments, "chatAugments");
-registerFunction(automaticExpressions, "automaticExpressions");
-registerFunction(layeringMenu, "layeringMenu");
-registerFunction(cacheClearer, "cacheClearer");
-registerFunction(lockpickHelp, "lockpickHelp");
-registerFunction(commands, "commands");
-registerFunction(chatRoomOverlay, "chatRoomOverlay");
-registerFunction(privateWardrobe, "privateWardrobe");
-registerFunction(antiGarbling, "antiGarbling");
-registerFunction(autoGhostBroadcast, "autoGhostBroadcast");
-registerFunction(blindWithoutGlasses, "blindWithoutGlasses");
-registerFunction(friendPresenceNotifications, "friendPresenceNotifications");
-registerFunction(forcedClubSlave, "forcedClubSlave");
-registerFunction(instantMessenger, "instantMessenger");
-registerFunction(autoStruggle, "autoStruggle");
-registerFunction(nicknames, "nicknames");
-registerFunction(leashAlways, "leashAlways");
-registerFunction(toySync, "toySync");
-registerFunction(pastProfiles, "pastProfiles");
-registerFunction(pendingMessages, "pendingMessages");
-registerFunction(hideHiddenItemsIcon, "hideHiddenItemsIcon");
-registerFunction(crafting, "crafting");
-registerFunction(itemAntiCheat, "itemAntiCheat");
-registerFunction(leashFix, "leashFix");
-registerFunction(hookBCXAPI, "hookBCXAPI");
-registerFunction(customContentDomainCheck, "customContentDomainCheck");
-registerFunction(numericArousalMeters, "numericArousalMeters");
-registerFunction(richOnlineProfile, "richOnlineProfile");
-funcsRegistered = "enable";
+registerAllFunctions()
 
 // Post ready when in a chat room
 await fbcNotify(`For Better Club v${window.FBC_VERSION} Loaded`);
 
 Player.FBC = FBC_VERSION;
-
-async function hookBCXAPI() {
-  await waitFor(() => !!window.bcx);
-  BCX = window.bcx?.getModApi("FBC") ?? null;
-}
 
 /** @type {(target?: number | null, requestReply?: boolean) => void} */
 export function sendHello(target = null, requestReply = false) {
@@ -697,10 +513,6 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
     chatMessageElement.appendChild(child);
   }
   chatMessageElement.setAttribute("bce-original-text", originalText);
-}
-
-function nicknames() {
-  ServerCharacterNicknameRegex = /^[\p{L}0-9\p{Z}'-]+$/u;
 }
 
 /** @type {(effect: EffectName) => boolean} */

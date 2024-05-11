@@ -1,5 +1,6 @@
-import { SDK, HOOK_PRIORITIES, HIDDEN, BCE_MSG, MESSAGE_TYPES, BCX } from "..";
-import { waitFor, isCharacter } from "../util/util";
+import { SDK, HOOK_PRIORITIES, HIDDEN, BCE_MSG, MESSAGE_TYPES } from "..";
+import { BCX } from "./hookBCXAPI";
+import { waitFor, isCharacter } from "../util/utils";
 import { displayText } from "../util/localization";
 import { logError } from "../util/logger";
 
