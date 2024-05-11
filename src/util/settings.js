@@ -1,6 +1,6 @@
-import { sendHello, removeCustomEffect, enableLeashing, disableLeashing, toySyncState, fbcBeepNotify, beepChangelog } from "..";
+import { sendHello, toySyncState, fbcBeepNotify, beepChangelog } from "..";
 import { debug, logInfo, logWarn, logError } from "./logger";
-import { waitFor, isString, parseJSON, isNonNullObject, objEntries } from "./utils";
+import { waitFor, isString, parseJSON, isNonNullObject, objEntries, removeCustomEffect, enableLeashing, disableLeashing } from "./utils";
 import { loadExtendedWardrobe } from "../functions/extendedWardrobe";
 import { settingsVersion } from "./constants";
 import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE, BCE_MAX_AROUSAL, BCE_COLOR_ADJUSTMENTS_CLASS_NAME, DISCORD_INVITE_URL } from "./constants";

@@ -1,4 +1,4 @@
-import { logError } from "./logger";
+import { logWarn, logError } from "./logger";
 
 /**
  * @param {number} ms
@@ -177,3 +177,49 @@ export const fbcChatNotify = (node) => {
 
   ChatRoomAppendChat(div);
 };
+
+/** @type {(effect: EffectName) => boolean} */
+export function addCustomEffect(effect) {
+  let updated = false;
+  const emoticon = Player.Appearance.find((a) => a.Asset.Name === "Emoticon");
+  if (!emoticon) {
+    logWarn("Could not find emoticon asset.");
+    return updated;
+  }
+  if (!emoticon.Property) {
+    emoticon.Property = { Effect: [effect] };
+    updated = true;
+  } else if (!emoticon.Property.Effect) {
+    emoticon.Property.Effect = [effect];
+    updated = true;
+  } else if (!emoticon.Property.Effect.includes(effect)) {
+    emoticon.Property.Effect.push(effect);
+    updated = true;
+  }
+  if (updated && ServerPlayerIsInChatRoom()) {
+    ChatRoomCharacterUpdate(Player);
+  }
+  return updated;
+}
+
+/** @type {(effect: EffectName) => boolean} */
+export function removeCustomEffect(effect) {
+  const emoticon = Player.Appearance.find((a) => a.Asset.Name === "Emoticon");
+  let updated = false;
+  if (emoticon?.Property?.Effect?.includes(effect)) {
+    emoticon.Property.Effect = emoticon.Property.Effect.filter((e) => e !== effect);
+    updated = true;
+  }
+  if (updated && ServerPlayerIsInChatRoom()) {
+    ChatRoomCharacterUpdate(Player);
+  }
+  return updated;
+}
+
+export function enableLeashing() {
+  addCustomEffect("Leash");
+}
+
+export function disableLeashing() {
+  removeCustomEffect("Leash");
+}
