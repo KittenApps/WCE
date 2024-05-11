@@ -58,6 +58,7 @@ import { autoStruggle } from './functions/autoStruggle';
 import { leashAlways } from './functions/leashAlways';
 import { pastProfiles } from './functions/pastProfiles';
 import { pendingMessages } from './functions/pendingMessages';
+import { hideHiddenItemsIcon } from './functions/hideHiddenItemsIcon';
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
@@ -959,27 +960,6 @@ function toySync() {
 
   script.src = "https://cdn.jsdelivr.net/npm/buttplug@1.0.17/dist/web/buttplug.min.js";
   document.body.appendChild(frame);
-}
-
-function hideHiddenItemsIcon() {
-  SDK.hookFunction(
-    "DrawCharacter",
-    HOOK_PRIORITIES.ModifyBehaviourLow,
-    /**
-     * @param {Parameters<typeof DrawCharacter>} args
-     */
-    (args, next) => {
-      const [c] = args;
-      if (!c || !fbcSettings.hideHiddenItemsIcon) {
-        return next(args);
-      }
-      const backup = c.HasHiddenItems;
-      c.HasHiddenItems = false;
-      const ret = next(args);
-      c.HasHiddenItems = backup;
-      return ret;
-    }
-  );
 }
 
 function richOnlineProfile() {
