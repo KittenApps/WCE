@@ -1,7 +1,7 @@
-import { SDK, HOOK_PRIORITIES } from '..';
+import { SDK, HOOK_PRIORITIES } from "..";
 import { waitFor } from "../util/utils";
-import { fbcSettings } from '../util/settings';
-import { debug } from '../util/logger';
+import { fbcSettings } from "../util/settings";
+import { debug } from "../util/logger";
 
 export async function lockpickHelp() {
   await waitFor(() => !!StruggleMinigames);

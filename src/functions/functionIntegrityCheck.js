@@ -1,7 +1,7 @@
-import { SDK } from '..';
-import { waitFor, objEntries } from '../util/utils';
-import { logInfo, logWarn } from '../util/logger';
-import { expectedHashes } from '../util/functionHashes';
+import { SDK } from "..";
+import { waitFor, objEntries } from "../util/utils";
+import { logInfo, logWarn } from "../util/logger";
+import { expectedHashes } from "../util/functionHashes";
 
 /** @type {unknown[]} */
 export const deviatingHashes = [];

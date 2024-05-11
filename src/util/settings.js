@@ -1,9 +1,21 @@
-import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE, sendHello, BCE_MAX_AROUSAL, BCE_COLOR_ADJUSTMENTS_CLASS_NAME, 
-  removeCustomEffect, enableLeashing, disableLeashing, toySyncState, fbcBeepNotify,
-  DISCORD_INVITE_URL, beepChangelog, settingsVersion } from '..';
-import { debug, logInfo, logWarn, logError } from './logger';
-import { waitFor, isString, parseJSON, isNonNullObject, objEntries } from './utils';
-import { loadExtendedWardrobe } from '../functions/extendedWardrobe';
+import {
+  DEFAULT_WARDROBE_SIZE,
+  EXPANDED_WARDROBE_SIZE,
+  sendHello,
+  BCE_MAX_AROUSAL,
+  BCE_COLOR_ADJUSTMENTS_CLASS_NAME,
+  removeCustomEffect,
+  enableLeashing,
+  disableLeashing,
+  toySyncState,
+  fbcBeepNotify,
+  DISCORD_INVITE_URL,
+  beepChangelog,
+  settingsVersion,
+} from "..";
+import { debug, logInfo, logWarn, logError } from "./logger";
+import { waitFor, isString, parseJSON, isNonNullObject, objEntries } from "./utils";
+import { loadExtendedWardrobe } from "../functions/extendedWardrobe";
 
 /**
  * @type {Record<keyof defaultSettings, string | boolean> & {version: number}}

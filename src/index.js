@@ -22,12 +22,12 @@
 /* eslint-disable no-inline-comments */
 // @ts-check
 
-import { debug, logWarn, pastLogs } from './util/logger';
-import { waitFor, sleep, objEntries, bceParseUrl } from './util/utils';
-import { fbcSettings, settingsLoaded } from './util/settings';
-import { displayText } from './util/localization';
-import { registerAllFunctions, incompleteFunctions } from './registerFunctions';
-import { deviatingHashes} from './functions/functionIntegrityCheck';
+import { debug, logWarn, pastLogs } from "./util/logger";
+import { waitFor, sleep, objEntries, bceParseUrl } from "./util/utils";
+import { fbcSettings, settingsLoaded } from "./util/settings";
+import { displayText } from "./util/localization";
+import { registerAllFunctions, incompleteFunctions } from "./registerFunctions";
+import { deviatingHashes } from "./functions/functionIntegrityCheck";
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
@@ -87,10 +87,10 @@ export const DEFAULT_WARDROBE_SIZE = 24;
 export const EXPANDED_WARDROBE_SIZE = 96;
 export const HIDDEN = "Hidden";
 export const MESSAGE_TYPES = Object.freeze({
-    Activity: "Activity",
-    ArousalSync: "ArousalSync",
-    Hello: "Hello",
-  });
+  Activity: "Activity",
+  ArousalSync: "ArousalSync",
+  Hello: "Hello",
+});
 export const WHISPER_CLASS = "bce-whisper-input";
 
 const EMBED_TYPE = /** @type {const} */ ({
@@ -273,7 +273,7 @@ async function fbcDebug(copy) {
 window.fbcDebug = fbcDebug;
 FUSAM.registerDebugMethod("FBC", fbcDebug);
 
-registerAllFunctions()
+registerAllFunctions();
 
 // Post ready when in a chat room
 await fbcNotify(`For Better Club v${window.FBC_VERSION} Loaded`);

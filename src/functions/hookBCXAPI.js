@@ -1,4 +1,4 @@
-import { waitFor } from '../util/utils';
+import { waitFor } from "../util/utils";
 
 /** @type {import('../../types/bcxExternalInterface').BCX_ModAPI | null} */
 export let BCX = null;

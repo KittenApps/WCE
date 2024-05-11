@@ -1,4 +1,4 @@
-import { isString } from './utils';
+import { isString } from "./utils";
 
 /** @type {{ level: "error" | "warn" | "info" | "debug", message: string }[]} */
 export const pastLogs = new Array(100);
@@ -26,7 +26,7 @@ const pushLog = (level, ...args) => {
 /**
  * @type {(...args: unknown[]) => void}
  */
- export const debug = (...args) => {
+export const debug = (...args) => {
   console.debug("FBC", `${window.FBC_VERSION}:`, ...args);
   pushLog("debug", ...args);
 };

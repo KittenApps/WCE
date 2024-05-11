@@ -3,7 +3,15 @@ import { registerSocketListener } from "./appendSocketListenersToInit";
 import { BCX } from "./hookBCXAPI";
 import { waitFor } from "../util/utils";
 import { fbcSettings } from "../util/settings";
-import { deepCopy, isString, objEntries, isCharacter, isNonNullObject, isStringOrStringArray, mustNum } from "../util/utils";
+import {
+  deepCopy,
+  isString,
+  objEntries,
+  isCharacter,
+  isNonNullObject,
+  isStringOrStringArray,
+  mustNum,
+} from "../util/utils";
 import { displayText } from "../util/localization";
 import { logWarn } from "../util/logger";
 

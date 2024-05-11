@@ -315,7 +315,7 @@ export async function settingsPage() {
     run: PreferenceSubscreenBCESettingsRun,
     exit: PreferenceSubscreenBCESettingsExit,
     load: PreferenceSubscreenBCESettingsLoad,
-    unload: () => {}
+    unload: () => {},
   });
 
   /** @type {(e: KeyboardEvent) => void} */

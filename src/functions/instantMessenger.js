@@ -1,10 +1,10 @@
-import { SDK, HOOK_PRIORITIES, fbcNotify, processChatAugmentsForLine } from '..';
-import { BCX } from './hookBCXAPI';
-import { registerSocketListener } from './appendSocketListenersToInit';
-import { displayText } from '../util/localization';
-import { parseJSON, objEntries, isNonNullObject, isString } from '../util/utils';
-import { debug } from '../util/logger';
-import { fbcSettings } from '../util/settings';
+import { SDK, HOOK_PRIORITIES, fbcNotify, processChatAugmentsForLine } from "..";
+import { BCX } from "./hookBCXAPI";
+import { registerSocketListener } from "./appendSocketListenersToInit";
+import { displayText } from "../util/localization";
+import { parseJSON, objEntries, isNonNullObject, isString } from "../util/utils";
+import { debug } from "../util/logger";
+import { fbcSettings } from "../util/settings";
 
 // BcUtil-compatible instant messaging with friends
 export function instantMessenger() {

@@ -1,46 +1,46 @@
 import { SDK, HOOK_PRIORITIES } from ".";
 import { debug, logError } from "./util/logger";
 import { fbcSettings, postSettings, bceLoadSettings } from "./util/settings";
-import { antiGarbleCheat } from './functions/antiGarbleCheat';
-import { functionIntegrityCheck } from './functions/functionIntegrityCheck';
-import { bceStyles } from './functions/bceStyles';
-import { commonPatches } from './functions/commonPatches';
-import { beepImprovements } from './functions/beepImprovements';
-import { commands } from './functions/commands';
-import { settingsPage } from './functions/settingsPage';
-import { lockpickHelp } from './functions/lockpickHelp';
-import { automaticReconnect } from './functions/automaticReconnect';
-import { chatAugments } from './functions/chatAugments';
-import { layeringMenu } from './functions/layeringMenu';
-import { cacheClearer } from './functions/cacheClearer';
-import { chatRoomOverlay } from './functions/chatRoomOverlay';
-import { hiddenMessageHandler } from './functions/hiddenMessageHandler';
-import { privateWardrobe } from './functions/privateWardrobe';
-import { antiGarbling } from './functions/antiGarbling';
-import { automaticExpressions } from './functions/automaticExpressions';
-import { alternateArousal } from './functions/alternateArousal';
-import { autoGhostBroadcast } from './functions/autoGhostBroadcast';
-import { blindWithoutGlasses } from './functions/blindWithoutGlasses';
-import { friendPresenceNotifications } from './functions/friendPresenceNotifications';
-import { itemAntiCheat } from './functions/itemAntiCheat';
-import { forcedClubSlave } from './functions/forcedClubSlave';
-import { leashFix } from './functions/leashFix';
-import { instantMessenger } from './functions/instantMessenger';
-import { extendedWardrobe } from './functions/extendedWardrobe';
-import { customContentDomainCheck } from './functions/customContentDomainCheck';
-import { discreetMode } from './functions/discreetMode';
-import { autoStruggle } from './functions/autoStruggle';
-import { leashAlways } from './functions/leashAlways';
-import { pastProfiles } from './functions/pastProfiles';
-import { pendingMessages } from './functions/pendingMessages';
-import { hideHiddenItemsIcon } from './functions/hideHiddenItemsIcon';
-import { richOnlineProfile } from './functions/richOnlineProfile';
-import { crafting } from './functions/crafting';
-import { numericArousalMeters } from './functions/numericArousalMeters';
+import { antiGarbleCheat } from "./functions/antiGarbleCheat";
+import { functionIntegrityCheck } from "./functions/functionIntegrityCheck";
+import { bceStyles } from "./functions/bceStyles";
+import { commonPatches } from "./functions/commonPatches";
+import { beepImprovements } from "./functions/beepImprovements";
+import { commands } from "./functions/commands";
+import { settingsPage } from "./functions/settingsPage";
+import { lockpickHelp } from "./functions/lockpickHelp";
+import { automaticReconnect } from "./functions/automaticReconnect";
+import { chatAugments } from "./functions/chatAugments";
+import { layeringMenu } from "./functions/layeringMenu";
+import { cacheClearer } from "./functions/cacheClearer";
+import { chatRoomOverlay } from "./functions/chatRoomOverlay";
+import { hiddenMessageHandler } from "./functions/hiddenMessageHandler";
+import { privateWardrobe } from "./functions/privateWardrobe";
+import { antiGarbling } from "./functions/antiGarbling";
+import { automaticExpressions } from "./functions/automaticExpressions";
+import { alternateArousal } from "./functions/alternateArousal";
+import { autoGhostBroadcast } from "./functions/autoGhostBroadcast";
+import { blindWithoutGlasses } from "./functions/blindWithoutGlasses";
+import { friendPresenceNotifications } from "./functions/friendPresenceNotifications";
+import { itemAntiCheat } from "./functions/itemAntiCheat";
+import { forcedClubSlave } from "./functions/forcedClubSlave";
+import { leashFix } from "./functions/leashFix";
+import { instantMessenger } from "./functions/instantMessenger";
+import { extendedWardrobe } from "./functions/extendedWardrobe";
+import { customContentDomainCheck } from "./functions/customContentDomainCheck";
+import { discreetMode } from "./functions/discreetMode";
+import { autoStruggle } from "./functions/autoStruggle";
+import { leashAlways } from "./functions/leashAlways";
+import { pastProfiles } from "./functions/pastProfiles";
+import { pendingMessages } from "./functions/pendingMessages";
+import { hideHiddenItemsIcon } from "./functions/hideHiddenItemsIcon";
+import { richOnlineProfile } from "./functions/richOnlineProfile";
+import { crafting } from "./functions/crafting";
+import { numericArousalMeters } from "./functions/numericArousalMeters";
 import { appendSocketListenersToInit } from "./functions/appendSocketListenersToInit";
 import { nicknames } from "./functions/nicknames";
 import { hookBCXAPI } from "./functions/hookBCXAPI";
-import { toySync } from './functions/toySync';
+import { toySync } from "./functions/toySync";
 
 /** @type {string[]} */
 export const incompleteFunctions = [];
@@ -61,7 +61,7 @@ const registerFunction = async (func, label) => {
   }
 };
 
-export async function registerAllFunctions(){
+export async function registerAllFunctions() {
   // Delay game processes until registration is complete
   /** @type {"init" | "enable" | "disable"} */
   let funcsRegistered = "init";

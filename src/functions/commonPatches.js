@@ -1,6 +1,6 @@
-import { SDK, HOOK_PRIORITIES, patchFunction } from '..';
-import { displayText } from '../util/localization';
-import { isNonNullObject } from '../util/utils';
+import { SDK, HOOK_PRIORITIES, patchFunction } from "..";
+import { displayText } from "../util/localization";
+import { isNonNullObject } from "../util/utils";
 
 const DEVS = [23476, 27006, 24890];
 
