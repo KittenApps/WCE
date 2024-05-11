@@ -1,4 +1,5 @@
-import { patchFunction, processChatAugmentsForLine } from "..";
+import { processChatAugmentsForLine } from "..";
+import { patchFunction } from "../util/modding";
 import { createTimer } from "../util/hooks";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";

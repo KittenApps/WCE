@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { waitFor, isString, isChatMessage } from "../util/utils";
 import { fbcSettings, defaultSettings, bceSaveSettings } from "../util/settings";
 import { displayText } from "../util/localization";

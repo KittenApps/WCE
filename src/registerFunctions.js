@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from ".";
+import { SDK, HOOK_PRIORITIES } from "./util/modding";
 import { debug, logError } from "./util/logger";
 import { fbcSettings, postSettings, bceLoadSettings } from "./util/settings";
 import { antiGarbleCheat } from "./functions/antiGarbleCheat";

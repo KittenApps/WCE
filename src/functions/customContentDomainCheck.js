@@ -1,4 +1,5 @@
-import { SDK, HOOK_PRIORITIES, sessionCustomOrigins } from "..";
+import { sessionCustomOrigins } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 

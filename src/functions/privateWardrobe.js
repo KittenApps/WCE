@@ -1,4 +1,4 @@
-import { patchFunction, SDK, HOOK_PRIORITIES } from "..";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { waitFor, isCharacter, drawTextFitLeft } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";

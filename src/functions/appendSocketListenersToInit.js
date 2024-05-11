@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 
 /** @type {[any, any][]} */
 const listeners = [];

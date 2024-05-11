@@ -1,4 +1,4 @@
-import { SDK } from "..";
+import { SDK } from "../util/modding";
 import { waitFor, objEntries } from "../util/utils";
 import { logInfo, logWarn } from "../util/logger";
 import { expectedHashes } from "../util/functionHashes";

@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { waitFor, sleep, parseJSON, isString } from "../util/utils";
 import { debug, logWarn } from "../util/logger";

@@ -1,4 +1,4 @@
-import { patchFunction } from "..";
+import { patchFunction } from "../util/modding";
 import { fbcBeepNotify } from "../util/hooks";
 import { displayText } from "../util/localization";
 

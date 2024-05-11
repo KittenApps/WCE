@@ -1,4 +1,4 @@
-import { patchFunction } from "..";
+import { patchFunction } from "../util/modding";
 
 // make anti garble bypass (in restrictions preferences) available on all difficulty levels
 export function antiGarbleCheat() {

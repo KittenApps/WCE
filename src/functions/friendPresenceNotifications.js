@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { createTimer } from "../util/hooks";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { fbcSettings } from "../util/settings";

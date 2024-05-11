@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { debug } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 import { deepCopy, mustNum, fbcChatNotify } from "../util/utils";

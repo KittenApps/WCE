@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcBeepNotify } from "../util/hooks";
 import { waitFor, isWardrobe, parseJSON } from "../util/utils";
 import { logInfo, logError } from "../util/logger";

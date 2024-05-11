@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { waitFor, isNonNullObject, parseJSON, objEntries, isString, drawTooltip } from "../util/utils";
 import { displayText } from "../util/localization";
 import { debug, logWarn, logError } from "../util/logger";

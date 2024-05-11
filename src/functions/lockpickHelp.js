@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { waitFor } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 import { debug } from "../util/logger";

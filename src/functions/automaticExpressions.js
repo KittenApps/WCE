@@ -1,4 +1,4 @@
-import { patchFunction, SDK, HOOK_PRIORITIES } from "..";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { BCX } from "./hookBCXAPI";
 import { waitFor, fbcChatNotify } from "../util/utils";

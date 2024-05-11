@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { BCX } from "./hookBCXAPI";
 import { waitFor, isCharacter } from "../util/utils";
 import { displayText } from "../util/localization";

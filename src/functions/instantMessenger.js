@@ -1,4 +1,5 @@
-import { SDK, HOOK_PRIORITIES, processChatAugmentsForLine } from "..";
+import { processChatAugmentsForLine } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { BCX } from "./hookBCXAPI";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { displayText } from "../util/localization";

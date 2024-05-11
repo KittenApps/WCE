@@ -1,4 +1,4 @@
-import { patchFunction } from "..";
+import { patchFunction } from "../util/modding";
 
 export function leashFix() {
   patchFunction(

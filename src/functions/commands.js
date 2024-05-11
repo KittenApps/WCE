@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES } from "..";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { ICONS } from "../util/constants";
 import { BCX } from "./hookBCXAPI";
 import { waitFor, parseJSON, fbcChatNotify } from "../util/utils";

@@ -1,4 +1,4 @@
-import { patchFunction, SDK, HOOK_PRIORITIES } from "..";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 import { waitFor } from "../util/utils";
