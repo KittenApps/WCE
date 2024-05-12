@@ -200,19 +200,19 @@ export const fbcSendAction = (text) => {
 /** @type {(effect: EffectName) => boolean} */
 export function addCustomEffect(effect) {
   let updated = false;
-  const emoticon = Player.Appearance.find((a) => a.Asset.Name === "Emoticon");
-  if (!emoticon) {
-    logWarn("Could not find emoticon asset.");
+  const pronouns = Player.Appearance.find(a => a.Asset.Group.Name === "Pronouns");
+  if (!pronouns) {
+    logWarn("Could not find pronouns asset.");
     return updated;
   }
-  if (!emoticon.Property) {
-    emoticon.Property = { Effect: [effect] };
+  if (!pronouns.Property) {
+    pronouns.Property = { Effect: [effect] };
     updated = true;
-  } else if (!emoticon.Property.Effect) {
-    emoticon.Property.Effect = [effect];
+  } else if (!pronouns.Property.Effect) {
+    pronouns.Property.Effect = [effect];
     updated = true;
-  } else if (!emoticon.Property.Effect.includes(effect)) {
-    emoticon.Property.Effect.push(effect);
+  } else if (!pronouns.Property.Effect.includes(effect)) {
+    pronouns.Property.Effect.push(effect);
     updated = true;
   }
   if (updated && ServerPlayerIsInChatRoom()) {
@@ -223,10 +223,10 @@ export function addCustomEffect(effect) {
 
 /** @type {(effect: EffectName) => boolean} */
 export function removeCustomEffect(effect) {
-  const emoticon = Player.Appearance.find((a) => a.Asset.Name === "Emoticon");
+  const pronouns = Player.Appearance.find(a => a.Asset.Group.Name === "Pronouns");
   let updated = false;
-  if (emoticon?.Property?.Effect?.includes(effect)) {
-    emoticon.Property.Effect = emoticon.Property.Effect.filter((e) => e !== effect);
+  if (pronouns?.Property?.Effect?.includes(effect)) {
+    pronouns.Property.Effect = pronouns.Property.Effect.filter((e) => e !== effect);
     updated = true;
   }
   if (updated && ServerPlayerIsInChatRoom()) {

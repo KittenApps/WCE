@@ -3,7 +3,7 @@ import { displayText } from "../util/localization";
 import { isNonNullObject } from "../util/utils";
 
 const FBC_DEVS = [23476, 27006, 24890];
-const WCE_DEVS = [129178, 696];
+const WCE_DEVS = [129178];
 
 export function commonPatches() {
   // DrawBackNextButton patch to allow overriding hover text position

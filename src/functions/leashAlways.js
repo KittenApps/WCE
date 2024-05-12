@@ -2,22 +2,13 @@ import { waitFor, enableLeashing, disableLeashing } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 
 export async function leashAlways() {
-  await waitFor(() => Player?.Appearance?.some((a) => a.Asset.Name === "Emoticon"));
-  const emoticon = Player.Appearance.find((a) => a.Asset.Name === "Emoticon");
+  await waitFor(() => AssetFemale3DCG?.some(a => a.Group === "Pronouns"));
+  // @ts-ignore
+  AssetFemale3DCG.find(a => a.Group === "Pronouns").Asset.forEach(p => p.AllowEffect = [E.Leash, E.BlurLight]);
 
-  if (!emoticon) {
-    throw new Error("Could not find emoticon in Player appearance.");
-  }
-
-  if (Array.isArray(emoticon.Asset.AllowEffect)) {
-    emoticon.Asset.AllowEffect.push("Leash");
-  } else {
-    // @ts-ignore - not readonly
-    emoticon.Asset.AllowEffect = ["Leash"];
-  }
-  // @ts-ignore - not readonly
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  emoticon.Asset.AllowEffect.push("BlurLight");
+  await waitFor(() => Player?.Appearance?.some(a => a.Asset.Group.Name === "Pronouns"));
+  // @ts-ignore
+  Player.Appearance.find(a => a.Asset.Group.Name === "Pronouns").Asset.AllowEffect = [E.Leash, E.BlurLight];
 
   if (fbcSettings.leashAlways) {
     enableLeashing();
