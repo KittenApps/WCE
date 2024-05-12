@@ -47,7 +47,13 @@ export function commonPatches() {
           throw new Error("could not get canvas 2d context");
         }
         ctx.textAlign = "left";
-        DrawText(isWceDev ? displayText("WCE Developer") : displayText("FBC Developer"), 550, 75, isWceDev ? "fuchsia" : "hotpink", "black");
+        DrawText(
+          isWceDev ? displayText("WCE Developer") : displayText("FBC Developer"),
+          550,
+          75,
+          isWceDev ? "fuchsia" : "hotpink",
+          "black"
+        );
         ctx.textAlign = "center";
       }
 

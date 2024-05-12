@@ -458,8 +458,11 @@ export async function commands() {
               ? ` BCX ${window.bcx.getCharacterVersion(character.MemberNumber) ?? "?"}`
               : ""
           }${character.FBC ? `\nWCE v${character.FBC} Alt Arousal: ${character.BCEArousal?.toString()}` : ""}${
-            character.FBCOtherAddons && character.FBCOtherAddons.some((mod) => !["BCX", "FBC", "WCE"].includes(mod.name))
-              ? `\nOther Addons:\n- ${character.FBCOtherAddons.filter((mod) => !["BCX", "FBC", "WCE"].includes(mod.name))
+            character.FBCOtherAddons &&
+            character.FBCOtherAddons.some((mod) => !["BCX", "FBC", "WCE"].includes(mod.name))
+              ? `\nOther Addons:\n- ${character.FBCOtherAddons.filter(
+                  (mod) => !["BCX", "FBC", "WCE"].includes(mod.name)
+                )
                   .map((mod) => `${mod.name} v${mod.version} ${mod.repository ?? ""}`)
                   .join("\n- ")}`
               : ""

@@ -16,23 +16,23 @@ export const expectedHashes = (gameVersion) => {
         CharacterBuildDialog: "85F79C6E",
         CharacterCompressWardrobe: "2A05ECD1",
         CharacterDecompressWardrobe: "327FADA4",
-        CharacterDelete: "57AA5D48", // optional parameter was added to skip npc Character clearing in https://gitgud.io/BondageProjects/Bondage-College/-/commit/7ee7939bdf40fac6a496e7851a50efe3277c8e63
+        CharacterDelete: "57AA5D48",
         CharacterGetCurrent: "69F45A41",
         CharacterLoadCanvas: "EAB81BC4",
         CharacterLoadOnline: "B1BCD3B1",
         CharacterNickname: "A794EFF5",
-        CharacterRefresh: "301DA9CF", // C.RunScripts not relevant here: https://gitgud.io/BondageProjects/Bondage-College/-/merge_requests/4905
+        CharacterRefresh: "301DA9CF",
         CharacterReleaseTotal: "BB9C6989",
         CharacterSetCurrent: "F46573D8",
         CharacterSetFacialExpression: "F83CE881",
         CharacterSetActivePose: "566A14D7",
-        ChatAdminRoomCustomizationClick: "9D859B28", // not relevant: https://gitgud.io/BondageProjects/Bondage-College/-/merge_requests/4917
-        ChatAdminRoomCustomizationProcess: "AF01C65A", // same as above
+        ChatAdminRoomCustomizationClick: "9D859B28",
+        ChatAdminRoomCustomizationProcess: "AF01C65A",
         ChatRoomAppendChat: "998F2F98",
         ChatRoomCharacterUpdate: "DE2DC592",
         ChatRoomCharacterViewDrawBackground: "39EFE213",
         ChatRoomCharacterViewIsActive: "CD8066FA",
-        ChatRoomClearAllElements: "D67A7839", // works https://gitgud.io/BondageProjects/Bondage-College/-/merge_requests/4908
+        ChatRoomClearAllElements: "D67A7839",
         ChatRoomClick: "F57069BB",
         ChatRoomCurrentTime: "A462DD3A",
         ChatRoomDrawCharacterStatusIcons: "198C8657",
@@ -50,16 +50,16 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomRegisterMessageHandler: "C432923A",
         ChatRoomResize: "653445D7",
         ChatRoomRun: "9E0D7899",
-        ChatRoomSendChat: "C4C0688E", // only formatting change
+        ChatRoomSendChat: "C4C0688E",
         ChatRoomStart: "9B822A9A",
         CommandExecute: "803D6C70",
         CommandParse: "474ECCE0",
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
-        CommonSetScreen: "E10E2148", // non relevant https://gitgud.io/BondageProjects/Bondage-College/-/commit/f011a26580f67b2655ba540262b1344441a3c620
-        CraftingClick: "5A1B4ACC", // import / export crafted itemss tested
+        CommonSetScreen: "E10E2148",
+        CraftingClick: "5A1B4ACC",
         CraftingConvertSelectedToItem: "48270B42",
-        CraftingRun: "4018E748", // import / export crafted itemss tested
+        CraftingRun: "4018E748",
         DialogDrawItemMenu: "FCE556C2",
         DialogLeave: "C37553DC",
         DialogMenuButtonBuild: "E69567D2",
@@ -67,13 +67,13 @@ export const expectedHashes = (gameVersion) => {
         DrawArousalMeter: "BB0755AF",
         DrawArousalThermometer: "7ED6D822",
         DrawBackNextButton: "9AF4BA37",
-        DrawButton: "B747DF6E", // works
+        DrawButton: "B747DF6E",
         DrawCharacter: "B175AF5E",
         DrawCheckbox: "00FD87EB",
         DrawImageEx: "E01BE7E7",
         DrawImageResize: "D205975A",
         DrawItemPreview: "6A7A1E2A",
-        DrawProcess: "9776CBC2", // works
+        DrawProcess: "9776CBC2",
         DrawText: "C1BF0F50",
         DrawTextFit: "F9A1B11E",
         ElementCreateTextArea: "AA4AEDE7",
@@ -81,9 +81,9 @@ export const expectedHashes = (gameVersion) => {
         ElementScrollToEnd: "1AC45575",
         ElementValue: "4F26C62F",
         FriendListShowBeep: "6C0449BB",
-        GameRun: "505F7E21", // seems to work fine
+        GameRun: "505F7E21",
         GLDrawResetCanvas: "81214642",
-        InformationSheetRun: "4B2D599D", // works
+        InformationSheetRun: "4B2D599D",
         InterfaceTextGet: "4B2D599D",
         InventoryGet: "E666F671",
         LoginClick: "EE94BEC7",
@@ -112,7 +112,7 @@ export const expectedHashes = (gameVersion) => {
         ServerAppearanceLoadFromBundle: "946537FD",
         ServerClickBeep: "3E6277BE",
         ServerConnect: "845E50A6",
-        ServerDisconnect: "198FF7E7", // works
+        ServerDisconnect: "198FF7E7",
         ServerInit: "B6CEF7F1",
         ServerOpenFriendList: "FA8D3CDE",
         ServerPlayerExtensionSettingsSync: "1776666B",
@@ -120,7 +120,7 @@ export const expectedHashes = (gameVersion) => {
         ServerSendQueueProcess: "BD4277AC",
         SkillGetWithRatio: "3EB4BC45",
         SpeechGarble: "9D669F73",
-        SpeechGarbleByGagLevel: "F7555009", // non relevant
+        SpeechGarbleByGagLevel: "F7555009",
         SpeechGetTotalGagLevel: "5F4F6D45",
         StruggleDexterityProcess: "7E19ADA9",
         StruggleFlexibilityCheck: "727CE05B",
@@ -132,7 +132,7 @@ export const expectedHashes = (gameVersion) => {
         TextGet: "4DDE5794",
         TextLoad: "0D535190",
         TimerInventoryRemove: "1FA771FB",
-        TimerProcess: "BFB7FFE2", // no relevant
+        TimerProcess: "BFB7FFE2",
         TitleExit: "F13F533C",
         ValidationSanitizeProperties: "659F5965",
         WardrobeClick: "33405B1D",
