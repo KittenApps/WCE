@@ -1,6 +1,6 @@
 [build]
     dist = "dist"
-    command = "npm run build"
+    command = "npm run release"
 
 [[headers]]
     for = "/*"
