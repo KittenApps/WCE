@@ -1,4 +1,4 @@
-import { patchFunction } from "../util/modding";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 
 // make anti garble bypass (in restrictions preferences) available on all difficulty levels
 export function antiGarbleCheat() {
@@ -7,6 +7,7 @@ export function antiGarbleCheat() {
     { "C.RestrictionSettings.NoSpeechGarble = false;\n\t}": "}" },
     "make anti garble bypass (in restrictions preferences) available on all difficulty level"
   );
+
   patchFunction(
     "PreferenceSubscreenRestrictionRun",
     {
@@ -15,12 +16,18 @@ export function antiGarbleCheat() {
     },
     "make anti garble bypass (in restrictions preferences) available on all difficulty level"
   );
-  patchFunction(
+
+  SDK.hookFunction(
     "PreferenceSubscreenRestrictionClick",
-    {
-      "if (MouseIn(500, 625, 64, 64) && (Player.GetDifficulty() == 0)) Player.RestrictionSettings.NoSpeechGarble = !Player.RestrictionSettings.NoSpeechGarble;":
-        "if (MouseIn(500, 625, 64, 64)) Player.RestrictionSettings.NoSpeechGarble = !Player.RestrictionSettings.NoSpeechGarble;",
-    },
-    "make anti garble bypass (in restrictions preferences) available on all difficulty level"
+    HOOK_PRIORITIES.Top,
+    /**
+     * @param {Parameters<typeof PreferenceSubscreenRestrictionClick>} args
+     */ (args, next) => {
+      if (MouseIn(500, 625, 64, 64)) {
+        Player.RestrictionSettings.NoSpeechGarble = !Player.RestrictionSettings.NoSpeechGarble;
+        return;
+      }
+      return next(args);
+    }
   );
 }

@@ -33,7 +33,7 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomCharacterViewDraw: "CA108410", // Screens/Online/ChatRoom/ChatRoomCharacterView.js (19.4.2024 )
         ChatRoomCharacterViewIsActive: "CD8066FA",
         ChatRoomClearAllElements: "D67A7839",
-        ChatRoomClick: "F57069BB", // 747C51C4
+        ChatRoomClick: "F57069BB", // 747C51C4 antiGarble
         ChatRoomCurrentTime: "A462DD3A",
         ChatRoomDrawCharacterStatusIcons: "198C8657",
         ChatRoomHTMLEntities: "0A7ADB1D",
@@ -45,29 +45,29 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomMenuBuild: "F76AEFC3",
         ChatRoomMenuClick: "B1F7EBFB", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
-        ChatRoomMessage: "BBD61334", // EA9F35DE
-        ChatRoomMessageDisplay: "37B5D4F2", // 7B98A629
+        ChatRoomMessage: "BBD61334", // EA9F35DE ToDo
+        ChatRoomMessageDisplay: "37B5D4F2", // 7B98A629 ToDo
         ChatRoomRegisterMessageHandler: "C432923A",
-        ChatRoomResize: "653445D7", // F01AFCBA
-        ChatRoomRun: "9E0D7899", // 975B8ABD
-        ChatRoomSendChat: "C4C0688E", // 21606D2F
+        ChatRoomResize: "653445D7", // F01AFCBA antiGarble
+        ChatRoomRun: "9E0D7899", // 975B8ABD antiGarble
+        ChatRoomSendChat: "C4C0688E", // 21606D2F ToDo
         ChatRoomSendChatMessage: "4F3BDB61", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomSendWhisper: "2D2E4F8E", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomStart: "9B822A9A",
-        CommandExecute: "803D6C70", // C5477FA1
+        CommandExecute: "803D6C70", // C5477FA1 ToDo
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
         CommonSetScreen: "E10E2148",
-        CraftingClick: "5A1B4ACC", // 9169F897
+        CraftingClick: "5A1B4ACC", // 9169F897 ToDo
         CraftingConvertSelectedToItem: "48270B42",
-        CraftingRun: "4018E748", // 51577F65
+        CraftingRun: "4018E748", // 51577F65 ToDo
         DialogDrawItemMenu: "FCE556C2",
         DialogLeave: "C37553DC",
         DialogMenuButtonBuild: "E69567D2", // Scripts/Dialog.js (2.5.2024)
         DialogMenuButtonClick: "C1F5E0AF", // Scripts/Dialog.js (2.5.2024)
         DrawArousalMeter: "BB0755AF",
         DrawArousalThermometer: "7ED6D822",
-        DrawBackNextButton: "9AF4BA37", // 7263249E
+        DrawBackNextButton: "9AF4BA37", // 7263249E ToDo
         DrawButton: "B747DF6E",
         DrawCharacter: "B175AF5E",
         DrawCheckbox: "00FD87EB",
@@ -82,13 +82,13 @@ export const expectedHashes = (gameVersion) => {
         ElementScrollToEnd: "1AC45575",
         ElementValue: "4F26C62F",
         FriendListShowBeep: "6C0449BB",
-        GameRun: "505F7E21", // 337CB358
+        GameRun: "505F7E21", // 337CB358 ToDo
         GLDrawResetCanvas: "81214642",
-        InformationSheetRun: "4B2D599D", // 060A6DBA
+        InformationSheetRun: "4B2D599D", // 060A6DBA ToDo
         InterfaceTextGet: "66603471", // Scripts/Text.js (2.5.2024)
         InventoryGet: "E666F671",
-        LoginClick: "EE94BEC7", // ADA7E2B7
-        LoginRun: "C3926C4F", // D1DB7A8A
+        LoginClick: "EE94BEC7", // ADA7E2B7 ToDo
+        LoginRun: "C3926C4F", // D1DB7A8A ToDo
         LoginSetSubmitted: "C88F4A8E",
         LoginStatusReset: "18619F02",
         MouseIn: "CA8B839E",
@@ -101,14 +101,14 @@ export const expectedHashes = (gameVersion) => {
         OnlineProfileLoad: "BE8B009B",
         OnlineProfileRun: "7F57EF9A",
         PoseSetActive: "22C02050",
-        PreferenceInitPlayer: "037AB0BC", // F6DF1324
+        PreferenceInitPlayer: "F6DF1324", // Screens/Character/Preference/Preference.js (6.5.2024)
         PreferenceSubscreenArousalClick: "D8DCBBB5", // Screens/Character/Preference/Preference.js (6.5.2024)
         PreferenceSubscreenArousalRun: "96A6157B", // Screens/Character/Preference/Preference.js (6.5.2024)
-        PreferenceSubscreenRestrictionClick: "30C611F9", // EDC419A0
-        PreferenceSubscreenRestrictionRun: "9A8128AF", // 54908E55
+        PreferenceSubscreenRestrictionClick: "EDC419A0", // Screens/Character/Preference/Preference.js (6.5.2024)
+        PreferenceSubscreenRestrictionRun: "54908E55", // Screens/Character/Preference/Preference.js (6.5.2024)
         RelogRun: "10AF5A60",
         RelogExit: "2DFB2DAD",
-        ServerAccountBeep: "AAC49FD4", // 48D0BA71
+        ServerAccountBeep: "AAC49FD4", // 48D0BA71 ToDo
         ServerAppearanceBundle: "4D069622",
         ServerAppearanceLoadFromBundle: "946537FD",
         ServerClickBeep: "3E6277BE",
@@ -120,16 +120,16 @@ export const expectedHashes = (gameVersion) => {
         ServerSend: "ABE74E75",
         ServerSendQueueProcess: "BD4277AC",
         SkillGetWithRatio: "3EB4BC45",
-        SpeechGarble: "9D669F73", // 44AA51A4
-        SpeechGarbleByGagLevel: "F7555009", // 1D24B031
-        SpeechGetTotalGagLevel: "5F4F6D45", // CE6ABFD1
-        StruggleDexterityProcess: "7E19ADA9", // D185D348
+        SpeechGarble: "9D669F73", // 44AA51A4 anitGarble
+        SpeechGarbleByGagLevel: "F7555009", // 1D24B031 anitGarble
+        SpeechGetTotalGagLevel: "5F4F6D45", // CE6ABFD1 anitGarble
+        StruggleDexterityProcess: "7E19ADA9", // D185D348 ToDo
         StruggleFlexibilityCheck: "727CE05B",
-        StruggleFlexibilityProcess: "278D7285", // 1A0B96EF
-        StruggleLockPickDraw: "2F1F603B", // C04E2FBB
+        StruggleFlexibilityProcess: "278D7285", // 1A0B96EF ToDo
+        StruggleLockPickDraw: "2F1F603B", // C04E2FBB ToDo
         StruggleMinigameHandleExpression: "1B3ABF55",
         StruggleMinigameStop: "FB05E8A9",
-        StruggleStrengthProcess: "D20CF698", // B1A1457D
+        StruggleStrengthProcess: "D20CF698", // B1A1457D ToDo
         TextGet: "4DDE5794",
         TextLoad: "0D535190",
         TimerInventoryRemove: "1FA771FB",
