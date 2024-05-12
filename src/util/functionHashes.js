@@ -58,9 +58,9 @@ export const expectedHashes = (gameVersion) => {
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
         CommonSetScreen: "E10E2148",
-        CraftingClick: "5A1B4ACC", // 9169F897 ToDo
+        CraftingClick: "9169F897", // Screens/Room/Crafting/Crafting.js
         CraftingConvertSelectedToItem: "48270B42",
-        CraftingRun: "4018E748", // 51577F65 ToDo
+        CraftingRun: "51577F65", // Screens/Room/Crafting/Crafting.js
         DialogDrawItemMenu: "FCE556C2",
         DialogLeave: "C37553DC",
         DialogMenuButtonBuild: "E69567D2", // Scripts/Dialog.js (2.5.2024)
@@ -82,13 +82,13 @@ export const expectedHashes = (gameVersion) => {
         ElementScrollToEnd: "1AC45575",
         ElementValue: "4F26C62F",
         FriendListShowBeep: "6C0449BB",
-        GameRun: "505F7E21", // 337CB358 ToDo
+        GameRun: "337CB358", // Scripts/Game.js
         GLDrawResetCanvas: "81214642",
-        InformationSheetRun: "4B2D599D", // 060A6DBA ToDo
+        InformationSheetRun: "060A6DBA", // Screens/Character/InformationSheet/InformationSheet.js
         InterfaceTextGet: "66603471", // Scripts/Text.js (2.5.2024)
         InventoryGet: "E666F671",
-        LoginClick: "EE94BEC7", // ADA7E2B7 ToDo
-        LoginRun: "C3926C4F", // D1DB7A8A ToDo
+        LoginClick: "ADA7E2B7", // Screens/Character/Login/Login.js
+        LoginRun: "D1DB7A8A", // Screens/Character/Login/Login.js
         LoginSetSubmitted: "C88F4A8E",
         LoginStatusReset: "18619F02",
         MouseIn: "CA8B839E",
@@ -108,7 +108,7 @@ export const expectedHashes = (gameVersion) => {
         PreferenceSubscreenRestrictionRun: "54908E55", // Screens/Character/Preference/Preference.js (6.5.2024)
         RelogRun: "10AF5A60",
         RelogExit: "2DFB2DAD",
-        ServerAccountBeep: "AAC49FD4", // 48D0BA71 ToDo
+        ServerAccountBeep: "48D0BA71", // Scripts/Server.js 
         ServerAppearanceBundle: "4D069622",
         ServerAppearanceLoadFromBundle: "946537FD",
         ServerClickBeep: "3E6277BE",

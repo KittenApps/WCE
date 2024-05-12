@@ -1,5 +1,5 @@
 export const FBC_VERSION = "6.2";
-export const settingsVersion = 62;
+export const settingsVersion = 61;
 export const SUPPORTED_GAME_VERSIONS = ["R104"];
 
 export const fbcChangelog = `${FBC_VERSION} next

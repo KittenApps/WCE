@@ -41,6 +41,7 @@ export async function blindWithoutGlasses() {
     }
   }
 
+  // ToDo: Find another Hook for that (onItemChange)
   SDK.hookFunction(
     "GameRun",
     HOOK_PRIORITIES.Observe,
