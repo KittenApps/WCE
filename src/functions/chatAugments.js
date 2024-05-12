@@ -215,12 +215,20 @@ export function chatAugments() {
   );
 
   patchFunction(
-    "CommandParse",
+    "ChatRoomSendChatMessage",
     {
       "// Regular chat can be prevented with an owner presence rule":
         "// Regular chat can be prevented with an owner presence rule\nmsg = bceMessageReplacements(msg);\n// ",
-      "// The whispers get sent to the server and shown on the client directly":
-        "// The whispers get sent to the server and shown on the client directly\nmsg = bceMessageReplacements(msg);",
+    },
+    "No link or OOC parsing for sent whispers."
+  );
+
+  patchFunction(
+    "ChatRoomSendWhisper",
+    {
+      'const data = ChatRoomGenerateChatRoomChatMessage("Whisper", msg);':
+        `msg = bceMessageReplacements(msg);
+         const data = ChatRoomGenerateChatRoomChatMessage("Whisper", msg);`,
     },
     "No link or OOC parsing for sent whispers."
   );

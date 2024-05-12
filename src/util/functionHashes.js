@@ -51,9 +51,10 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomResize: "653445D7", // F01AFCBA
         ChatRoomRun: "9E0D7899", // 975B8ABD
         ChatRoomSendChat: "C4C0688E", // 21606D2F
+        ChatRoomSendChatMessage: "4F3BDB61",
+        ChatRoomSendWhisper: "2D2E4F8E",
         ChatRoomStart: "9B822A9A",
         CommandExecute: "803D6C70", // C5477FA1
-        CommandParse: "474ECCE0", // 5CE27223
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
         CommonSetScreen: "E10E2148",
