@@ -377,7 +377,7 @@ export const defaultSettings = /** @type {const} */ ({
     },
     category: "cheats",
     description:
-      "Bypasses gagged effect on others and deafen effect on yourself. You'll still be unable to understand others if they use FBC's gag anti-cheat.",
+      "Bypasses gagged effect on others and deafen effect on yourself. You'll still be unable to understand others if they use WCE's gag anti-cheat.",
   },
   lockpick: {
     label: "Reveal Lockpicking Order Based on Skill",
@@ -512,7 +512,7 @@ export const defaultSettings = /** @type {const} */ ({
     description: "You will be partially blinded while not wearing glasses.",
   },
   leashAlways: {
-    label: "Allow leashing without wearing a leashable item (requires leasher to have FBC too)",
+    label: "Allow leashing without wearing a leashable item (requires leasher to have WCE too)",
     value: false,
     /**
      * @param {unknown} newValue
@@ -684,7 +684,7 @@ export const defaultSettings = /** @type {const} */ ({
     },
     category: "misc",
     description:
-      "Share a list of your installed addons with other FBC users in the room, visible via /versions chat command.",
+      "Share a list of your installed addons with other WCE users in the room, visible via /versions chat command.",
   },
   buttplugDevices: {
     label: "Buttplug Devices",
@@ -763,8 +763,8 @@ export const bceLoadSettings = async () => {
     if (!isNonNullObject(settings)) {
       debug("no settings", key);
       fbcBeepNotify(
-        "Welcome to FBC",
-        `Welcome to For Better Club v${window.FBC_VERSION}! As this is your first time using FBC on this account, you may want to check out the settings page for some options to customize your experience. You can find it in the game preferences. Enjoy! In case of problems, you can contact us via Discord at ${DISCORD_INVITE_URL}`
+        "Welcome to WCE",
+        `Welcome to Wholesome Club Extensions v${window.FBC_VERSION}! As this is your first time using WCE on this account, you may want to check out the settings page for some options to customize your experience. You can find it in the game preferences. Enjoy!` // In case of problems, you can contact us via Discord at ${DISCORD_INVITE_URL}`
       );
       // @ts-expect-error -- this is fully populated in the loop below
       settings = {};
@@ -834,11 +834,11 @@ async function beepChangelog() {
   await waitFor(() => !!Player?.AccountName);
   await sleep(5000);
   fbcBeepNotify(
-    displayText("FBC Changelog"),
-    displayText(`FBC has received significant updates since you last used it. See /fbcchangelog in a chatroom.`)
+    displayText("WCE Changelog"),
+    displayText(`WCE has received significant updates since you last used it. See /wcechangelog in a chatroom.`)
   );
   await waitFor(() => !!document.getElementById("TextAreaChatLog"));
-  fbcChatNotify(`For Better Club (FBC) changelog:\n${fbcChangelog}`);
+  fbcChatNotify(`For Better Club (WCE) changelog:\n${fbcChangelog}`);
 }
 
 export const fbcSettingValue = (key) => {

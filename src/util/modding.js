@@ -14,10 +14,10 @@ export const HOOK_PRIORITIES = /** @type {const} */ ({
 
 export const SDK = bcModSdk.registerMod(
   {
-    name: "FBC",
+    name: "WCE",
     version: FBC_VERSION,
-    fullName: "For Better Club",
-    repository: "https://github.com/KittenApps/fbc-fork.git",
+    fullName: "Wholesome Club Extensions",
+    repository: "https://github.com/KittenApps/WCE.git",
   },
   {
     allowReplace: false,
@@ -32,7 +32,7 @@ export const patchFunction = (functionName, patches, affectedFunctionality) => {
   // Guard against patching a function that has been modified by another addon not using the shared SDK on supported versions.
   if (deviatingHashes.includes(functionName) && SUPPORTED_GAME_VERSIONS.includes(GameVersion)) {
     logWarn(
-      `Attempted patching of ${functionName} despite detected deviation. Impact may be: ${affectedFunctionality}\n\nSee /fbcdebug in a chatroom for more information or copy(await fbcDebug()) in console.`
+      `Attempted patching of ${functionName} despite detected deviation. Impact may be: ${affectedFunctionality}\n\nSee /wcedebug in a chatroom for more information or copy(await fbcDebug()) in console.`
     );
     skippedFunctionality.push(affectedFunctionality);
   }

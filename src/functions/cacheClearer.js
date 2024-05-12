@@ -36,7 +36,7 @@ export function cacheClearer() {
     {
       'let suffix = "";': `let suffix = "";
         if (name === "clearCache") {
-          DrawButton(1005 + Space * Number(idx), 2, Space - 2, 60, "", color, null, "clear and reload the drawing cache of all characters");
+          DrawButton(1005 + Space * Number(idx), 2, Space - 2, 60, "", color, null, "[WCE] clear and reload the drawing cache of all characters");
           DrawImage("Icons/Small/Reset.png", 976 + Space * Number(idx) + Space / 2, 4);
           continue;
         }`,

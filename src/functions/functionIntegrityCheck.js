@@ -34,7 +34,7 @@ export async function functionIntegrityCheck() {
     }
     const actualHash = SDK.getOriginalHash(func);
     if (actualHash !== hash) {
-      logWarn(`Function ${func} has been modified before FBC, potential incompatibility: ${actualHash}`);
+      logWarn(`Function ${func} has been modified before WCE, potential incompatibility: ${actualHash}`);
       deviatingHashes.push(func);
     }
   }

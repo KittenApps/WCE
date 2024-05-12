@@ -21,7 +21,7 @@ export function customContentDomainCheck() {
     FUSAM.modals.open({
       prompt: displayText(`Do you want to allow 3rd party ${type ?? "content"} to be loaded from $origin? $trusted`, {
         $origin: origin,
-        $trusted: trustedOrigins.includes(origin) ? displayText("(This origin is trusted by authors of FBC)") : "",
+        $trusted: trustedOrigins.includes(origin) ? displayText("(This origin is trusted by authors of WCE)") : "",
       }),
       callback: (act) => {
         open = false;

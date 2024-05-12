@@ -1451,7 +1451,7 @@ export async function automaticExpressions() {
     Description: displayText("['list' or name of emote]: run an animation"),
     Action: (_1, _2, args) => {
       if (!fbcSettings.activityExpressions) {
-        fbcChatNotify(displayText("Activity expressions are not enabled in FBC settings. Unable to run animations."));
+        fbcChatNotify(displayText("Activity expressions are not enabled in WCE settings. Unable to run animations."));
         return;
       }
       if (args[0] === "list") {
@@ -1520,7 +1520,7 @@ export async function automaticExpressions() {
       if (!fbcSettings.animationEngine) {
         fbcChatNotify(
           displayText(
-            "Warning: animation engine in FBC is disabled. Pose may not be synchronized or set. Enable animation engine in FBC settings."
+            "Warning: animation engine in WCE is disabled. Pose may not be synchronized or set. Enable animation engine in WCE settings."
           )
         );
       }
@@ -1543,7 +1543,7 @@ export async function automaticExpressions() {
         CharacterSetFacialExpression(C, C.ExpressionQueue[0].Group, C.ExpressionQueue[0].Expression, undefined, undefined, true);
       }`,
     },
-    "Game's timed expressions are not hooked to FBC's animation engine"
+    "Game's timed expressions are not hooked to WCE's animation engine"
   );
 
   patchFunction(
@@ -1553,7 +1553,7 @@ export async function automaticExpressions() {
       if (bceAnimationEngineEnabled()) {
         if (item?.Asset?.Group?.Name) {
           CharacterSetFacialExpression(C, item.Asset.Group.Name, null);
-          console.warn("(FBC) Animation engine acknowledged validation-based expression removal for face component", item)
+          console.warn("(WCE) Animation engine acknowledged validation-based expression removal for face component", item)
         } else {
           console.warn("Unable to determine asset group name for item", item);
         }

@@ -2,7 +2,8 @@ import { SDK, HOOK_PRIORITIES, patchFunction } from "../util/modding";
 import { displayText } from "../util/localization";
 import { isNonNullObject } from "../util/utils";
 
-const DEVS = [23476, 27006, 24890];
+const FBC_DEVS = [23476, 27006, 24890];
+const WCE_DEVS = [129178, 696];
 
 export function commonPatches() {
   // DrawBackNextButton patch to allow overriding hover text position
@@ -37,14 +38,16 @@ export function commonPatches() {
       }
 
       const ret = next(args);
+      const isFbcDev = FBC_DEVS.includes(InformationSheetSelection.MemberNumber);
+      const isWceDev = WCE_DEVS.includes(InformationSheetSelection.MemberNumber);
 
-      if (DEVS.includes(InformationSheetSelection.MemberNumber)) {
+      if (isFbcDev || isWceDev) {
         const ctx = window.MainCanvas.getContext("2d");
         if (!ctx) {
           throw new Error("could not get canvas 2d context");
         }
         ctx.textAlign = "left";
-        DrawText(displayText("FBC Developer"), 550, 75, "hotpink", "black");
+        DrawText(isWceDev ? displayText("WCE Developer") : displayText("FBC Developer"), 550, 75, isWceDev ? "fuchsia" : "hotpink", "black");
         ctx.textAlign = "center";
       }
 

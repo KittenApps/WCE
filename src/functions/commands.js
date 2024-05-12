@@ -19,10 +19,10 @@ export async function fbcDebug(copy) {
   info.set("Browser", navigator.userAgent);
   info.set("Game Version", `${GameVersion}${SUPPORTED_GAME_VERSIONS.includes(GameVersion) ? "" : " (unsupported)"}`);
   info.set("WebGL Version", GLVersion);
-  info.set("FBC Version", FBC_VERSION);
+  info.set("WCE Version", FBC_VERSION);
   info.set("Loaded via FUSAM", typeof FUSAM === "object" && FUSAM?.addons?.FBC ? "Yes" : "No");
   info.set(
-    "FBC Enabled Settings",
+    "WCE Enabled Settings",
     `\n- ${objEntries(fbcSettings)
       .filter(([k, v]) => v || k === "version")
       .map(([k, v]) => `${k}: ${v.toString()}`)
@@ -155,7 +155,19 @@ export async function commands() {
     },
     {
       Tag: "fbcchangelog",
-      Description: displayText("Show recent FBC changelog"),
+      Description: displayText("Show recent WCE changelog"),
+      Action: () => {
+        fbcChatNotify(fbcChangelog);
+      },
+    },
+    {
+      Tag: "wcedebug",
+      Description: displayText("Get debug information to share with developers."),
+      Action: () => fbcDebug(true),
+    },
+    {
+      Tag: "wcechangelog",
+      Description: displayText("Show recent WCE changelog"),
       Action: () => {
         fbcChatNotify(fbcChangelog);
       },
@@ -163,7 +175,7 @@ export async function commands() {
     {
       Tag: "exportlooks",
       Description: displayText(
-        "[target member number]: Copy your or another player's appearance in a format that can be imported with FBC or BCX"
+        "[target member number]: Copy your or another player's appearance in a format that can be imported with WCE or BCX"
       ),
       Action: async (_, _command, args) => {
         const [target] = args;
@@ -268,7 +280,7 @@ export async function commands() {
     },
     {
       Tag: "importlooks",
-      Description: displayText("Import looks from a string (BCX or FBC export)"),
+      Description: displayText("Import looks from a string (BCX or WCE export)"),
       Action: () => {
         if (!Player.CanChangeOwnClothes() || !OnlineGameAllowChange()) {
           fbcChatNotify(
@@ -435,7 +447,7 @@ export async function commands() {
     },
     {
       Tag: "versions",
-      Description: displayText("show versions of the club, FBC, BCX and other mods in use by players"),
+      Description: displayText("show versions of the club, WCE, BCX and other mods in use by players"),
       Action: (_, _command, args) => {
         /** @type {(character: Character) => string} */
         const getCharacterModInfo = (character) =>
@@ -445,9 +457,9 @@ export async function commands() {
             window.bcx?.getCharacterVersion(character.MemberNumber)
               ? ` BCX ${window.bcx.getCharacterVersion(character.MemberNumber) ?? "?"}`
               : ""
-          }${character.FBC ? `\nFBC v${character.FBC} Alt Arousal: ${character.BCEArousal?.toString()}` : ""}${
-            character.FBCOtherAddons && character.FBCOtherAddons.some((mod) => !["BCX", "FBC"].includes(mod.name))
-              ? `\nOther Addons:\n- ${character.FBCOtherAddons.filter((mod) => !["BCX", "FBC"].includes(mod.name))
+          }${character.FBC ? `\nWCE v${character.FBC} Alt Arousal: ${character.BCEArousal?.toString()}` : ""}${
+            character.FBCOtherAddons && character.FBCOtherAddons.some((mod) => !["BCX", "FBC", "WCE"].includes(mod.name))
+              ? `\nOther Addons:\n- ${character.FBCOtherAddons.filter((mod) => !["BCX", "FBC", "WCE"].includes(mod.name))
                   .map((mod) => `${mod.name} v${mod.version} ${mod.repository ?? ""}`)
                   .join("\n- ")}`
               : ""

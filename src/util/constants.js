@@ -19,10 +19,10 @@ export const fbcChangelog = `${FBC_VERSION} next
 `;
 
 export const DISCORD_INVITE_URL = "https://discord.gg/SHJMjEh9VH";
-export const WEBSITE_URL = "https://sidiousious.gitlab.io/bce/";
+export const WEBSITE_URL = "https://github.com/KittenApps/WCE";
 
 export const BCE_COLOR_ADJUSTMENTS_CLASS_NAME = "bce-colors";
-export const BCE_LICENSE = "https://gitlab.com/Sidiousious/bce/-/blob/main/LICENSE";
+export const BCE_LICENSE = "https://github.com/KittenApps/WCE/blob/main/LICENSE";
 export const BCE_MAX_AROUSAL = 99.6;
 export const BCE_MSG = "BCEMsg";
 export const DARK_INPUT_CLASS = "bce-dark-input";

@@ -23,7 +23,7 @@ export async function settingsPage() {
     Math.ceil(Object.values(defaultSettings).filter((v) => v.category === category).length / settingsPerPage);
 
   const discordInvitePosition = /** @type {const} */ ([1500, 60, 250, 50]);
-  const licensePosition = /** @type {const} */ ([1500, 120, 250, 50]);
+  const licensePosition = /** @type {const} */ ([1500, /*120*/ 60, 250, 50]);
   const websitePosition = /** @type {const} */ ([1240, 60, 250, 50]);
   let currentPageNumber = 0;
 
@@ -88,14 +88,14 @@ export async function settingsPage() {
     }
     ctx.textAlign = "left";
     DrawText(displayText("Wholesome Club Extensions (WCE) Settings"), 300, 125, "Black", "Gray");
-    DrawButton(...discordInvitePosition, "", "White", "");
+    /*DrawButton(...discordInvitePosition, "", "White", "");
     DrawText(
       displayText("Join Discord"),
       discordInvitePosition[0] + 20,
       discordInvitePosition[1] + discordInvitePosition[3] / 2,
       "Black",
       ""
-    );
+    );*/
     DrawButton(...licensePosition, "", "White", "");
     DrawText(displayText("License"), licensePosition[0] + 20, licensePosition[1] + licensePosition[3] / 2, "Black", "");
     DrawButton(...websitePosition, "", "White", "");

@@ -53,9 +53,9 @@ export function automaticReconnect() {
        */ (args, next) => {
         const ret = next(args);
         if (Object.keys(loginData.passwords).length > 0) {
-          DrawText(displayText("Saved Logins (FBC)"), 170, 35, "White", "Black");
+          DrawText(displayText("Saved Logins (WCE)"), 170, 35, "White", "Black");
         }
-        DrawButton(1250, 385, 180, 60, displayText("Save (FBC)"), "White");
+        DrawButton(1250, 385, 180, 60, displayText("Save (WCE)"), "White");
 
         let y = 60;
         for (const user in loginData.passwords) {

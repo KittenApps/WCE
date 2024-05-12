@@ -27,7 +27,7 @@ const pushLog = (level, ...args) => {
  * @type {(...args: unknown[]) => void}
  */
 export const debug = (...args) => {
-  console.debug("FBC", `${window.FBC_VERSION}:`, ...args);
+  console.debug("WCE", `${window.FBC_VERSION}:`, ...args);
   pushLog("debug", ...args);
 };
 
@@ -35,7 +35,7 @@ export const debug = (...args) => {
  * @type {(...args: unknown[]) => void}
  */
 export const logInfo = (...args) => {
-  console.info("FBC", `${window.FBC_VERSION}:`, ...args);
+  console.info("WCE", `${window.FBC_VERSION}:`, ...args);
   pushLog("info", ...args);
 };
 
@@ -43,7 +43,7 @@ export const logInfo = (...args) => {
  * @type {(...args: unknown[]) => void}
  */
 export const logWarn = (...args) => {
-  console.warn("FBC", `${window.FBC_VERSION}:`, ...args);
+  console.warn("WCE", `${window.FBC_VERSION}:`, ...args);
   pushLog("warn", ...args);
 };
 
@@ -51,6 +51,6 @@ export const logWarn = (...args) => {
  * @type {(...args: unknown[]) => void}
  */
 export const logError = (...args) => {
-  console.error("FBC", `${window.FBC_VERSION}:`, ...args);
+  console.error("WCE", `${window.FBC_VERSION}:`, ...args);
   pushLog("error", ...args);
 };

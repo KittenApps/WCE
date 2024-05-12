@@ -65,7 +65,7 @@ export async function forcedClubSlave() {
       [
         "160",
         "100",
-        displayText("([FBC] Force them to become a Club Slave.)"),
+        displayText("([WCE] Force them to become a Club Slave.)"),
         displayText("(She will become a Club Slave for the next hour.)"),
         "bceSendToClubSlavery()",
         "bceCanSendToClubSlavery()",
@@ -73,8 +73,8 @@ export async function forcedClubSlave() {
       [
         "160",
         "",
-        displayText("([FBC] Force them to become a Club Slave.)"),
-        displayText("(Requires both to use compatible versions of FBC and the target to not already be a club slave.)"),
+        displayText("([WCE] Force them to become a Club Slave.)"),
+        displayText("(Requires both to use compatible versions of WCE and the target to not already be a club slave.)"),
         "",
         "!bceCanSendToClubSlavery()",
       ],

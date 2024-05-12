@@ -7,7 +7,7 @@ export function beepImprovements() {
     fbcBeepNotify(
       displayText("Incompatibility"),
       displayText(
-        "FBC is incompatible with BCUtil. Some functionality from FBC may not work. BCUtil's wardrobe, appearance, and instant messaging functionality are all available within FBC. Go to FBC settings and enable the relevant options, then disable BCUtil to migrate fully to FBC. This beep will appear every time FBC detects BCUtil as having loaded before FBC."
+        "WCE is incompatible with BCUtil. Some functionality from WCE may not work. BCUtil's wardrobe, appearance, and instant messaging functionality are all available within WCE. Go to WCE settings and enable the relevant options, then disable BCUtil to migrate fully to WCE. This beep will appear every time WCE detects BCUtil as having loaded before WCE."
       )
     );
     return;
@@ -37,6 +37,6 @@ export function beepImprovements() {
         }
       }`,
     },
-    "Beeps are not enhanced by FBC."
+    "Beeps are not enhanced by WCE."
   );
 }

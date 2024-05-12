@@ -1,5 +1,7 @@
 {
+	"name": "wce",
 	"type": "module",
+	"license": "GPL-3.0-or-later",
 	"scripts": {
 		"start": "esbuild src/index.js --bundle --outfile=./dist/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=./dist",
 		"build": "esbuild src/index.js --bundle --outfile=./dist/wce.js --format=esm --sourcemap",

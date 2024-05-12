@@ -73,7 +73,7 @@ export async function layeringMenu() {
      * @param {Parameters<InterfaceTextGet>} args
      */
     (args, next) => {
-      if (args[0] === "DialogMenuPaint") return "Copy colors to other items of same type";
+      if (args[0] === "DialogMenuPaint") return displayText("[WCE] Copy colors to other items of same type");
       return next(args);
     }
   );

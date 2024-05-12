@@ -354,7 +354,7 @@ export async function pastProfiles() {
         DrawButton(1820, 60, 90, 90, "", "White", "Icons/Cancel.png", TextGet("LeaveNoSave"));
         return null;
       }
-      DrawButton(1620, 60, 90, 90, "", "White", "Icons/Notifications.png", displayText("[FBC] Notes"));
+      DrawButton(1620, 60, 90, 90, "", "White", "Icons/Notifications.png", displayText("[WCE] Notes"));
       return next(args);
     }
   );

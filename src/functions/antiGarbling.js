@@ -19,7 +19,7 @@ export async function antiGarbling() {
 
   ChatRoomRegisterMessageHandler({
     Priority: 1,
-    Description: "Anti-garbling by FBC",
+    Description: "Anti-garbling by WCE",
     Callback: (data, sender, msg) => {
       const clientGagged = msg.endsWith(GAGBYPASSINDICATOR);
       msg = msg.replace(/[\uf123-\uf124]/gu, "");

@@ -36,7 +36,7 @@ if (window.FBC_VERSION) {
 }
 
 if (typeof ChatRoomCharacter === "undefined") {
-  throw new Error("Bondage Club not detected. Skipping FBC initialization.");
+  throw new Error("Bondage Club not detected. Skipping WCE initialization.");
 }
 
 window.FBC_VERSION = FBC_VERSION;
@@ -49,7 +49,7 @@ window.fbcSettingValue = fbcSettingValue;
 window.bce_initializeDefaultExpression = () => {};
 window.fbcDebug = fbcDebug;
 
-FUSAM.registerDebugMethod("FBC", fbcDebug);
+FUSAM.registerDebugMethod("WCE", fbcDebug);
 
 await registerAllFunctions();
 
