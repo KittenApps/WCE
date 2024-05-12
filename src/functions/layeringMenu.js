@@ -54,7 +54,8 @@ export async function layeringMenu() {
         fbcSettings.copyColor &&
         Player.CanInteract() &&
         C?.FocusGroup?.Name &&
-        !InventoryGroupIsBlocked(C, C.FocusGroup.Name)
+        !InventoryGroupIsBlocked(C, C.FocusGroup.Name) &&
+        DialogMenuMode === "items"
       ) {
         const focusItem = InventoryGet(C, C.FocusGroup.Name);
         if (assetWorn(C, focusItem) && colorCopiableAssets.includes(focusItem.Asset.Name)) {

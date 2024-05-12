@@ -43,8 +43,8 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomMapViewCharacterOnWhisperRange: "B0D08E96",
         ChatRoomMapViewIsActive: "D181020D",
         ChatRoomMenuBuild: "F76AEFC3",
-        ChatRoomMenuClick: "B1F7EBFB", // Screens/Online/ChatRoom/ChatRoom.js
-        ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomMenuClick: "B1F7EBFB", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
+        ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomMessage: "BBD61334", // EA9F35DE
         ChatRoomMessageDisplay: "37B5D4F2", // 7B98A629
         ChatRoomRegisterMessageHandler: "C432923A",
@@ -63,8 +63,8 @@ export const expectedHashes = (gameVersion) => {
         CraftingRun: "4018E748", // 51577F65
         DialogDrawItemMenu: "FCE556C2",
         DialogLeave: "C37553DC",
-        DialogMenuButtonBuild: "E69567D2",
-        DialogMenuButtonClick: "E69567D2", // C1F5E0AF
+        DialogMenuButtonBuild: "E69567D2", // Scripts/Dialog.js (2.5.2024)
+        DialogMenuButtonClick: "C1F5E0AF", // Scripts/Dialog.js (2.5.2024)
         DrawArousalMeter: "BB0755AF",
         DrawArousalThermometer: "7ED6D822",
         DrawBackNextButton: "9AF4BA37", // 7263249E
@@ -85,7 +85,7 @@ export const expectedHashes = (gameVersion) => {
         GameRun: "505F7E21", // 337CB358
         GLDrawResetCanvas: "81214642",
         InformationSheetRun: "4B2D599D", // 060A6DBA
-        InterfaceTextGet: "4B2D599D", // 66603471
+        InterfaceTextGet: "66603471", // Scripts/Text.js (2.5.2024)
         InventoryGet: "E666F671",
         LoginClick: "EE94BEC7", // ADA7E2B7
         LoginRun: "C3926C4F", // D1DB7A8A
@@ -102,8 +102,8 @@ export const expectedHashes = (gameVersion) => {
         OnlineProfileRun: "7F57EF9A",
         PoseSetActive: "22C02050",
         PreferenceInitPlayer: "037AB0BC", // F6DF1324
-        PreferenceSubscreenArousalClick: "30C611F9", // D8DCBBB5
-        PreferenceSubscreenArousalRun: "9A8128AF", // 96A6157B
+        PreferenceSubscreenArousalClick: "D8DCBBB5", // Screens/Character/Preference/Preference.js (6.5.2024)
+        PreferenceSubscreenArousalRun: "96A6157B", // Screens/Character/Preference/Preference.js (6.5.2024)
         PreferenceSubscreenRestrictionClick: "30C611F9", // EDC419A0
         PreferenceSubscreenRestrictionRun: "9A8128AF", // 54908E55
         RelogRun: "10AF5A60",
