@@ -20,15 +20,24 @@ export function cacheClearer() {
     }
   );
 
-  patchFunction(
+  SDK.hookFunction(
     "ChatRoomMenuClick",
-    {
-      "switch (ChatRoomMenuButtons[B]) {": `switch (ChatRoomMenuButtons[B]) {
-        case "clearCache": 
-          bceDoClearCaches();
-          break;`,
-    },
-    "manual clearing and reloading of drawing cache"
+    HOOK_PRIORITIES.AddBehaviour,
+    /**
+     * @param {Parameters<typeof ChatRoomMenuBuild>} args
+     */
+    (args, next) => {
+      const ret = next(args);
+      if (fbcSettings.manualCacheClear) {
+        const Space = 992 / (ChatRoomMenuButtons.length);
+        for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
+          if (MouseXIn(1005 + Space * B, Space - 2) && ChatRoomMenuButtons[B] === "clearCache") {
+            doClearCaches();
+          }
+        }
+      }
+      return ret;
+    }
   );
 
   patchFunction(
@@ -58,10 +67,10 @@ export function cacheClearer() {
     if (!fbcSettings.automateCacheClear) {
       return;
     }
-    window.bceDoClearCaches();
+    doClearCaches();
   };
 
-  window.bceDoClearCaches = function () {
+   function doClearCaches() {
     debug("Clearing caches");
     if (GLDrawCanvas.GL?.textureCache) {
       GLDrawCanvas.GL.textureCache.clear();

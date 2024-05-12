@@ -21,7 +21,6 @@ declare global {
   var bceMessageReplacements: (msg: string) => string;
   var bceClearPassword: (name: string) => void;
   var bceClearCaches: () => Promise<void>;
-  var bceDoClearCaches: () => void;
   var bceStartClubSlave: () => Promise<void>;
   var bceSendToClubSlavery: () => void;
   var bceCanSendToClubSlavery: () => boolean;

@@ -43,8 +43,8 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomMapViewCharacterOnWhisperRange: "B0D08E96",
         ChatRoomMapViewIsActive: "D181020D",
         ChatRoomMenuBuild: "F76AEFC3",
-        ChatRoomMenuClick: "600503B8", // B1F7EBFB
-        ChatRoomMenuDraw: "CF17EA43", // 83275135
+        ChatRoomMenuClick: "B1F7EBFB", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomMessage: "BBD61334", // EA9F35DE
         ChatRoomMessageDisplay: "37B5D4F2", // 7B98A629
         ChatRoomRegisterMessageHandler: "C432923A",
