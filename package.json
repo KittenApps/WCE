@@ -4,8 +4,7 @@
 	"license": "GPL-3.0-or-later",
 	"scripts": {
 		"start": "esbuild src/index.js --bundle --outfile=./dist/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=./dist",
-		"build": "esbuild src/index.js --bundle --outfile=./dist/wce.js --format=esm --sourcemap",
-		"release": "npm run build && npx replace-in-file 'http://localhost:4000' $DEPLOY_PRIME_URL dist/wce-*loader.user.js",
+		"build": "node build.js",
 		"test": "tsc",
 		"prettier": "npx prettier src --write --trailing-comma es5 --print-width 120",
 		"serve": "npx http-server ./dist -p 4000 -c-1 --cors"
