@@ -20,13 +20,13 @@ export function chatRoomOverlay() {
         C.FBC &&
         ChatRoomHideIconState === 0
       ) {
-        const icon = ["1", "2", "3"].includes(C.FBC.split(".")[0]) ? ICONS.BCE_USER : ICONS.USER;
-        DrawImageResize(icon, CharX + 270 * Zoom, CharY, 40 * Zoom, 40 * Zoom);
+        const text = ["1", "2", "3", "4", "5"].includes(C.FBC.split(".")[0]) ? "FBC" : "WCE";
+        DrawTextFit(text, CharX + 290 * Zoom, CharY + 12 * Zoom, 50 * Zoom, C.FBCNoteExists ? "Cyan" : "White", "Black");
         DrawTextFit(
           /^\d+\.\d+(\.\d+)?$/u.test(C.FBC) ? C.FBC : "",
           CharX + 290 * Zoom,
-          CharY + 30 * Zoom,
-          40 * Zoom,
+          CharY + 32 * Zoom,
+          35 * Zoom,
           C.FBCNoteExists ? "Cyan" : "White",
           "Black"
         );
