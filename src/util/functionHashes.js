@@ -9,9 +9,9 @@ export const expectedHashes = (gameVersion) => {
         ActivitySetArousal: "3AE28123",
         ActivitySetArousalTimer: "1342AFE2",
         ActivityTimerProgress: "6CD388A7",
-        AppearanceClick: "4C04C15E", // B6E6C8CE
+        AppearanceClick: "B6E6C8CE", // Screens/Character/Appearance/Appearance.js (2.5.2024)
         AppearanceLoad: "4360C485",
-        AppearanceRun: "6EC75705", // BDC2AC93
+        AppearanceRun: "BDC2AC93", // Screens/Character/Appearance/Appearance.js (2.5.2024)
         CharacterAppearanceWardrobeLoad: "A5B63A03",
         CharacterBuildDialog: "85F79C6E",
         CharacterCompressWardrobe: "2A05ECD1",
@@ -24,13 +24,13 @@ export const expectedHashes = (gameVersion) => {
         CharacterRefresh: "301DA9CF",
         CharacterReleaseTotal: "BB9C6989",
         CharacterSetCurrent: "F46573D8",
-        CharacterSetFacialExpression: "F83CE881", // EC032BEE
+        CharacterSetFacialExpression: "EC032BEE", // Scripts/Character.js (6.5.2024)
         CharacterSetActivePose: "566A14D7",
         ChatAdminRoomCustomizationClick: "9D859B28",
         ChatAdminRoomCustomizationProcess: "AF01C65A",
         ChatRoomAppendChat: "998F2F98",
         ChatRoomCharacterUpdate: "DE2DC592",
-        ChatRoomCharacterViewDrawBackground: "39EFE213", // 555798A7
+        ChatRoomCharacterViewDraw: "CA108410", // Screens/Online/ChatRoom/ChatRoomCharacterView.js (19.4.2024 )
         ChatRoomCharacterViewIsActive: "CD8066FA",
         ChatRoomClearAllElements: "D67A7839",
         ChatRoomClick: "F57069BB", // 747C51C4
@@ -51,8 +51,8 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomResize: "653445D7", // F01AFCBA
         ChatRoomRun: "9E0D7899", // 975B8ABD
         ChatRoomSendChat: "C4C0688E", // 21606D2F
-        ChatRoomSendChatMessage: "4F3BDB61",
-        ChatRoomSendWhisper: "2D2E4F8E",
+        ChatRoomSendChatMessage: "4F3BDB61", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
+        ChatRoomSendWhisper: "2D2E4F8E", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomStart: "9B822A9A",
         CommandExecute: "803D6C70", // C5477FA1
         CommonClick: "1F6DF7CB",
