@@ -45,16 +45,15 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomMenuBuild: "F76AEFC3",
         ChatRoomMenuClick: "B1F7EBFB", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
-        ChatRoomMessage: "BBD61334", // EA9F35DE ToDo
-        ChatRoomMessageDisplay: "37B5D4F2", // 7B98A629 ToDo
+        ChatRoomMessage: "EA9F35DE", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomRegisterMessageHandler: "C432923A",
         ChatRoomResize: "653445D7", // F01AFCBA antiGarble
         ChatRoomRun: "9E0D7899", // 975B8ABD antiGarble
-        ChatRoomSendChat: "C4C0688E", // 21606D2F ToDo
+        ChatRoomSendChat: "21606D2F", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomSendChatMessage: "4F3BDB61", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomSendWhisper: "2D2E4F8E", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomStart: "9B822A9A",
-        CommandExecute: "803D6C70", // C5477FA1 ToDo
+        CommandExecute: "C5477FA1", // Screens/Online/ChatRoom/Commands.js
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
         CommonSetScreen: "E10E2148",
@@ -67,7 +66,7 @@ export const expectedHashes = (gameVersion) => {
         DialogMenuButtonClick: "C1F5E0AF", // Scripts/Dialog.js (2.5.2024)
         DrawArousalMeter: "BB0755AF",
         DrawArousalThermometer: "7ED6D822",
-        DrawBackNextButton: "9AF4BA37", // 7263249E ToDo
+        DrawBackNextButton: "7263249E", // Scripts/Drawing.js
         DrawButton: "B747DF6E",
         DrawCharacter: "B175AF5E",
         DrawCheckbox: "00FD87EB",
@@ -120,16 +119,16 @@ export const expectedHashes = (gameVersion) => {
         ServerSend: "ABE74E75",
         ServerSendQueueProcess: "BD4277AC",
         SkillGetWithRatio: "3EB4BC45",
-        SpeechGarble: "9D669F73", // 44AA51A4 anitGarble
-        SpeechGarbleByGagLevel: "F7555009", // 1D24B031 anitGarble
-        SpeechGetTotalGagLevel: "5F4F6D45", // CE6ABFD1 anitGarble
-        StruggleDexterityProcess: "7E19ADA9", // D185D348 ToDo
+        SpeechGarble: "9D669F73", // 44AA51A4 antiGarble
+        SpeechGarbleByGagLevel: "F7555009", // 1D24B031 antiGarble
+        SpeechGetTotalGagLevel: "5F4F6D45", // CE6ABFD1 antiGarble
+        StruggleDexterityProcess: "D185D348", // Scripts/Struggle.js
         StruggleFlexibilityCheck: "727CE05B",
-        StruggleFlexibilityProcess: "278D7285", // 1A0B96EF ToDo
-        StruggleLockPickDraw: "2F1F603B", // C04E2FBB ToDo
+        StruggleFlexibilityProcess: "1A0B96EF", // Scripts/Struggle.js
+        StruggleLockPickDraw: "C04E2FBB", // Scripts/Struggle.js
         StruggleMinigameHandleExpression: "1B3ABF55",
         StruggleMinigameStop: "FB05E8A9",
-        StruggleStrengthProcess: "D20CF698", // B1A1457D ToDo
+        StruggleStrengthProcess: "B1A1457D", // StruggleStrengthProcess
         TextGet: "4DDE5794",
         TextLoad: "0D535190",
         TimerInventoryRemove: "1FA771FB",

@@ -205,14 +205,6 @@ export function chatAugments() {
     },
     "No OOC on CTRL+Enter."
   );
-  patchFunction(
-    "ChatRoomMessageDisplay",
-    {
-      "var div": `msg = msg.replace(/${CLOSINGBRACKETINDICATOR}/g, ")");
-      var div`,
-    },
-    "OOC closing brackets may look wonky."
-  );
 
   patchFunction(
     "ChatRoomSendChatMessage",
