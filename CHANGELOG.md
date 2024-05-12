@@ -7,3 +7,5 @@
 - made it load seperate from FUSAM again (still requires FUSAM for it's API though)
 - updated for r103
 - fix rich profile sticking on the screen after disconnect
+
+(WIP)

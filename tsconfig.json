@@ -1,8 +1,9 @@
 {
 	"include": [
 		"node_modules/bc-stubs/bc/**/*.d.ts",
-		"**/*.js",
-		"**/*.ts"
+		"types/wce.d.ts",
+		"src/**/*.js",
+		"src/**/*.ts"
 	],
 	"exclude": [
 		"dist/**"
