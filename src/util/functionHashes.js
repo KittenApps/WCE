@@ -9,9 +9,9 @@ export const expectedHashes = (gameVersion) => {
         ActivitySetArousal: "3AE28123",
         ActivitySetArousalTimer: "1342AFE2",
         ActivityTimerProgress: "6CD388A7",
-        AppearanceClick: "4C04C15E",
+        AppearanceClick: "4C04C15E", // B6E6C8CE
         AppearanceLoad: "4360C485",
-        AppearanceRun: "6EC75705",
+        AppearanceRun: "6EC75705", // BDC2AC93
         CharacterAppearanceWardrobeLoad: "A5B63A03",
         CharacterBuildDialog: "85F79C6E",
         CharacterCompressWardrobe: "2A05ECD1",
@@ -24,16 +24,16 @@ export const expectedHashes = (gameVersion) => {
         CharacterRefresh: "301DA9CF",
         CharacterReleaseTotal: "BB9C6989",
         CharacterSetCurrent: "F46573D8",
-        CharacterSetFacialExpression: "F83CE881",
+        CharacterSetFacialExpression: "F83CE881", // EC032BEE
         CharacterSetActivePose: "566A14D7",
         ChatAdminRoomCustomizationClick: "9D859B28",
         ChatAdminRoomCustomizationProcess: "AF01C65A",
         ChatRoomAppendChat: "998F2F98",
         ChatRoomCharacterUpdate: "DE2DC592",
-        ChatRoomCharacterViewDrawBackground: "39EFE213",
+        ChatRoomCharacterViewDrawBackground: "39EFE213", // 555798A7
         ChatRoomCharacterViewIsActive: "CD8066FA",
         ChatRoomClearAllElements: "D67A7839",
-        ChatRoomClick: "F57069BB",
+        ChatRoomClick: "F57069BB", // 747C51C4
         ChatRoomCurrentTime: "A462DD3A",
         ChatRoomDrawCharacterStatusIcons: "198C8657",
         ChatRoomHTMLEntities: "0A7ADB1D",
@@ -43,30 +43,30 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomMapViewCharacterOnWhisperRange: "B0D08E96",
         ChatRoomMapViewIsActive: "D181020D",
         ChatRoomMenuBuild: "F76AEFC3",
-        ChatRoomMenuClick: "600503B8",
-        ChatRoomMenuDraw: "CF17EA43",
-        ChatRoomMessage: "BBD61334",
-        ChatRoomMessageDisplay: "37B5D4F2",
+        ChatRoomMenuClick: "600503B8", // B1F7EBFB
+        ChatRoomMenuDraw: "CF17EA43", // 83275135
+        ChatRoomMessage: "BBD61334", // EA9F35DE
+        ChatRoomMessageDisplay: "37B5D4F2", // 7B98A629
         ChatRoomRegisterMessageHandler: "C432923A",
-        ChatRoomResize: "653445D7",
-        ChatRoomRun: "9E0D7899",
-        ChatRoomSendChat: "C4C0688E",
+        ChatRoomResize: "653445D7", // F01AFCBA
+        ChatRoomRun: "9E0D7899", // 975B8ABD
+        ChatRoomSendChat: "C4C0688E", // 21606D2F
         ChatRoomStart: "9B822A9A",
-        CommandExecute: "803D6C70",
-        CommandParse: "474ECCE0",
+        CommandExecute: "803D6C70", // C5477FA1
+        CommandParse: "474ECCE0", // 5CE27223
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
         CommonSetScreen: "E10E2148",
-        CraftingClick: "5A1B4ACC",
+        CraftingClick: "5A1B4ACC", // 9169F897
         CraftingConvertSelectedToItem: "48270B42",
-        CraftingRun: "4018E748",
+        CraftingRun: "4018E748", // 51577F65
         DialogDrawItemMenu: "FCE556C2",
         DialogLeave: "C37553DC",
         DialogMenuButtonBuild: "E69567D2",
-        DialogMenuButtonClick: "E69567D2",
+        DialogMenuButtonClick: "E69567D2", // C1F5E0AF
         DrawArousalMeter: "BB0755AF",
         DrawArousalThermometer: "7ED6D822",
-        DrawBackNextButton: "9AF4BA37",
+        DrawBackNextButton: "9AF4BA37", // 7263249E
         DrawButton: "B747DF6E",
         DrawCharacter: "B175AF5E",
         DrawCheckbox: "00FD87EB",
@@ -81,13 +81,13 @@ export const expectedHashes = (gameVersion) => {
         ElementScrollToEnd: "1AC45575",
         ElementValue: "4F26C62F",
         FriendListShowBeep: "6C0449BB",
-        GameRun: "505F7E21",
+        GameRun: "505F7E21", // 337CB358
         GLDrawResetCanvas: "81214642",
-        InformationSheetRun: "4B2D599D",
-        InterfaceTextGet: "4B2D599D",
+        InformationSheetRun: "4B2D599D", // 060A6DBA
+        InterfaceTextGet: "4B2D599D", // 66603471
         InventoryGet: "E666F671",
-        LoginClick: "EE94BEC7",
-        LoginRun: "C3926C4F",
+        LoginClick: "EE94BEC7", // ADA7E2B7
+        LoginRun: "C3926C4F", // D1DB7A8A
         LoginSetSubmitted: "C88F4A8E",
         LoginStatusReset: "18619F02",
         MouseIn: "CA8B839E",
@@ -100,14 +100,14 @@ export const expectedHashes = (gameVersion) => {
         OnlineProfileLoad: "BE8B009B",
         OnlineProfileRun: "7F57EF9A",
         PoseSetActive: "22C02050",
-        PreferenceInitPlayer: "037AB0BC",
-        PreferenceSubscreenArousalClick: "30C611F9",
-        PreferenceSubscreenArousalRun: "9A8128AF",
-        PreferenceSubscreenRestrictionClick: "30C611F9",
-        PreferenceSubscreenRestrictionRun: "9A8128AF",
+        PreferenceInitPlayer: "037AB0BC", // F6DF1324
+        PreferenceSubscreenArousalClick: "30C611F9", // D8DCBBB5
+        PreferenceSubscreenArousalRun: "9A8128AF", // 96A6157B
+        PreferenceSubscreenRestrictionClick: "30C611F9", // EDC419A0
+        PreferenceSubscreenRestrictionRun: "9A8128AF", // 54908E55
         RelogRun: "10AF5A60",
         RelogExit: "2DFB2DAD",
-        ServerAccountBeep: "AAC49FD4",
+        ServerAccountBeep: "AAC49FD4", // 48D0BA71
         ServerAppearanceBundle: "4D069622",
         ServerAppearanceLoadFromBundle: "946537FD",
         ServerClickBeep: "3E6277BE",
@@ -119,16 +119,16 @@ export const expectedHashes = (gameVersion) => {
         ServerSend: "ABE74E75",
         ServerSendQueueProcess: "BD4277AC",
         SkillGetWithRatio: "3EB4BC45",
-        SpeechGarble: "9D669F73",
-        SpeechGarbleByGagLevel: "F7555009",
-        SpeechGetTotalGagLevel: "5F4F6D45",
-        StruggleDexterityProcess: "7E19ADA9",
+        SpeechGarble: "9D669F73", // 44AA51A4
+        SpeechGarbleByGagLevel: "F7555009", // 1D24B031
+        SpeechGetTotalGagLevel: "5F4F6D45", // CE6ABFD1
+        StruggleDexterityProcess: "7E19ADA9", // D185D348
         StruggleFlexibilityCheck: "727CE05B",
-        StruggleFlexibilityProcess: "278D7285",
-        StruggleLockPickDraw: "2F1F603B",
+        StruggleFlexibilityProcess: "278D7285", // 1A0B96EF
+        StruggleLockPickDraw: "2F1F603B", // C04E2FBB
         StruggleMinigameHandleExpression: "1B3ABF55",
         StruggleMinigameStop: "FB05E8A9",
-        StruggleStrengthProcess: "D20CF698",
+        StruggleStrengthProcess: "D20CF698", // B1A1457D
         TextGet: "4DDE5794",
         TextLoad: "0D535190",
         TimerInventoryRemove: "1FA771FB",
