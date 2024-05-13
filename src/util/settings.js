@@ -124,18 +124,6 @@ export const defaultSettings = /** @type {const} */ ({
     category: "activities",
     description: "Shows the numeric value of arousal meters when expanded.",
   },
-  allowLayeringOthers: {
-    label: "Enable layering menus on other players",
-    value: true,
-    /**
-     * @param {unknown} newValue
-     */
-    sideEffects: (newValue) => {
-      debug("allowLayeringOthers", newValue);
-    },
-    category: "appearance",
-    description: "Let's you edit the layering on items of other players.",
-  },
   copyColor: {
     label: "Enable option to copy color to all item's of the same type",
     value: false,

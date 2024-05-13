@@ -7,14 +7,25 @@ import { displayText } from "../util/localization";
 export async function layeringMenu() {
   await waitFor(() => !!Player?.AppearanceLayers);
 
-  patchFunction(
-    "DialogMenuButtonBuild",
-    {
-      "if (Item != null && C.IsPlayer() && Player.CanInteract()) {":
-        "if (Item != null && (C.IsPlayer() || fbcSettingValue('allowLayeringOthers')) && (Player.CanInteract() || fbcSettingValue('allowLayeringWhileBound'))) {",
-    },
-    "Built-in layering menus options for allow on others and allow while bound"
-  );
+  if (['R104Beta1', 'R104Beta2'].includes(GameVersion)) { // ToDo: remove once r104 is out
+    patchFunction(
+      "DialogMenuButtonBuild",
+      {
+        "if (Item != null && C.IsPlayer() && Player.CanInteract()) {":
+          "if (Item != null && !C.IsNpc() && (Player.CanInteract() || fbcSettingValue('allowLayeringWhileBound'))) {",
+      },
+      "Built-in layering menus options for allow on others and allow while bound"
+    );
+  } else {
+    patchFunction(
+      "DialogMenuButtonBuild",
+      {
+        "if (Item != null && !C.IsNpc() && Player.CanInteract()) {":
+          "if (Item != null && !C.IsNpc() && (Player.CanInteract() || fbcSettingValue('allowLayeringWhileBound'))) {",
+      },
+      "Built-in layering menus options for allow on others and allow while bound"
+    );
+  }
 
   // Pseudo-items that we do not want to process for color copying
   const ignoredColorCopiableAssets = [
