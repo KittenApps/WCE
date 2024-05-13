@@ -72,7 +72,7 @@ export async function forcedClubSlave() {
       ],
       [
         "160",
-        "",
+        "160",
         displayText("([WCE] Force them to become a Club Slave.)"),
         displayText("(Requires both to use compatible versions of WCE and the target to not already be a club slave.)"),
         "",
@@ -96,13 +96,9 @@ export async function forcedClubSlave() {
         ...clubSlaveDialog.map((v) => ({
           Stage: v[0],
           NextStage: v[1],
-          Option: v[2]
-            .replace("DialogCharacterName", CharacterNickname(c))
-            .replace("DialogPlayerName", CharacterNickname(Player)),
-          Result: v[3]
-            .replace("DialogCharacterName", CharacterNickname(c))
-            .replace("DialogPlayerName", CharacterNickname(Player)),
-          Function: (v[4].trim().substring(0, 6) === "Dialog" ? "" : "ChatRoom") + v[4],
+          Option: v[2],
+          Result: v[3],
+          Function: v[4] === "" ? null : "ChatRoom" + v[4],
           Prerequisite: v[5],
           FBC: true,
         }))
@@ -130,7 +126,7 @@ export async function forcedClubSlave() {
     );
   })();
 
-  window.bceSendToClubSlavery = function () {
+  function bceSendToClubSlavery() {
     /** @type {ServerChatRoomMessage} */
     const message = {
       Type: HIDDEN,
@@ -151,7 +147,7 @@ export async function forcedClubSlave() {
     DialogLeave();
   };
 
-  window.bceCanSendToClubSlavery = function () {
+  function bceCanSendToClubSlavery() {
     const C = CurrentCharacter;
     if (!C) {
       return false;
@@ -161,19 +157,15 @@ export async function forcedClubSlave() {
 
   window.bceGotoRoom = (roomName) => {
     ChatRoomJoinLeash = roomName;
+    ChatRoomCharacter = [];
     DialogLeave();
     ChatRoomClearAllElements();
-    if (CurrentScreen === "ChatRoom") {
-      ServerSend("ChatRoomLeave", "");
-      CommonSetScreen("Online", "ChatSearch");
-    } else {
-      ChatRoomStart("", "", null, null, "Introduction", BackgroundsTagList);
-    }
+    if (CurrentScreen === "ChatRoom") ServerSend("ChatRoomLeave", "");
+    ChatRoomStart("X", "", null, null, "Introduction", BackgroundsTagList);
   };
 
-  window.bceStartClubSlave = bceStartClubSlave;
-  window.ChatRoombceSendToClubSlavery = window.bceSendToClubSlavery;
-  window.ChatRoombceCanSendToClubSlavery = window.bceCanSendToClubSlavery;
+  window.ChatRoombceSendToClubSlavery = bceSendToClubSlavery;
+  window.ChatRoombceCanSendToClubSlavery = bceCanSendToClubSlavery;
 
   await patch;
 }
