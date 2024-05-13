@@ -134,7 +134,7 @@ export function displayText(original, replacements = {}) {
       "Show friends going offline too": "显示朋友离线通知",
       "Show friend presence notifications in chat, when possible": "在聊天室里显示好友在线通知",
       "Show sent messages while waiting for server": "在等待服务器时显示已发送的消息",
-      "Show whisper button on chat messages": "在聊天消息上显示悄悄话按钮",
+      "Show whisper button on chat messages (requires refresh)": "在聊天消息上显示悄悄话按钮 （需要刷新网页)",
       "Rich online profile": "丰富的在线个人资料",
       "Allow IMs to bypass BCX beep restrictions": "允许即时通讯绕过BCX beep限制",
       "Hide the hidden items icon": "不显示隐藏的物品图标",

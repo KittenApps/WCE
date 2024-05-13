@@ -5,5 +5,5 @@ export let BCX = null;
 
 export async function hookBCXAPI() {
   await waitFor(() => !!window.bcx);
-  BCX = window.bcx?.getModApi("FBC") ?? null;
+  BCX = window.bcx?.getModApi("WCE") ?? null;
 }

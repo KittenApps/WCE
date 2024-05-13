@@ -343,7 +343,7 @@ export const defaultSettings = /** @type {const} */ ({
       "Shows messages you've sent while waiting for the server to respond, confirming you have sent the message and the server is just being slow.",
   },
   whisperButton: {
-    label: "Show whisper button on chat messages",
+    label: "Show whisper button on chat messages (requires refresh)",
     value: true,
     /**
      * @param {unknown} newValue
