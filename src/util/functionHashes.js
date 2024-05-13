@@ -107,7 +107,7 @@ export const expectedHashes = (gameVersion) => {
         PreferenceSubscreenRestrictionRun: "54908E55", // Screens/Character/Preference/Preference.js (6.5.2024)
         RelogRun: "10AF5A60",
         RelogExit: "2DFB2DAD",
-        ServerAccountBeep: "48D0BA71", // Scripts/Server.js 
+        ServerAccountBeep: "48D0BA71", // Scripts/Server.js
         ServerAppearanceBundle: "4D069622",
         ServerAppearanceLoadFromBundle: "946537FD",
         ServerClickBeep: "3E6277BE",

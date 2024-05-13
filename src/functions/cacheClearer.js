@@ -29,7 +29,7 @@ export function cacheClearer() {
     (args, next) => {
       const ret = next(args);
       if (fbcSettings.manualCacheClear) {
-        const Space = 992 / (ChatRoomMenuButtons.length);
+        const Space = 992 / ChatRoomMenuButtons.length;
         for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
           if (MouseXIn(1005 + Space * B, Space - 2) && ChatRoomMenuButtons[B] === "clearCache") {
             doClearCaches();
@@ -70,7 +70,7 @@ export function cacheClearer() {
     doClearCaches();
   };
 
-   function doClearCaches() {
+  function doClearCaches() {
     debug("Clearing caches");
     if (GLDrawCanvas.GL?.textureCache) {
       GLDrawCanvas.GL.textureCache.clear();
@@ -83,7 +83,7 @@ export function cacheClearer() {
     );
     oldOnlineCharacters.forEach((c) => CharacterDelete(c));
     Character.filter((c) => c.IsOnline?.()).forEach((c) => CharacterRefresh(c, false, false));
-  };
+  }
 
   const clearCaches = () => {
     if (fbcSettings.automateCacheClear) {

@@ -81,15 +81,14 @@ export function discreetMode() {
             blur: Player.GetBlurLevel(),
             darken: DrawGetDarkFactor(),
             tints: Player.GetTints(),
-            sizeMode: ChatRoomCustomSizeMode
+            sizeMode: ChatRoomCustomSizeMode,
           };
 
           // Loop over the room's characters to draw each of them
           ChatRoomCharacterViewLoopCharacters((charIdx, charX, charY, _space, roomZoom) => {
-
             // Draw the background every five characters, this fixes clipping errors
             if (charIdx % charsPerRow === 0) {
-              const Y = charCount <= charsPerRow ? viewHeight * (1 - roomZoom) / 2 : 0;
+              const Y = charCount <= charsPerRow ? (viewHeight * (1 - roomZoom)) / 2 : 0;
               const bgRect = RectMakeRect(0, Y + charIdx * 100, viewWidth, viewHeight * roomZoom);
               DrawRoomBackground("Backgrounds/BrickWall.jpg", bgRect, opts);
             }

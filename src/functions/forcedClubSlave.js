@@ -145,7 +145,7 @@ export async function forcedClubSlave() {
     };
     ServerSend("ChatRoomChat", message);
     DialogLeave();
-  };
+  }
 
   function bceCanSendToClubSlavery() {
     const C = CurrentCharacter;
@@ -153,7 +153,7 @@ export async function forcedClubSlave() {
       return false;
     }
     return C.BCECapabilities?.includes("clubslave") && !C.Appearance.some((a) => a.Asset.Name === "ClubSlaveCollar");
-  };
+  }
 
   window.bceGotoRoom = (roomName) => {
     ChatRoomJoinLeash = roomName;

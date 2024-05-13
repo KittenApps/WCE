@@ -200,7 +200,7 @@ export const fbcSendAction = (text) => {
 /** @type {(effect: EffectName) => boolean} */
 export function addCustomEffect(effect) {
   let updated = false;
-  const pronouns = Player.Appearance.find(a => a.Asset.Group.Name === "Pronouns");
+  const pronouns = Player.Appearance.find((a) => a.Asset.Group.Name === "Pronouns");
   if (!pronouns) {
     logWarn("Could not find pronouns asset.");
     return updated;
@@ -223,7 +223,7 @@ export function addCustomEffect(effect) {
 
 /** @type {(effect: EffectName) => boolean} */
 export function removeCustomEffect(effect) {
-  const pronouns = Player.Appearance.find(a => a.Asset.Group.Name === "Pronouns");
+  const pronouns = Player.Appearance.find((a) => a.Asset.Group.Name === "Pronouns");
   let updated = false;
   if (pronouns?.Property?.Effect?.includes(effect)) {
     pronouns.Property.Effect = pronouns.Property.Effect.filter((e) => e !== effect);

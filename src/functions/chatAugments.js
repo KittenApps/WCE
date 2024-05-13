@@ -218,8 +218,7 @@ export function chatAugments() {
   patchFunction(
     "ChatRoomSendWhisper",
     {
-      'const data = ChatRoomGenerateChatRoomChatMessage("Whisper", msg);':
-        `msg = bceMessageReplacements(msg);
+      'const data = ChatRoomGenerateChatRoomChatMessage("Whisper", msg);': `msg = bceMessageReplacements(msg);
          const data = ChatRoomGenerateChatRoomChatMessage("Whisper", msg);`,
     },
     "No link or OOC parsing for sent whispers."
