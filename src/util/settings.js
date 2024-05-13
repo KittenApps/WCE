@@ -21,7 +21,7 @@ import {
   EXPANDED_WARDROBE_SIZE,
   BCE_MAX_AROUSAL,
   BCE_COLOR_ADJUSTMENTS_CLASS_NAME,
-  DISCORD_INVITE_URL,
+  // DISCORD_INVITE_URL,
 } from "./constants";
 import { displayText } from "./localization";
 
@@ -368,19 +368,6 @@ export const defaultSettings = /** @type {const} */ ({
     description:
       "Reduces the font-size of the chat input filed in chat rooms, so you can see and proofread more of your written text at once.",
   },
-  gagspeak: {
-    label: "Understand All Gagged and when Deafened",
-    value: false,
-    /**
-     * @param {unknown} newValue
-     */
-    sideEffects: (newValue) => {
-      debug("gagspeak", newValue);
-    },
-    category: "cheats",
-    description:
-      "Bypasses gagged effect on others and deafen effect on yourself. You'll still be unable to understand others if they use WCE's gag anti-cheat.",
-  },
   lockpick: {
     label: "Reveal Lockpicking Order Based on Skill",
     value: false,
@@ -443,60 +430,6 @@ export const defaultSettings = /** @type {const} */ ({
     category: "buttplug",
     description:
       "Allows the game to control your real vibrators. For a list of supported vibrators see https://buttplug.io",
-  },
-  antiAntiGarble: {
-    label: "Limited gag anti-cheat: cloth-gag equivalent garbling",
-    value: false,
-    /**
-     * @param {unknown} newValue
-     */
-    sideEffects: (newValue) => {
-      if (newValue) {
-        fbcSettings.antiAntiGarbleStrong = false;
-        fbcSettings.antiAntiGarbleExtra = false;
-      }
-      debug("antiAntiGarble", newValue);
-      sendHello();
-    },
-    category: "immersion",
-    description:
-      "Slur your speech a little bit while gagged forcing others, even those cheating, to have some trouble understanding you.",
-  },
-  antiAntiGarbleStrong: {
-    label: "Full gag anti-cheat: use equipped gags to determine garbling",
-    value: true,
-    /**
-     * @param {unknown} newValue
-     */
-    sideEffects: (newValue) => {
-      if (newValue) {
-        fbcSettings.antiAntiGarble = false;
-        fbcSettings.antiAntiGarbleExtra = false;
-      }
-      debug("antiAntiGarbleStrong", newValue);
-      sendHello();
-    },
-    category: "immersion",
-    description:
-      "Use equipped gags' full effect to prevent others from understanding you fully, even those that are cheating.",
-  },
-  antiAntiGarbleExtra: {
-    label: "Extra gag anti-cheat: even more garbling for the most extreme gags",
-    value: false,
-    /**
-     * @param {unknown} newValue
-     */
-    sideEffects: (newValue) => {
-      if (newValue) {
-        fbcSettings.antiAntiGarble = false;
-        fbcSettings.antiAntiGarbleStrong = false;
-      }
-      debug("antiAntiGarbleExtra", newValue);
-      sendHello();
-    },
-    category: "immersion",
-    description:
-      "Use equipped gags' full effect to prevent others from understanding you fully, even those that are cheating. This option adds another level of gagging for the most extreme predicaments, preventing you from making much sound at all.",
   },
   blindWithoutGlasses: {
     label: "Require glasses to see",
@@ -601,23 +534,6 @@ export const defaultSettings = /** @type {const} */ ({
     category: "misc",
     description:
       "Automatically re-enter your password after you disconnect from the game. For convenience or AFK. Requires the password for the current account to have been saved in the login screen. Passwords are saved in your browser's local storage in plain text.",
-  },
-  showQuickAntiGarble: {
-    label: "Show gag cheat and anti-cheat options in chat",
-    value: false,
-    /**
-     * @param {unknown} newValue
-     */
-    sideEffects: (newValue) => {
-      if (newValue) {
-        ChatRoomChatInputRect = [1005, 908, 695, 90];
-      } else {
-        ChatRoomChatInputRect = [1005, 908, 895, 90];
-      }
-      debug("showQuickAntiGarble", newValue);
-    },
-    category: "misc",
-    description: "Adds a quick switch for the two options next to the chat input area.",
   },
   ghostNewUsers: {
     label: "Automatically ghost+blocklist unnaturally new users",

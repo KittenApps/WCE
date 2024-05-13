@@ -21,9 +21,6 @@ declare global {
   var bceMessageReplacements: (msg: string) => string;
   var bceClearPassword: (name: string) => void;
   var bceClearCaches: () => Promise<void>;
-  var bceStartClubSlave: () => Promise<void>;
-  var bceSendToClubSlavery: () => void;
-  var bceCanSendToClubSlavery: () => boolean;
   var ChatRoombceSendToClubSlavery: () => void;
   var ChatRoombceCanSendToClubSlavery: () => boolean;
   var bceGotoRoom: (room: string) => void;
@@ -138,7 +135,7 @@ declare global {
     | "activities"
     | "immersion"
     | "appearance"
-    | "addons"
+    | "antigarble"
     | "misc"
     | "cheats"
     | "buttplug"

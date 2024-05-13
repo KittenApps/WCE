@@ -6,7 +6,7 @@ import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 const CAPABILITIES = /** @type {const} */ (["clubslave", "antigarble"]);
 
 function blockAntiGarble() {
-  return !!(fbcSettings.antiAntiGarble || fbcSettings.antiAntiGarbleStrong || fbcSettings.antiAntiGarbleExtra);
+  return false;
 }
 
 /** @type {(target?: number | null, requestReply?: boolean) => void} */
