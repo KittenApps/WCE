@@ -42,6 +42,7 @@ import { nicknames } from "./functions/nicknames";
 import { hookBCXAPI } from "./functions/hookBCXAPI";
 import { shareAddons } from "./functions/shareAddons";
 import { confirmLeave } from "./functions/confirmLeave";
+import { betterChatInput } from "./functions/betterChatInput";
 import { toySync } from "./functions/toySync";
 
 /** @type {string[]} */
@@ -161,5 +162,6 @@ export async function registerAllFunctions() {
   registerFunction(richOnlineProfile, "richOnlineProfile");
   registerFunction(shareAddons, "shareAddons");
   registerFunction(confirmLeave, "confirmLeave");
+  registerFunction(betterChatInput, "betterChatInput");
   funcsRegistered = "enable";
 }

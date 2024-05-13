@@ -366,6 +366,19 @@ export const defaultSettings = /** @type {const} */ ({
     category: "chat",
     description: "Changes the online profile to support clickable links and embedded images.",
   },
+  betterChatInput: {
+    label: "improve the chat input style to fit more text",
+    value: false,
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      debug("betterChatInput", newValue);
+      ChatRoomResize(false);
+    },
+    category: "chat",
+    description: "Reduces the font-size of the chat input filed in chat rooms, so you can see and proofread more of your written text at once.",
+  },
   gagspeak: {
     label: "Understand All Gagged and when Deafened",
     value: false,
