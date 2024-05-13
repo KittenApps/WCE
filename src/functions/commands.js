@@ -9,6 +9,7 @@ import { fbcChangelog, SUPPORTED_GAME_VERSIONS, FBC_VERSION } from "../util/cons
 import { toySyncState } from "./toySync";
 import { incompleteFunctions } from "../registerFunctions";
 import { deviatingHashes } from "./functionIntegrityCheck";
+import { bceGotoRoom } from "./forcedClubSlave";
 
 /**
  * @param {boolean} [copy] - Whether to copy the report to the clipboard
@@ -170,6 +171,13 @@ export async function commands() {
       Description: displayText("Show recent WCE changelog"),
       Action: () => {
         fbcChatNotify(fbcChangelog);
+      },
+    },
+    {
+      Tag: "wcegotoroom",
+      Description: displayText("[room name or empty] switches to the room or leaves room if empty (ignoring all restrictions) "),
+      Action: (_, command) => {
+        bceGotoRoom(command.substring(13).trim());
       },
     },
     {

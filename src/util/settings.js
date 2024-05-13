@@ -365,7 +365,8 @@ export const defaultSettings = /** @type {const} */ ({
       ChatRoomResize(false);
     },
     category: "chat",
-    description: "Reduces the font-size of the chat input filed in chat rooms, so you can see and proofread more of your written text at once.",
+    description:
+      "Reduces the font-size of the chat input filed in chat rooms, so you can see and proofread more of your written text at once.",
   },
   gagspeak: {
     label: "Understand All Gagged and when Deafened",

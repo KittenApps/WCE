@@ -53,6 +53,20 @@ export const bceStartClubSlave = async () => {
   window.bceGotoRoom(room);
 };
 
+export function bceGotoRoom(roomName) {
+  ChatRoomJoinLeash = roomName;
+  ChatRoomCharacter = [];
+  DialogLeave();
+  ChatRoomClearAllElements();
+  if (CurrentScreen === "ChatRoom") ServerSend("ChatRoomLeave", "");
+  if (roomName) {
+    ChatRoomStart("X", "", null, null, "Introduction", BackgroundsTagList);
+  } else {
+    ChatRoomSetLastChatRoom(null);
+    CommonSetScreen("Room", "MainHall");
+  }
+}
+
 export async function forcedClubSlave() {
   const patch = (async function patchDialog() {
     await waitFor(
@@ -155,15 +169,7 @@ export async function forcedClubSlave() {
     return C.BCECapabilities?.includes("clubslave") && !C.Appearance.some((a) => a.Asset.Name === "ClubSlaveCollar");
   }
 
-  window.bceGotoRoom = (roomName) => {
-    ChatRoomJoinLeash = roomName;
-    ChatRoomCharacter = [];
-    DialogLeave();
-    ChatRoomClearAllElements();
-    if (CurrentScreen === "ChatRoom") ServerSend("ChatRoomLeave", "");
-    ChatRoomStart("X", "", null, null, "Introduction", BackgroundsTagList);
-  };
-
+  window.bceGotoRoom = bceGotoRoom;
   window.ChatRoombceSendToClubSlavery = bceSendToClubSlavery;
   window.ChatRoombceCanSendToClubSlavery = bceCanSendToClubSlavery;
 
