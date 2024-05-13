@@ -31,13 +31,16 @@ export async function automaticExpressions() {
     "disabling conflicting Player.ArousalSettings.AffectExpression when Animation Engine is active"
   );
 
-  patchFunction(
+  SDK.hookFunction(
     "PreferenceSubscreenArousalClick",
-    {
-      "Player.ArousalSettings.AffectExpression = !Player.ArousalSettings.AffectExpression;":
-        'Player.ArousalSettings.AffectExpression = !Player.ArousalSettings.AffectExpression && !fbcSettingValue("animationEngine");',
-    },
-    "disabling conflicting Player.ArousalSettings.AffectExpression when Animation Engine is active"
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    /**
+     * @param {Parameters<typeof PreferenceSubscreenArousalClick>} args
+     */
+    (args, next) => {
+      if (fbcSettings.animationEngine && PreferenceArousalIsActive() && MouseIn(1250, 276, 64, 64)) return;
+      return next(args);
+    }
   );
 
   patchFunction(
