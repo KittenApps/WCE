@@ -35,6 +35,7 @@ let postSettingsHasRun = false;
 export const defaultSettings = /** @type {const} */ ({
   animationEngine: {
     label: "Animation Engine",
+    value: false,
     /**
      * @param {unknown} newValue
      */
@@ -49,41 +50,34 @@ export const defaultSettings = /** @type {const} */ ({
       }
       debug("animationEngine", newValue);
     },
-    value: false,
     category: "activities",
     description: "Enables the animation engine. This will replace the game's expression and pose system.",
   },
   expressions: {
     label: "Automatic Arousal Expressions (Replaces Vanilla)",
+    value: false,
+    disabled: () => !fbcSettings.animationEngine,
     /**
      * @param {unknown} newValue
      */
     sideEffects: (newValue) => {
-      if (newValue) {
-        fbcSettings.animationEngine = true;
-        defaultSettings.animationEngine.sideEffects(true);
-      }
       debug("expressions", newValue);
     },
-    value: false,
     category: "activities",
-    description: "Automatically express arousal when performing an activity.",
+    description: "Automatically express arousal when performing an activity (requires Animation Engine).",
   },
   activityExpressions: {
     label: "Activity Expressions",
     value: false,
+    disabled: () => !fbcSettings.animationEngine,
     /**
      * @param {unknown} newValue
      */
     sideEffects: (newValue) => {
-      if (newValue) {
-        fbcSettings.animationEngine = true;
-        defaultSettings.animationEngine.sideEffects(true);
-      }
       debug("activityExpressions", newValue);
     },
     category: "activities",
-    description: "Automatically express reactions to certain activities.",
+    description: "Automatically express reactions to certain activities (requires Animation Engine).",
   },
   alternateArousal: {
     label: "Alternate Arousal (Replaces Vanilla, requires hybrid/locked arousal meter)",

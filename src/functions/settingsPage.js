@@ -123,7 +123,7 @@ export async function settingsPage() {
           64,
           displayText(defaultSetting.label),
           !!fbcSettings[settingName],
-          false,
+          defaultSetting.disabled?.() || false,
           currentSetting === settingName ? "Red" : "Black"
         );
         y += settingsYIncrement;
@@ -243,7 +243,7 @@ export async function settingsPage() {
           currentPageNumber * settingsPerPage,
           currentPageNumber * settingsPerPage + settingsPerPage
         )) {
-          if (MouseIn(300, y, 64, 64)) {
+          if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
             fbcSettings[settingName] = !fbcSettings[settingName];
             defaultSetting.sideEffects(fbcSettings[settingName]);
           } else if (MouseIn(364, y, 1000, 64)) {
