@@ -9,9 +9,9 @@ export const expectedHashes = (gameVersion) => {
         ActivitySetArousal: "3AE28123",
         ActivitySetArousalTimer: "1342AFE2",
         ActivityTimerProgress: "6CD388A7",
-        AppearanceClick: "B6E6C8CE", // Screens/Character/Appearance/Appearance.js (2.5.2024)
+        AppearanceClick: "4E3937AA", // Screens/Character/Appearance/Appearance.js (13.5.2024)
         AppearanceLoad: "4360C485",
-        AppearanceRun: "BDC2AC93", // Screens/Character/Appearance/Appearance.js (2.5.2024)
+        AppearanceRun: "EAF1055D", // Screens/Character/Appearance/Appearance.js (13.5.2024)
         CharacterAppearanceWardrobeLoad: "A5B63A03",
         CharacterBuildDialog: "85F79C6E",
         CharacterCompressWardrobe: "2A05ECD1",
@@ -78,6 +78,7 @@ export const expectedHashes = (gameVersion) => {
         DrawTextFit: "F9A1B11E",
         ElementCreateTextArea: "AA4AEDE7",
         ElementIsScrolledToEnd: "1CC4FE11",
+        ElementPositionFixed: "A3068A11",
         ElementScrollToEnd: "1AC45575",
         ElementValue: "4F26C62F",
         FriendListShowBeep: "6C0449BB",
