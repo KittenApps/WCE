@@ -60,4 +60,15 @@ export async function antiGarbling() {
       return { Content: process.text, Type: type, Dictionary };
     }
   );
+
+  ChatRoomRegisterMessageHandler({
+    Description: "show OriginalMsg while deafened",
+    Priority: 90,
+    Callback: (data, sender, msg, metadata) => {
+      if (data.Type == "Chat" && fbcSettings.antiDeaf && Player.GetDeafLevel() > 0) {
+        metadata.OriginalMsg = msg;
+      }
+      return false;
+    },
+  });
 }

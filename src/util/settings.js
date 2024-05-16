@@ -544,6 +544,18 @@ export const defaultSettings = /** @type {const} */ ({
     category: "cheats",
     description: "This setting is temporary until BCX supports a focus mode rule.",
   },
+  antiDeaf: {
+    label: "Anti Deafen",
+    value: false,
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      debug("antiDeaf", newValue);
+    },
+    category: "cheats",
+    description: "Show original messages in brackets while deafened.",
+  },
   toySync: {
     label: "Enable buttplug.io (requires refresh)",
     value: false,
