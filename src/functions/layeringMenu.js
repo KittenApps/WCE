@@ -91,19 +91,30 @@ export async function layeringMenu() {
     }
   );
 
-  window.fbcCopyColors = copyColors;
-
-  patchFunction(
+  SDK.hookFunction(
     "DialogMenuButtonClick",
-    {
-      'else if (Item && button === "Layering") {': `else if (Item && button === "Paint") {
-          fbcCopyColors(C, Item);
-          return false;
+    HOOK_PRIORITIES.AddBehaviour,
+    /**
+     * @param {Parameters<DialogMenuButtonClick>} args
+     */
+    (args, next) => {
+      const ret = next(args);
+      if (!ret && !["colorExpression", "colorItem", "extended", "layering", "tighten"].includes(DialogMenuMode)) {
+        const C = CharacterGetCurrent();
+        const Item = C.FocusGroup ? InventoryGet(C, C.FocusGroup.Name) : null;
+        for (let I = 0; I < DialogMenuButton.length; I++) {
+          if (MouseIn(1885 - I * 110, 15, 90, 90)) {
+            const button = DialogMenuButton[I];
+            // @ts-ignore
+            if (Item && button === "Paint") {
+              copyColors(C, Item);
+              return false;
+            }
+          }
         }
-
-        else if (Item && button === "Layering") {`,
-    },
-    "Built-in layering menus options for allow on others and allow while bound"
+      }
+      return ret;
+    }
   );
 
   /** @type {(C: Character, focusItem: Item) => void} */
@@ -138,8 +149,8 @@ export async function layeringMenu() {
       if (item.Asset.Name === focusItem.Asset.Name) {
         if (Array.isArray(focusItem.Color)) {
           if (Array.isArray(item.Color)) {
-            for (let i = 0; i < item.Color.length && i < focusItem.Color.length; i++) {
-              item.Color[item.Color.length - (i + 1)] = focusItem.Color[focusItem.Color.length - (i + 1)];
+            for (let i = item.Color.length - 1; i >= 0; i--) {
+              item.Color[i] = focusItem.Color[i % focusItem.Color.length];
             }
           } else {
             item.Color = focusItem.Color[focusItem.Color.length - 1];
