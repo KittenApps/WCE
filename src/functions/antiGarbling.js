@@ -22,8 +22,12 @@ export async function antiGarbling() {
       if (msg !== process.text) {
         if (Player.RestrictionSettings.NoSpeechGarble) {
           originalMsg = msg;
-        } else if (type === "Chat") {
-          switch (fbcSettings.antiGarbleChatLevel) {
+        // @ts-ignore
+        } else if (!["off", "full"].includes(fbcSettings[`antiGarble${type}Level`])) {
+          if (fbcSettings[`antiGarble${type}BabyTalk`] && SpeechTransformShouldBabyTalk(Player)) {
+            originalMsg = SpeechTransformBabyTalk(originalMsg);
+          }
+          switch (fbcSettings[`antiGarble${type}Level`]) {
             case "none":
               originalMsg = msg;
               break;
@@ -32,25 +36,14 @@ export async function antiGarbling() {
             case "high":
               const int = Math.min(
                 SpeechTransformGagGarbleIntensity(Player),
-                { low: 1, medium: 3, high: 5 }[fbcSettings.antiGarbleChatLevel]
+                { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]
               );
               originalMsg = SpeechTransformGagGarble(msg, int);
               break;
           }
-        } else if (type === "Whisper") {
-          switch (fbcSettings.antiGarbleWhisperLevel) {
-            case "none":
-              originalMsg = msg;
-              break;
-            case "low":
-            case "medium":
-            case "high":
-              const int = Math.min(
-                SpeechTransformGagGarbleIntensity(Player),
-                { low: 1, medium: 3, high: 5 }[fbcSettings.antiGarbleWhisperLevel]
-              );
-              originalMsg = SpeechTransformGagGarble(msg, int);
-              break;
+          const intensity = SpeechTransformStutterIntensity(Player);
+          if (fbcSettings[`antiGarble${type}Stutter`] && intensity > 0) {
+            originalMsg = SpeechTransformStutter(originalMsg, intensity);
           }
         }
       }

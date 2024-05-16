@@ -371,7 +371,7 @@ export const defaultSettings = /** @type {const} */ ({
       "Enables the anti-garble system. Allowing you to send less garbled version of your messages together with the garbled one to others, who could read it in brackets.",
   },
   antiGarbleChatOptions: {
-    label: "Anti Garble chat options (not implemented yet)",
+    label: "Anti Garble chat options",
     value: false,
     disabled: () => !fbcSettings.antiGarble,
     /**
@@ -413,9 +413,9 @@ export const defaultSettings = /** @type {const} */ ({
       "Sends an ungarbled (or lower garbled up to the selected value) chat message together with the garbled messages, which is shown on the recipient side in brackets (defaults to full = no ungarbling).",
   },
   antiGarbleChatBabyTalk: {
-    label: "preserve baby talk in chat messages",
+    label: "chat: preserve baby talk",
     value: false,
-    disabled: () => !fbcSettings.antiGarble || true,
+    disabled: () => !fbcSettings.antiGarble,
     /**
      * @param {unknown} newValue
      */
@@ -423,12 +423,12 @@ export const defaultSettings = /** @type {const} */ ({
       debug("antiGarbleChatBabyTalk", newValue);
     },
     category: "antigarble",
-    description: "not implemented yet!",
+    description: "Ungarbled chat messages will still have the baby talk effect applied to them.",
   },
   antiGarbleChatStutter: {
-    label: "preserve stutter in chat messages",
+    label: "chat: preserve stutter",
     value: false,
-    disabled: () => !fbcSettings.antiGarble || true,
+    disabled: () => !fbcSettings.antiGarble,
     /**
      * @param {unknown} newValue
      */
@@ -436,7 +436,7 @@ export const defaultSettings = /** @type {const} */ ({
       debug("antiGarbleChatoptions", newValue);
     },
     category: "antigarble",
-    description: "not implemented yet!",
+    description: "Ungarbled chat messages will still have the stutter effect applied to them.",
   },
   antiGarbleWhisperLevel: {
     label: "Anti Garble whisper level:",
@@ -462,9 +462,9 @@ export const defaultSettings = /** @type {const} */ ({
       "Sends an ungarbled (or lower garbled) whisper message together with the garbled messages, which is shown on the recipient side in brackets. (off = only sending the ungarbled messages as the original).",
   },
   antiGarbleWhisperBabyTalk: {
-    label: "preserve baby talk in whispers",
+    label: "whispers: preserve baby talk",
     value: false,
-    disabled: () => !fbcSettings.antiGarble || true,
+    disabled: () => !fbcSettings.antiGarble,
     /**
      * @param {unknown} newValue
      */
@@ -472,12 +472,12 @@ export const defaultSettings = /** @type {const} */ ({
       debug("antiGarbleWhisperBabyTalk", newValue);
     },
     category: "antigarble",
-    description: "not implemented yet!",
+    description: "Ungarbled whisper messages will still have the baby talk effect applied to them.",
   },
   antiGarbleWhisperStutter: {
-    label: "preserve stutter in whispers",
+    label: "whispers: preserve stutter",
     value: false,
-    disabled: () => !fbcSettings.antiGarble || true,
+    disabled: () => !fbcSettings.antiGarble,
     /**
      * @param {unknown} newValue
      */
@@ -485,7 +485,7 @@ export const defaultSettings = /** @type {const} */ ({
       debug("antiGarbleWhisperStutter", newValue);
     },
     category: "antigarble",
-    description: "not implemented yet!",
+    description: "Ungarbled whisper messages will still have the stutter effect applied to them.",
   },
   lockpick: {
     label: "Reveal Lockpicking Order Based on Skill",

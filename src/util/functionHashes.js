@@ -120,9 +120,13 @@ export const expectedHashes = (gameVersion) => {
         ServerSend: "ABE74E75",
         ServerSendQueueProcess: "BD4277AC",
         SkillGetWithRatio: "3EB4BC45",
+        SpeechTransformBabyTalk: "C812EE0E", // Scripts/Speech.js
         SpeechTransformGagGarble: "C056FE08", // Scripts/Speech.js
         SpeechTransformGagGarbleIntensity: "F61ECBDA", // Scripts/Speech.js
         SpeechTransformProcess: "666DDA2F", // Scripts/Speech.js
+        SpeechTransformShouldBabyTalk: "634BCD64", // Scripts/Speech.js
+        SpeechTransformStutter: "A930F55E", // Scripts/Speech.js
+        SpeechTransformStutterIntensity: "4754768A", // Scripts/Speech.js
         StruggleDexterityProcess: "D185D348", // Scripts/Struggle.js
         StruggleFlexibilityCheck: "727CE05B",
         StruggleFlexibilityProcess: "1A0B96EF", // Scripts/Struggle.js
