@@ -3,11 +3,7 @@ import { waitFor } from "../util/utils";
 import { createTimer } from "../util/hooks";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 
-const CAPABILITIES = /** @type {const} */ (["clubslave", "antigarble"]);
-
-function blockAntiGarble() {
-  return false;
-}
+const CAPABILITIES = /** @type {const} */ (["clubslave"]);
 
 /** @type {(target?: number | null, requestReply?: boolean) => void} */
 export function sendHello(target = null, requestReply = false) {
@@ -34,7 +30,6 @@ export function sendHello(target = null, requestReply = false) {
       alternateArousal: !!fbcSettings.alternateArousal,
       replyRequested: requestReply,
       capabilities: CAPABILITIES,
-      blockAntiGarble: blockAntiGarble(),
     },
   };
   if (target) {

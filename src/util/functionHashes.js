@@ -33,9 +33,9 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomCharacterViewDraw: "CA108410", // Screens/Online/ChatRoom/ChatRoomCharacterView.js (19.4.2024 )
         ChatRoomCharacterViewIsActive: "CD8066FA",
         ChatRoomClearAllElements: "D67A7839",
-        ChatRoomClick: "F57069BB", // 747C51C4 antiGarble
         ChatRoomCurrentTime: "A462DD3A",
         ChatRoomDrawCharacterStatusIcons: "198C8657",
+        ChatRoomGenerateChatRoomChatMessage: "6BFAC520", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomHTMLEntities: "0A7ADB1D",
         ChatRoomKeyDown: "CBE6830E",
         ChatRoomListManipulation: "75D28A8B",
@@ -47,8 +47,6 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomMessage: "EA9F35DE", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomRegisterMessageHandler: "C432923A",
-        ChatRoomResize: "653445D7", // F01AFCBA antiGarble
-        ChatRoomRun: "9E0D7899", // 975B8ABD antiGarble
         ChatRoomSendChat: "21606D2F", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomSendChatMessage: "4F3BDB61", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomSendWhisper: "2D2E4F8E", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
@@ -62,7 +60,7 @@ export const expectedHashes = (gameVersion) => {
         CraftingRun: "51577F65", // Screens/Room/Crafting/Crafting.js
         DialogDrawItemMenu: "FCE556C2",
         DialogLeave: "C37553DC",
-        DialogMenuButtonBuild: "E69567D2", // Scripts/Dialog.js (2.5.2024)
+        DialogMenuButtonBuild: "AC1C6466", // Scripts/Dialog.js (13.5.2024)
         DialogMenuButtonClick: "C1F5E0AF", // Scripts/Dialog.js (2.5.2024)
         DrawArousalMeter: "BB0755AF",
         DrawArousalThermometer: "7ED6D822",
@@ -120,9 +118,9 @@ export const expectedHashes = (gameVersion) => {
         ServerSend: "ABE74E75",
         ServerSendQueueProcess: "BD4277AC",
         SkillGetWithRatio: "3EB4BC45",
-        SpeechGarble: "9D669F73", // 44AA51A4 antiGarble
-        SpeechGarbleByGagLevel: "F7555009", // 1D24B031 antiGarble
-        SpeechGetTotalGagLevel: "5F4F6D45", // CE6ABFD1 antiGarble
+        SpeechTransformGagGarble: "C056FE08", // Scripts/Speech.js
+        SpeechTransformGagGarbleIntensity: "F61ECBDA", // Scripts/Speech.js
+        SpeechTransformProcess: "666DDA2F", // Scripts/Speech.js
         StruggleDexterityProcess: "D185D348", // Scripts/Struggle.js
         StruggleFlexibilityCheck: "727CE05B",
         StruggleFlexibilityProcess: "1A0B96EF", // Scripts/Struggle.js

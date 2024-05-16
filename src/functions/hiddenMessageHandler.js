@@ -81,7 +81,6 @@ export async function hiddenMessageHandler() {
     sender.BCEArousalProgress = message.progress || sender.ArousalSettings?.Progress || 0;
     sender.BCEEnjoyment = message.enjoyment || 1;
     sender.BCECapabilities = message.capabilities ?? [];
-    sender.BCEBlockAntiGarble = message.blockAntiGarble ?? false;
     if (message.replyRequested) {
       sendHello(sender.MemberNumber);
     }
