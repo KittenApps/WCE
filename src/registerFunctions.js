@@ -1,7 +1,6 @@
 import { SDK, HOOK_PRIORITIES } from "./util/modding";
 import { debug, logError } from "./util/logger";
 import { fbcSettings, postSettings, bceLoadSettings } from "./util/settings";
-import { antiGarbleCheat } from "./functions/antiGarbleCheat";
 import { functionIntegrityCheck } from "./functions/functionIntegrityCheck";
 import { bceStyles } from "./functions/bceStyles";
 import { commonPatches } from "./functions/commonPatches";
@@ -117,7 +116,6 @@ export async function registerAllFunctions() {
     }
   );
 
-  registerFunction(antiGarbleCheat, "antiGarbleCheat");
   await registerFunction(functionIntegrityCheck, "functionIntegrityCheck");
   registerFunction(bceStyles, "bceStyles");
   registerFunction(commonPatches, "commonPatches");

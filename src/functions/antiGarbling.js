@@ -2,7 +2,6 @@ import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 
 export async function antiGarbling() {
-    // ChatRoomGenerateChatRoomChatMessage
     SDK.hookFunction(
       "ChatRoomGenerateChatRoomChatMessage",
       HOOK_PRIORITIES.Top,
@@ -13,7 +12,7 @@ export async function antiGarbling() {
         const [type, msg] = args;
         let process = { effects: [], text: msg };
 
-        if (type !== 'Whisper' || fbcSettings.antiGarbleWhisperLevel !== 'off') {
+        if (type !== 'Whisper' || (fbcSettings.antiGarbleWhisperLevel !== 'off')) {
           process = SpeechTransformProcess(Player, msg, SpeechTransformSenderEffects);
         }
 
