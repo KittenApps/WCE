@@ -394,13 +394,7 @@ export const defaultSettings = /** @type {const} */ ({
     label: "Anti Garble chat level:",
     type: "select",
     value: "full",
-    options: [
-      { value: "none", label: "none" },
-      { value: "low", label: "low" },
-      { value: "medium", label: "medium" },
-      { value: "high", label: "high" },
-      { value: "full", label: "full" },
-    ],
+    options: ["none", "low", "medium", "high", "full"],
     disabled: () => !fbcSettings.antiGarble,
     /**
      * @param {unknown} newValue
@@ -442,14 +436,7 @@ export const defaultSettings = /** @type {const} */ ({
     label: "Anti Garble whisper level:",
     type: "select",
     value: "full",
-    options: [
-      { value: "off", label: "off" },
-      { value: "none", label: "none" },
-      { value: "low", label: "low" },
-      { value: "medium", label: "medium" },
-      { value: "high", label: "high" },
-      { value: "full", label: "full" },
-    ],
+    options: ["off", "none", "low", "medium", "high", "full"],
     disabled: () => !fbcSettings.antiGarble,
     /**
      * @param {unknown} newValue

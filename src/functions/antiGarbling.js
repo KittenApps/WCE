@@ -1,5 +1,5 @@
 import { SDK, HOOK_PRIORITIES, patchFunction } from "../util/modding";
-import { fbcSettings, settingsLoaded } from "../util/settings";
+import { fbcSettings, defaultSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
 export async function antiGarbling() {
@@ -55,21 +55,8 @@ export async function antiGarbling() {
     }
   );
 
-  const chatOptions = [
-    { value: "none", label: "chat: none" },
-    { value: "low", label: "chat: low" },
-    { value: "medium", label: "chat: medium" },
-    { value: "high", label: "chat: high" },
-    { value: "full", label: "chat: full" },
-  ];
-  const whisperOptions = [
-    { value: "off", label: "whis: off" },
-    { value: "none", label: "whis: none" },
-    { value: "low", label: "whis: low" },
-    { value: "medium", label: "whis: medium" },
-    { value: "high", label: "whis: high" },
-    { value: "full", label: "whis: full" },
-  ];
+  const chatOptions = defaultSettings.antiGarbleChatLevel.options;
+  const whisperOptions = defaultSettings.antiGarbleWhisperLevel.options;
 
   SDK.hookFunction(
     "ChatRoomRun",
@@ -85,7 +72,8 @@ export async function antiGarbling() {
           window.InputChat?.value.startsWith("/whisper ");
         const options = isWhisper ? whisperOptions : chatOptions;
         const setting = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
-        const idx = options.findIndex((o) => o.value === fbcSettings[setting]);
+        // @ts-ignore
+        const idx = options.indexOf(fbcSettings[setting]);
         const len = options.length;
         DrawRect(1810, 878, 185, 120, "Black");
         DrawBackNextButton(
@@ -93,11 +81,15 @@ export async function antiGarbling() {
           878,
           185,
           50,
-          displayText(options[idx].label),
+          displayText((isWhisper ? "whis: " : "chat: ") + options[idx]),
           "White",
           "",
-          () => displayText(options[(idx - 1 + len) % len].label),
-          () => displayText(options[(idx + 1 + len) % len].label),
+          () => displayText((isWhisper ? "Anti Garble whisper level: " : "Anti Garble chat level: ") + options[(idx - 1 + len) % len]),
+          () => displayText((isWhisper ? "Anti Garble whisper level: " : "Anti Garble chat level: ") + options[(idx + 1 + len) % len]),
+          false,
+          null,
+          // @ts-ignore
+          { X: 1000, Y: 910, Width: 200, Height: 90 }
         );
         DrawButton(1810, 928, 185, 70, "", "White");
         DrawImage("Icons/Small/Chat.png", 1875, 935);
@@ -120,13 +112,14 @@ export async function antiGarbling() {
           window.InputChat?.value.startsWith("/whisper ");
         const options = isWhisper ? whisperOptions : chatOptions;
         const setting = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
-        const idx = options.findIndex((o) => o.value === fbcSettings[setting]);
+        // @ts-ignore
+        const idx = options.indexOf(fbcSettings[setting]);
         const len = options.length;
         if (MouseIn(1810, 878, 92, 50)) {
-          return fbcSettings[setting] = options[(idx - 1 + len) % len].value;
+          return fbcSettings[setting] = options[(idx - 1 + len) % len];
         }
         if (MouseIn(1810 + 92, 878, 93, 50)) {
-          return fbcSettings[setting] = options[(idx + 1 + len) % len].value;
+          return fbcSettings[setting] = options[(idx + 1 + len) % len];
         }
       }
       return next(args);

@@ -6,8 +6,8 @@ import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey } fr
 import { displayText } from "../util/localization";
 import { BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "../util/constants";
 
-const SelectButtonOffset = 850;
-const SelectButtonWidth = 300;
+const SelectButtonOffset = 900;
+const SelectButtonWidth = 200;
 
 // Create settings page
 export async function settingsPage() {
@@ -120,7 +120,7 @@ export async function settingsPage() {
         currentPageNumber * settingsPerPage + settingsPerPage
       )) {
         if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options)) {
-          const idx = defaultSetting.options.findIndex((o) => o.value === fbcSettings[settingName]);
+          const idx = defaultSetting.options.indexOf(fbcSettings[settingName]);
           const len = defaultSetting.options.length;
           const disabled = defaultSetting.disabled?.() || false;
           DrawText(
@@ -135,11 +135,11 @@ export async function settingsPage() {
             y,
             SelectButtonWidth,
             64,
-            displayText(defaultSetting.options[idx].label),
+            displayText(defaultSetting.options[idx]),
             disabled ? "#ebebe4" : "White",
             "",
-            () => displayText(defaultSetting.options[(idx - 1 + len) % len].label),
-            () => displayText(defaultSetting.options[(idx + 1 + len) % len].label),
+            () => displayText(defaultSetting.label + " " + defaultSetting.options[(idx - 1 + len) % len]),
+            () => displayText(defaultSetting.label + " " + defaultSetting.options[(idx + 1 + len) % len]),
             disabled
           );
         } else {
@@ -273,12 +273,12 @@ export async function settingsPage() {
         )) {
           if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options)) {
             const segWidth = SelectButtonWidth / 2;
-            const idx = defaultSetting.options.findIndex((o) => o.value === fbcSettings[settingName]);
+            const idx = defaultSetting.options.indexOf(fbcSettings[settingName]);
             const len = defaultSetting.options.length;
-            if (MouseIn(850 + segWidth, y, segWidth, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
-              fbcSettings[settingName] = defaultSetting.options[(idx + 1 + len) % len].value;
-            } else if (MouseIn(850, y, segWidth, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
-              fbcSettings[settingName] = defaultSetting.options[(idx - 1 + len) % len].value;
+            if (MouseIn(SelectButtonOffset + segWidth, y, segWidth, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
+              fbcSettings[settingName] = defaultSetting.options[(idx + 1 + len) % len];
+            } else if (MouseIn(SelectButtonOffset, y, segWidth, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
+              fbcSettings[settingName] = defaultSetting.options[(idx - 1 + len) % len];
             } else if (MouseIn(364, y, SelectButtonOffset - 364, 64)) {
               currentSetting = settingName;
               debug("currentSetting", currentSetting);
