@@ -349,7 +349,7 @@ export const defaultSettings = /** @type {const} */ ({
     description: "Changes the online profile to support clickable links and embedded images.",
   },
   betterChatInput: {
-    label: "improve the chat input style to fit more text",
+    label: "Improve the chat input style to fit more text",
     value: false,
     /**
      * @param {unknown} newValue
@@ -361,6 +361,83 @@ export const defaultSettings = /** @type {const} */ ({
     category: "chat",
     description:
       "Reduces the font-size of the chat input filed in chat rooms, so you can see and proofread more of your written text at once.",
+  },
+  antiGarble: {
+    label: "Anti Garble",
+    value: false,
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      if (!newValue) {
+        fbcSettings.antiGarbleChatOptions = false;
+        fbcSettings.antiGarbleLevel = "full";
+        fbcSettings.antiGarbleWhisperLevel = "full";
+      }
+      debug("antiGarble", newValue);
+    },
+    category: "antigarble",
+    description:
+      "Enables the anti-garble system. Allowing you to send less garbled version of your messages together with the garbled one to others, who could read it in brackets.",
+  },
+  antiGarbleLevel: {
+    label: "Anti Garble level:",
+    type: "select",
+    value: "full",
+    options: [
+      { value: "none", label: "none" },
+      { value: "low", label: "low" },
+      { value: "medium", label: "medium" },
+      { value: "high", label: "high" },
+      { value: "full", label: "full" }
+    ],
+    disabled: () => !fbcSettings.antiGarble,
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      debug("antiGarbleLevel", newValue);
+    },
+    category: "antigarble",
+    description:
+      "Sends an ungarbled (or lower garbled up to the selected value) chat message together with the garbled messages, which is shown on the recipient side in brackets (defaults to full = no ungarbling).",
+  },
+  antiGarbleWhisperLevel: {
+    label: "Anti Garble whisper level:",
+    type: "select",
+    value: "full",
+    options: [
+      { value: "off", label: "off" },
+      { value: "none", label: "none" },
+      { value: "low", label: "low" },
+      { value: "medium", label: "medium" },
+      { value: "high", label: "high" },
+      { value: "full", label: "full" }
+    ],
+    disabled: () => !fbcSettings.antiGarble,
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      debug("antiGarbleWhisperLevel", newValue);
+    },
+    category: "antigarble",
+    description:
+      "Sends an ungarbled (or lower garbled) whisper message together with the garbled messages, which is shown on the recipient side in brackets. (off = only sending the ungarbled messages as the original).",
+  },
+  antiGarbleChatOptions: {
+    label: "Anti Garble chat options",
+    value: false,
+    disabled: () => !fbcSettings.antiGarble,
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      debug("antiGarbleChatoptions", newValue);
+    },
+    category: "antigarble",
+    description:
+      "Adds quick options for your anti-garble settings to the chat input menue.",
   },
   lockpick: {
     label: "Reveal Lockpicking Order Based on Skill",

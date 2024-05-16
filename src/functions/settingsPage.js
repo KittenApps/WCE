@@ -6,6 +6,9 @@ import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey } fr
 import { displayText } from "../util/localization";
 import { BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "../util/constants";
 
+const SelectButtonOffset = 850;
+const SelectButtonWidth = 300;
+
 // Create settings page
 export async function settingsPage() {
   await waitFor(() => !!PreferenceSubscreenList);
@@ -73,7 +76,7 @@ export async function settingsPage() {
    * @param {SettingsCategory} category
    */
   const currentDefaultSettings = (category) =>
-    objEntries(defaultSettings).filter(([, v]) => v.category === category && v.value === !!v.value);
+    objEntries(defaultSettings).filter(([k, v]) => v.category === category && k !== "buttplugDevices");
 
   const PreferenceSubscreenBCESettingsLoad = function () {
     currentPageNumber = 0;
@@ -116,16 +119,41 @@ export async function settingsPage() {
         currentPageNumber * settingsPerPage,
         currentPageNumber * settingsPerPage + settingsPerPage
       )) {
-        DrawCheckbox(
-          300,
-          y,
-          64,
-          64,
-          displayText(defaultSetting.label),
-          !!fbcSettings[settingName],
-          defaultSetting.disabled?.() || false,
-          currentSetting === settingName ? "Red" : "Black"
-        );
+        if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options) ) {
+          const idx = defaultSetting.options.findIndex((o) => o.value === fbcSettings[settingName]);
+          const len = defaultSetting.options.length;
+          const disabled = defaultSetting.disabled?.() || false;
+          DrawText(
+            displayText(defaultSetting.label),
+            400,
+            y + 33,
+            currentSetting === settingName ? "Red" : "Black",
+            "Gray"
+          );
+          DrawBackNextButton(
+            SelectButtonOffset,
+            y,
+            SelectButtonWidth,
+            64,
+            displayText(defaultSetting.options[idx].label),
+            disabled ? "#ebebe4" : "White",
+            "",
+            () => displayText(defaultSetting.options[(idx - 1 + len) % len].label),
+            () => displayText(defaultSetting.options[(idx + 1 + len) % len].label),
+            disabled
+          );
+        } else {
+          DrawCheckbox(
+            300,
+            y,
+            64,
+            64,
+            displayText(defaultSetting.label),
+            !!fbcSettings[settingName],
+            defaultSetting.disabled?.() || false,
+            currentSetting === settingName ? "Red" : "Black"
+          );
+        }
         y += settingsYIncrement;
       }
       if (currentCategory === "buttplug") {
@@ -243,12 +271,26 @@ export async function settingsPage() {
           currentPageNumber * settingsPerPage,
           currentPageNumber * settingsPerPage + settingsPerPage
         )) {
-          if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
-            fbcSettings[settingName] = !fbcSettings[settingName];
-            defaultSetting.sideEffects(fbcSettings[settingName]);
-          } else if (MouseIn(364, y, 1000, 64)) {
-            currentSetting = settingName;
-            debug("currentSetting", currentSetting);
+          if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options) ) {
+            const segWidth = SelectButtonWidth / 2;
+            const idx = defaultSetting.options.findIndex((o) => o.value === fbcSettings[settingName]);
+            const len = defaultSetting.options.length;
+            if (MouseIn(850 + segWidth, y, segWidth, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
+              fbcSettings[settingName] = defaultSetting.options[(idx + 1 + len) % len].value;
+            } else if (MouseIn(850, y, segWidth, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
+              fbcSettings[settingName] = defaultSetting.options[(idx - 1 + len) % len].value;
+            } else if (MouseIn(364, y, SelectButtonOffset - 364, 64)) {
+              currentSetting = settingName;
+              debug("currentSetting", currentSetting);
+            }
+          } else {
+            if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
+              fbcSettings[settingName] = !fbcSettings[settingName];
+              defaultSetting.sideEffects(fbcSettings[settingName]);
+            } else if (MouseIn(364, y, 1000, 64)) {
+              currentSetting = settingName;
+              debug("currentSetting", currentSetting);
+            }
           }
           y += settingsYIncrement;
         }
