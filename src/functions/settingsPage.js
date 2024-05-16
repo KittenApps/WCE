@@ -119,7 +119,7 @@ export async function settingsPage() {
         currentPageNumber * settingsPerPage,
         currentPageNumber * settingsPerPage + settingsPerPage
       )) {
-        if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options) ) {
+        if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options)) {
           const idx = defaultSetting.options.findIndex((o) => o.value === fbcSettings[settingName]);
           const len = defaultSetting.options.length;
           const disabled = defaultSetting.disabled?.() || false;
@@ -271,7 +271,7 @@ export async function settingsPage() {
           currentPageNumber * settingsPerPage,
           currentPageNumber * settingsPerPage + settingsPerPage
         )) {
-          if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options) ) {
+          if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options)) {
             const segWidth = SelectButtonWidth / 2;
             const idx = defaultSetting.options.findIndex((o) => o.value === fbcSettings[settingName]);
             const len = defaultSetting.options.length;

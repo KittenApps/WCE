@@ -7,7 +7,8 @@ import { displayText } from "../util/localization";
 export async function layeringMenu() {
   await waitFor(() => !!Player?.AppearanceLayers);
 
-  if (['R104Beta1', 'R104Beta2'].includes(GameVersion)) { // ToDo: remove once r104 is out
+  if (["R104Beta1", "R104Beta2"].includes(GameVersion)) {
+    // ToDo: remove once r104 is out
     patchFunction(
       "DialogMenuButtonBuild",
       {

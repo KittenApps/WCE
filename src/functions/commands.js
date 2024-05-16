@@ -175,7 +175,9 @@ export async function commands() {
     },
     {
       Tag: "wcegotoroom",
-      Description: displayText("[room name or empty] switches to the room or leaves room if empty (ignoring all restrictions)"),
+      Description: displayText(
+        "[room name or empty] switches to the room or leaves room if empty (ignoring all restrictions)"
+      ),
       Action: (_, command) => {
         bceGotoRoom(command.substring(13).trim());
       },

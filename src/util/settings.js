@@ -395,8 +395,7 @@ export const defaultSettings = /** @type {const} */ ({
       debug("antiGarbleChatoptions", newValue);
     },
     category: "antigarble",
-    description:
-      "Adds quick options for your anti-garble settings to the chat input menu.",
+    description: "Adds quick options for your anti-garble settings to the chat input menu.",
   },
   antiGarbleChatLevel: {
     label: "Anti Garble chat level:",
@@ -407,7 +406,7 @@ export const defaultSettings = /** @type {const} */ ({
       { value: "low", label: "low" },
       { value: "medium", label: "medium" },
       { value: "high", label: "high" },
-      { value: "full", label: "full" }
+      { value: "full", label: "full" },
     ],
     disabled: () => !fbcSettings.antiGarble,
     /**
@@ -431,8 +430,7 @@ export const defaultSettings = /** @type {const} */ ({
       debug("antiGarbleChatBabyTalk", newValue);
     },
     category: "antigarble",
-    description:
-      "not implemented yet!",
+    description: "not implemented yet!",
   },
   antiGarbleChatStutter: {
     label: "preserve stutter in chat messages",
@@ -445,8 +443,7 @@ export const defaultSettings = /** @type {const} */ ({
       debug("antiGarbleChatoptions", newValue);
     },
     category: "antigarble",
-    description:
-      "not implemented yet!",
+    description: "not implemented yet!",
   },
   antiGarbleWhisperLevel: {
     label: "Anti Garble whisper level:",
@@ -458,7 +455,7 @@ export const defaultSettings = /** @type {const} */ ({
       { value: "low", label: "low" },
       { value: "medium", label: "medium" },
       { value: "high", label: "high" },
-      { value: "full", label: "full" }
+      { value: "full", label: "full" },
     ],
     disabled: () => !fbcSettings.antiGarble,
     /**
@@ -482,8 +479,7 @@ export const defaultSettings = /** @type {const} */ ({
       debug("antiGarbleWhisperBabyTalk", newValue);
     },
     category: "antigarble",
-    description:
-      "not implemented yet!",
+    description: "not implemented yet!",
   },
   antiGarbleWhisperStutter: {
     label: "preserve stutter in whispers",
@@ -496,8 +492,7 @@ export const defaultSettings = /** @type {const} */ ({
       debug("antiGarbleWhisperStutter", newValue);
     },
     category: "antigarble",
-    description:
-      "not implemented yet!",
+    description: "not implemented yet!",
   },
   lockpick: {
     label: "Reveal Lockpicking Order Based on Skill",
