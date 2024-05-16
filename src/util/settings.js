@@ -385,9 +385,9 @@ export const defaultSettings = /** @type {const} */ ({
       "Enables the anti-garble system. Allowing you to send less garbled version of your messages together with the garbled one to others, who could read it in brackets.",
   },
   antiGarbleChatOptions: {
-    label: "Anti Garble chat options",
+    label: "Anti Garble chat options (not implemented yet)",
     value: false,
-    disabled: () => !fbcSettings.antiGarble,
+    disabled: () => !fbcSettings.antiGarble || true,
     /**
      * @param {unknown} newValue
      */
@@ -396,7 +396,7 @@ export const defaultSettings = /** @type {const} */ ({
     },
     category: "antigarble",
     description:
-      "Adds quick options for your anti-garble settings to the chat input menue.",
+      "Adds quick options for your anti-garble settings to the chat input menu.",
   },
   antiGarbleChatLevel: {
     label: "Anti Garble chat level:",
@@ -423,7 +423,7 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleChatBabyTalk: {
     label: "preserve baby talk in chat messages",
     value: false,
-    disabled: () => true,
+    disabled: () => !fbcSettings.antiGarble || true,
     /**
      * @param {unknown} newValue
      */
@@ -437,7 +437,7 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleChatStutter: {
     label: "preserve stutter in chat messages",
     value: false,
-    disabled: () => true,
+    disabled: () => !fbcSettings.antiGarble || true,
     /**
      * @param {unknown} newValue
      */
@@ -474,7 +474,7 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleWhisperBabyTalk: {
     label: "preserve baby talk in whispers",
     value: false,
-    disabled: () => true,
+    disabled: () => !fbcSettings.antiGarble || true,
     /**
      * @param {unknown} newValue
      */
@@ -488,7 +488,7 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleWhisperStutter: {
     label: "preserve stutter in whispers",
     value: false,
-    disabled: () => true,
+    disabled: () => !fbcSettings.antiGarble || true,
     /**
      * @param {unknown} newValue
      */
