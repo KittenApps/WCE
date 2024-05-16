@@ -1,4 +1,4 @@
-import { patchFunction } from "../util/modding";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { createTimer } from "../util/hooks";
 import { debug } from "../util/logger";
 import { displayText } from "../util/localization";
@@ -179,49 +179,66 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
 
 export function chatAugments() {
   // CTRL+Enter OOC implementation
-  patchFunction(
+  SDK.hookFunction(
     "ChatRoomKeyDown",
-    {
-      "ChatRoomSendChat()": `if (fbcSettingValue("ctrlEnterOoc") && event.ctrlKey && ElementValue("InputChat")?.trim()) {
-          let text = ElementValue("InputChat");
-          let prefix = "";
-          if (!text) {
-            fbcChatNotify("Nothing to send!");
-            return;
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    /**
+     * @param {Parameters<typeof ChatRoomKeyDown>} args
+     */
+    ([event], next) => {
+      if (document.activeElement.id === "InputChat") {
+        if (event.key === "Enter" && !event.shiftKey) {
+          if (fbcSettingValue("ctrlEnterOoc") && event.ctrlKey && ElementValue("InputChat")?.trim()) {
+            let text = ElementValue("InputChat");
+            let prefix = "";
+            if (!text) {
+              fbcChatNotify("Nothing to send!");
+              return;
+            }
+            // Whisper command
+            if (text.startsWith("/w ")) {
+              const textParts = text.split(' ');
+              text = textParts.slice(2).join(' ');
+              prefix = textParts.slice(0, 2).join(' ') + ' ';
+            } else if (text.startsWith("/") && !text.startsWith("//")) {
+              fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
+              return;
+            }
+  
+            ElementValue("InputChat", prefix + "(" + text.replace(/\)/g, CLOSINGBRACKETINDICATOR));
           }
-          // Whisper command
-          if (text.startsWith("/w ")) {
-            const textParts = text.split(' ');
-            text = textParts.slice(2).join(' ');
-            prefix = textParts.slice(0, 2).join(' ') + ' ';
-          } else if (text.startsWith("/") && !text.startsWith("//")) {
-            fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
-            return;
-          }
-
-          ElementValue("InputChat", prefix + "(" + text.replace(/\\)/g, "${CLOSINGBRACKETINDICATOR}"));
+          ChatRoomSendChat()
+          return true;
         }
-        ChatRoomSendChat()`,
-    },
-    "No OOC on CTRL+Enter."
+        if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+          ChatRoomScrollHistory(event.key === "ArrowUp");
+			    return true;
+        }
+      }
+      return next([event]);
+    }
   );
 
-  patchFunction(
+  SDK.hookFunction(
     "ChatRoomSendChatMessage",
-    {
-      "// Regular chat can be prevented with an owner presence rule":
-        "// Regular chat can be prevented with an owner presence rule\nmsg = bceMessageReplacements(msg);\n// ",
-    },
-    "No link or OOC parsing for sent whispers."
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    /**
+     * @param {Parameters<typeof ChatRoomSendChatMessage>} args
+     */
+    ([msg], next) => {
+      return next([bceMessageReplacements(msg)]);
+    }
   );
 
-  patchFunction(
+  SDK.hookFunction(
     "ChatRoomSendWhisper",
-    {
-      'const data = ChatRoomGenerateChatRoomChatMessage("Whisper", msg);': `msg = bceMessageReplacements(msg);
-         const data = ChatRoomGenerateChatRoomChatMessage("Whisper", msg);`,
-    },
-    "No link or OOC parsing for sent whispers."
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    /**
+     * @param {Parameters<typeof ChatRoomSendWhisper>} args
+     */
+    ([targetNumber, msg], next) => {
+      return next([targetNumber, bceMessageReplacements(msg)]);
+    }
   );
 
   const startSounds = ["..", "--"];
