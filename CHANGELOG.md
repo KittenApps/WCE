@@ -1,5 +1,7 @@
 ### This Changelog isn't written yet, please come back later to see a list of all changes between FBC 5.8  and WCE 6.2
 
+until then feel free to [read the complete commit history](https://github.com/KittenApps/WCE/commits/main/)
+
 - add button to manual clear and reload the drawing cache of all characters in a chat room
 - improved r103 compatibility
 - removed fps limits/counter (now natively in base game in graphic preferences, page 2)

@@ -33,6 +33,7 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomCharacterViewDraw: "CA108410", // Screens/Online/ChatRoom/ChatRoomCharacterView.js (19.4.2024 )
         ChatRoomCharacterViewIsActive: "CD8066FA",
         ChatRoomClearAllElements: "D67A7839",
+        ChatRoomClick: "747C51C4", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomCurrentTime: "A462DD3A",
         ChatRoomDrawCharacterStatusIcons: "198C8657",
         ChatRoomGenerateChatRoomChatMessage: "6BFAC520", // Screens/Online/ChatRoom/ChatRoom.js
@@ -47,6 +48,7 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomMessage: "EA9F35DE", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomRegisterMessageHandler: "C432923A",
+        ChatRoomRun: "975B8ABD", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomSendChat: "21606D2F", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomSendChatMessage: "4F3BDB61", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomSendWhisper: "2D2E4F8E", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)

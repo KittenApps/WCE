@@ -348,20 +348,6 @@ export const defaultSettings = /** @type {const} */ ({
     category: "chat",
     description: "Changes the online profile to support clickable links and embedded images.",
   },
-  betterChatInput: {
-    label: "Improve the chat input style to fit more text",
-    value: false,
-    /**
-     * @param {unknown} newValue
-     */
-    sideEffects: (newValue) => {
-      debug("betterChatInput", newValue);
-      ChatRoomResize(false);
-    },
-    category: "chat",
-    description:
-      "Reduces the font-size of the chat input filed in chat rooms, so you can see and proofread more of your written text at once.",
-  },
   antiGarble: {
     label: "Anti Garble",
     value: false,
@@ -387,12 +373,19 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleChatOptions: {
     label: "Anti Garble chat options (not implemented yet)",
     value: false,
-    disabled: () => !fbcSettings.antiGarble || true,
+    disabled: () => !fbcSettings.antiGarble,
     /**
      * @param {unknown} newValue
      */
     sideEffects: (newValue) => {
       debug("antiGarbleChatoptions", newValue);
+      if (newValue) {
+        ChatRoomChatLogRect = [1005, 66, 988, 805];
+        ChatRoomChatInputRect = [1005, 878, 800, 120];
+      } else {
+        ChatRoomChatLogRect = [1005, 66, 988, 835];
+        ChatRoomChatInputRect = [1005, 908, 895, 90];
+      }
     },
     category: "antigarble",
     description: "Adds quick options for your anti-garble settings to the chat input menu.",
@@ -894,7 +887,7 @@ async function beepChangelog() {
     displayText(`WCE has received significant updates since you last used it. See /wcechangelog in a chatroom.`)
   );
   await waitFor(() => !!document.getElementById("TextAreaChatLog"));
-  fbcChatNotify(`For Better Club (WCE) changelog:\n${fbcChangelog}`);
+  fbcChatNotify(`Wholesome Club Extensions (WCE) changelog:\n${fbcChangelog}`);
 }
 
 export const fbcSettingValue = (key) => {
