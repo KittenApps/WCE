@@ -38,7 +38,6 @@ declare global {
   var bceStripBeepMetadata: (text: string) => string;
   var bcModSdk: ModSDKGlobalAPI | undefined;
   var FUSAM: FUSAMPublicAPI | undefined;
-  var InterfaceTextGet: (msg: string) => string;
 
   type FUSAMPublicAPI = {
     present: true;
@@ -70,7 +69,6 @@ declare global {
     FBC: string;
     FBCOtherAddons?: readonly import("./bcModSdk").ModSDKModInfo[];
     BCEArousal: boolean;
-    BCEBlockAntiGarble: boolean;
     BCECapabilities: readonly string[];
     BCEArousalProgress: number;
     BCEEnjoyment: number;
@@ -126,7 +124,6 @@ declare global {
     progress?: number;
     enjoyment?: number;
     activity?: BCEActivity;
-    blockAntiGarble: boolean;
     otherAddons?: readonly import("./bcModSdk").ModSDKModInfo[];
   };
   type SettingsCategory =

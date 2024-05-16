@@ -14,9 +14,9 @@
 		"@types/events": "^3.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
-		"bc-stubs": "^103.0.0",
+		"bc-stubs": "^104.0.0-Beta.2",
 		"dexie": "^3.2.7",
-		"esbuild": "^0.21.1",
+		"esbuild": "^0.21.3",
 		"typescript": "^5.4.5"
 	}
 }
