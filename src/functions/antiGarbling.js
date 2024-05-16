@@ -9,6 +9,7 @@ export async function antiGarbling() {
        * @param {Parameters<typeof ChatRoomGenerateChatRoomChatMessage>} args
        */ 
        (args, next) => {
+        if (!fbcSettings.antiGarble) return next(args);
         const [type, msg] = args;
         let process = { effects: [], text: msg };
 

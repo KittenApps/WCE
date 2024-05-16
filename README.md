@@ -10,11 +10,11 @@
     * the super wholesome Animation Engine
     * Chat links and embeds (and 3d party content prompts)
     * friends online notifications, buttplug.io toy sync and more ...
-* a completely rewritten anti garble feature for the latest BC versions (WIP)
+* a completely rewritten anti garble feature for the latest BC versions
 * adopted to new features in latest BC versions:
     * updated layering menus and copy color button
     * added clear cache button to chat menu
-* check out the [Changelog](Changelog.md) for a complete list of changes since FBC 5.8
+* check out the [Changelog](CHANGELOG.md) for a complete list of changes since FBC 5.8
 
 ## Installation
 

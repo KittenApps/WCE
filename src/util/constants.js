@@ -1,21 +1,12 @@
 export const FBC_VERSION = "6.2";
-export const settingsVersion = 61;
+export const settingsVersion = 62;
 export const SUPPORTED_GAME_VERSIONS = ["R104"];
 
-export const fbcChangelog = `${FBC_VERSION} next
-- add button to manual clear and reload the drawing cache of all characters in a chat room
-
-6.1
-- improved r103 compatibility
-- removed fps limits/counter (now natively in base game in graphic preferences, page 2)
-- make anti garble bypass (in restrictions preferences) availa ble on all difficulty levels
-
-6.0
-- forked the project by Kitty Stella (129178)
-- restored features removed in 5.9 (this fork is based on 5.8)
-- made it load seperate from FUSAM again (still requires FUSAM for it's API though)
-- updated for r103
-- fix rich profile sticking on the screen after disconnect
+export const fbcChangelog = `* WCE 6.2 is a fork of the old FBC 5.8 and tries to bring all it's amazing features (animation engine, chat embeds, friend notifications, ...) back
+* it features a completely rewritten anti garble feature for the latest BC versions  (now sender side)
+* some other new features (updated layering menus, copy color buttons and a clear cache button)
+* and many bugfixes for broken FBC features
+* for a full changelog visit: https://github.com/KittenApps/WCE/blob/main/CHANGELOG.md
 `;
 
 export const DISCORD_INVITE_URL = "https://discord.gg/SHJMjEh9VH";
