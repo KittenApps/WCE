@@ -405,7 +405,7 @@ export const defaultSettings = /** @type {const} */ ({
     description: "Adds quick options for your anti-garble settings to the chat input menu.",
   },
   antiGarbleChatLevel: {
-    label: "Anti Garble chat level:",
+    label: "Chat garble level:",
     type: "select",
     value: "full",
     options: ["none", "low", "medium", "high", "full"],
@@ -447,7 +447,7 @@ export const defaultSettings = /** @type {const} */ ({
     description: "Ungarbled chat messages will still have the stutter effect applied to them.",
   },
   antiGarbleWhisperLevel: {
-    label: "Anti Garble whisper level:",
+    label: "Whisper garble level:",
     type: "select",
     value: "full",
     options: ["off", "none", "low", "medium", "high", "full"],

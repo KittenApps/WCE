@@ -84,8 +84,8 @@ export default function antiGarbling() {
           displayText((isWhisper ? "whis: " : "chat: ") + options[idx]),
           "White",
           "",
-          () => displayText((isWhisper ? "Anti Garble whisper level: " : "Anti Garble chat level: ") + options[(idx - 1 + len) % len]),
-          () => displayText((isWhisper ? "Anti Garble whisper level: " : "Anti Garble chat level: ") + options[(idx + 1 + len) % len]),
+          () => displayText((isWhisper ? "Whisper garble level: " : "Chat garble level: ") + options[(idx - 1 + len) % len]),
+          () => displayText((isWhisper ? "Whisper garble level: " : "Chat garble level: ") + options[(idx + 1 + len) % len]),
           false,
           null,
           // @ts-ignore
