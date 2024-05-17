@@ -159,4 +159,5 @@ export function displayText(original, replacements = {}) {
   return text;
 }
 
+/** @type {(original: string, replacements?: Record<string, string>) => string} */
 export const fbcDisplayText = (original, replacements = {}) => displayText(original, replacements);

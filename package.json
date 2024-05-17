@@ -4,16 +4,19 @@
 	"license": "GPL-3.0-or-later",
 	"scripts": {
 		"start": "esbuild src/index.js --bundle --outfile=./dist/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=./dist",
-		"build": "node build.js",
+		"build": "node ./build.js",
 		"test": "tsc",
-		"prettier": "npx prettier src --write --trailing-comma es5 --print-width 120",
+		"lint": "eslint ./src",
 		"serve": "npx http-server ./dist -p 4000 -c-1 --cors"
 	},
 	"devDependencies": {
 		"@total-typescript/ts-reset": "^0.5.1",
 		"@types/events": "^3.0.0",
-		"@typescript-eslint/eslint-plugin": "^5.62.0",
-		"@typescript-eslint/parser": "^5.62.0",
+		"@typescript-eslint/eslint-plugin": "^7.9.0",
+		"@typescript-eslint/parser": "^7.9.0",
+		"eslint": "^8.57.0",
+		"eslint-plugin-deprecation": "^2.0.0",
+		"eslint-config-prettier": "^9.1.0",
 		"bc-stubs": "^104.0.0-Beta.2",
 		"dexie": "^3.2.7",
 		"esbuild": "^0.21.3",

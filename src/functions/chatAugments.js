@@ -193,21 +193,21 @@ export function chatAugments() {
             let prefix = "";
             if (!text) {
               fbcChatNotify("Nothing to send!");
-              return;
+              return true;
             }
             // Whisper command
             if (text.startsWith("/w ")) {
               const textParts = text.split(' ');
               text = textParts.slice(2).join(' ');
-              prefix = textParts.slice(0, 2).join(' ') + ' ';
+              prefix = `${textParts.slice(0, 2).join(' ')} `;
             } else if (text.startsWith("/") && !text.startsWith("//")) {
               fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
-              return;
+              return true;
             }
-  
-            ElementValue("InputChat", prefix + "(" + text.replace(/\)/g, CLOSINGBRACKETINDICATOR));
+
+            ElementValue("InputChat", `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`);
           }
-          ChatRoomSendChat()
+          ChatRoomSendChat();
           return true;
         }
         if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
@@ -225,9 +225,7 @@ export function chatAugments() {
     /**
      * @param {Parameters<typeof ChatRoomSendChatMessage>} args
      */
-    ([msg], next) => {
-      return next([bceMessageReplacements(msg)]);
-    }
+    ([msg], next) => next([bceMessageReplacements(msg)])
   );
 
   SDK.hookFunction(
@@ -236,9 +234,7 @@ export function chatAugments() {
     /**
      * @param {Parameters<typeof ChatRoomSendWhisper>} args
      */
-    ([targetNumber, msg], next) => {
-      return next([targetNumber, bceMessageReplacements(msg)]);
-    }
+    ([targetNumber, msg], next) => next([targetNumber, bceMessageReplacements(msg)])
   );
 
   const startSounds = ["..", "--"];

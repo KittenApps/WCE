@@ -1,5 +1,4 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { ICONS } from "../util/constants";
 import { isCharacter } from "../util/utils";
 
 export function chatRoomOverlay() {

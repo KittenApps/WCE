@@ -2,7 +2,7 @@ import { SDK, HOOK_PRIORITIES, patchFunction } from "../util/modding";
 import { fbcSettings, defaultSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
-export async function antiGarbling() {
+export function antiGarbling() {
   SDK.hookFunction(
     "ChatRoomGenerateChatRoomChatMessage",
     HOOK_PRIORITIES.Top,
@@ -33,13 +33,15 @@ export async function antiGarbling() {
               break;
             case "low":
             case "medium":
-            case "high":
+            case "high": {
               const int = Math.min(
                 SpeechTransformGagGarbleIntensity(Player),
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]
               );
               originalMsg = SpeechTransformGagGarble(msg, int);
               break;
+            }
           }
           const intensity = SpeechTransformStutterIntensity(Player);
           if (fbcSettings[`antiGarble${type}Stutter`] && intensity > 0) {
@@ -48,9 +50,7 @@ export async function antiGarbling() {
         }
       }
 
-      /** @type {ChatMessageDictionary} */
-      let Dictionary = [{ Effects: process.effects, Original: originalMsg }];
-
+      const Dictionary = [{ Effects: process.effects, Original: originalMsg }];
       return { Content: process.text, Type: type, Dictionary };
     }
   );
@@ -67,7 +67,7 @@ export async function antiGarbling() {
     (args, next) => {
       const ret = next(args);
       if (fbcSettings.antiGarbleChatOptions) {
-        const isWhisper = ChatRoomTargetMemberNumber !== -1 || 
+        const isWhisper = ChatRoomTargetMemberNumber !== -1 ||
           window.InputChat?.value.startsWith("/w ") ||
           window.InputChat?.value.startsWith("/whisper ");
         const options = isWhisper ? whisperOptions : chatOptions;
@@ -107,7 +107,7 @@ export async function antiGarbling() {
     (args, next) => {
       if (fbcSettings.antiGarbleChatOptions && MouseIn(1810, 878, 185, 120)) {
         if (MouseIn(1810, 928, 185, 70)) return ChatRoomSendChat();
-        const isWhisper = ChatRoomTargetMemberNumber !== -1 || 
+        const isWhisper = ChatRoomTargetMemberNumber !== -1 ||
           window.InputChat?.value.startsWith("/w ") ||
           window.InputChat?.value.startsWith("/whisper ");
         const options = isWhisper ? whisperOptions : chatOptions;
@@ -116,10 +116,12 @@ export async function antiGarbling() {
         const idx = options.indexOf(fbcSettings[setting]);
         const len = options.length;
         if (MouseIn(1810, 878, 92, 50)) {
-          return fbcSettings[setting] = options[(idx - 1 + len) % len];
+          fbcSettings[setting] = options[(idx - 1 + len) % len];
+          return null;
         }
         if (MouseIn(1810 + 92, 878, 93, 50)) {
-          return fbcSettings[setting] = options[(idx + 1 + len) % len];
+          fbcSettings[setting] = options[(idx + 1 + len) % len];
+          return null;
         }
       }
       return next(args);
@@ -143,7 +145,7 @@ export async function antiGarbling() {
     Description: "show OriginalMsg while deafened",
     Priority: 90,
     Callback: (data, sender, msg, metadata) => {
-      if (data.Type == "Chat" && fbcSettings.antiDeaf && Player.GetDeafLevel() > 0) {
+      if (data.Type === "Chat" && fbcSettings.antiDeaf && Player.GetDeafLevel() > 0) {
         metadata.OriginalMsg = msg;
       }
       return false;

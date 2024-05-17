@@ -53,6 +53,7 @@ export const bceStartClubSlave = async () => {
   window.bceGotoRoom(room);
 };
 
+/** @type {(roomName: string) => void} */
 export function bceGotoRoom(roomName) {
   ChatRoomJoinLeash = roomName;
   ChatRoomCharacter = [];
@@ -112,7 +113,7 @@ export async function forcedClubSlave() {
           NextStage: v[1],
           Option: v[2],
           Result: v[3],
-          Function: v[4] === "" ? null : "ChatRoom" + v[4],
+          Function: v[4] === "" ? null : `ChatRoom${v[4]}`,
           Prerequisite: v[5],
           FBC: true,
         }))

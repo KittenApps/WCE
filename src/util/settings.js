@@ -15,8 +15,9 @@ import {
   fbcChatNotify,
 } from "./utils";
 import { loadExtendedWardrobe } from "../functions/extendedWardrobe";
-import { settingsVersion, fbcChangelog } from "./constants";
 import {
+  settingsVersion,
+  fbcChangelog,
   DEFAULT_WARDROBE_SIZE,
   EXPANDED_WARDROBE_SIZE,
   BCE_MAX_AROUSAL,
@@ -382,7 +383,7 @@ export const defaultSettings = /** @type {const} */ ({
       // ToDo: Remove r104 beta workaround after r104 is stable for a while
       if (newValue) {
         ChatRoomChatLogRect = [1005, 66, 988, 805];
-        ChatRoomChatInputRect = GameVersion.startsWith('R104Beta') ? [1005, 878, 800, 120] : [1405, 938, 800, 120] ;
+        ChatRoomChatInputRect = GameVersion.startsWith('R104Beta') ? [1005, 878, 800, 120] : [1405, 938, 800, 120];
       } else {
         ChatRoomChatLogRect = [1005, 66, 988, 835];
         ChatRoomChatInputRect = GameVersion.startsWith('R104Beta') ? [1005, 908, 895, 90] : [1453, 953, 895, 90];
@@ -878,6 +879,7 @@ async function beepChangelog() {
   fbcChatNotify(`Wholesome Club Extensions (WCE) changelog:\n${fbcChangelog}`);
 }
 
+/** @type {(key: string) => boolean | string} */
 export const fbcSettingValue = (key) => {
   if (isDefaultSettingKey(key)) {
     return fbcSettings[key];

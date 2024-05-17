@@ -1,10 +1,11 @@
 import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { BCX } from "./hookBCXAPI";
-import { waitFor, fbcChatNotify } from "../util/utils";
 import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 import {
+  waitFor,
+  fbcChatNotify,
   deepCopy,
   isString,
   objEntries,
@@ -38,7 +39,7 @@ export async function automaticExpressions() {
      * @param {Parameters<typeof PreferenceSubscreenArousalClick>} args
      */
     (args, next) => {
-      if (fbcSettings.animationEngine && PreferenceArousalIsActive() && MouseIn(1250, 276, 64, 64)) return;
+      if (fbcSettings.animationEngine && PreferenceArousalIsActive() && MouseIn(1250, 276, 64, 64)) return null;
       return next(args);
     }
   );

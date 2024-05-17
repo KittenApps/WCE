@@ -81,6 +81,7 @@ export function discreetMode() {
             blur: Player.GetBlurLevel(),
             darken: DrawGetDarkFactor(),
             tints: Player.GetTints(),
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             sizeMode: ChatRoomCustomSizeMode,
           };
 
@@ -96,6 +97,7 @@ export function discreetMode() {
             // Draw the character, it's status bubble and it's overlay
             DrawCharacter(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom);
             DrawStatus(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom);
+            // eslint-disable-next-line no-eq-null, eqeqeq
             if (ChatRoomCharacterDrawlist[charIdx].MemberNumber != null) {
               ChatRoomCharacterViewDrawOverlay(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom, charIdx);
             }

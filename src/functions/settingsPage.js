@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { toySyncState } from "./toySync";
-import { ICONS } from "../util/constants";
 import { waitFor, objEntries, drawTooltip } from "../util/utils";
 import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey } from "../util/settings";
 import { displayText } from "../util/localization";
-import { BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "../util/constants";
+import { ICONS, BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "../util/constants";
 
 const SelectButtonOffset = 900;
 const SelectButtonWidth = 200;
@@ -26,7 +31,7 @@ export async function settingsPage() {
     Math.ceil(Object.values(defaultSettings).filter((v) => v.category === category).length / settingsPerPage);
 
   const discordInvitePosition = /** @type {const} */ ([1500, 60, 250, 50]);
-  const licensePosition = /** @type {const} */ ([1500, /*120*/ 60, 250, 50]);
+  const licensePosition = /** @type {const} */ ([1500, /* 120*/ 60, 250, 50]);
   const websitePosition = /** @type {const} */ ([1240, 60, 250, 50]);
   let currentPageNumber = 0;
 
@@ -85,6 +90,7 @@ export async function settingsPage() {
     bceSaveSettings();
     PreferenceSubscreenExtensionsClear();
   };
+  // eslint-disable-next-line complexity
   const PreferenceSubscreenBCESettingsRun = function () {
     const ctx = window.MainCanvas.getContext("2d");
     if (!ctx) {
@@ -93,7 +99,7 @@ export async function settingsPage() {
     }
     ctx.textAlign = "left";
     DrawText(displayText("Wholesome Club Extensions (WCE) Settings"), 300, 125, "Black", "Gray");
-    /*DrawButton(...discordInvitePosition, "", "White", "");
+    /* DrawButton(...discordInvitePosition, "", "White", "");
     DrawText(
       displayText("Join Discord"),
       discordInvitePosition[0] + 20,
@@ -138,8 +144,8 @@ export async function settingsPage() {
             displayText(defaultSetting.options[idx]),
             disabled ? "#ebebe4" : "White",
             "",
-            () => displayText(defaultSetting.label + " " + defaultSetting.options[(idx - 1 + len) % len]),
-            () => displayText(defaultSetting.label + " " + defaultSetting.options[(idx + 1 + len) % len]),
+            () => displayText(`${defaultSetting.label} ${defaultSetting.options[(idx - 1 + len) % len]}`),
+            () => displayText(`${defaultSetting.label} ${defaultSetting.options[(idx + 1 + len) % len]}`),
             disabled
           );
         } else {
@@ -283,14 +289,12 @@ export async function settingsPage() {
               currentSetting = settingName;
               debug("currentSetting", currentSetting);
             }
-          } else {
-            if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
-              fbcSettings[settingName] = !fbcSettings[settingName];
-              defaultSetting.sideEffects(fbcSettings[settingName]);
-            } else if (MouseIn(364, y, 1000, 64)) {
-              currentSetting = settingName;
-              debug("currentSetting", currentSetting);
-            }
+          } else if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
+            fbcSettings[settingName] = !fbcSettings[settingName];
+            defaultSetting.sideEffects(fbcSettings[settingName]);
+          } else if (MouseIn(364, y, 1000, 64)) {
+            currentSetting = settingName;
+            debug("currentSetting", currentSetting);
           }
           y += settingsYIncrement;
         }
@@ -360,6 +364,7 @@ export async function settingsPage() {
     run: PreferenceSubscreenBCESettingsRun,
     exit: PreferenceSubscreenBCESettingsExit,
     load: PreferenceSubscreenBCESettingsLoad,
+    // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
     unload: () => {},
   });
 

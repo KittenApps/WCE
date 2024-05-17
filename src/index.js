@@ -45,7 +45,7 @@ window.fbcChatNotify = fbcChatNotify;
 window.fbcSendAction = fbcSendAction;
 window.fbcSettingValue = fbcSettingValue;
 // Expressions init method for custom expressions (here to not break customizer script)
-// eslint-disable-next-line camelcase
+// eslint-disable-next-line camelcase, no-empty-function, @typescript-eslint/no-empty-function
 window.bce_initializeDefaultExpression = () => {};
 window.fbcDebug = fbcDebug;
 

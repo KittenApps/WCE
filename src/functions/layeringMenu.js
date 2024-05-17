@@ -1,6 +1,5 @@
 import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
-import { waitFor } from "../util/utils";
-import { isCharacter, deepCopy, fbcSendAction } from "../util/utils";
+import { waitFor, isCharacter, deepCopy, fbcSendAction } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
