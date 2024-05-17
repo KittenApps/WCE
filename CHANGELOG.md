@@ -7,7 +7,7 @@
     * friends online notifications
     * buttplug.io toy sync
     * and other smaller features
-* Anti Garble system: complete rewrite from scratch
+* Anti Garble system: complete rewrite from scratch ([read the docs](https://github.com/KittenApps/WCE/wiki/Anti-Garble-system))
     * BC changed from a recipient based garbling to sender based garbling in r103+
     * set garble level separately for your outgoing whisper and normal chat messages (everyone can see the less garbled message in brackets, without requiring any addons on their side)
     * added options to preserve baby talk or stutter too
