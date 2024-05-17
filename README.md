@@ -18,8 +18,6 @@
 
 ## Installation
 
-*these instructions are for r104+ only, for a still with r103 compatible version use the [old loader](https://kittenapps.github.io/fbc-fork/fbc.loader.user.js)*
-
 ### User Script loader (recommended)
 
 1. **Install a users script manager:**
