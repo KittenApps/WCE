@@ -37,6 +37,7 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomCurrentTime: "A462DD3A",
         ChatRoomDrawCharacterStatusIcons: "198C8657",
         ChatRoomGenerateChatRoomChatMessage: "6BFAC520", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomHideElements: "E1435FF3", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomHTMLEntities: "0A7ADB1D",
         ChatRoomKeyDown: "CBE6830E",
         ChatRoomListManipulation: "75D28A8B",

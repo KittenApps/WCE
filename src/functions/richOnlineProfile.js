@@ -81,10 +81,10 @@ export default function richOnlineProfile() {
   );
 
   SDK.hookFunction(
-    "ServerDisconnect",
+    "ChatRoomHideElements",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
     /**
-     * @param {Parameters<typeof ServerDisconnect>} args
+     * @param {Parameters<typeof ChatRoomHideElements>} args
      */
     (args, next) => {
       disableRichTextArea();
