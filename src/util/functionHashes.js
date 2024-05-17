@@ -80,7 +80,7 @@ export const expectedHashes = (gameVersion) => {
         DrawTextFit: "F9A1B11E",
         ElementCreateTextArea: "AA4AEDE7",
         ElementIsScrolledToEnd: "1CC4FE11",
-        ElementPositionFixed: "A3068A11",
+        ElementPosition: "3D9F7B72", // Scripts/Element.js
         ElementScrollToEnd: "1AC45575",
         ElementValue: "4F26C62F",
         FriendListShowBeep: "6C0449BB",
