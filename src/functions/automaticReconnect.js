@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { waitFor, sleep, parseJSON, isString } from "../util/utils";
@@ -5,8 +6,73 @@ import { debug, logWarn } from "../util/logger";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 
-export default function automaticReconnect() {
-  const localStoragePasswordsKey = "bce.passwords";
+export default async function automaticReconnect() {
+  const scriptEl = document.createElement("script");
+  scriptEl.src = "https://unpkg.com/dexie@3.2.7/dist/dexie.js";
+  document.body.appendChild(scriptEl);
+
+  await waitFor(() => typeof Dexie !== "undefined" && ServerSocket && ServerIsConnected);
+
+  const db = new Dexie("wce-saved-accounts");
+  db.version(1).stores({
+    key: "++id, key",
+  });
+  const keyTable = db.table("key");
+
+  /** @type {CryptoKey} */
+  let encKey = await keyTable.get(1);
+  if (!encKey) {
+    // eslint-disable-next-line require-atomic-updates
+    encKey = await window.crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+    await keyTable.put(encKey, [1]);
+  }
+
+  /** @type {() => Promise<Passwords>} */
+  async function loadAccounts() {
+    const a = localStorage.getItem("bce.passwords.authTag");
+    if (!a) {
+      /** @type {Passwords} */
+      const accounts = parseJSON(localStorage.getItem("bce.passwords"));
+      if (window.crypto?.subtle) storeAccounts(accounts);
+      return accounts;
+    }
+    const decoder = new TextDecoder("utf8");
+    const auth = new Uint8Array(a.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
+    const iv = new Uint8Array(localStorage.getItem("bce.passwords.iv").match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
+    const data = new Uint8Array(localStorage.getItem("bce.passwords").match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
+    console.log(auth, iv, data);
+    const s = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, data);
+    const str = decoder.decode(new Uint8Array(s));
+    return parseJSON(str);
+  }
+
+  const accounts = await loadAccounts();
+
+  /** @type {() => Passwords} */
+  function loadPasswords() {
+    return accounts || {};
+  }
+
+  /** @type {(accs: Passwords) => void} */
+  function storeAccounts(accs) {
+    if (window.crypto?.subtle) {
+      const iv = window.crypto.getRandomValues(new Uint8Array(16));
+      const auth = window.crypto.getRandomValues(new Uint8Array(16));
+      const encoder = new TextEncoder();
+      window.crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv, additionalData: auth, tagLength: 128 },
+        encKey,
+        encoder.encode(JSON.stringify(accs))
+      ).then((s) => {
+        localStorage.setItem("bce.passwords", Array.from(new Uint8Array(s)).map((b) => b.toString(16).padStart(2, "0")).join(''));
+        localStorage.setItem("bce.passwords.authTag", Array.from(auth).map((b) => b.toString(16).padStart(2, "0")).join(''));
+        localStorage.setItem("bce.passwords.iv", Array.from(iv).map((b) => b.toString(16).padStart(2, "0")).join(''));
+      });
+    } else {
+      localStorage.setItem("bce.passwords", JSON.stringify(accs));
+    }
+  }
+
   window.bceUpdatePasswordForReconnect = () => {
     let name = "";
     if (CurrentScreen === "Login") {
@@ -15,21 +81,18 @@ export default function automaticReconnect() {
       name = Player.AccountName;
     }
 
-    let passwords = /** @type {Passwords} */ (parseJSON(localStorage.getItem(localStoragePasswordsKey)));
-    if (!passwords) {
-      passwords = {};
-    }
+    const passwords = loadPasswords();
     passwords[name] = ElementValue("InputPassword");
-    localStorage.setItem(localStoragePasswordsKey, JSON.stringify(passwords));
+    storeAccounts(passwords);
   };
 
   window.bceClearPassword = (accountname) => {
-    const passwords = /** @type {Passwords} */ (parseJSON(localStorage.getItem(localStoragePasswordsKey)));
-    if (!passwords || !Object.prototype.hasOwnProperty.call(passwords, accountname)) {
+    const passwords = loadPasswords();
+    if (!Object.prototype.hasOwnProperty.call(passwords, accountname)) {
       return;
     }
     delete passwords[accountname];
-    localStorage.setItem(localStoragePasswordsKey, JSON.stringify(passwords));
+    storeAccounts(passwords);
   };
 
   let lastClick = Date.now();
@@ -37,11 +100,9 @@ export default function automaticReconnect() {
   async function loginCheck() {
     await waitFor(() => CurrentScreen === "Login");
 
-    const loadPasswords = () => /** @type {Passwords} */ (parseJSON(localStorage.getItem(localStoragePasswordsKey)));
-
     /** @type {{ passwords: Passwords, posMaps: Record<string, string> }} */
     const loginData = {
-      passwords: loadPasswords() || {},
+      passwords: loadPasswords(),
       posMaps: {},
     };
 
@@ -81,7 +142,7 @@ export default function automaticReconnect() {
         if (MouseIn(1250, 385, 180, 60)) {
           bceUpdatePasswordForReconnect();
           loginData.posMaps = {};
-          loginData.passwords = loadPasswords() || {};
+          loginData.passwords = loadPasswords();
         }
         const now = Date.now();
         if (now - lastClick < 150) {
@@ -96,10 +157,11 @@ export default function automaticReconnect() {
           if (MouseIn(10, idx, 350, 60)) {
             ElementValue("InputName", loginData.posMaps[idx]);
             ElementValue("InputPassword", loginData.passwords[loginData.posMaps[idx]]);
+            LoginDoLogin();
           } else if (MouseIn(355, idx, 60, 60)) {
             bceClearPassword(loginData.posMaps[idx]);
             loginData.posMaps = {};
-            loginData.passwords = loadPasswords() || {};
+            loginData.passwords = loadPasswords();
           }
         }
         return ret;
@@ -127,11 +189,8 @@ export default function automaticReconnect() {
       return;
     }
     breakCircuit = true;
-    let passwords = /** @type {Passwords} */ (parseJSON(localStorage.getItem(localStoragePasswordsKey)));
+    const passwords = loadPasswords();
     debug("Attempting to log in again as", Player.AccountName);
-    if (!passwords) {
-      passwords = {};
-    }
     if (!passwords[Player.AccountName]) {
       logWarn("No saved credentials for account", Player.AccountName);
       return;

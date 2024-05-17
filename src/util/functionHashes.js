@@ -90,6 +90,7 @@ export const expectedHashes = (gameVersion) => {
         InterfaceTextGet: "66603471", // Scripts/Text.js (2.5.2024)
         InventoryGet: "E666F671",
         LoginClick: "ADA7E2B7", // Screens/Character/Login/Login.js
+        LoginDoLogin: "D4000B03", // Screens/Character/Login/Login.js
         LoginRun: "D1DB7A8A", // Screens/Character/Login/Login.js
         LoginSetSubmitted: "C88F4A8E",
         LoginStatusReset: "18619F02",
