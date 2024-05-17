@@ -220,6 +220,17 @@ export function chatAugments() {
   );
 
   SDK.hookFunction(
+    "ChatRoomMessageDisplay",
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    /**
+     * @param {Parameters<typeof ChatRoomMessageDisplay>} args
+     */
+    ([data, msg, SenderCharacter, metadata], next) => next(
+      [data, msg.replace(new RegExp(CLOSINGBRACKETINDICATOR, "g"), ")"), SenderCharacter, metadata]
+    )
+  );
+
+  SDK.hookFunction(
     "ChatRoomSendChatMessage",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
     /**
