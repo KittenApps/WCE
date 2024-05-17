@@ -411,7 +411,7 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleChatBabyTalk: {
     label: "chat: preserve baby talk",
     value: false,
-    disabled: () => !fbcSettings.antiGarble,
+    disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
     /**
      * @param {unknown} newValue
      */
@@ -424,7 +424,7 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleChatStutter: {
     label: "chat: preserve stutter",
     value: false,
-    disabled: () => !fbcSettings.antiGarble,
+    disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
     /**
      * @param {unknown} newValue
      */
@@ -453,7 +453,8 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleWhisperBabyTalk: {
     label: "whispers: preserve baby talk",
     value: false,
-    disabled: () => !fbcSettings.antiGarble,
+    // @ts-ignore
+    disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
     /**
      * @param {unknown} newValue
      */
@@ -466,7 +467,8 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleWhisperStutter: {
     label: "whispers: preserve stutter",
     value: false,
-    disabled: () => !fbcSettings.antiGarble,
+    // @ts-ignore
+    disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
     /**
      * @param {unknown} newValue
      */
