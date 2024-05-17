@@ -170,6 +170,18 @@ export const defaultSettings = /** @type {const} */ ({
     category: "appearance",
     description: "Allows you to preview all saved outfits at a glance, no more having to remember names.",
   },
+  confirmWardrobeSave: {
+    label: "Confirm overriding wardrobe outfits",
+    value: false,
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      debug("confirmWardrobeSave", newValue);
+    },
+    category: "appearance",
+    description: "When saving over an already existing wardrobe outfit you'll ask for confirmation, preventing accidentally overwriting outfits.",
+  },
   automateCacheClear: {
     label: "Clear Drawing Cache Hourly",
     value: false,
