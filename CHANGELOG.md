@@ -26,8 +26,10 @@
   * allows gradually migrating to TypeScript in the future too
 * other smaller fixes and improvements
   * updated for r104 compatibility
+  * improved the performance of the timer implementation by hooking the main game loop only once and using a timer registry instead of hooking it once for every timer
   * fix discreet mode
   * fix send to club slavery feature
+  * added an option to let overriding existing wardrobe outfits require an extra confirmation step
   * added `/wcegotoroom <roomname>` chat command to go to the specified room (or leave to mail hall if empty) immediately ignoring all restrictions
   * settings: added support for disabled input and select fields (and used them in anti garble and animation engine settings)
   * improved loader performance by using modulepreload
@@ -37,4 +39,5 @@
   * make activating the animation engine properly disable the affect expression setting in BC's arousal preferences
   * made it load separate from FUSAM again (still requires FUSAM for it's API though)
   * fix rich profile sticking on the screen after disconnect
+  * improve blindWithoutGlasees performance by hooking it on character draw instead of the main game loop
   * update dependencies (modSdk, bc-stubs, dexie)
