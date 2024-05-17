@@ -1,23 +1,30 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 
+/** @type {{ lastTime: number; cb: () => void; intval: number; }[]} */
+const timers = [];
+
 /** @type {(cb: () => void, intval: number) => void} */
 export function createTimer(cb, intval) {
-  let lastTime = Date.now();
-  SDK.hookFunction(
-    "GameRun",
-    HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof GameRun>} args
-     */ (args, next) => {
-      const ts = Date.now();
-      if (ts - lastTime > intval) {
-        lastTime = ts;
-        cb();
-      }
-      return next(args);
-    }
-  );
+  timers.push({ cb, intval, lastTime: performance.now() });
 }
+
+SDK.hookFunction(
+  "GameRun",
+  HOOK_PRIORITIES.Top,
+  /**
+   * @param {Parameters<typeof GameRun>} args
+   */
+  (args, next) => {
+    const ts = performance.now();
+    timers.forEach((t) => {
+      if (ts - t.lastTime > t.intval) {
+        t.lastTime = ts;
+        t.cb();
+      }
+    });
+    return next(args);
+  }
+);
 
 /**
  * @type {(title: string, text: string) => void}
