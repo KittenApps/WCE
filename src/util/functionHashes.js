@@ -12,6 +12,7 @@ export const expectedHashes = (gameVersion) => {
         AppearanceClick: "4E3937AA", // Screens/Character/Appearance/Appearance.js (13.5.2024)
         AppearanceLoad: "4360C485",
         AppearanceRun: "EAF1055D", // Screens/Character/Appearance/Appearance.js (13.5.2024)
+        CharacterAppearanceBuildCanvas: "C05FE035", // Screens/Character/Appearance/Appearance.js
         CharacterAppearanceWardrobeLoad: "A5B63A03",
         CharacterBuildDialog: "85F79C6E",
         CharacterCompressWardrobe: "2A05ECD1",

@@ -41,12 +41,11 @@ export default async function blindWithoutGlasses() {
     }
   }
 
-  // ToDo: Find another Hook for that (onItemChange)
   SDK.hookFunction(
-    "GameRun",
+    "CharacterAppearanceBuildCanvas",
     HOOK_PRIORITIES.Observe,
     /**
-     * @param {Parameters<typeof GameRun>} args
+     * @param {Parameters<typeof CharacterAppearanceBuildCanvas>} args
      */ (args, next) => {
       checkBlindness();
       return next(args);
