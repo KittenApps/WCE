@@ -1,6 +1,6 @@
 import { patchFunction } from "../util/modding";
 
-export function leashFix() {
+export default function leashFix() {
   patchFunction(
     "ChatSearchQuery",
     {

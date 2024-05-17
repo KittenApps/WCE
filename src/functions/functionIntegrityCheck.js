@@ -6,7 +6,7 @@ import { expectedHashes } from "../util/functionHashes";
 /** @type {unknown[]} */
 export const deviatingHashes = [];
 
-export async function functionIntegrityCheck() {
+export default async function functionIntegrityCheck() {
   await waitFor(() => GameVersion !== "R0" && typeof ServerIsConnected === "boolean" && ServerIsConnected);
 
   logInfo("Checking function integrity with GameVersion", GameVersion);

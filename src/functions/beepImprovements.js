@@ -2,7 +2,7 @@ import { patchFunction } from "../util/modding";
 import { fbcBeepNotify } from "../util/hooks";
 import { displayText } from "../util/localization";
 
-export function beepImprovements() {
+export default function beepImprovements() {
   if (typeof StartBcUtil === "function") {
     fbcBeepNotify(
       displayText("Incompatibility"),

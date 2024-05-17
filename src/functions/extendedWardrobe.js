@@ -75,7 +75,7 @@ export function loadExtendedWardrobe(wardrobe) {
   return wardrobe;
 }
 
-export async function extendedWardrobe() {
+export default async function extendedWardrobe() {
   await waitFor(() => !!ServerSocket);
 
   SDK.hookFunction(

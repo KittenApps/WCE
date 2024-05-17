@@ -10,7 +10,7 @@ const BEEP_CLICK_ACTIONS = Object.freeze({
   FriendList: "FriendList",
 });
 
-export async function friendPresenceNotifications() {
+export default async function friendPresenceNotifications() {
   await waitFor(() => !!Player && ServerSocket && ServerIsConnected);
 
   function checkFriends() {

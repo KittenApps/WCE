@@ -3,7 +3,7 @@ import { waitFor } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 import { debug } from "../util/logger";
 
-export async function lockpickHelp() {
+export default async function lockpickHelp() {
   await waitFor(() => !!StruggleMinigames);
 
   /** @type {(s: number) => () => number} */

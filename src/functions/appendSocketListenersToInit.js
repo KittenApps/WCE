@@ -14,7 +14,7 @@ export function registerSocketListener(event, cb) {
   return null;
 }
 
-export function appendSocketListenersToInit() {
+export default function appendSocketListenersToInit() {
   SDK.hookFunction(
     "ServerInit",
     HOOK_PRIORITIES.AddBehaviour,

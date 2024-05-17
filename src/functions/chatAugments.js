@@ -177,7 +177,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
   chatMessageElement.setAttribute("bce-original-text", originalText);
 }
 
-export function chatAugments() {
+export default function chatAugments() {
   // CTRL+Enter OOC implementation
   SDK.hookFunction(
     "ChatRoomKeyDown",

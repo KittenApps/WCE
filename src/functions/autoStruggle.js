@@ -2,7 +2,7 @@ import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 
-export function autoStruggle() {
+export default function autoStruggle() {
   SDK.hookFunction(
     "StruggleFlexibilityCheck",
     HOOK_PRIORITIES.OverrideBehaviour,

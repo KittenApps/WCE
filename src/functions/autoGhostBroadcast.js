@@ -3,7 +3,7 @@ import { waitFor } from "../util/utils";
 import { debug } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 
-export async function autoGhostBroadcast() {
+export default async function autoGhostBroadcast() {
   await waitFor(() => !!ServerSocket && ServerIsConnected);
   registerSocketListener("ChatRoomSyncMemberJoin", (data) => {
     if (fbcSettings.ghostNewUsers && Date.now() - data.Character.Creation < 30000) {

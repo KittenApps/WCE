@@ -2,7 +2,7 @@ import { SDK, HOOK_PRIORITIES, patchFunction } from "../util/modding";
 import { fbcSettings, defaultSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
-export function antiGarbling() {
+export default function antiGarbling() {
   SDK.hookFunction(
     "ChatRoomGenerateChatRoomChatMessage",
     HOOK_PRIORITIES.Top,

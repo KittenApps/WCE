@@ -4,7 +4,7 @@ import { fbcSettings } from "../util/settings";
 import { waitFor } from "../util/utils";
 import { debug } from "../util/logger";
 
-export function cacheClearer() {
+export default function cacheClearer() {
   const cacheClearInterval = 1 * 60 * 60 * 1000;
 
   SDK.hookFunction(

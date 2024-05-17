@@ -3,7 +3,7 @@ import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
-export function richOnlineProfile() {
+export default function richOnlineProfile() {
   const descTextArea = "DescriptionInput";
   const descRich = "bceRichOnlineProfile";
   let originalShown = true;

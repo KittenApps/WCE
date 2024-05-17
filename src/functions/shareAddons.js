@@ -49,7 +49,7 @@ export function sendHello(target = null, requestReply = false) {
   ServerSend("ChatRoomChat", message);
 }
 
-export function shareAddons() {
+export default function shareAddons() {
   waitFor(() => ServerIsConnected && ServerPlayerIsInChatRoom());
 
   sendHello(null, true);

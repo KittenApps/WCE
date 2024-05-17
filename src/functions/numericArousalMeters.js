@@ -1,7 +1,7 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 
-export function numericArousalMeters() {
+export default function numericArousalMeters() {
   let isExpanded = false;
   let increasing = false;
   SDK.hookFunction(

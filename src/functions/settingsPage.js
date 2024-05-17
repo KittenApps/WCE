@@ -15,7 +15,7 @@ const SelectButtonOffset = 900;
 const SelectButtonWidth = 200;
 
 // Create settings page
-export async function settingsPage() {
+export default async function settingsPage() {
   await waitFor(() => !!PreferenceSubscreenList);
 
   debug("initializing");

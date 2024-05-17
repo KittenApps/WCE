@@ -9,7 +9,7 @@ export const toySyncState = {
   deviceSettings: new Map(),
 };
 
-export function toySync() {
+export default function toySync() {
   // Handles synchronizing in-game vibrators with real bluetooth devices via buttplut.io
   if (!fbcSettings.toySync) {
     return;

@@ -4,7 +4,7 @@ import { fbcSettings } from "../util/settings";
 import { deepCopy, mustNum, fbcChatNotify, fbcSendAction } from "../util/utils";
 import { displayText } from "../util/localization";
 
-export function itemAntiCheat() {
+export default function itemAntiCheat() {
   /** @type {Map<number, number>} */
   const noticesSent = new Map();
 

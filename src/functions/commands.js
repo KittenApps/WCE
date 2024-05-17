@@ -96,7 +96,7 @@ function findDrawnCharacters(target, limitVisible = false) {
   return targetMembers.filter(Boolean);
 }
 
-export async function commands() {
+export default async function commands() {
   await waitFor(() => !!Commands);
   debug("registering additional commands");
 

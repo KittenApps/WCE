@@ -17,7 +17,7 @@ import {
 import { displayText } from "../util/localization";
 import { logWarn } from "../util/logger";
 
-export async function automaticExpressions() {
+export default async function automaticExpressions() {
   await waitFor(() => CurrentScreen === "ChatRoom" && !!Player.ArousalSettings);
   if (!Player.ArousalSettings) {
     throw new Error("Player.ArousalSettings is not defined");

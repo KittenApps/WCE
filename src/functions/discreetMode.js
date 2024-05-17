@@ -3,7 +3,7 @@ import { fbcSettings } from "../util/settings";
 import { isString } from "../util/utils";
 import { displayText } from "../util/localization";
 
-export function discreetMode() {
+export default function discreetMode() {
   /**
    * @param {any} args
    * @param {(args: any) => void} next

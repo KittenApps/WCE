@@ -1,7 +1,7 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 
-export function hideHiddenItemsIcon() {
+export default function hideHiddenItemsIcon() {
   SDK.hookFunction(
     "DrawCharacter",
     HOOK_PRIORITIES.ModifyBehaviourLow,

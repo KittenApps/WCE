@@ -5,7 +5,7 @@ import { fbcSettings } from "../util/settings";
 /** @type {Map<string, "allowed" | "denied">} */
 export const sessionCustomOrigins = new Map();
 
-export function customContentDomainCheck() {
+export default function customContentDomainCheck() {
   const trustedOrigins = ["https://fs.kinkop.eu", "https://i.imgur.com"];
 
   let open = false;

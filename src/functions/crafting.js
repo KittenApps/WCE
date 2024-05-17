@@ -3,7 +3,7 @@ import { waitFor, isNonNullObject, parseJSON, objEntries, isString, drawTooltip 
 import { displayText } from "../util/localization";
 import { debug, logWarn, logError } from "../util/logger";
 
-export async function crafting() {
+export default async function crafting() {
   await waitFor(() => Array.isArray(Commands) && Commands.length > 0);
 
   const importPosition = /** @type {const} */ ([1485, 15, 90, 90]);

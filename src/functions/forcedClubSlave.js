@@ -68,7 +68,7 @@ export function bceGotoRoom(roomName) {
   }
 }
 
-export async function forcedClubSlave() {
+export default async function forcedClubSlave() {
   const patch = (async function patchDialog() {
     await waitFor(
       () =>

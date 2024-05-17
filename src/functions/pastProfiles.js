@@ -23,7 +23,7 @@ function hideChatRoomElements() {
   ChatRoomChatHidden = true;
 }
 
-export async function pastProfiles() {
+export default async function pastProfiles() {
   if (!fbcSettings.pastProfiles) {
     return;
   }

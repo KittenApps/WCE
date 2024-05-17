@@ -3,7 +3,7 @@ import { waitFor, fbcChatNotify, addCustomEffect, removeCustomEffect } from "../
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
-export async function blindWithoutGlasses() {
+export default async function blindWithoutGlasses() {
   await waitFor(() => !!Player && !!Player.Appearance);
 
   function checkBlindness() {

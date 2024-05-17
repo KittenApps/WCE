@@ -8,7 +8,7 @@ import { debug } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 
 // BcUtil-compatible instant messaging with friends
-export function instantMessenger() {
+export default function instantMessenger() {
   window.bceStripBeepMetadata = (msg) => msg.split("\uf124")[0].trimEnd();
 
   // Build the DOM

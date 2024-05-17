@@ -5,7 +5,7 @@ import { debug, logWarn } from "../util/logger";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 
-export function automaticReconnect() {
+export default function automaticReconnect() {
   const localStoragePasswordsKey = "bce.passwords";
   window.bceUpdatePasswordForReconnect = () => {
     let name = "";

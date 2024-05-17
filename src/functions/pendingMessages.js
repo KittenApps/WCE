@@ -3,7 +3,7 @@ import { fbcSettings } from "../util/settings";
 import { isChatMessage } from "../util/utils";
 import { HIDDEN } from "../util/constants";
 
-export function pendingMessages() {
+export default function pendingMessages() {
   /** @type {(dictionary: Record<string, unknown>[], key: string, value: unknown) => Record<string, unknown>[]} */
   function addToDictionary(dictionary, key, value) {
     if (!Array.isArray(dictionary)) {

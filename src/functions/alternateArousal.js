@@ -5,7 +5,7 @@ import { logWarn } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 import { BCE_MAX_AROUSAL, HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 
-export async function alternateArousal() {
+export default async function alternateArousal() {
   await waitFor(() => !!ServerSocket && ServerIsConnected);
 
   Player.BCEArousalProgress = Math.min(BCE_MAX_AROUSAL, Player.ArousalSettings?.Progress ?? 0);

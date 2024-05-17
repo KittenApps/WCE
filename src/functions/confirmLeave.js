@@ -1,7 +1,7 @@
 import { toySyncState } from "./toySync";
 import { fbcSettings } from "../util/settings";
 
-export function confirmLeave() {
+export default function confirmLeave() {
   // Confirm leaving the page to prevent accidental back button, refresh, or other navigation-related disruptions
   window.addEventListener(
     "beforeunload",

@@ -3,7 +3,7 @@ import { waitFor, isCharacter, drawTextFitLeft } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
-export async function privateWardrobe() {
+export default async function privateWardrobe() {
   await waitFor(() => !!Player);
 
   let inCustomWardrobe = false,

@@ -3,7 +3,7 @@ import { waitFor, isCharacter, deepCopy, fbcSendAction } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
-export async function layeringMenu() {
+export default async function layeringMenu() {
   await waitFor(() => !!Player?.AppearanceLayers);
 
   if (["R104Beta1", "R104Beta2"].includes(GameVersion)) {

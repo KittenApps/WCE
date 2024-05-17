@@ -5,7 +5,7 @@ import { debug, logWarn } from "../util/logger";
 import { HIDDEN, MESSAGE_TYPES } from "../util/constants";
 import { bceStartClubSlave } from "./forcedClubSlave";
 
-export async function hiddenMessageHandler() {
+export default async function hiddenMessageHandler() {
   await waitFor(() => ServerSocket && ServerIsConnected);
 
   /**

@@ -1,7 +1,7 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { isCharacter } from "../util/utils";
 
-export function chatRoomOverlay() {
+export default function chatRoomOverlay() {
   SDK.hookFunction(
     "ChatRoomDrawCharacterStatusIcons",
     HOOK_PRIORITIES.AddBehaviour,
