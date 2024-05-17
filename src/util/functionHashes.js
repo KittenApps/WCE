@@ -51,7 +51,7 @@ export const expectedHashes = (gameVersion) => {
         ChatRoomRun: "975B8ABD", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomSendChat: "21606D2F", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomSendChatMessage: "4F3BDB61", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
-        ChatRoomSendWhisper: "2D2E4F8E", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
+        ChatRoomSendWhisper: "C246F7EF", // Screens/Online/ChatRoom/ChatRoom.js (16.5.2024)
         ChatRoomStart: "9B822A9A",
         CommandExecute: "C5477FA1", // Screens/Online/ChatRoom/Commands.js
         CommonClick: "1F6DF7CB",
