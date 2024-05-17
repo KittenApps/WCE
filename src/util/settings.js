@@ -774,7 +774,7 @@ export const bceLoadSettings = async () => {
     const onlineSettings = /** @type {typeof fbcSettings | null} */ (
       parseJSON(
         LZString.decompressFromBase64(
-          // eslint-disable-next-line deprecation/deprecation
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           Player.ExtensionSettings.FBC || (Player.OnlineSettings?.BCE ?? "")
         ) || null
       )

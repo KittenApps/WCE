@@ -178,6 +178,7 @@ export const fbcNotify = async (text, duration = 5000, properties = {}) => {
   };
 };
 
+/** @type {(text: string) => void} */
 export const fbcSendAction = (text) => {
   ServerSend("ChatRoomChat", {
     Content: "Beep",

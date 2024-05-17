@@ -6,6 +6,7 @@ export const fbcChangelog = `* WCE 6.2 is a fork of the old FBC 5.8 and tries to
 * it features a completely rewritten anti garble feature for the latest BC versions  (now sender side)
 * some other new features (updated layering menus, copy color buttons and a clear cache button)
 * and many bugfixes for broken FBC features
+* please recheck your WCE settings, because many things have changed
 * for a full changelog visit: https://github.com/KittenApps/WCE/blob/main/CHANGELOG.md
 `;
 
