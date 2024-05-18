@@ -32,9 +32,9 @@ export default async function automaticReconnect() {
     const a = localStorage.getItem("bce.passwords.authTag");
     if (!a) {
       /** @type {Passwords} */
-      const accounts = parseJSON(localStorage.getItem("bce.passwords"));
-      if (window.crypto?.subtle) storeAccounts(accounts);
-      return accounts;
+      const accs = parseJSON(localStorage.getItem("bce.passwords")) || {};
+      if (window.crypto?.subtle) storeAccounts(accs);
+      return accs;
     }
     const decoder = new TextDecoder("utf8");
     const auth = new Uint8Array(a.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
@@ -46,7 +46,7 @@ export default async function automaticReconnect() {
     return parseJSON(str);
   }
 
-  const accounts = await loadAccounts();
+  let accounts = await loadAccounts();
 
   /** @type {() => Passwords} */
   function loadPasswords() {
@@ -59,6 +59,7 @@ export default async function automaticReconnect() {
       const iv = window.crypto.getRandomValues(new Uint8Array(16));
       const auth = window.crypto.getRandomValues(new Uint8Array(16));
       const encoder = new TextEncoder();
+      accounts = accs;
       window.crypto.subtle.encrypt(
         { name: 'AES-GCM', iv, additionalData: auth, tagLength: 128 },
         encKey,
@@ -69,7 +70,8 @@ export default async function automaticReconnect() {
         localStorage.setItem("bce.passwords.iv", Array.from(iv).map((b) => b.toString(16).padStart(2, "0")).join(''));
       });
     } else {
-      localStorage.setItem("bce.passwords", JSON.stringify(accs));
+      // localStorage.setItem("bce.passwords", JSON.stringify(accs));
+      localStorage.removeItem("bce.passwords");
     }
   }
 
