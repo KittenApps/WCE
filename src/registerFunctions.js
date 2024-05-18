@@ -43,6 +43,7 @@ import shareAddons from "./functions/shareAddons";
 import confirmLeave from "./functions/confirmLeave";
 import toySync from "./functions/toySync";
 import chatRoomWhisperFixes from "./functions/chatRoomWhisperFixes";
+import allowCustomEffect from "./functions/allowCustomEffects";
 
 /** @type {string[]} */
 export const incompleteFunctions = [];
@@ -120,6 +121,7 @@ export async function registerAllFunctions() {
   registerFunction(bceStyles, "bceStyles");
   registerFunction(commonPatches, "commonPatches");
   registerFunction(extendedWardrobe, "extendedWardrobe");
+  registerFunction(allowCustomEffect, "allowCustomEffect");
   registerFunction(automaticReconnect, "automaticReconnect");
   registerFunction(hiddenMessageHandler, "hiddenMessageHandler");
   await registerFunction(bceLoadSettings, "bceLoadSettings");
