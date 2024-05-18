@@ -7,10 +7,6 @@ export default async function blindWithoutGlasses() {
   await waitFor(() => !!Player && !!Player.Appearance);
 
   function checkBlindness() {
-    if (!fbcSettings.blindWithoutGlasses) {
-      return;
-    }
-
     const glasses = [
         "Glasses1",
         "Glasses2",
@@ -47,7 +43,7 @@ export default async function blindWithoutGlasses() {
     /**
      * @param {Parameters<typeof CharacterAppearanceBuildCanvas>} args
      */ (args, next) => {
-      checkBlindness();
+      if (fbcSettings.blindWithoutGlasses && args[0].IsPlayer()) checkBlindness();
       return next(args);
     }
   );
