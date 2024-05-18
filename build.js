@@ -6,8 +6,10 @@ import { promises as fs } from 'node:fs';
 esbuild.build({
   entryPoints: ['src/index.js'],
   bundle: true,
+  splitting: true,
   minify: true,
-  outfile: 'dist/wce.js',
+  outdir: 'dist',
+  entryNames: 'wce',
   format: 'esm',
   sourcemap: 'linked'
 });

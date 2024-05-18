@@ -1,4 +1,5 @@
 node_modules
-dist/fbc.*
-dist/wce.*
+dist
+!dist/wce-*loader.user.js
+!dist/*.png
 .DS_Store

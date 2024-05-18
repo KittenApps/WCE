@@ -7,7 +7,6 @@ declare global {
     InputChat?: HTMLTextAreaElement;
     MainCanvas: HTMLCanvasElement;
   }
-  var Dexie: import("dexie").DexieConstructor;
   var FBC_VERSION: string;
   var fbcSendAction: (text: string) => void;
   var fbcChatNotify: (node: HTMLElement | HTMLElement[] | string) => void;

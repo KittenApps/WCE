@@ -29,11 +29,11 @@ export default function chatRoomOverlay() {
           "Black"
         );
         DrawTextFit(
-          /^\d+\.\d+(\.\d+)?$/u.test(C.FBC) ? C.FBC : "",
+          /^\d+\.\d+(\.\d+)?b?$/u.test(C.FBC) ? C.FBC.replace("b", "") : "",
           CharX + 290 * Zoom,
           CharY + 32 * Zoom,
-          35 * Zoom,
-          C.FBCNoteExists ? "Cyan" : "White",
+          50 * Zoom,
+          C.FBC.endsWith("b") ? "Lightpink" : "White",
           "Black"
         );
       }

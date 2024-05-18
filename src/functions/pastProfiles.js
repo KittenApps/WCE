@@ -1,14 +1,6 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
-import {
-  waitFor,
-  deepCopy,
-  parseJSON,
-  isCharacter,
-  isNonNullObject,
-  drawTextFitLeft,
-  fbcChatNotify,
-} from "../util/utils";
+import { deepCopy, parseJSON, isCharacter, isNonNullObject, drawTextFitLeft, fbcChatNotify } from "../util/utils";
 import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { displayText } from "../util/localization";
 
@@ -28,13 +20,8 @@ export default async function pastProfiles() {
     return;
   }
 
-  const scriptEl = document.createElement("script");
-  scriptEl.src = "https://unpkg.com/dexie@3.2.7/dist/dexie.js";
-  document.body.appendChild(scriptEl);
-
-  await waitFor(() => typeof Dexie !== "undefined" && ServerSocket && ServerIsConnected);
-
-  const db = new Dexie("bce-past-profiles");
+  const d = await import('dexie');
+  const db = new d.Dexie("bce-past-profiles");
   db.version(3).stores({
     profiles: "memberNumber, name, lastNick, seen, characterBundle",
     notes: "memberNumber, note, updatedAt",
