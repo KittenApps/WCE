@@ -11,9 +11,8 @@ export default async function automaticReconnect() {
   scriptEl.src = "https://unpkg.com/dexie@3.2.7/dist/dexie.js";
   document.body.appendChild(scriptEl);
 
-  await waitFor(() => typeof Dexie !== "undefined" && ServerSocket && ServerIsConnected);
-
-  const db = new Dexie("wce-saved-accounts");
+  const d = await import("dexie");
+  const db = new d.Dexie("wce-saved-accounts");
   db.version(1).stores({
     key: "++id, key",
   });
@@ -38,12 +37,21 @@ export default async function automaticReconnect() {
     }
     const decoder = new TextDecoder("utf8");
     const auth = new Uint8Array(a.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
-    const iv = new Uint8Array(localStorage.getItem("bce.passwords.iv").match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
-    const data = new Uint8Array(localStorage.getItem("bce.passwords").match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
-    console.log(auth, iv, data);
-    const s = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, data);
-    const str = decoder.decode(new Uint8Array(s));
-    return parseJSON(str);
+    const iv = new Uint8Array(localStorage.getItem("bce.passwords.iv").match(/[\da-f]{2}/gi)
+      .map((h) => parseInt(h, 16)));
+    const data = new Uint8Array(localStorage.getItem("bce.passwords").match(/[\da-f]{2}/gi)
+      .map((h) => parseInt(h, 16)));
+    try {
+      const s = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, data);
+      const str = decoder.decode(new Uint8Array(s));
+      return parseJSON(str);
+    } catch (e) {
+      localStorage.removeItem("bce.passwords.authTag");
+      localStorage.removeItem("bce.passwords.iv");
+      localStorage.removeItem("bce.passwords");
+      keyTable.clear();
+      return {};
+    }
   }
 
   let accounts = await loadAccounts();
@@ -65,12 +73,14 @@ export default async function automaticReconnect() {
         encKey,
         encoder.encode(JSON.stringify(accs))
       ).then((s) => {
-        localStorage.setItem("bce.passwords", Array.from(new Uint8Array(s)).map((b) => b.toString(16).padStart(2, "0")).join(''));
-        localStorage.setItem("bce.passwords.authTag", Array.from(auth).map((b) => b.toString(16).padStart(2, "0")).join(''));
-        localStorage.setItem("bce.passwords.iv", Array.from(iv).map((b) => b.toString(16).padStart(2, "0")).join(''));
+        localStorage.setItem("bce.passwords", Array.from(new Uint8Array(s)).map((b) => b.toString(16).padStart(2, "0"))
+          .join(''));
+        localStorage.setItem("bce.passwords.authTag", Array.from(auth).map((b) => b.toString(16).padStart(2, "0"))
+          .join(''));
+        localStorage.setItem("bce.passwords.iv", Array.from(iv).map((b) => b.toString(16).padStart(2, "0"))
+          .join(''));
       });
     } else {
-      // localStorage.setItem("bce.passwords", JSON.stringify(accs));
       localStorage.removeItem("bce.passwords");
     }
   }
@@ -118,7 +128,7 @@ export default async function automaticReconnect() {
         if (Object.keys(loginData.passwords).length > 0) {
           DrawText(displayText("Saved Logins (WCE)"), 170, 35, "White", "Black");
         }
-        DrawButton(1250, 385, 180, 60, displayText("Save (WCE)"), "White");
+        DrawButton(1250, 387, 180, 50, displayText("Save (WCE)"), "White");
 
         let y = 60;
         for (const user in loginData.passwords) {
