@@ -42,6 +42,7 @@ import hookBCXAPI from "./functions/hookBCXAPI";
 import shareAddons from "./functions/shareAddons";
 import confirmLeave from "./functions/confirmLeave";
 import toySync from "./functions/toySync";
+import chatRoomWhisperFixes from "./functions/chatRoomWhisperFixes";
 
 /** @type {string[]} */
 export const incompleteFunctions = [];
@@ -159,5 +160,6 @@ export async function registerAllFunctions() {
   registerFunction(richOnlineProfile, "richOnlineProfile");
   registerFunction(shareAddons, "shareAddons");
   registerFunction(confirmLeave, "confirmLeave");
+  registerFunction(chatRoomWhisperFixes, "chatRoomWhisperFixes");
   funcsRegistered = "enable";
 }

@@ -361,6 +361,18 @@ export const defaultSettings = /** @type {const} */ ({
     category: "chat",
     description: "Changes the online profile to support clickable links and embedded images.",
   },
+  whisperTargetFixes: {
+    label: "Improved whisper target handling",
+    value: true,
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      debug("whisperTargetFixes", newValue);
+    },
+    category: "chat",
+    description: "Automatically reset whisper target if they leave the room for more than one minute and after the first invalid whisper target warning message.",
+  },
   antiGarble: {
     label: "Anti Garble",
     value: false,
