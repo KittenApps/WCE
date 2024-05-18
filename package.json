@@ -14,12 +14,12 @@
 		"@types/events": "^3.0.3",
 		"@typescript-eslint/eslint-plugin": "^7.9.0",
 		"@typescript-eslint/parser": "^7.9.0",
-		"eslint": "^8.57.0",
-		"eslint-plugin-deprecation": "^2.0.0",
-		"eslint-config-prettier": "^9.1.0",
-		"bc-stubs": "^104.0.0-Beta.2",
+		"bc-stubs": "^104.0.1",
 		"dexie": "^3.2.7",
 		"esbuild": "^0.21.3",
+		"eslint": "^8.57.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-deprecation": "^2.0.0",
 		"typescript": "^5.4.5"
 	}
 }
