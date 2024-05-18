@@ -10,16 +10,17 @@
 		"serve": "npm run build && npx http-server ./dist -p 4000 -c-1 --cors"
 	},
 	"devDependencies": {
+		"@eslint/compat": "^1.0.1",
+		"@eslint/js": "^9.3.0",
 		"@total-typescript/ts-reset": "^0.5.1",
 		"@types/events": "^3.0.3",
-		"@typescript-eslint/eslint-plugin": "^7.9.0",
-		"@typescript-eslint/parser": "^7.9.0",
 		"bc-stubs": "^104.0.1",
 		"dexie": "^3.2.7",
 		"esbuild": "^0.21.3",
 		"eslint": "^8.57.0",
-		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-deprecation": "^2.0.0",
-		"typescript": "^5.4.5"
+		"globals": "^15.2.0",
+		"typescript": "^5.4.5",
+		"typescript-eslint": "^7.9.0"
 	}
 }
