@@ -4,7 +4,7 @@ import { waitFor, parseJSON, fbcChatNotify, objEntries } from "../util/utils";
 import { debug, logInfo, pastLogs } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
-import { fbcChangelog, SUPPORTED_GAME_VERSIONS, FBC_VERSION, ICONS } from "../util/constants";
+import { fbcChangelog, SUPPORTED_GAME_VERSIONS, FBC_VERSION } from "../util/constants";
 import { toySyncState } from "./toySync";
 import { incompleteFunctions } from "../registerFunctions";
 import { deviatingHashes } from "./functionIntegrityCheck";
@@ -136,7 +136,7 @@ export default async function commands() {
         repl.title = "Whisper";
         repl.classList.add("bce-line-icon-wrapper");
         const img = document.createElement("img");
-        img.src = ICONS.WHISPER;
+        img.src = "https://wce.netlify.app/whisper.png";
         img.alt = "Whisper";
         img.classList.add("bce-line-icon");
         repl.appendChild(img);

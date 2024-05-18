@@ -9,7 +9,7 @@ import { waitFor, objEntries, drawTooltip } from "../util/utils";
 import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey } from "../util/settings";
 import { displayText } from "../util/localization";
-import { ICONS, BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "../util/constants";
+import { BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "../util/constants";
 
 const SelectButtonOffset = 900;
 const SelectButtonWidth = 200;
@@ -359,7 +359,7 @@ export default async function settingsPage() {
   PreferenceRegisterExtensionSetting({
     Identifier: "WCE",
     ButtonText: displayText("WCE Settings"),
-    Image: ICONS.LOGO,
+    Image: "https://wce.netlify.app/icon.png",
     click: PreferenceSubscreenBCESettingsClick,
     run: PreferenceSubscreenBCESettingsRun,
     exit: PreferenceSubscreenBCESettingsExit,
