@@ -40,4 +40,19 @@ export default function chatRoomWhisperFixes() {
     },
     "Resetting blush, eyes, and eyebrows after struggling"
   );
+
+  // ToDo: remove once r105 is out
+  if (GameVersion === 'R104') {
+    SDK.hookFunction(
+      "ChatRoomLeave",
+      HOOK_PRIORITIES.AddBehaviour,
+      /**
+       * @param {Parameters<typeof ChatRoomLeave>} args
+       */
+      (args, next) => {
+        ChatRoomSetTarget(-1);
+        return next(args);
+      }
+    );
+  }
 }
