@@ -12,7 +12,6 @@ import {
   removeCustomEffect,
   enableLeashing,
   disableLeashing,
-  fbcChatNotify,
 } from "./utils";
 import { loadExtendedWardrobe } from "../functions/extendedWardrobe";
 import {
@@ -25,6 +24,7 @@ import {
   // DISCORD_INVITE_URL,
 } from "./constants";
 import { displayText } from "./localization";
+import { augmentedChatNotify } from "../functions/chatAugments";
 
 /**
  * @type {Record<keyof defaultSettings, string | boolean> & {version: number}}
@@ -902,7 +902,7 @@ async function beepChangelog() {
     displayText(`WCE has received significant updates since you last used it. See /wcechangelog in a chatroom.`)
   );
   await waitFor(() => !!document.getElementById("TextAreaChatLog"));
-  fbcChatNotify(`Wholesome Club Extensions (WCE) changelog:\n${fbcChangelog}`);
+  augmentedChatNotify(`Wholesome Club Extensions (WCE) changelog:\n${fbcChangelog}`);
 }
 
 /** @type {(key: string) => boolean | string} */

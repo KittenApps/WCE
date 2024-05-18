@@ -9,6 +9,7 @@ import { toySyncState } from "./toySync";
 import { incompleteFunctions } from "../registerFunctions";
 import { deviatingHashes } from "./functionIntegrityCheck";
 import { bceGotoRoom } from "./forcedClubSlave";
+import { augmentedChatNotify } from "./chatAugments";
 
 /**
  * @param {boolean} [copy] - Whether to copy the report to the clipboard
@@ -157,7 +158,7 @@ export default async function commands() {
       Tag: "fbcchangelog",
       Description: displayText("Show recent WCE changelog"),
       Action: () => {
-        fbcChatNotify(fbcChangelog);
+        augmentedChatNotify(fbcChangelog);
       },
     },
     {
@@ -169,7 +170,7 @@ export default async function commands() {
       Tag: "wcechangelog",
       Description: displayText("Show recent WCE changelog"),
       Action: () => {
-        fbcChatNotify(fbcChangelog);
+        augmentedChatNotify(fbcChangelog);
       },
     },
     {

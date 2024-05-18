@@ -177,6 +177,29 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
   chatMessageElement.setAttribute("bce-original-text", originalText);
 }
 
+/**
+ * @type {(node: HTMLElement | HTMLElement[] | string) => void}
+ */
+export const augmentedChatNotify = (node) => {
+  const div = document.createElement("div");
+  div.setAttribute("class", "ChatMessage bce-notification");
+  div.setAttribute("data-time", ChatRoomCurrentTime());
+  div.setAttribute("data-sender", Player.MemberNumber?.toString());
+  if (typeof node === "string") {
+    div.appendChild(document.createTextNode(node));
+  } else if (Array.isArray(node)) {
+    div.append(...node);
+  } else {
+    div.appendChild(node);
+  }
+  ChatRoomAppendChat(div);
+  // eslint-disable-next-line no-loop-func
+  const scrollToEnd = () => {
+    if (ElementIsScrolledToEnd("TextAreaChatLog")) ElementScrollToEnd("TextAreaChatLog");
+  };
+  processChatAugmentsForLine(div, scrollToEnd);
+};
+
 export default function chatAugments() {
   // CTRL+Enter OOC implementation
   SDK.hookFunction(
