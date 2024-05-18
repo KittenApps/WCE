@@ -3,9 +3,12 @@ import { SDK, HOOK_PRIORITIES } from "../util/modding";
 /** @type {{ lastTime: number; cb: () => void; intval: number; }[]} */
 const timers = [];
 
-/** @type {(cb: () => void, intval: number) => void} */
+/** @type {(cb: () => void, intval: number) => (() => void)} */
 export function createTimer(cb, intval) {
   timers.push({ cb, intval, lastTime: performance.now() });
+  return () => {
+    timers.splice(timers.findIndex((t) => t.cb === cb), 1);
+  };
 }
 
 SDK.hookFunction(
