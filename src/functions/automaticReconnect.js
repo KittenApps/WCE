@@ -32,7 +32,7 @@ export default async function automaticReconnect() {
     if (!a) {
       /** @type {Passwords} */
       const accs = parseJSON(localStorage.getItem("bce.passwords")) || {};
-      if (window.crypto?.subtle) storeAccounts(accs);
+      if (window.crypto?.subtle) setTimeout(() => storeAccounts(accs), 1);
       return accs;
     }
     const decoder = new TextDecoder("utf8");
