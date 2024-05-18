@@ -382,10 +382,10 @@ export const defaultSettings = /** @type {const} */ ({
     sideEffects: (newValue) => {
       if (!newValue) {
         fbcSettings.antiGarbleChatOptions = false;
-        fbcSettings.antiGarbleChatLevel = "full";
+        fbcSettings.antiGarbleChatLevel = "none";
         fbcSettings.antiGarbleChatBabyTalk = false;
         fbcSettings.antiGarbleChatStutter = false;
-        fbcSettings.antiGarbleWhisperLevel = "full";
+        fbcSettings.antiGarbleWhisperLevel = "none";
         fbcSettings.antiGarbleWhisperBabyTalk = false;
         fbcSettings.antiGarbleWhisperStutter = false;
       }
@@ -419,7 +419,7 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleChatLevel: {
     label: "Chat garble level:",
     type: "select",
-    value: "full",
+    value: "none",
     options: ["none", "low", "medium", "high", "full"],
     disabled: () => !fbcSettings.antiGarble,
     /**
@@ -461,7 +461,7 @@ export const defaultSettings = /** @type {const} */ ({
   antiGarbleWhisperLevel: {
     label: "Whisper garble level:",
     type: "select",
-    value: "full",
+    value: "none",
     options: ["off", "none", "low", "medium", "high", "full"],
     disabled: () => !fbcSettings.antiGarble,
     /**

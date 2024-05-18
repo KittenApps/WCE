@@ -98,7 +98,13 @@ export default async function settingsPage() {
       return;
     }
     ctx.textAlign = "left";
-    DrawText(displayText("Wholesome Club Extensions (WCE) Settings"), 300, 125, "Black", "Gray");
+    DrawText(
+      displayText(currentCategory ? `WCE Settings - ${settingCategoryLabels[currentCategory]}` : "Wholesome Club Extensions (WCE) Settings"),
+      300,
+      125,
+      "Black",
+      "Gray"
+    );
     /* DrawButton(...discordInvitePosition, "", "White", "");
     DrawText(
       displayText("Join Discord"),
