@@ -7,7 +7,7 @@
 		"build": "node ./build.js",
 		"test": "tsc",
 		"lint": "eslint ./src",
-		"serve": "npx http-server ./dist -p 4000 -c-1 --cors"
+		"serve": "npm run build && npx http-server ./dist -p 4000 -c-1 --cors"
 	},
 	"devDependencies": {
 		"@total-typescript/ts-reset": "^0.5.1",
