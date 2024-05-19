@@ -9,16 +9,25 @@ import { fbcSettings } from "../util/settings";
 export default async function automaticReconnect() {
   const { Dexie } = await import("dexie");
   const db = new Dexie("wce-saved-accounts");
-  db.version(1).stores({
+  db.version(2).stores({
     key: "id, key",
     accounts: "id, data, iv, auth"
   });
   const keyTable = db.table("key");
   const accTable = db.table("accounts");
 
-  /** @type {{key: CryptoKey;}} */
-  const key = await keyTable.get({ id: 1 });
-  let /** @type {CryptoKey} */ encKey;
+  let /** @type {{key: CryptoKey;}} */ key, /** @type {CryptoKey} */ encKey;
+  // ToDo: remove old upgrade handling once 6.2.1 is out for a while
+  try {
+     key = await keyTable.get({ id: 1 });
+  } catch (e) {
+    logWarn(e);
+    localStorage.removeItem("bce.passwords.authTag");
+    localStorage.removeItem("bce.passwords.iv");
+    localStorage.removeItem("bce.passwords");
+    await db.delete();
+    window.location.reload();
+  }
   if (!key) {
     // eslint-disable-next-line require-atomic-updates
     encKey = await window.crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
