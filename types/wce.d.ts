@@ -232,7 +232,7 @@ declare global {
     LastIntensity?: number;
   };
   type FBCToySyncState = {
-    client?: import("./buttplug.io.1.0.17").ButtplugClient;
+    client?: import("buttplug").ButtplugClient;
     deviceSettings: Map<string, FBCToySetting>;
   };
 }

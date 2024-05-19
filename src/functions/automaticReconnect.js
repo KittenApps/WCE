@@ -16,7 +16,7 @@ export default async function automaticReconnect() {
   const keyTable = db.table("key");
   const accTable = db.table("accounts");
 
-  let /** @type {{key: CryptoKey;}} */ key, /** @type {CryptoKey} */ encKey;
+  let /** @type {CryptoKey} */ encKey, /** @type {{key: CryptoKey;}} */ key;
   // ToDo: remove old upgrade handling once 6.2.1 is out for a while
   try {
      key = await keyTable.get({ id: 1 });

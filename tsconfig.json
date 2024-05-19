@@ -14,6 +14,7 @@
 		"moduleResolution": "node",
 		"noEmit": true,
 		"target": "es2020",
-		"checkJs": true
+		"checkJs": true,
+		"skipLibCheck": true
 	}
 }

@@ -29,10 +29,10 @@ export async function fbcDebug(copy) {
       .map(([k, v]) => `${k}: ${v.toString()}`)
       .join("\n- ")}`
   );
-  if (toySyncState.client?.Connected) {
+  if (toySyncState.client?.connected) {
     info.set(
       "Buttplug.io Devices",
-      toySyncState.client.Devices.map((d) => `${d.Name} (${d.AllowedMessages.join(",")})`).join(", ")
+      toySyncState.client.devices.map((d) => `${d.name} (${d.vibrateAttributes.join(",")})`).join(", ")
     );
   }
   info.set(
