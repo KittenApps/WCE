@@ -7,46 +7,74 @@ import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 
 export default async function automaticReconnect() {
-  const d = await import("dexie");
-  const db = new d.Dexie("wce-saved-accounts");
+  const { Dexie } = await import("dexie");
+  const db = new Dexie("wce-saved-accounts");
   db.version(1).stores({
-    key: "++id, key",
+    key: "id, key",
+    accounts: "id, data, iv, auth"
   });
   const keyTable = db.table("key");
+  const accTable = db.table("accounts");
 
-  /** @type {CryptoKey} */
-  let encKey = await keyTable.get(1);
-  if (!encKey) {
+  /** @type {{key: CryptoKey;}} */
+  const key = await keyTable.get({ id: 1 });
+  let /** @type {CryptoKey} */ encKey;
+  if (!key) {
     // eslint-disable-next-line require-atomic-updates
     encKey = await window.crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
-    await keyTable.put(encKey, [1]);
+    await keyTable.put({ id: 1, key: encKey });
+  } else {
+    encKey = key.key;
   }
 
   /** @type {() => Promise<Passwords>} */
   async function loadAccounts() {
+    const d = localStorage.getItem("bce.passwords");
+    const i = localStorage.getItem("bce.passwords.iv");
     const a = localStorage.getItem("bce.passwords.authTag");
-    if (!a) {
+    if (d && (!a || !i)) {
       /** @type {Passwords} */
       const accs = parseJSON(localStorage.getItem("bce.passwords")) || {};
-      if (window.crypto?.subtle) setTimeout(() => storeAccounts(accs), 1);
+      if (window.crypto?.subtle) {
+        setTimeout(() => {
+          localStorage.removeItem("bce.passwords");
+          storeAccounts(accs);
+        }, 1);
+      }
       return accs;
     }
+    let /** @type {Uint8Array} */ auth, /** @type {Uint8Array} */ data, /** @type {Uint8Array} */ iv;
+    // ToDo: remove this migrations code once 6.2.1 is out for a while
+    if (d && a && i) {
+      auth = new Uint8Array(a.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
+      iv = new Uint8Array(i.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
+      data = new Uint8Array(d.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
+    } else {
+      const res = await accTable.get({ id: 1 });
+      if (!res) return {};
+      ({ auth, iv, data } = res);
+    }
     const decoder = new TextDecoder("utf8");
-    const auth = new Uint8Array(a.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
-    const iv = new Uint8Array(localStorage.getItem("bce.passwords.iv").match(/[\da-f]{2}/gi)
-      .map((h) => parseInt(h, 16)));
-    const data = new Uint8Array(localStorage.getItem("bce.passwords").match(/[\da-f]{2}/gi)
-      .map((h) => parseInt(h, 16)));
     try {
       const s = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, data);
-      const str = decoder.decode(new Uint8Array(s));
-      return parseJSON(str);
+      /** @type {Passwords} */
+      const accs = parseJSON(decoder.decode(new Uint8Array(s))) || {};
+      if (d && a && i) {
+        setTimeout(() => {
+          localStorage.removeItem("bce.passwords.authTag");
+          localStorage.removeItem("bce.passwords.iv");
+          localStorage.removeItem("bce.passwords");
+          storeAccounts(accs);
+        }, 1);
+      }
+      return accs;
     } catch (e) {
       logWarn(e);
       localStorage.removeItem("bce.passwords.authTag");
       localStorage.removeItem("bce.passwords.iv");
       localStorage.removeItem("bce.passwords");
       keyTable.clear();
+      accTable.clear();
       return {};
     }
   }
@@ -69,14 +97,7 @@ export default async function automaticReconnect() {
         { name: 'AES-GCM', iv, additionalData: auth, tagLength: 128 },
         encKey,
         encoder.encode(JSON.stringify(accs))
-      ).then((s) => {
-        localStorage.setItem("bce.passwords", Array.from(new Uint8Array(s)).map((b) => b.toString(16).padStart(2, "0"))
-          .join(''));
-        localStorage.setItem("bce.passwords.authTag", Array.from(auth).map((b) => b.toString(16).padStart(2, "0"))
-          .join(''));
-        localStorage.setItem("bce.passwords.iv", Array.from(iv).map((b) => b.toString(16).padStart(2, "0"))
-          .join(''));
-      });
+      ).then((s) => accTable.put({ id: 1, iv, auth, data: new Uint8Array(s) }, [1]));
     } else {
       localStorage.removeItem("bce.passwords");
     }
