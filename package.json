@@ -5,7 +5,7 @@
 	"scripts": {
 		"start": "esbuild src/index.js --bundle --outfile=./dist/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=./dist",
 		"build": "node ./build.js",
-		"test": "npm run typecheck || npm run lint",
+		"test": "npm run typecheck ; npm run lint",
 		"typecheck": "tsc",
 		"lint": "eslint ./src",
 		"serve": "npm run build && npx http-server ./dist -p 4000 -c-1 --cors"
@@ -19,7 +19,7 @@
 		"@eslint/js": "^9.3.0",
 		"@total-typescript/ts-reset": "^0.5.1",
 		"@types/events": "^3.0.3",
-		"bc-stubs": "^104.0.1",
+		"bc-stubs": "^104.0.2",
 		"esbuild": "^0.21.3",
 		"eslint": "^8.57.0",
 		"eslint-plugin-deprecation": "^2.0.0",

@@ -371,6 +371,7 @@ export default async function settingsPage() {
     run: PreferenceSubscreenBCESettingsRun,
     exit: PreferenceSubscreenBCESettingsExit,
     load: PreferenceSubscreenBCESettingsLoad,
+    // ToDo: remove once r105 is out
     // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
     unload: () => {},
   });

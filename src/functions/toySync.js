@@ -74,7 +74,10 @@ export default async function toySync() {
 
   // Sync vibrations from slots
   const removeTimer = createTimer(() => {
-    if (!client.connected) return removeTimer();
+    if (!client.connected) {
+       removeTimer();
+       return;
+    }
     for (const d of client.devices.filter((dev) => dev.vibrateAttributes.length > 0)) {
       const deviceSettings = toySyncState.deviceSettings?.get(d.name);
       if (!deviceSettings) {

@@ -52,31 +52,22 @@ export default async function automaticReconnect() {
       }
       return accs;
     }
-    let /** @type {Uint8Array} */ auth, /** @type {Uint8Array} */ data, /** @type {Uint8Array} */ iv;
     // ToDo: remove this migrations code once 6.2.1 is out for a while
     if (d && a && i) {
-      auth = new Uint8Array(a.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
-      iv = new Uint8Array(i.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
-      data = new Uint8Array(d.match(/[\da-f]{2}/gi).map((h) => parseInt(h, 16)));
-    } else {
-      const res = await accTable.get({ id: 1 });
-      if (!res) return {};
-      ({ auth, iv, data } = res);
+      localStorage.removeItem("bce.passwords.authTag");
+      localStorage.removeItem("bce.passwords.iv");
+      localStorage.removeItem("bce.passwords");
+      keyTable.clear();
+      return {};
     }
+    /** @type {{auth: Uint8Array; iv: Uint8Array; data: Uint8Array;}} */
+    const res = await accTable.get({ id: 1 });
+    if (!res) return {};
+    const { auth, iv, data } = res;
     const decoder = new TextDecoder("utf8");
     try {
       const s = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, data);
-      /** @type {Passwords} */
-      const accs = parseJSON(decoder.decode(new Uint8Array(s))) || {};
-      if (d && a && i) {
-        setTimeout(() => {
-          localStorage.removeItem("bce.passwords.authTag");
-          localStorage.removeItem("bce.passwords.iv");
-          localStorage.removeItem("bce.passwords");
-          storeAccounts(accs);
-        }, 1);
-      }
-      return accs;
+      return parseJSON(decoder.decode(new Uint8Array(s))) || {};
     } catch (e) {
       logWarn(e);
       localStorage.removeItem("bce.passwords.authTag");
