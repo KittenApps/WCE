@@ -245,9 +245,10 @@ export default async function settingsPage() {
         if (isDefaultSettingKey(currentSetting)) {
           drawTooltip(300, 830, 1400, displayText(defaultSettings[currentSetting].description), "left");
         }
-
-        DrawText(`${currentPageNumber + 1} / ${settingsPageCount(currentCategory)}`, 1700, 230, "Black", "Gray");
-        DrawButton(1815, 180, 90, 90, "", "White", "Icons/Next.png");
+        if (settingsPageCount(currentCategory) > 1) {
+          DrawText(`${currentPageNumber + 1} / ${settingsPageCount(currentCategory)}`, 1700, 230, "Black", "Gray");
+          DrawButton(1815, 180, 90, 90, "", "White", "Icons/Next.png");
+        }
       }
     } else {
       let y = settingsYStart;
