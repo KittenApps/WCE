@@ -61,29 +61,20 @@ export default async function toySync() {
     await client.connect(connector);
     logInfo("Connected buttplug.io");
   } catch (ex) {
-    if (ex) {
-      // eslint-disable-next-line no-alert
-      alert(
-        displayText(
-          "buttplug.io is enabled, but server could not be contacted at ws://127.0.0.1:12345. Is Intiface Desktop running? Is another client connected to it?"
-        )
-      );
-      logError("buttplug.io could not connect to server", ex);
-      return;
-    }
+    alert(
+      displayText(
+        "buttplug.io is enabled, but server could not be contacted at ws://127.0.0.1:12345. Is Intiface Desktop running? Is another client connected to it?"
+      )
+    );
+    logError("buttplug.io could not connect to server", ex);
+    return;
   }
 
   toySyncState.client = client;
 
-  let lastSync = 0;
   // Sync vibrations from slots
-  createTimer(() => {
-    if (lastSync > Date.now() - 3000) {
-      // Don't change vibes more than once per 3 seconds
-      return;
-    }
-
-    // 0 is VibrateCmd
+  const removeTimer = createTimer(() => {
+    if (!client.connected) return removeTimer();
     for (const d of client.devices.filter((dev) => dev.vibrateAttributes.length > 0)) {
       const deviceSettings = toySyncState.deviceSettings?.get(d.name);
       if (!deviceSettings) {
@@ -98,7 +89,6 @@ export default async function toySync() {
       }
       deviceSettings.LastIntensity = intensity;
 
-      lastSync = Date.now();
       if (typeof intensity !== "number" || intensity < 0) {
         d.vibrate(0);
       } else {
@@ -125,7 +115,7 @@ export default async function toySync() {
         }
       }
     }
-  }, 0);
+  }, 3000);
 
   Commands.push({
     Tag: "toybatteries",
