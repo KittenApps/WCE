@@ -49,6 +49,8 @@ export default function antiGarbling() {
           }
         }
       }
+      // eslint-disable-next-line no-undefined
+      if (process.text === originalMsg) originalMsg = undefined;
 
       const Dictionary = [{ Effects: process.effects, Original: originalMsg }];
       return { Content: process.text, Type: type, Dictionary };

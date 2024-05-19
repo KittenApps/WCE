@@ -7,10 +7,6 @@ import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 
 export default async function automaticReconnect() {
-  const scriptEl = document.createElement("script");
-  scriptEl.src = "https://unpkg.com/dexie@3.2.7/dist/dexie.js";
-  document.body.appendChild(scriptEl);
-
   const d = await import("dexie");
   const db = new d.Dexie("wce-saved-accounts");
   db.version(1).stores({
@@ -46,6 +42,7 @@ export default async function automaticReconnect() {
       const str = decoder.decode(new Uint8Array(s));
       return parseJSON(str);
     } catch (e) {
+      logWarn(e);
       localStorage.removeItem("bce.passwords.authTag");
       localStorage.removeItem("bce.passwords.iv");
       localStorage.removeItem("bce.passwords");

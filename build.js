@@ -3,6 +3,10 @@
 import * as esbuild from 'esbuild'
 import { promises as fs } from 'node:fs';
 
+await fs.readdir('dist').then(files => Promise.all(files.map(f => {
+  if (!f.endsWith('.png') && !f.endsWith('.user.js')) return fs.unlink(`dist/${f}`);
+})));
+
 esbuild.build({
   entryPoints: ['src/index.js'],
   bundle: true,
