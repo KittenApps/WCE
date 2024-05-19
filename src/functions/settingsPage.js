@@ -177,7 +177,7 @@ export default async function settingsPage() {
           "Gray"
         );
         if (fbcSettings.toySync) {
-          if (!toySyncState.client?.Connected) {
+          if (!toySyncState.client?.connected) {
             DrawText(displayText("Still connecting or connection failed..."), 300, 450, "Black", "Gray");
           } else {
             ctx.textAlign = "center";
@@ -195,14 +195,14 @@ export default async function settingsPage() {
             DrawText(displayText("Device Name"), 300, 420, "Black", "Gray");
             DrawText(displayText("Synchronized Slot"), 800, 420, "Black", "Gray");
             y = 500;
-            for (const d of toySyncState.client.Devices.filter((dev) => dev.AllowedMessages.includes(0))) {
-              let deviceSettings = toySyncState.deviceSettings.get(d.Name);
+            for (const d of toySyncState.client.devices.filter((dev) => dev.vibrateAttributes.length > 0)) {
+              let deviceSettings = toySyncState.deviceSettings.get(d.name);
               if (!deviceSettings) {
                 deviceSettings = {
-                  Name: d.Name,
+                  Name: d.name,
                   SlotName: "None",
                 };
-                toySyncState.deviceSettings.set(d.Name, deviceSettings);
+                toySyncState.deviceSettings.set(d.name, deviceSettings);
               }
               const currentIdx = vibratingSlots.indexOf(deviceSettings.SlotName);
               let nextIdx = 0,
@@ -217,7 +217,7 @@ export default async function settingsPage() {
               } else {
                 nextIdx = currentIdx + 1;
               }
-              DrawText(d.Name, 300, y, "Black", "Gray");
+              DrawText(d.name, 300, y, "Black", "Gray");
 
               ctx.textAlign = "center";
               DrawBackNextButton(
@@ -305,7 +305,7 @@ export default async function settingsPage() {
           y += settingsYIncrement;
         }
       }
-      if (currentCategory === "buttplug" && toySyncState.client?.Connected) {
+      if (currentCategory === "buttplug" && toySyncState.client?.connected) {
         if (MouseIn(...scanButtonPosition)) {
           if (!toySyncState.client.isScanning) {
             toySyncState.client.startScanning();
@@ -313,14 +313,14 @@ export default async function settingsPage() {
           return;
         }
         y = 500;
-        for (const d of toySyncState.client.Devices.filter((dev) => dev.AllowedMessages.includes(0))) {
+        for (const d of toySyncState.client.devices.filter((dev) => dev.vibrateAttributes.length > 0)) {
           if (!MouseIn(800, y - 32, 450, 64)) {
             y += settingsYIncrement;
             continue;
           }
-          const deviceSettings = toySyncState.deviceSettings.get(d.Name);
+          const deviceSettings = toySyncState.deviceSettings.get(d.name);
           if (!deviceSettings) {
-            logWarn("Could not find device settings for", d.Name, toySyncState.deviceSettings);
+            logWarn("Could not find device settings for", d.name, toySyncState.deviceSettings);
             y += settingsYIncrement;
             continue;
           }

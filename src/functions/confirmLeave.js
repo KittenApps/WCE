@@ -6,9 +6,9 @@ export default function confirmLeave() {
   window.addEventListener(
     "beforeunload",
     (e) => {
-      if (toySyncState.client?.Connected) {
+      if (toySyncState.client?.connected) {
         // Stop vibrating toys
-        for (const device of toySyncState.client.Devices.filter((d) => d.AllowedMessages.includes(0))) {
+        for (const device of toySyncState.client.devices.filter((d) => d.vibrateAttributes.length > 0)) {
           device.vibrate(0);
         }
       }
