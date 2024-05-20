@@ -20,8 +20,8 @@ export default async function pastProfiles() {
     return;
   }
 
-  const d = await import("dexie");
-  const db = new d.Dexie("bce-past-profiles");
+  const { Dexie } = await import("@silizia/dexie");
+  const db = new Dexie("bce-past-profiles");
   db.version(3).stores({
     profiles: "memberNumber, name, lastNick, seen, characterBundle",
     notes: "memberNumber, note, updatedAt",

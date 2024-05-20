@@ -1,5 +1,3 @@
-import { ModSDKGlobalAPI } from "./bcModSdk";
-
 export {};
 
 declare global {
@@ -35,7 +33,7 @@ declare global {
     replacements?: Record<string, string>
   ) => string;
   var bceStripBeepMetadata: (text: string) => string;
-  var bcModSdk: ModSDKGlobalAPI | undefined;
+  var bcModSdk: import("bondage-club-mod-sdk").ModSDKGlobalAPI | undefined;
   var FUSAM: FUSAMPublicAPI | undefined;
 
   type FUSAMPublicAPI = {
@@ -66,7 +64,7 @@ declare global {
   // extends BC Character interface with additional FBC properties
   interface Character {
     FBC: string;
-    FBCOtherAddons?: readonly import("./bcModSdk").ModSDKModInfo[];
+    FBCOtherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
     BCEArousal: boolean;
     BCECapabilities: readonly string[];
     BCEArousalProgress: number;
@@ -123,7 +121,7 @@ declare global {
     progress?: number;
     enjoyment?: number;
     activity?: BCEActivity;
-    otherAddons?: readonly import("./bcModSdk").ModSDKModInfo[];
+    otherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
   };
   type SettingsCategory =
     | "performance"

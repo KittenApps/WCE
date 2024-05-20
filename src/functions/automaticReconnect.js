@@ -7,7 +7,7 @@ import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 
 export default async function automaticReconnect() {
-  const { Dexie } = await import("dexie");
+  const { Dexie } = await import("@silizia/dexie");
   const db = new Dexie("wce-saved-accounts");
   db.version(2).stores({
     key: "id, key",

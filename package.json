@@ -3,27 +3,33 @@
 	"type": "module",
 	"license": "GPL-3.0-or-later",
 	"scripts": {
-		"start": "esbuild src/index.js --bundle --outfile=./dist/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=./dist",
-		"build": "node ./build.js",
+		"start": "esbuild src/index.js --bundle --outfile=public/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=public",
+		"build": "rollup -c",
 		"test": "npm run typecheck ; npm run lint",
 		"typecheck": "tsc",
 		"lint": "eslint ./src",
 		"serve": "npm run build && npx http-server ./dist -p 4000 -c-1 --cors"
 	},
 	"dependencies": {
-		"buttplug": "^3.2.2",
-		"dexie": "^4.0.4"
+		"@silizia/dexie": "^4.0.4",
+		"buttplug": "^3.2.2"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.0.1",
 		"@eslint/js": "^9.3.0",
+		"@rollup/plugin-alias": "^5.1.0",
+		"@rollup/plugin-node-resolve": "^15.2.3",
 		"@total-typescript/ts-reset": "^0.5.1",
 		"@types/events": "^3.0.3",
 		"bc-stubs": "^104.0.2",
+		"bondage-club-mod-sdk": "^1.2.0",
 		"esbuild": "^0.21.3",
 		"eslint": "^8.57.0",
 		"eslint-plugin-deprecation": "^2.0.0",
 		"globals": "^15.3.0",
+		"rollup": "^4.17.2",
+		"rollup-plugin-copy": "^3.5.0",
+		"rollup-plugin-esbuild": "^6.1.1",
 		"typescript": "^5.4.5",
 		"typescript-eslint": "^7.9.0"
 	}

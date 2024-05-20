@@ -14,13 +14,13 @@ export default function chatRoomWhisperFixes() {
     (args, next) => {
       if (fbcSettings.whisperTargetFixes && args[0].Type === "Action" && args[0].Sender === ChatRoomTargetMemberNumber) {
         if (["ServerLeave", "ServerBan", "ServerKick", "ServerDisconnect"].some((m) => args[0].Content.startsWith(m))) {
-          leaveResetTargetTimers[args[0].Sender] = setTimeout(() => {
+          leaveResetTargetTimers[args[0].Sender] = window.setTimeout(() => {
             ChatRoomSetTarget(-1);
             ChatRoomSendLocal('<span style="color: red">[WCE] Your whisper target was cleared, because they left the room for more than a minute!</span>');
           }, 60 * 1000);
         } else if (args[0].Content.startsWith("ServerEnter")) {
           if (leaveResetTargetTimers[args[0].Sender]) {
-            clearTimeout(leaveResetTargetTimers[args[0].Sender]);
+            window.clearTimeout(leaveResetTargetTimers[args[0].Sender]);
             delete leaveResetTargetTimers[args[0].Sender];
           }
         }

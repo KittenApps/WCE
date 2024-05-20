@@ -11,7 +11,7 @@
 	"compilerOptions": {
 		"module": "ES2022",
 		"allowJs": true,
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"noEmit": true,
 		"target": "es2020",
 		"checkJs": true,
