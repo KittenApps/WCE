@@ -1,5 +1,3 @@
-import { isString } from "./utils";
-
 /** @type {{ level: "error" | "warn" | "info" | "debug", message: string }[]} */
 export const pastLogs = new Array(100);
 
@@ -10,7 +8,7 @@ const pushLog = (level, ...args) => {
     level,
     message: args
       .map((v) => {
-        if (isString(v)) {
+        if (typeof v === "string") {
           return v;
         }
         try {

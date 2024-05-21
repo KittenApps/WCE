@@ -1,10 +1,7 @@
-import { SDK } from "../util/modding";
+import { SDK, deviatingHashes } from "../util/modding";
 import { waitFor, objEntries } from "../util/utils";
 import { logInfo, logWarn } from "../util/logger";
 import { expectedHashes } from "../util/functionHashes";
-
-/** @type {unknown[]} */
-export const deviatingHashes = [];
 
 export default async function functionIntegrityCheck() {
   await waitFor(() => GameVersion !== "R0" && typeof ServerIsConnected === "boolean" && ServerIsConnected);

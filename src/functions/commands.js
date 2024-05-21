@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES, skippedFunctionality } from "../util/modding";
+import { SDK, HOOK_PRIORITIES, skippedFunctionality, deviatingHashes } from "../util/modding";
 import { BCX } from "./hookBCXAPI";
 import { waitFor, parseJSON, fbcChatNotify, objEntries } from "../util/utils";
 import { debug, logInfo, pastLogs } from "../util/logger";
@@ -7,7 +7,6 @@ import { displayText } from "../util/localization";
 import { fbcChangelog, SUPPORTED_GAME_VERSIONS, FBC_VERSION } from "../util/constants";
 import { toySyncState } from "./toySync";
 import { incompleteFunctions } from "../registerFunctions";
-import { deviatingHashes } from "./functionIntegrityCheck";
 import { bceGotoRoom } from "./forcedClubSlave";
 import { augmentedChatNotify } from "./chatAugments";
 
