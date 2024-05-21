@@ -15,7 +15,7 @@ const pushLog = (level, ...args) => {
         }
         try {
           return JSON.stringify(v);
-        } catch (e) {
+        } catch {
           // eslint-disable-next-line @typescript-eslint/no-base-to-string
           return v?.toString();
         }

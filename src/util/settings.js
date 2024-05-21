@@ -791,6 +791,7 @@ const bceSettingKey = () => `bce.settings.${Player?.AccountName}`;
 /**
  * @type {() => Promise<typeof fbcSettings>}
  */
+// eslint-disable-next-line complexity
 export const bceLoadSettings = async () => {
   await waitFor(() => !!Player?.AccountName);
   const key = bceSettingKey();

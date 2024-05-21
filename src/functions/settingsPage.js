@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -372,7 +370,7 @@ export default async function settingsPage() {
     exit: PreferenceSubscreenBCESettingsExit,
     load: PreferenceSubscreenBCESettingsLoad,
     // ToDo: remove once r105 is out
-    // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
+    // eslint-disable-next-line no-empty-function
     unload: () => {},
   });
 

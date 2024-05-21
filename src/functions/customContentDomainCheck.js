@@ -52,32 +52,23 @@ export default function customContentDomainCheck() {
       try {
         // @ts-ignore - the function's types are garbage
         const [{ ImageURL, MusicURL }] = args;
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
         const imageOrigin = ImageURL && new URL(ImageURL).origin;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
         const musicOrigin = MusicURL && new URL(MusicURL).origin;
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         if (imageOrigin && !sessionCustomOrigins.has(imageOrigin)) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           showCustomContentDomainCheckWarning(imageOrigin, "image");
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         } else if (musicOrigin && !sessionCustomOrigins.has(musicOrigin)) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           showCustomContentDomainCheckWarning(musicOrigin, "music");
         }
 
         if (
           (!ImageURL ||
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             sessionCustomOrigins.get(imageOrigin) === "allowed") &&
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           (!MusicURL || sessionCustomOrigins.get(musicOrigin) === "allowed")
         ) {
           return next(args);
         }
-      } catch (_) {
+      } catch {
         // Don't care
       }
 
@@ -96,7 +87,7 @@ export default function customContentDomainCheck() {
         try {
           const url = new URL(s);
           sessionCustomOrigins.set(url.origin, "allowed");
-        } catch (_) {
+        } catch {
           // Don't care
         }
       }

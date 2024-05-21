@@ -39,7 +39,7 @@ export default {
     alias({
       entries: [
         { find: 'buttplug', replacement: 'buttplug/dist/web/buttplug.mjs' },
-        { find: '@silizia/dexie', replacement: '@silizia/dexie/dist/dexie.mjs' }
+        { find: 'dexie', replacement: 'dexie/dist/dexie.mjs' }
       ],
     }),
     nodeResolve({ modulesOnly: true }),

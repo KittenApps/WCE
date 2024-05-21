@@ -7,7 +7,7 @@ import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 
 export default async function automaticReconnect() {
-  const { Dexie } = await import("@silizia/dexie");
+  const { Dexie } = await import("dexie");
   const db = new Dexie("wce-saved-accounts");
   db.version(2).stores({
     key: "id, key",
@@ -29,7 +29,6 @@ export default async function automaticReconnect() {
     window.location.reload();
   }
   if (!key) {
-    // eslint-disable-next-line require-atomic-updates
     encKey = await window.crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
     await keyTable.put({ id: 1, key: encKey });
   } else {

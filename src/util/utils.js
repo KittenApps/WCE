@@ -36,16 +36,13 @@ export function isNonNullObject(o) {
 export function isChatMessage(m) {
   return (
     isNonNullObject(m) &&
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     typeof m.Type === "string" &&
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     typeof m.Content === "string"
   );
 }
 
 /** @type {(c: unknown) => c is Character} */
 export function isCharacter(c) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return isNonNullObject(c) && typeof c.IsPlayer === "function";
 }
 
@@ -68,9 +65,7 @@ function isItemBundleArray(o) {
 function isItemBundle(o) {
   return (
     isNonNullObject(o) &&
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     typeof o.Name === "string" &&
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     typeof o.Group === "string"
   );
 }
@@ -85,7 +80,6 @@ export function mustNum(id, def = -Number.MAX_SAFE_INTEGER) {
 
 /** @type {<T>(o: T) => T} */
 export function deepCopy(o) {
-  // eslint-disable-next-line
   return structuredClone(o);
 }
 

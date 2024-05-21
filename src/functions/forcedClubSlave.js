@@ -41,7 +41,6 @@ export const bceStartClubSlave = async () => {
 
   PoseSetActive(Player, "Kneel", false);
 
-  // eslint-disable-next-line require-atomic-updates
   ManagementMistress.Stage = "320";
   ManagementMistress.CurrentDialog = displayText(
     "(You get grabbed by a pair of maids and brought to management.) Your owner wants you to be a Club Slave. Now strip."

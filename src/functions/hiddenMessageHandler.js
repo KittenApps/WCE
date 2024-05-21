@@ -89,7 +89,6 @@ export default async function hiddenMessageHandler() {
 
   registerSocketListener(
     "ChatRoomMessage",
-    // eslint-disable-next-line complexity
     (data) => {
       if (data.Type !== HIDDEN) {
         return;

@@ -1297,7 +1297,6 @@ export default async function automaticExpressions() {
               matcher.Criteria.DictionaryMatchers &&
               !matcher.Criteria.DictionaryMatchers.some((m) =>
                 data.Dictionary?.find((t) =>
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                   // @ts-ignore - intentional dynamic indexing on statically defined types
                   Object.keys(m).every((k) => m[k] === t[k])
                 )
@@ -1376,7 +1375,6 @@ export default async function automaticExpressions() {
       })
       .filter((v) => v[1] !== null)
       .map((v) => [v[0], [{ Expression: v[1] }]])
-      // eslint-disable-next-line no-inline-comments
       .reduce((a, v) => ({ ...a, [/** @type {string} */ (v[0])]: v[1] }), {}),
   });
 
@@ -1629,7 +1627,6 @@ export default async function automaticExpressions() {
       /**
        * @param {Parameters<typeof PoseSetActive>} args
        */
-      // eslint-disable-next-line no-loop-func
       (args, next) => {
         const [C, Pose] = args;
         if (

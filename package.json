@@ -12,7 +12,8 @@
 	},
 	"dependencies": {
 		"@silizia/dexie": "^4.0.4",
-		"buttplug": "^3.2.2"
+		"buttplug": "^3.2.2",
+		"dexie": "npm:@silizia/dexie@^4.0.4"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.0.1",
@@ -24,13 +25,13 @@
 		"bc-stubs": "^104.0.2",
 		"bondage-club-mod-sdk": "^1.2.0",
 		"esbuild": "^0.21.3",
-		"eslint": "^8.57.0",
-		"eslint-plugin-deprecation": "^2.0.0",
+		"eslint": "^9.3.0",
+		"eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^2.0.3",
 		"globals": "^15.3.0",
 		"rollup": "^4.17.2",
 		"rollup-plugin-copy": "^3.5.0",
 		"rollup-plugin-esbuild": "^6.1.1",
 		"typescript": "^5.4.5",
-		"typescript-eslint": "^7.9.0"
+		"typescript-eslint": "^8.0.0-alpha.14"
 	}
 }

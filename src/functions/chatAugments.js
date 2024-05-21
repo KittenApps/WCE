@@ -104,7 +104,6 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
             domNode = document.createTextNode(url.href);
             if (embedType !== EMBED_TYPE.None) {
               const promptTrust = document.createElement("a");
-              // eslint-disable-next-line no-loop-func
               promptTrust.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -193,7 +192,6 @@ export const augmentedChatNotify = (node) => {
     div.appendChild(node);
   }
   ChatRoomAppendChat(div);
-  // eslint-disable-next-line no-loop-func
   const scrollToEnd = () => {
     if (ElementIsScrolledToEnd("TextAreaChatLog")) ElementScrollToEnd("TextAreaChatLog");
   };
@@ -389,7 +387,6 @@ export default function chatAugments() {
         !chatMessageElement.classList.contains("bce-pending")
       ) {
         const scrolledToEnd = ElementIsScrolledToEnd(chatLogContainerId);
-        // eslint-disable-next-line no-loop-func
         const scrollToEnd = () => {
           if (scrolledToEnd) {
             ElementScrollToEnd(chatLogContainerId);

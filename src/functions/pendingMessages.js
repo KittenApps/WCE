@@ -29,7 +29,6 @@ export default function pendingMessages() {
         const tag = message.Dictionary?.find?.((d) => d.Tag === "fbc_nonce");
         if (tag) {
           // @ts-ignore - custom dictionary Tag
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           const el = document.querySelector(`[data-nonce='${tag.Text}']`);
           if (el) {
             el.remove();
