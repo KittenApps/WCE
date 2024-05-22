@@ -28,7 +28,7 @@
 		"eslint": "^9.3.0",
 		"eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^2.0.3",
 		"globals": "^15.3.0",
-		"rollup": "^4.17.2",
+		"rollup": "^4.18.0",
 		"rollup-plugin-copy": "^3.5.0",
 		"rollup-plugin-esbuild": "^6.1.1",
 		"typescript": "^5.4.5",

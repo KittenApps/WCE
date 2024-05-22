@@ -6,17 +6,8 @@ import { displayText } from "../util/localization";
 export default async function layeringMenu() {
   await waitFor(() => !!Player?.AppearanceLayers);
 
-  if (["R104Beta1", "R104Beta2"].includes(GameVersion)) {
-    // ToDo: remove once r104 is out
-    patchFunction(
-      "DialogMenuButtonBuild",
-      {
-        "if (Item != null && C.IsPlayer() && Player.CanInteract()) {":
-          "if (Item != null && !C.IsNpc() && (Player.CanInteract() || fbcSettingValue('allowLayeringWhileBound'))) {",
-      },
-      "Built-in layering menus options for allow on others and allow while bound"
-    );
-  } else {
+  // ToDo: remove once r105 is out and add typecheck back in
+  if (GameVersion === 'R104') {
     patchFunction(
       "DialogMenuButtonBuild",
       {
@@ -24,6 +15,20 @@ export default async function layeringMenu() {
           "if (Item != null && !C.IsNpc() && (Player.CanInteract() || fbcSettingValue('allowLayeringWhileBound'))) {",
       },
       "Built-in layering menus options for allow on others and allow while bound"
+    );
+  } else {
+    SDK.hookFunction(
+      "Layering.Init",
+      HOOK_PRIORITIES.AddBehaviour,
+      /**
+       * @param {Parameters<typeof Layering.Init>} args
+       */
+      (args, next) => {
+        const ret = next(args);
+        // @ts-ignore
+        Layering.Readonly = args[4] && !fbcSettings.allowLayeringWhileBound;
+        return ret;
+      }
     );
   }
 

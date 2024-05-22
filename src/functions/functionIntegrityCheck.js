@@ -17,15 +17,29 @@ export default async function functionIntegrityCheck() {
     return hash !== "SKIP";
   }
 
+function IsObject(obj) {
+	return !!obj && typeof obj === 'object' && !Array.isArray(obj);
+}
+
   for (const [func, hash] of objEntries(expectedHashes(GameVersion))) {
     if (!isActiveFunction(func, hash)) {
       continue;
     }
-    if (!window[func]) {
-      logWarn(`Expected function ${func} not found.`);
-      continue;
-    }
-    if (typeof window[func] !== "function") {
+
+    /** @type {any} */
+    let context = window;
+    /** @type {string[]} */
+		const targetPath = func.split('.');
+		for (let i = 0; i < targetPath.length - 1; i++) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+			context = context[targetPath[i]];
+			if (!IsObject(context)) {
+				logWarn(`Expected Function ${func} not found; ${targetPath.slice(0, i + 1).join('.')} is not object`);
+			}
+		}
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    context = context[targetPath.pop()];
+    if (typeof context !== "function") {
       logWarn(`Expected function ${func} is not a function.`);
       continue;
     }

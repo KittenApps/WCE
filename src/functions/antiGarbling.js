@@ -130,9 +130,8 @@ export default function antiGarbling() {
     }
   );
 
-  // ToDo: Remove r104 beta workaround after r104 is stable for a while
   patchFunction(
-    GameVersion.startsWith('R104Beta') ? "ElementPositionFixed" : "ElementPosition",
+    "ElementPosition",
     {
       "const Font = MainCanvas.canvas.clientWidth <= MainCanvas.canvas.clientHeight * 2 ? MainCanvas.canvas.clientWidth / 50 : MainCanvas.canvas.clientHeight / 25;": `let Font;
         if (fbcSettingValue("antiGarbleChatOptions") && ElementID === "InputChat") {
