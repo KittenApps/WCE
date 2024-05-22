@@ -14,7 +14,7 @@ export interface BCX_RuleStateAPI_Generic {
   readonly ruleDefinition: any;
 
   /** Current condition data of the rule */
-  readonly condition: any | undefined;
+  readonly condition: any;
 
   /** If the rule is in effect (active and all conditions valid) */
   readonly inEffect: boolean;
@@ -33,29 +33,67 @@ export interface BCX_RuleStateAPI_Generic {
    * @param targetCharacter - If the rule is against specific target different than player (e.g. sending message/beep), this adds it to log
    * @param dictionary - Dictionary of rule-specific text replacements in logs and notifications; see implementation of individual rules
    */
-  trigger(
-    targetCharacter?: number | null,
-    dictionary?: Record<string, string>
-  ): void;
+  trigger(targetCharacter?: number | null, dictionary?: Record<string, string>): void;
 
   /**
    * Triggers and logs that Player attempted to violate this rule, but the attempt was blocked (for enforced rules)
    * @param targetCharacter - If the rule is against specific target different than player (e.g. sending message/beep), this adds it to log
    * @param dictionary - Dictionary of rule-specific text replacements in logs and notifications; see implementation of individual rules
    */
-  triggerAttempt(
-    targetCharacter?: number | null,
-    dictionary?: Record<string, string>
-  ): void;
+  triggerAttempt(targetCharacter?: number | null, dictionary?: Record<string, string>): void;
+}
+
+// If using full BCX declarations (remove if not)
+export interface BCX_RuleStateAPI<ID extends BCX_Rule> extends BCX_RuleStateAPI_Generic {
+  readonly rule: ID;
+  readonly ruleDefinition: RuleDisplayDefinition<ID>;
+
+  readonly condition: ConditionsConditionData<"rules"> | undefined;
+
+  readonly customData: ID extends keyof RuleCustomData ? (RuleCustomData[ID] | undefined) : undefined;
+  readonly internalData: ID extends keyof RuleInternalData ? (RuleInternalData[ID] | undefined) : undefined;
 }
 
 // If not using full BCX declarations (uncomment if not)
-type BCX_Rule = string;
-type BCX_RuleStateAPI<ID extends BCX_Rule> = BCX_RuleStateAPI_Generic;
+// type BCX_Rule = string;
+// type BCX_RuleStateAPI<ID extends BCX_Rule> = BCX_RuleStateAPI_Generic;
 
 //#endregion
 
-export interface BCX_ModAPI {
+export interface BCX_Events {
+  curseTrigger: {
+    /** Which action the curses did to the item */
+    action: "remove" | "add" | "swap" | "update" | "color" | "autoremove";
+    /** Name of asset group that was changed */
+    group: string;
+  };
+  /**
+   * Triggers whenever player changes subscreen in BCX.
+   * Note, that some changes might not be observable by outside mod (e.g. when user simply switches to different subscreen).
+   * This can trigger even outside of `InformationSheet` screen.
+   */
+  bcxSubscreenChange: {
+    /**
+     * Whether BCX is currently showing one of custom screens, overriding the default BC screen.
+     *
+     * At the time of emitting, this value is the same as the one returned by `bcx.inBcxSubscreen()`.
+     */
+    inBcxSubscreen: boolean;
+  };
+  /**
+   * Triggers whenever BCX sends a "local" message to the chat.
+   */
+  bcxLocalMessage: {
+    /** The actual message that is to be displayed */
+    message: string | Node;
+    /** Timeout of the message - if set, the message auto-hides after {timeout} milliseconds */
+    timeout?: number;
+    /** Sender metadata (used for displaying a membernumber on some messages) */
+    sender?: number;
+  };
+}
+
+export interface BCX_ModAPI extends BCXEventEmitter<BCX_Events> {
   /** Name of the mod this API was requested for */
   readonly modName: string;
 
@@ -84,4 +122,24 @@ export interface BCX_ConsoleInterface {
    * @param mod - Same identifier of your mod as used for ModSDK
    */
   getModApi(mod: string): BCX_ModAPI;
+
+  /** Whether BCX is currently showing one of custom screens, overriding the default BC screen. */
+  inBcxSubscreen(): boolean;
+}
+
+interface Window {
+  bcx?: BCX_ConsoleInterface;
+}
+
+type BCXEvent = Record<never, unknown>;
+type BCXAnyEvent<T extends BCXEvent> = {
+  [key in keyof T]: {
+    event: key;
+    data: T[key];
+  };
+}[keyof T];
+
+export interface BCXEventEmitter<T extends BCXEvent> {
+  on<K extends keyof T>(s: K, listener: (v: T[K]) => void): () => void;
+  onAny(listener: (value: BCXAnyEvent<T>) => void): () => void;
 }

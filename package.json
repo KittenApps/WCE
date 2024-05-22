@@ -26,7 +26,7 @@
 		"bondage-club-mod-sdk": "^1.2.0",
 		"esbuild": "^0.21.3",
 		"eslint": "^9.3.0",
-		"eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^2.0.3",
+		"eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^2.1.0",
 		"globals": "^15.3.0",
 		"rollup": "^4.18.0",
 		"rollup-plugin-copy": "^3.5.0",
