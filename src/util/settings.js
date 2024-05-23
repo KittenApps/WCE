@@ -846,6 +846,18 @@ export const defaultSettings = /** @type {const} */ ({
     category: "hidden",
     description: "",
   },
+  toySyncAddress: {
+    label: "Intiface Address",
+    value: "ws://127.0.0.1:12345",
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      debug("toySyncAddress", newValue);
+    },
+    category: "hidden",
+    description: "",
+  },
 });
 
 export function settingsLoaded() {

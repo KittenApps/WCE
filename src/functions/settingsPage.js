@@ -82,9 +82,14 @@ export default async function settingsPage() {
     objEntries(defaultSettings).filter(([k, v]) => v.category === category && k !== "buttplugDevices");
 
   const PreferenceSubscreenBCESettingsLoad = function () {
+    // @ts-ignore
+    ElementCreateInput("WceIntifaceAddress", "text", fbcSettings.toySyncAddress);
+    ElementPosition("WceIntifaceAddress", -999, -999, 550);
     currentPageNumber = 0;
   };
   const PreferenceSubscreenBCESettingsExit = function () {
+    fbcSettings.toySyncAddress = ElementValue("WceIntifaceAddress");
+    ElementRemove("WceIntifaceAddress");
     bceSaveSettings();
     PreferenceSubscreenExtensionsClear();
   };
@@ -174,6 +179,7 @@ export default async function settingsPage() {
           "Black",
           "Gray"
         );
+        ElementPosition("WceIntifaceAddress", 1300, settingsYStart + 32, 550);
         if (fbcSettings.toySync) {
           if (!toySyncState.client?.connected) {
             DrawText(displayText("Still connecting or connection failed..."), 300, 450, "Black", "Gray");
@@ -271,6 +277,7 @@ export default async function settingsPage() {
       if (currentCategory === null) {
         PreferenceSubscreenBCESettingsExit();
       } else {
+        ElementPosition("WceIntifaceAddress", -999, -999, 550);
         currentCategory = null;
       }
     } else if (MouseIn(...licensePosition)) {

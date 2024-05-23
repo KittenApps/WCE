@@ -56,14 +56,17 @@ export default async function toySync() {
     debug("Scanning finished", data);
   });
 
-  const connector = new ButtplugBrowserWebsocketClientConnector("ws://127.0.0.1:12345");
+  // @ts-ignore
+  const connector = new ButtplugBrowserWebsocketClientConnector(fbcSettings.toySyncAddress || "ws://127.0.0.1:12345");
   try {
     await client.connect(connector);
     logInfo("Connected buttplug.io");
   } catch (ex) {
     alert(
       displayText(
-        "buttplug.io is enabled, but server could not be contacted at ws://127.0.0.1:12345. Is Intiface Desktop running? Is another client connected to it?"
+        "buttplug.io is enabled, but server could not be contacted at $toySyncAddress. Is Intiface Desktop running? Is another client connected to it?",
+        // @ts-ignore
+        { $toySyncAddress: fbcSettings.toySyncAddress }
       )
     );
     logError("buttplug.io could not connect to server", ex);
