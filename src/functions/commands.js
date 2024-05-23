@@ -136,7 +136,7 @@ export default async function commands() {
         repl.title = "Whisper";
         repl.classList.add("bce-line-icon-wrapper");
         const img = document.createElement("img");
-        img.src = "https://wce.netlify.app/whisper.png";
+        img.src = `${PUBLIC_URL}/whisper.png`;
         img.alt = "Whisper";
         img.classList.add("bce-line-icon");
         repl.appendChild(img);

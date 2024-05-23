@@ -1,6 +1,7 @@
 import { SDK, HOOK_PRIORITIES, patchFunction } from "../util/modding";
 import { fbcSettings, defaultSettings } from "../util/settings";
 import { displayText } from "../util/localization";
+import { stutterWord } from "./chatAugments";
 
 export default function antiGarbling() {
   SDK.hookFunction(
@@ -9,48 +10,50 @@ export default function antiGarbling() {
     /**
      * @param {Parameters<typeof ChatRoomGenerateChatRoomChatMessage>} args
      */
+    // eslint-disable-next-line complexity
     (args, next) => {
       if (!fbcSettings.antiGarble) return next(args);
       const [type, msg] = args;
       let process = { effects: [], text: msg };
+      let originalMsg;
 
       if (type !== "Whisper" || fbcSettings.antiGarbleWhisperLevel !== "off") {
         process = SpeechTransformProcess(Player, msg, SpeechTransformSenderEffects);
-      }
-
-      let originalMsg;
-      if (msg !== process.text) {
-        if (Player.RestrictionSettings.NoSpeechGarble) {
-          originalMsg = msg;
-        // @ts-ignore
-        } else if (!["off", "full"].includes(fbcSettings[`antiGarble${type}Level`])) {
-          if (fbcSettings[`antiGarble${type}BabyTalk`] && SpeechTransformShouldBabyTalk(Player)) {
-            originalMsg = SpeechTransformBabyTalk(originalMsg);
-          }
-          switch (fbcSettings[`antiGarble${type}Level`]) {
-            case "none":
-              originalMsg = msg;
-              break;
-            case "low":
-            case "medium":
-            case "high": {
-              const int = Math.min(
-                SpeechTransformGagGarbleIntensity(Player),
+        const shouldBabyTalk = SpeechTransformShouldBabyTalk(Player);
+        const gagIntensity = SpeechTransformGagGarbleIntensity(Player);
+        const stutterIntensity = SpeechTransformStutterIntensity(Player);
+        if (gagIntensity > 0 ||
+          (fbcSettings[`antiGarble${type}BabyTalk`] === "remove" && shouldBabyTalk) ||
+          (fbcSettings[`antiGarble${type}Stutter`] === "remove" && stutterIntensity > 0)
+        ) {
+          if (Player.RestrictionSettings.NoSpeechGarble) {
+            originalMsg = msg;
+          // @ts-ignore
+          } else if (fbcSettings[`antiGarble${type}Level`] !== "full") {
+            if (fbcSettings[`antiGarble${type}BabyTalk`] === "preserve" && shouldBabyTalk) {
+              originalMsg = SpeechTransformBabyTalk(originalMsg);
+            }
+            switch (fbcSettings[`antiGarble${type}Level`]) {
+              case "none":
+                originalMsg = msg;
+                break;
+              case "low":
+              case "medium":
+              case "high": {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]
-              );
-              originalMsg = SpeechTransformGagGarble(msg, int);
-              break;
+                const int = Math.min(gagIntensity, { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]);
+                originalMsg = SpeechTransformGagGarble(msg, int);
+                break;
+              }
+            }
+            if (fbcSettings[`antiGarble${type}Stutter`] === "preserve" && stutterIntensity > 0) {
+              originalMsg = fbcSettings.stutters ? stutterWord(originalMsg, true).results.join("") : SpeechTransformStutter(originalMsg, stutterIntensity);
             }
           }
-          const intensity = SpeechTransformStutterIntensity(Player);
-          if (fbcSettings[`antiGarble${type}Stutter`] && intensity > 0) {
-            originalMsg = SpeechTransformStutter(originalMsg, intensity);
-          }
         }
+        // eslint-disable-next-line no-undefined
+        if (process.text === originalMsg) originalMsg = undefined;
       }
-      // eslint-disable-next-line no-undefined
-      if (process.text === originalMsg) originalMsg = undefined;
 
       const Dictionary = [{ Effects: process.effects, Original: originalMsg }];
       return { Content: process.text, Type: type, Dictionary };
@@ -59,6 +62,7 @@ export default function antiGarbling() {
 
   const chatOptions = defaultSettings.antiGarbleChatLevel.options;
   const whisperOptions = defaultSettings.antiGarbleWhisperLevel.options;
+  const effectOptions = defaultSettings.antiGarbleChatBabyTalk.options;
 
   SDK.hookFunction(
     "ChatRoomRun",
@@ -84,7 +88,7 @@ export default function antiGarbling() {
           185,
           50,
           displayText((isWhisper ? "whis: " : "chat: ") + options[idx]),
-          "White",
+          idx === 5 ? "Lightgreen" : `#${`${(15 - idx * 2).toString(16)}`.repeat(6)}`,
           "",
           () => displayText((isWhisper ? "Whisper garble level: " : "Chat garble level: ") + options[(idx - 1 + len) % len]),
           () => displayText((isWhisper ? "Whisper garble level: " : "Chat garble level: ") + options[(idx + 1 + len) % len]),
@@ -93,8 +97,38 @@ export default function antiGarbling() {
           // @ts-ignore
           { X: 1000, Y: 910, Width: 200, Height: 90 }
         );
-        DrawButton(1810, 928, 185, 70, "", "White");
-        DrawImage("Icons/Small/Chat.png", 1875, 935);
+        // @ts-ignore
+        const stidx = effectOptions.indexOf(fbcSettings[isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter"]);
+        // @ts-ignore
+        const btidx = effectOptions.indexOf(fbcSettings[isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk"]);
+        DrawButton(
+          1810,
+          928,
+          35,
+          35,
+          "",
+          idx > 3 ? "#555555" : `#${`${(15 - stidx * 3).toString(16)}`.repeat(6)}`,
+          `${PUBLIC_URL}/stutter.png`,
+          `${isWhisper ? "Whisper" : "Chat"} stutters: ${fbcSettings[isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter"]}`,
+          idx > 3,
+          // @ts-ignore
+          { X: 1000, Y: 910, Width: 200, Height: 90 }
+        );
+        DrawButton(
+          1810,
+          963,
+          35,
+          35,
+          "",
+          idx > 3 ? "#555555" : `#${`${(15 - btidx * 3).toString(16)}`.repeat(6)}`,
+          `${PUBLIC_URL}/baby.png`,
+          `${isWhisper ? "Whisper" : "Chat"} baby talk: ${fbcSettings[isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk"]}`,
+          idx > 3,
+          // @ts-ignore
+          { X: 1000, Y: 910, Width: 200, Height: 90 }
+        );
+        DrawButton(1845, 928, 150, 70, "", "White");
+        DrawImage("Icons/Small/Chat.png", 1898, 935);
       }
       return ret;
     }
@@ -108,7 +142,7 @@ export default function antiGarbling() {
      */
     (args, next) => {
       if (fbcSettings.antiGarbleChatOptions && MouseIn(1810, 878, 185, 120)) {
-        if (MouseIn(1810, 928, 185, 70)) return ChatRoomSendChat();
+        if (MouseIn(1845, 928, 150, 70)) return ChatRoomSendChat();
         const isWhisper = ChatRoomTargetMemberNumber !== -1 ||
           window.InputChat?.value.startsWith("/w ") ||
           window.InputChat?.value.startsWith("/whisper ");
@@ -122,8 +156,22 @@ export default function antiGarbling() {
           return null;
         }
         if (MouseIn(1810 + 92, 878, 93, 50)) {
-          fbcSettings[setting] = options[(idx + 1 + len) % len];
+          fbcSettings[setting] = options[(idx + 1) % len];
           return null;
+        }
+        if (idx <= 3) {
+          // @ts-ignore
+          const stidx = effectOptions.indexOf(fbcSettings[isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter"]);
+          // @ts-ignore
+          const btidx = effectOptions.indexOf(fbcSettings[isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk"]);
+          if (MouseIn(1810, 928, 35, 35)) {
+            fbcSettings[isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter"] = effectOptions[(stidx + 1) % 3];
+            return null;
+          }
+          if (MouseIn(1810, 963, 35, 35)) {
+            fbcSettings[isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk"] = effectOptions[(btidx + 1) % 3];
+            return null;
+          }
         }
       }
       return next(args);

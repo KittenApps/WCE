@@ -25,6 +25,52 @@ function bceParseUrl(word) {
   }
 }
 
+const startSounds = ["..", "--"];
+const endSounds = ["...", "~", "~..", "~~", "..~"];
+const eggedSounds = ["ah", "aah", "mnn", "nn", "mnh", "mngh", "haa", "nng", "mnng"];
+/**
+ * StutterWord will add s-stutters to the beginning of words and return 1-2 words, the original word with its stutters and a sound, based on arousal
+ * @type {(word: string, forceStutter?: boolean) => {results: string[], stutter: boolean}}
+ */
+export function stutterWord(word, forceStutter) {
+  if (!word?.length) {
+    return { results: [word], stutter: false };
+  }
+
+  /** @type {(wrd: string) => string} */
+  const addStutter = (wrd) =>
+    /^\p{L}/u.test(wrd) ? `${wrd.substring(0, /\uD800-\uDFFF/u.test(wrd[0]) ? 2 : 1)}-${wrd}` : wrd;
+
+  const maxIntensity = Math.max(
+    0,
+    ...Player.Appearance.filter((a) => (a.Property?.Intensity ?? -1) > -1).map((a) => a.Property?.Intensity ?? 0)
+  );
+
+  const playerArousal = Player.ArousalSettings?.Progress ?? 0;
+  const eggedBonus = maxIntensity * 5;
+  const chanceToStutter = (Math.max(0, playerArousal - 10 + eggedBonus) * 0.5) / 100;
+
+  const chanceToMakeSound = (Math.max(0, playerArousal / 2 - 20 + eggedBonus * 2) * 0.5) / 100;
+  let stutter = false;
+
+  const r = Math.random();
+  for (let i = Math.min(4, Math.max(1, maxIntensity)); i >= 1; i--) {
+    if (r < chanceToStutter / i || (i === 1 && forceStutter && chanceToStutter > 0)) {
+      word = addStutter(word);
+      stutter = true;
+    }
+  }
+  const results = [word];
+  if (maxIntensity > 0 && Math.random() < chanceToMakeSound) {
+    const startSound = startSounds[Math.floor(Math.random() * startSounds.length)];
+    const sound = eggedSounds[Math.floor(Math.random() * eggedSounds.length)];
+    const endSound = endSounds[Math.floor(Math.random() * endSounds.length)];
+    results.push(" ", `${startSound}${displayText(sound)}${endSound}`);
+    stutter = true;
+  }
+  return { results, stutter };
+}
+
 /** @type {(url: URL) => "img" | "" | "none-img"} */
 function bceAllowedToEmbed(url) {
   const isTrustedOrigin =
@@ -252,71 +298,26 @@ export default function chatAugments() {
   );
 
   SDK.hookFunction(
-    "ChatRoomSendChatMessage",
+    "SpeechTransformProcess",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
     /**
-     * @param {Parameters<typeof ChatRoomSendChatMessage>} args
+     * @param {Parameters<typeof SpeechTransformProcess>} args
      */
-    ([msg], next) => next([bceMessageReplacements(msg)])
+    ([C, m, effects, ignoreOOC], next) => {
+      const { msg, hasStuttered } = bceMessageReplacements(m);
+      const result = next([C, msg, effects.filter((f) => f !== "stutter" || !fbcSettings.stutters), ignoreOOC]);
+      if (hasStuttered) result.effects.push("stutter");
+      return result;
+    }
   );
 
-  SDK.hookFunction(
-    "ChatRoomSendWhisper",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof ChatRoomSendWhisper>} args
-     */
-    ([targetNumber, msg], next) => next([targetNumber, bceMessageReplacements(msg)])
-  );
-
-  const startSounds = ["..", "--"];
-  const endSounds = ["...", "~", "~..", "~~", "..~"];
-  const eggedSounds = ["ah", "aah", "mnn", "nn", "mnh", "mngh", "haa", "nng", "mnng"];
-  /**
-   * StutterWord will add s-stutters to the beginning of words and return 1-2 words, the original word with its stutters and a sound, based on arousal
-   * @type {(word: string, forceStutter?: boolean) => string[]}
-   */
-  function stutterWord(word, forceStutter) {
-    if (!word?.length) {
-      return [word];
-    }
-
-    /** @type {(wrd: string) => string} */
-    const addStutter = (wrd) =>
-      /^\p{L}/u.test(wrd) ? `${wrd.substring(0, /\uD800-\uDFFF/u.test(wrd[0]) ? 2 : 1)}-${wrd}` : wrd;
-
-    const maxIntensity = Math.max(
-      0,
-      ...Player.Appearance.filter((a) => (a.Property?.Intensity ?? -1) > -1).map((a) => a.Property?.Intensity ?? 0)
-    );
-
-    const playerArousal = Player.ArousalSettings?.Progress ?? 0;
-    const eggedBonus = maxIntensity * 5;
-    const chanceToStutter = (Math.max(0, playerArousal - 10 + eggedBonus) * 0.5) / 100;
-
-    const chanceToMakeSound = (Math.max(0, playerArousal / 2 - 20 + eggedBonus * 2) * 0.5) / 100;
-
-    const r = Math.random();
-    for (let i = Math.min(4, Math.max(1, maxIntensity)); i >= 1; i--) {
-      if (r < chanceToStutter / i || (i === 1 && forceStutter && chanceToStutter > 0)) {
-        word = addStutter(word);
-      }
-    }
-    const results = [word];
-    if (maxIntensity > 0 && Math.random() < chanceToMakeSound) {
-      const startSound = startSounds[Math.floor(Math.random() * startSounds.length)];
-      const sound = eggedSounds[Math.floor(Math.random() * eggedSounds.length)];
-      const endSound = endSounds[Math.floor(Math.random() * endSounds.length)];
-      results.push(" ", `${startSound}${displayText(sound)}${endSound}`);
-    }
-    return results;
-  }
-
-  window.bceMessageReplacements = (msg) => {
+  /** @type {(msg: string) => {msg: string, hasStuttered: boolean}} */
+  function bceMessageReplacements(msg) {
     const words = [msg];
     let firstStutter = true,
       inOOC = false;
     const newWords = [];
+    let hasStuttered = false;
     for (let i = 0; i < words.length; i++) {
       // Handle other whitespace
       const whitespaceIdx = words[i].search(/[\s\r\n]/u);
@@ -358,7 +359,9 @@ export default function chatAugments() {
         newWords.push(words[i]);
         newWords.push(" )");
       } else if (fbcSettings.stutters && !inOOC) {
-        newWords.push(...stutterWord(words[i], firstStutter));
+        const { results, stutter } = stutterWord(words[i], firstStutter);
+        hasStuttered ||= stutter;
+        newWords.push(...results);
         firstStutter = false;
       } else {
         newWords.push(words[i]);
@@ -368,7 +371,7 @@ export default function chatAugments() {
         inOOC = false;
       }
     }
-    return newWords.join("");
+    return { msg: newWords.join(""), hasStuttered };
   };
 
   function bceChatAugments() {

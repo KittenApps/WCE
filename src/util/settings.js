@@ -382,12 +382,22 @@ export const defaultSettings = /** @type {const} */ ({
     sideEffects: (newValue) => {
       if (!newValue) {
         fbcSettings.antiGarbleChatOptions = false;
+        defaultSettings.antiGarbleChatOptions.sideEffects(false);
+        fbcSettings.antiGarbleChatLevel = "full";
+        fbcSettings.antiGarbleChatBabyTalk = "preserve";
+        fbcSettings.antiGarbleChatStutter = "preserve";
+        fbcSettings.antiGarbleWhisperLevel = "full";
+        fbcSettings.antiGarbleWhisperBabyTalk = "preserve";
+        fbcSettings.antiGarbleWhisperStutter = "preserve";
+      } else {
+        fbcSettings.antiGarbleChatOptions = true;
+        defaultSettings.antiGarbleChatOptions.sideEffects(true);
         fbcSettings.antiGarbleChatLevel = "none";
-        fbcSettings.antiGarbleChatBabyTalk = false;
-        fbcSettings.antiGarbleChatStutter = false;
+        fbcSettings.antiGarbleChatBabyTalk = "remove";
+        fbcSettings.antiGarbleChatStutter = "ignore";
         fbcSettings.antiGarbleWhisperLevel = "none";
-        fbcSettings.antiGarbleWhisperBabyTalk = false;
-        fbcSettings.antiGarbleWhisperStutter = false;
+        fbcSettings.antiGarbleWhisperBabyTalk = "remove";
+        fbcSettings.antiGarbleWhisperStutter = "ignore";
       }
       debug("antiGarble", newValue);
     },
@@ -407,9 +417,11 @@ export const defaultSettings = /** @type {const} */ ({
       if (newValue) {
         ChatRoomChatLogRect = [1005, 66, 988, 805];
         ChatRoomChatInputRect = [1405, 938, 800, 120];
+        ChatRoomChatLengthLabelRect = [1644, 970, 120, 82];
       } else {
         ChatRoomChatLogRect = [1005, 66, 988, 835];
         ChatRoomChatInputRect = [1453, 953, 895, 90];
+        ChatRoomChatLengthLabelRect = [1764, 970, 120, 82];
       }
     },
     category: "antigarble",
@@ -420,6 +432,13 @@ export const defaultSettings = /** @type {const} */ ({
     type: "select",
     value: "none",
     options: ["none", "low", "medium", "high", "full"],
+    tooltips: [
+      "Chat garble level: none (send a fully ungarbled message to the recipient, shown in brackets)",
+      "Chat garble level: low (send a partly ungarbled message, which is only garbled up to the low garbel level 1)",
+      "Chat garble level: medium (send a partly ungarbled message, which is only garbled up to the medium garbel level 3)",
+      "Chat garble level: high (send a partly ungarbled message, which is only garbled up to the high garbel level 5)",
+      "Chat garble level: full (always only sends the full garbled message, no ungarbled message in brackets)",
+    ],
     disabled: () => !fbcSettings.antiGarble,
     /**
      * @param {unknown} newValue
@@ -431,37 +450,65 @@ export const defaultSettings = /** @type {const} */ ({
     description:
       "Sends an ungarbled (or lower garbled up to the selected value) chat message together with the garbled messages, which is shown on the recipient side in brackets (defaults to full = no ungarbling).",
   },
-  antiGarbleChatBabyTalk: {
-    label: "chat: preserve baby talk",
-    value: false,
-    disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
-    /**
-     * @param {unknown} newValue
-     */
-    sideEffects: (newValue) => {
-      debug("antiGarbleChatBabyTalk", newValue);
-    },
-    category: "antigarble",
-    description: "Ungarbled chat messages will still have the baby talk effect applied to them.",
-  },
   antiGarbleChatStutter: {
-    label: "chat: preserve stutter",
-    value: false,
+    label: "Chat stutters:",
+    type: "select",
+    value: "preserve",
+    options: ["remove", "ignore", "preserve"],
+    tooltips: [
+      "Chat stutters: remove (always remove chat stutters, even if it is the only effect)",
+      "Chat stutters: ignore (remove chat stutters if ungarbling gag speech, but ignore if it is the only effect)",
+      "Chat stutters: preserve (always preserve chat stutters in the ungarbled text in brackets)"
+    ],
     disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
     /**
      * @param {unknown} newValue
      */
     sideEffects: (newValue) => {
+      if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
+        fbcSettings.antiGarbleChatStutter = newValue ? "preserve" : "ignore";
+      }
       debug("antiGarbleChatoptions", newValue);
     },
     category: "antigarble",
-    description: "Ungarbled chat messages will still have the stutter effect applied to them.",
+    description: "Controls if stutters in chat messages are always removed, ignored (only removed if other ungarbling applied) or preserved.",
+  },
+  antiGarbleChatBabyTalk: {
+    label: "Chat baby talk:",
+    type: "select",
+    value: "preserve",
+    options: ["remove", "ignore", "preserve"],
+    tooltips: [
+      "Chat baby talk: remove (always remove chat baby talk, even if it is the only effect)",
+      "Chat baby talk: ignore (remove chat baby talk if ungarbling gag speech, but ignore if it is the only effect)",
+      "Chat baby talk: preserve (always preserve chat baby talk in the ungarbled text in brackets)"
+    ],
+    disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
+        fbcSettings.antiGarbleChatBabyTalk = newValue ? "preserve" : "remove";
+      }
+      debug("antiGarbleChatBabyTalk", newValue);
+    },
+    category: "antigarble",
+    description: "Controls if baby talk in chat messages is always removed, ignored (only removed if other ungarbling applied) or preserved.",
   },
   antiGarbleWhisperLevel: {
     label: "Whisper garble level:",
     type: "select",
     value: "none",
-    options: ["off", "none", "low", "medium", "high", "full"],
+    options: ["none", "low", "medium", "high", "full", "off"],
+    tooltips: [
+      "Whisper garble level: none (send a fully ungarbled whisper to the recipient, shown in brackets)",
+      "Whisper garble level: low (send a partly ungarbled whisper, which is only garbled up to the low garbel level 1)",
+      "Whisper garble level: medium (send a partly ungarbled whisper, which is only garbled up to the medium garbel level 3)",
+      "Whisper garble level: high (send a partly ungarbled whisper, which is only garbled up to the high garbel level 5)",
+      "Whisper garble level: full (always only sends the full garbled whisper, no ungarbled message in brackets)",
+      "Whisper garble level: off (don't garble whisper messages at all, normal message is ungarbled, no message in brackets)"
+    ],
     disabled: () => !fbcSettings.antiGarble,
     /**
      * @param {unknown} newValue
@@ -473,33 +520,53 @@ export const defaultSettings = /** @type {const} */ ({
     description:
       "Sends an ungarbled (or lower garbled) whisper message together with the garbled messages, which is shown on the recipient side in brackets. (off = only sending the ungarbled messages as the original).",
   },
-  antiGarbleWhisperBabyTalk: {
-    label: "whispers: preserve baby talk",
-    value: false,
-    // @ts-ignore
-    disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
-    /**
-     * @param {unknown} newValue
-     */
-    sideEffects: (newValue) => {
-      debug("antiGarbleWhisperBabyTalk", newValue);
-    },
-    category: "antigarble",
-    description: "Ungarbled whisper messages will still have the baby talk effect applied to them.",
-  },
   antiGarbleWhisperStutter: {
-    label: "whispers: preserve stutter",
-    value: false,
+    label: "Whispers stutters:",
+    type: "select",
+    value: "preserve",
+    options: ["remove", "ignore", "preserve"],
+    tooltips: [
+      "Whispers stutters: remove (always remove whispers stutters, even if it is the only effect)",
+      "Whispers stutters: ignore (remove whispers stutters if ungarbling gag speech, but ignore if it is the only effect)",
+      "Whispers stutters: preserve (always preserve whispers stutters in the ungarbled text in brackets)"
+    ],
     // @ts-ignore
     disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
     /**
      * @param {unknown} newValue
      */
     sideEffects: (newValue) => {
+      if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
+        fbcSettings.antiGarbleWhisperStutter = newValue ? "preserve" : "ignore";
+      }
       debug("antiGarbleWhisperStutter", newValue);
     },
     category: "antigarble",
-    description: "Ungarbled whisper messages will still have the stutter effect applied to them.",
+    description: "Controls if stutters in whispers are always removed, ignored (only removed if other ungarbling applied) or preserved.",
+  },
+  antiGarbleWhisperBabyTalk: {
+    label: "Whispers baby talk:",
+    type: "select",
+    value: "preserve",
+    options: ["remove", "ignore", "preserve"],
+    tooltips: [
+      "Whispers baby talk: remove (always remove whispers baby talk, even if it is the only effect)",
+      "Whispers baby talk: ignore (remove whispers baby talk if ungarbling gag speech, but ignore if it is the only effect)",
+      "Whispers baby talk: preserve (always preserve whispers baby talk in the ungarbled text in brackets)"
+    ],
+    // @ts-ignore
+    disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
+        fbcSettings.antiGarbleWhisperBabyTalk = newValue ? "preserve" : "remove";
+      }
+      debug("antiGarbleWhisperBabyTalk", newValue);
+    },
+    category: "antigarble",
+    description: "Controls if baby talk in whispers is always removed, ignored (only removed if other ungarbling applied) or preserved.",
   },
   lockpick: {
     label: "Reveal Lockpicking Order Based on Skill",

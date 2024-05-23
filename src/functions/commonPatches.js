@@ -14,7 +14,18 @@ export default function commonPatches() {
       "DrawButtonHover(Left, Top, Width, Height,":
         "DrawButtonHover(tooltipPosition?.X || Left, tooltipPosition?.Y || Top, tooltipPosition?.Width || Width, tooltipPosition?.Height || Height,",
     },
-    "Tooltip positions may be incorrect."
+    "DrawBackNextButton tooltip positions may be incorrect."
+  );
+
+  // DrawButton patch to allow overriding hover text position
+  patchFunction(
+    "DrawButton",
+    {
+      "HoveringText, Disabled": "HoveringText, Disabled, tooltipPosition",
+      "DrawButtonHover(Left, Top, Width, Height,":
+        "DrawButtonHover(tooltipPosition?.X || Left, tooltipPosition?.Y || Top, tooltipPosition?.Width || Width, tooltipPosition?.Height || Height,",
+    },
+    "DrawButton tooltip positions may be incorrect."
   );
 
   // CommandExecute patch to fix /whitelistadd and /whitelistremove

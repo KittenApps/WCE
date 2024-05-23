@@ -241,7 +241,13 @@ export default async function settingsPage() {
         DrawText(displayText("Click on a setting to see its description"), 300, 160, "Gray", "Silver");
 
         if (isDefaultSettingKey(currentSetting)) {
-          drawTooltip(300, 830, 1400, displayText(defaultSettings[currentSetting].description), "left");
+          if (defaultSettings[currentSetting].tooltips) {
+            const idx = defaultSettings[currentSetting].options.indexOf(fbcSettings[currentSetting]);
+            drawTooltip(300, 800, 1600, displayText(defaultSettings[currentSetting].description), "left");
+            drawTooltip(330, 870, 1570, displayText(defaultSettings[currentSetting].tooltips[idx]), "left");
+          } else {
+            drawTooltip(300, 830, 1600, displayText(defaultSettings[currentSetting].description), "left");
+          }
         }
         if (settingsPageCount(currentCategory) > 1) {
           DrawText(`${currentPageNumber + 1} / ${settingsPageCount(currentCategory)}`, 1700, 230, "Black", "Gray");
@@ -290,14 +296,12 @@ export default async function settingsPage() {
               fbcSettings[settingName] = defaultSetting.options[(idx + 1 + len) % len];
             } else if (MouseIn(SelectButtonOffset, y, segWidth, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
               fbcSettings[settingName] = defaultSetting.options[(idx - 1 + len) % len];
-            } else if (MouseIn(364, y, SelectButtonOffset - 364, 64)) {
-              currentSetting = settingName;
-              debug("currentSetting", currentSetting);
             }
           } else if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
             fbcSettings[settingName] = !fbcSettings[settingName];
             defaultSetting.sideEffects(fbcSettings[settingName]);
-          } else if (MouseIn(364, y, 1000, 64)) {
+          }
+          if (MouseIn(364, y, 1000, 64)) {
             currentSetting = settingName;
             debug("currentSetting", currentSetting);
           }
@@ -364,7 +368,7 @@ export default async function settingsPage() {
   PreferenceRegisterExtensionSetting({
     Identifier: "WCE",
     ButtonText: displayText("WCE Settings"),
-    Image: "https://wce.netlify.app/icon.png",
+    Image: `${PUBLIC_URL}/icon.png`,
     click: PreferenceSubscreenBCESettingsClick,
     run: PreferenceSubscreenBCESettingsRun,
     exit: PreferenceSubscreenBCESettingsExit,

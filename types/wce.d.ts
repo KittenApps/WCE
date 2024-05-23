@@ -5,6 +5,7 @@ declare global {
     InputChat?: HTMLTextAreaElement;
     MainCanvas: HTMLCanvasElement;
   }
+  var PUBLIC_URL: string;
   var FBC_VERSION: string;
   var fbcSendAction: (text: string) => void;
   var fbcChatNotify: (node: HTMLElement | HTMLElement[] | string) => void;
@@ -15,7 +16,6 @@ declare global {
   var bceAnimationEngineEnabled: () => boolean;
   var bce_initializeDefaultExpression: () => void;
   var bceUpdatePasswordForReconnect: () => void;
-  var bceMessageReplacements: (msg: string) => string;
   var bceClearPassword: (name: string) => void;
   var bceClearCaches: () => Promise<void>;
   var ChatRoombceSendToClubSlavery: () => void;

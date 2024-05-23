@@ -2,6 +2,7 @@ import esbuild from 'rollup-plugin-esbuild'
 import nodeResolve from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
 import alias from '@rollup/plugin-alias';
+import replace from '@rollup/plugin-replace';
 import { promises as fs } from 'node:fs';
 
 await fs.rm('dist', { recursive: true, force: true });
@@ -25,6 +26,7 @@ const LICENSE = `/**
 *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 `
+const URL = process.env.CONTEXT === 'production' ? process.env.URL : process.env.DEPLOY_PRIME_URL;
 
 export default {
   input: 'src/index.js',
@@ -42,6 +44,9 @@ export default {
         { find: 'dexie', replacement: 'dexie/dist/dexie.mjs' }
       ],
     }),
+    replace({ preventAssignment: true, values: {
+      'PUBLIC_URL': URL ? `"${URL}"` : '"http://localhost:4000"'
+    } }),
     nodeResolve({ modulesOnly: true }),
     esbuild({
       sourceMap: true,
@@ -56,7 +61,6 @@ export default {
           dest: 'dist',
           transform: (contents) => {
             if (process.env.NETLIFY) {
-              const URL = process.env.CONTEXT === 'production' ? process.env.URL : process.env.DEPLOY_PRIME_URL;
               const NAME = `@name WCE${process.env.BRANCH === 'main' ? '' : ' ' + process.env.BRANCH} loader`;
               return contents.toString().replace('http://localhost:4000', URL).replace('@name WCE loader local', NAME);
             }

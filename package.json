@@ -3,7 +3,7 @@
 	"type": "module",
 	"license": "GPL-3.0-or-later",
 	"scripts": {
-		"start": "esbuild src/index.js --bundle --outfile=public/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=public",
+		"start": "esbuild src/index.js --bundle --outfile=public/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=public --define:PUBLIC_URL=\\'http://localhost:4000\\'",
 		"build": "rollup -c",
 		"test": "npm run typecheck ; npm run lint",
 		"typecheck": "tsc",
@@ -20,6 +20,7 @@
 		"@eslint/js": "^9.3.0",
 		"@rollup/plugin-alias": "^5.1.0",
 		"@rollup/plugin-node-resolve": "^15.2.3",
+		"@rollup/plugin-replace": "^5.0.5",
 		"@total-typescript/ts-reset": "^0.5.1",
 		"@types/events": "^3.0.3",
 		"bc-stubs": "^104.0.2",
