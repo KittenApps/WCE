@@ -197,7 +197,7 @@ export default async function privateWardrobe() {
         }
         args[0] = targetCharacter;
       }
-      if (fbcSettings.confirmWardrobeSave && Player.Wardrobe?.length > args[1] && Player.Wardrobe[args[1]].some((a) => a.Group === "Pronouns")) {
+      if (fbcSettings.confirmWardrobeSave && Player.Wardrobe?.length > args[1] && Player.Wardrobe[args[1]]?.some((a) => a.Group === "Pronouns")) {
         if (!window.confirm("Do you really want to override this wardrobe outfit?")) {
           return null;
         }
