@@ -19,7 +19,6 @@ export async function loadLocalWardrobe(wardrobe) {
   /** @type {{id: number, appearance: ServerItemBundle[]}[]} */
   const localWardrobe = (await localWardrobeTable.toArray()) || [];
   wardrobe.push(...localWardrobe.map((w) => sanitizeBundles(w.appearance)));
-  WardrobeLoadCharacters(false);
 }
 
 /** @type {(wardrobe: ServerItemBundle[][]) => Promise<void>} */
@@ -119,6 +118,29 @@ export default async function extendedWardrobe() {
         }
       }
       return next(args);
+    }
+  );
+
+  SDK.hookFunction(
+    "WardrobeLoadCharacterNames",
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    /**
+     * @param {Parameters<typeof WardrobeLoadCharacterNames>} args
+     */
+    (args, next) => {
+      if (!fbcSettings.localWardrobe) return next(args);
+      if (!Player.WardrobeCharacterNames) Player.WardrobeCharacterNames = [];
+      let Push = false;
+      while (Player.WardrobeCharacterNames.length <= WardrobeSize) {
+        if (Player.WardrobeCharacterNames.length < EXPANDED_WARDROBE_SIZE) {
+          Player.WardrobeCharacterNames.push(Player.Name);
+          Push = true;
+        } else {
+          Player.WardrobeCharacterNames.push("Local");
+        }
+      }
+      if (Push) ServerAccountUpdate.QueueData({ WardrobeCharacterNames: Player.WardrobeCharacterNames.slice(0, EXPANDED_WARDROBE_SIZE) });
+      return null;
     }
   );
 }

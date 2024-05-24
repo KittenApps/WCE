@@ -24,7 +24,15 @@ export default async function privateWardrobe() {
     {
       'CurrentScreen !== "Crafting"': 'CurrentScreen !== "Crafting" && CurrentScreen !== "Wardrobe"',
     },
-    "Full wardrobe may display blur and blindness effects of the target character"
+    "Full wardrobe may display blur and blindness effects of the background"
+  );
+
+  patchFunction(
+    "DrawCharacter",
+    {
+      '|| CurrentScreen === "Crafting"': '|| CurrentScreen === "Crafting" || CurrentScreen === "Wardrobe"'
+    },
+    "Full wardrobe may display blur and blindness effects of the outfits"
   );
 
   SDK.hookFunction(

@@ -20,7 +20,7 @@ export const BCE_MSG = "BCEMsg";
 export const DARK_INPUT_CLASS = "bce-dark-input";
 export const DEFAULT_WARDROBE_SIZE = 24;
 export const EXPANDED_WARDROBE_SIZE = 96;
-export const LOCAL_WARDROBE_SIZE = EXPANDED_WARDROBE_SIZE * 3;
+export const LOCAL_WARDROBE_SIZE = EXPANDED_WARDROBE_SIZE * 4;
 export const HIDDEN = "Hidden";
 export const MESSAGE_TYPES = Object.freeze({
   Activity: "Activity",
