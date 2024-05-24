@@ -33,6 +33,6 @@
 		"rollup-plugin-copy": "^3.5.0",
 		"rollup-plugin-esbuild": "^6.1.1",
 		"typescript": "^5.4.5",
-		"typescript-eslint": "^8.0.0-alpha.14"
+		"typescript-eslint": "^8.0.0-alpha.16"
 	}
 }
