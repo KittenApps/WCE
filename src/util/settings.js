@@ -151,6 +151,7 @@ export const defaultSettings = /** @type {const} */ ({
         }
       } else {
         // Restore original size
+        fbcSettings.localWardrobe = false;
         WardrobeSize = DEFAULT_WARDROBE_SIZE;
         WardrobeFixLength();
         CharacterAppearanceWardrobeOffset = 0;
@@ -160,8 +161,9 @@ export const defaultSettings = /** @type {const} */ ({
     description: "Increase the amount of wardrobe slots to save more outfits.",
   },
   localWardrobe: {
-    label: "Local Wardrobe",
+    label: "Local Wardrobe (+288)",
     value: false,
+    disabled: () => !fbcSettings.extendedWardrobe,
     /**
      * @param {unknown} newValue
      */
@@ -178,13 +180,13 @@ export const defaultSettings = /** @type {const} */ ({
         }
       } else {
         // Restore original size
-        WardrobeSize = fbcSettings.extendedWardrobe ? EXPANDED_WARDROBE_SIZE : DEFAULT_WARDROBE_SIZE;
+        WardrobeSize = EXPANDED_WARDROBE_SIZE;
         WardrobeFixLength();
         CharacterAppearanceWardrobeOffset = 0;
       }
     },
     category: "appearance",
-    description: "Enables the local Wardrobe, letting you save a unlimited number of outfit locally on your device (doesn't sync).",
+    description: "Enables the Local Wardrobe - save 288 additional outfits on your device (not synced between devices, but shared between alts on the same device).",
   },
   privateWardrobe: {
     label: "Replace wardrobe list with character previews",

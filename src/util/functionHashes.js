@@ -147,6 +147,7 @@ export const expectedHashes = (gameVersion) => {
         WardrobeFastSave: "D1E906FD",
         WardrobeFixLength: "CA3334C6",
         WardrobeLoad: "C343A4C7",
+        WardrobeLoadCharacterNames: "F39DF5E3",
         WardrobeRun: "633B3570",
       });
   }
