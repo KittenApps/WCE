@@ -5,6 +5,28 @@ import { logInfo, logError } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE } from "../util/constants";
 
+/** @type {import("dexie").Table<any, import("dexie").IndexableType, any>} */
+let localWardrobeTable;
+
+/** @type {(wardrobe: ItemBundle[][]) => Promise<void>} */
+export async function loadLocalWardrobe(wardrobe) {
+  const { Dexie } = await import("dexie");
+  const db = new Dexie("wce-local-wardrobe");
+  db.version(1).stores({
+    wardrobe: "id, appearance",
+  });
+  localWardrobeTable = db.table("wardrobe");
+  /** @type {{id: number, appearance: ServerItemBundle[]}[]} */
+  const localWardrobe = (await localWardrobeTable.toArray()) || [];
+  wardrobe.push(...localWardrobe.map((w) => sanitizeBundles(w.appearance)));
+  WardrobeLoadCharacters(false);
+}
+
+/** @type {(wardrobe: ServerItemBundle[][]) => Promise<void>} */
+async function saveLocalWardrobe(wardrobe) {
+  await localWardrobeTable.bulkPut(wardrobe.map((appearance, id) => ({ id, appearance })));
+}
+
 /**
  * Convert old {@link ItemProperties.Type} remnants into {@link ItemProperties.TypeRecord} in the passed item bundles.
  * @param {ItemBundle[]} bundleList
@@ -79,21 +101,6 @@ export default async function extendedWardrobe() {
   await waitFor(() => !!ServerSocket);
 
   SDK.hookFunction(
-    "CharacterDecompressWardrobe",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof CharacterDecompressWardrobe>} args
-     */
-    (args, next) => {
-      let wardrobe = next(args);
-      if (isWardrobe(wardrobe) && fbcSettings.extendedWardrobe && wardrobe.length < EXPANDED_WARDROBE_SIZE) {
-        wardrobe = loadExtendedWardrobe(wardrobe);
-      }
-      return wardrobe;
-    }
-  );
-
-  SDK.hookFunction(
     "CharacterCompressWardrobe",
     HOOK_PRIORITIES.Top,
     /**
@@ -102,11 +109,13 @@ export default async function extendedWardrobe() {
     (args, next) => {
       const [wardrobe] = args;
       if (isWardrobe(wardrobe)) {
-        const additionalWardrobe = wardrobe.slice(DEFAULT_WARDROBE_SIZE);
+        const additionalWardrobe = wardrobe.slice(DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE);
         if (additionalWardrobe.length > 0) {
           Player.ExtensionSettings.FBCWardrobe = LZString.compressToUTF16(JSON.stringify(additionalWardrobe));
           args[0] = wardrobe.slice(0, DEFAULT_WARDROBE_SIZE);
           ServerPlayerExtensionSettingsSync("FBCWardrobe");
+          const additionalLocalWardrobe = wardrobe.slice(EXPANDED_WARDROBE_SIZE);
+          if (additionalLocalWardrobe.length > 0) saveLocalWardrobe(additionalLocalWardrobe);
         }
       }
       return next(args);

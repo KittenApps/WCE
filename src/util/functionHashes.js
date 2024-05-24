@@ -16,7 +16,6 @@ export const expectedHashes = (gameVersion) => {
         CharacterAppearanceWardrobeLoad: "A5B63A03",
         CharacterBuildDialog: "85F79C6E",
         CharacterCompressWardrobe: "2A05ECD1",
-        CharacterDecompressWardrobe: "327FADA4",
         CharacterDelete: "57AA5D48",
         CharacterGetCurrent: "69F45A41",
         CharacterLoadCanvas: "EAB81BC4",

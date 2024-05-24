@@ -13,12 +13,13 @@ import {
   enableLeashing,
   disableLeashing,
 } from "./utils";
-import { loadExtendedWardrobe } from "../functions/extendedWardrobe";
+import { loadExtendedWardrobe, loadLocalWardrobe } from "../functions/extendedWardrobe";
 import {
   settingsVersion,
   fbcChangelog,
   DEFAULT_WARDROBE_SIZE,
   EXPANDED_WARDROBE_SIZE,
+  LOCAL_WARDROBE_SIZE,
   BCE_MAX_AROUSAL,
   BCE_COLOR_ADJUSTMENTS_CLASS_NAME,
   // DISCORD_INVITE_URL,
@@ -157,6 +158,33 @@ export const defaultSettings = /** @type {const} */ ({
     },
     category: "appearance",
     description: "Increase the amount of wardrobe slots to save more outfits.",
+  },
+  localWardrobe: {
+    label: "Local Wardrobe",
+    value: false,
+    /**
+     * @param {unknown} newValue
+     */
+    sideEffects: (newValue) => {
+      debug("localWardrobe", newValue);
+      if (newValue) {
+        if (Player.Wardrobe) {
+          WardrobeSize = LOCAL_WARDROBE_SIZE;
+          loadLocalWardrobe(Player.Wardrobe);
+          // Call compress wardrobe to save existing outfits, if another addon has extended the wardrobe
+          CharacterCompressWardrobe(Player.Wardrobe);
+        } else {
+          logWarn("Player.Wardrobe not found, skipping wardrobe extension");
+        }
+      } else {
+        // Restore original size
+        WardrobeSize = fbcSettings.extendedWardrobe ? EXPANDED_WARDROBE_SIZE : DEFAULT_WARDROBE_SIZE;
+        WardrobeFixLength();
+        CharacterAppearanceWardrobeOffset = 0;
+      }
+    },
+    category: "appearance",
+    description: "Enables the local Wardrobe, letting you save a unlimited number of outfit locally on your device (doesn't sync).",
   },
   privateWardrobe: {
     label: "Replace wardrobe list with character previews",
