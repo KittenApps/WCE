@@ -13,7 +13,7 @@
 	"dependencies": {
 		"@silizia/dexie": "^4.0.4",
 		"buttplug": "^3.2.2",
-		"dexie": "npm:@silizia/dexie@^4.0.4"
+		"dexie": "^4.0.5"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.0.1",
@@ -25,7 +25,7 @@
 		"@types/events": "^3.0.3",
 		"bc-stubs": "^104.0.2",
 		"bondage-club-mod-sdk": "^1.2.0",
-		"esbuild": "^0.21.3",
+		"esbuild": "^0.21.4",
 		"eslint": "^9.3.0",
 		"eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^2.1.0",
 		"globals": "^15.3.0",
