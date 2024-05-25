@@ -487,7 +487,7 @@ export const defaultSettings = /** @type {const} */ ({
     options: ["remove", "ignore", "preserve"],
     tooltips: [
       "Chat stutters: remove (always remove chat stutters, even if it is the only effect)",
-      "Chat stutters: ignore (remove chat stutters if ungarbling gag speech, but ignore if it is the only effect)",
+      "Chat stutters: ignore (remove chat stutters if ungarbling gag speech, but ignore it if it's the only effect)",
       "Chat stutters: preserve (always preserve chat stutters in the ungarbled text in brackets)"
     ],
     disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
@@ -510,7 +510,7 @@ export const defaultSettings = /** @type {const} */ ({
     options: ["remove", "ignore", "preserve"],
     tooltips: [
       "Chat baby talk: remove (always remove chat baby talk, even if it is the only effect)",
-      "Chat baby talk: ignore (remove chat baby talk if ungarbling gag speech, but ignore if it is the only effect)",
+      "Chat baby talk: ignore (remove chat baby talk if ungarbling gag speech, but ignore it if it's the only effect)",
       "Chat baby talk: preserve (always preserve chat baby talk in the ungarbled text in brackets)"
     ],
     disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
@@ -557,7 +557,7 @@ export const defaultSettings = /** @type {const} */ ({
     options: ["remove", "ignore", "preserve"],
     tooltips: [
       "Whispers stutters: remove (always remove whispers stutters, even if it is the only effect)",
-      "Whispers stutters: ignore (remove whispers stutters if ungarbling gag speech, but ignore if it is the only effect)",
+      "Whispers stutters: ignore (remove whispers stutters if ungarbling gag speech, but ignore it if it's the only effect)",
       "Whispers stutters: preserve (always preserve whispers stutters in the ungarbled text in brackets)"
     ],
     // @ts-ignore
@@ -581,7 +581,7 @@ export const defaultSettings = /** @type {const} */ ({
     options: ["remove", "ignore", "preserve"],
     tooltips: [
       "Whispers baby talk: remove (always remove whispers baby talk, even if it is the only effect)",
-      "Whispers baby talk: ignore (remove whispers baby talk if ungarbling gag speech, but ignore if it is the only effect)",
+      "Whispers baby talk: ignore (remove whispers baby talk if ungarbling gag speech, but ignore it if it's the only effect)",
       "Whispers baby talk: preserve (always preserve whispers baby talk in the ungarbled text in brackets)"
     ],
     // @ts-ignore

@@ -1,5 +1,37 @@
 # Changelog of Wholesome Club Extensions (WCE)
 
+## Wholesome Club Extensions (WCE) v6.2
+* improved Anti Garble system ([read the updated docs](https://github.com/KittenApps/WCE/wiki/Anti-Garble-system))
+  * improved controll over `stutter` and `baby talk`
+    * in addition to always remove and always preserve you can now set it to the new option:
+    * `ignore`: do not show an ungarbled message (in brackets) if no other garbling effects are applied, but otherwise removes it from the ungarbled message
+  * hide ungarbled message if it's exactly the same as the garbled one
+  * let you control `stutter` and `baby talk` options directly in the chat options menu
+  * improved anti garble option tooltips in the WCE settings
+  * integrate WCE's own `Alternate speech stutters` better into the game and into WCE's Anti Garble system
+    * by updating the hook and reporting back appplied effects
+    * fixes stutters being applied twice (both BC's and WCE's one)
+    * the anti garble system supports now WCE's stutters too (in removing and preserving)
+* Local Wardrobe (thanks cute outfit hoarding puppy Stacey for the idea <3)
+  * extends the Wardrobe by an additional 288 slots saved locally on your device (page 9-32)
+  * unlike the online section of the Wardrobe (page 1-8), the local wardrobe isn't synced between your different devices, but alts on the same device share the same Local Wardrobe
+  * fix blurry effect being applied to WCE's Wardrobe previews
+* encrypt `Saved Logins` credentials with a non exportable AES-GCM-256 key
+  * no more storing them in plaintext in `localStorage` (moved to `IndexedDB`)
+* upgrade Buttplug.io version to the latest 3.x (for toySync)
+  * fixes some incompatibility issues with recent Intiface releases
+  * allow setting a custom Intiface server address (now you can connect to Intiface on your phone in the same network)
+* WCE is now on FUSAM (WCE's loaders still have some `modulepreload` optimizations to reduce the time until you can access your Saved Logins by ~50%)
+* improved bundling of the WCE using Rollup (reducing bundle size)
+  * enabled code splitting to ship our own package for our dependencies
+  * upgrade Dexie version to 4.0.5
+  * move base64 encoded icons out of the bundle and load them as optimized png's
+* other smaller fixes and improvements
+  * upgrade linting stack to latest Eslint 9
+  * support checking hashes for nested functions
+  * preliminary layering fix for r105
+  * hide pagination button in WCE settings if there is only 1 page
+
 ## Changes between FBC 5.8 / 5.9 and WCE 6.2
 * bring back all features from FBC 5.8 removed in FBC 5.9:
     * Animation Engine and dependents

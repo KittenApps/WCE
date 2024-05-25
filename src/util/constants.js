@@ -1,13 +1,18 @@
-export const FBC_VERSION = "6.2.1b";
-export const settingsVersion = 62;
+export const FBC_VERSION = "6.2.1";
+export const settingsVersion = 62.1;
 export const SUPPORTED_GAME_VERSIONS = ["R104"];
 
-export const fbcChangelog = `* WCE 6.2 is a fork of the old FBC 5.8 and tries to bring all it's amazing features (animation engine, chat embeds, friend notifications, ...) back
-* it features a completely rewritten anti garble feature for the latest BC versions  (now sender side)
-* some other new features (updated layering menus, copy color buttons and a clear cache button)
-* and many bugfixes for broken FBC features
+export const fbcChangelog = `WCE v6.2.1
+* improved Anti Garble system
+* local Wardrobe
+* store Saved Logins encrypted
+* upgraded Buttplug.io support
+* for a full changelog visit: https://github.com/KittenApps/WCE/releases
+
+WCE v6.2
+* WCE 6.2 is a fork of the old FBC 5.8 and tries to bring all it's amazing features back
+* new Anti Garble system, layering improvements and other fixes and improvements
 * please recheck your WCE settings, because many things have changed
-* for a full changelog visit: https://github.com/KittenApps/WCE/blob/main/CHANGELOG.md
 `;
 
 export const DISCORD_INVITE_URL = "https://discord.gg/SHJMjEh9VH";

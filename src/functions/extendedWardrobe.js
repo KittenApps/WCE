@@ -18,6 +18,7 @@ export async function loadLocalWardrobe(wardrobe) {
   localWardrobeTable = db.table("wardrobe");
   /** @type {{id: number, appearance: ServerItemBundle[]}[]} */
   const localWardrobe = (await localWardrobeTable.toArray()) || [];
+  await waitFor(() => wardrobe.length === EXPANDED_WARDROBE_SIZE);
   wardrobe.push(...localWardrobe.map((w) => sanitizeBundles(w.appearance)));
 }
 
