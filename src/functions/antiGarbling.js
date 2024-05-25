@@ -128,7 +128,7 @@ export default function antiGarbling() {
           { X: 1000, Y: 910, Width: 200, Height: 90 }
         );
         DrawButton(1845, 928, 150, 70, "", "White");
-        DrawImage("Icons/Small/Chat.png", 1898, 935);
+        DrawImage("Icons/Small/Chat.png", 1895, 935);
       }
       return ret;
     }
