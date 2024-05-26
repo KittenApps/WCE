@@ -11,9 +11,8 @@
 		"serve": "npm run build && npx http-server ./dist -p 4000 -c-1 --cors"
 	},
 	"dependencies": {
-		"@silizia/dexie": "^4.0.4",
 		"buttplug": "^3.2.2",
-		"dexie": "^4.0.5"
+		"dexie": "^4.0.7"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.0.1",
