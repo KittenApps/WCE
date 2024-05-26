@@ -408,8 +408,9 @@ export const defaultSettings = /** @type {const} */ ({
     value: false,
     /**
      * @param {unknown} newValue
+     * @param {boolean} fromSettings
      */
-    sideEffects: (newValue) => {
+    sideEffects: (newValue, fromSettings) => {
       if (!newValue) {
         fbcSettings.antiGarbleChatOptions = false;
         defaultSettings.antiGarbleChatOptions.sideEffects(false);
@@ -419,7 +420,7 @@ export const defaultSettings = /** @type {const} */ ({
         fbcSettings.antiGarbleWhisperLevel = "full";
         fbcSettings.antiGarbleWhisperBabyTalk = "preserve";
         fbcSettings.antiGarbleWhisperStutter = "preserve";
-      } else {
+      } else if (fromSettings) {
         fbcSettings.antiGarbleChatOptions = true;
         defaultSettings.antiGarbleChatOptions.sideEffects(true);
         fbcSettings.antiGarbleChatLevel = "none";
@@ -996,7 +997,7 @@ export function postSettings() {
       delete fbcSettings[k];
       continue;
     }
-    defaultSettings[k].sideEffects(v);
+    defaultSettings[k].sideEffects(v, false);
   }
   bceSaveSettings();
 
