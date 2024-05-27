@@ -143,7 +143,7 @@ export default function itemAntiCheat() {
         displayText(
           `A magical shield on ${CharacterNickname(
             Player
-          )} repelled the suspiciously magical changes attempted by ${sourceName}! [FBC Anti-Cheat]`
+          )} repelled the suspiciously magical changes attempted by ${sourceName}! [WCE Anti-Cheat]`
         )
       );
     }

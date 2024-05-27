@@ -10,7 +10,6 @@ export default function antiGarbling() {
     /**
      * @param {Parameters<typeof ChatRoomGenerateChatRoomChatMessage>} args
      */
-    // eslint-disable-next-line complexity
     (args, next) => {
       if (!fbcSettings.antiGarble) return next(args);
       const [type, msg] = args;
@@ -88,7 +87,7 @@ export default function antiGarbling() {
           185,
           50,
           displayText((isWhisper ? "whis: " : "chat: ") + options[idx]),
-          idx === 5 ? "Lightgreen" : `#${`${(15 - idx * 2).toString(16)}`.repeat(6)}`,
+          idx === 5 ? "Lightgreen" : `#${(15 - idx * 2).toString(16).repeat(6)}`,
           "",
           () => displayText((isWhisper ? "Whisper garble level: " : "Chat garble level: ") + options[(idx - 1 + len) % len]),
           () => displayText((isWhisper ? "Whisper garble level: " : "Chat garble level: ") + options[(idx + 1 + len) % len]),
@@ -107,7 +106,7 @@ export default function antiGarbling() {
           35,
           35,
           "",
-          idx > 3 ? "#555555" : `#${`${(15 - stidx * 3).toString(16)}`.repeat(6)}`,
+          idx > 3 ? "#555555" : `#${(15 - stidx * 3).toString(16).repeat(6)}`,
           `${PUBLIC_URL}/stutter.png`,
           `${isWhisper ? "Whisper" : "Chat"} stutters: ${fbcSettings[isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter"]}`,
           idx > 3,
@@ -120,7 +119,7 @@ export default function antiGarbling() {
           35,
           35,
           "",
-          idx > 3 ? "#555555" : `#${`${(15 - btidx * 3).toString(16)}`.repeat(6)}`,
+          idx > 3 ? "#555555" : `#${(15 - btidx * 3).toString(16).repeat(6)}`,
           `${PUBLIC_URL}/baby.png`,
           `${isWhisper ? "Whisper" : "Chat"} baby talk: ${fbcSettings[isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk"]}`,
           idx > 3,

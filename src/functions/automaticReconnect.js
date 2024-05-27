@@ -116,7 +116,7 @@ export default async function automaticReconnect() {
 
   window.bceClearPassword = (accountname) => {
     const passwords = loadPasswords();
-    if (!Object.prototype.hasOwnProperty.call(passwords, accountname)) {
+    if (!Object.hasOwn(passwords, accountname)) {
       return;
     }
     delete passwords[accountname];
@@ -148,7 +148,7 @@ export default async function automaticReconnect() {
 
         let y = 60;
         for (const user in loginData.passwords) {
-          if (!Object.prototype.hasOwnProperty.call(loginData.passwords, user)) {
+          if (!Object.hasOwn(loginData.passwords, user)) {
             continue;
           }
           loginData.posMaps[y] = user;
@@ -178,7 +178,7 @@ export default async function automaticReconnect() {
         }
         lastClick = now;
         for (const pos in loginData.posMaps) {
-          if (!Object.prototype.hasOwnProperty.call(loginData.posMaps, pos)) {
+          if (!Object.hasOwn(loginData.posMaps, pos)) {
             continue;
           }
           const idx = parseInt(pos);

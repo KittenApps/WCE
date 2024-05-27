@@ -53,7 +53,7 @@ export default function cacheClearer() {
     "manual clearing and reloading of drawing cache"
   );
 
-  window.bceClearCaches = async function () {
+  async function bceClearCaches() {
     const start = Date.now();
     if (
       !(await waitFor(
@@ -68,7 +68,9 @@ export default function cacheClearer() {
       return;
     }
     doClearCaches();
-  };
+  }
+
+  window.bceClearCaches = bceClearCaches;
 
   function doClearCaches() {
     debug("Clearing caches");
@@ -87,7 +89,7 @@ export default function cacheClearer() {
 
   const clearCaches = () => {
     if (fbcSettings.automateCacheClear) {
-      window.bceClearCaches();
+      bceClearCaches();
     }
   };
 

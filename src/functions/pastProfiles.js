@@ -355,20 +355,16 @@ export default async function pastProfiles() {
     (args, next) => {
       if (inNotes) {
         if (MouseIn(1720, 60, 90, 90)) {
-          (async function () {
-            await quotaSafetyCheck();
-
+          quotaSafetyCheck().then(() => {
             if (!InformationSheetSelection || !InformationSheetSelection.MemberNumber) {
               throw new Error("invalid InformationSheetSelection in notes");
             }
-
-            // Save note
-            await notes.put({
+            return notes.put({
               memberNumber: InformationSheetSelection.MemberNumber,
               note: noteInput.value,
               updatedAt: Date.now(),
             });
-          })();
+          });
           hideNoteInput();
         } else if (MouseIn(1820, 60, 90, 90)) {
           hideNoteInput();

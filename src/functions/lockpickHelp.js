@@ -7,11 +7,10 @@ export default async function lockpickHelp() {
   await waitFor(() => !!StruggleMinigames);
 
   /** @type {(s: number) => () => number} */
-  const newRand = (s) =>
-    function () {
-      s = Math.sin(s) * 10000;
-      return s - Math.floor(s);
-    };
+  const newRand = (s) => () => {
+    s = Math.sin(s) * 10000;
+    return s - Math.floor(s);
+  };
 
   const pinSpacing = 100,
     pinWidth = 200,

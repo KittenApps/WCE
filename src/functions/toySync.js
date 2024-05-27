@@ -62,13 +62,14 @@ export default async function toySync() {
     await client.connect(connector);
     logInfo("Connected buttplug.io");
   } catch (ex) {
-    alert(
-      displayText(
+    FUSAM.modals.openAsync({
+      prompt: displayText(
         "buttplug.io is enabled, but server could not be contacted at $toySyncAddress. Is Intiface Desktop running? Is another client connected to it?",
         // @ts-ignore
         { $toySyncAddress: fbcSettings.toySyncAddress }
-      )
-    );
+      ),
+      buttons: { submit: "OK" },
+    });
     logError("buttplug.io could not connect to server", ex);
     return;
   }

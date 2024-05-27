@@ -135,7 +135,7 @@ export default function instantMessenger() {
 
     /** @type {"Message" | "Emote" | "Action"} */
     const messageType = ["Message", "Emote", "Action"].includes(details.messageType)
-      ? `${details.messageType}`
+      ? details.messageType
       : "Message";
     const messageColor = details?.messageColor ?? "#ffffff";
     const messageText = beep.Message?.split("\n")

@@ -97,7 +97,7 @@ export default function discreetMode() {
             // Draw the character, it's status bubble and it's overlay
             DrawCharacter(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom);
             DrawStatus(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom);
-            // eslint-disable-next-line no-eq-null, eqeqeq
+            // eslint-disable-next-line no-eq-null
             if (ChatRoomCharacterDrawlist[charIdx].MemberNumber != null) {
               ChatRoomCharacterViewDrawOverlay(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom, charIdx);
             }

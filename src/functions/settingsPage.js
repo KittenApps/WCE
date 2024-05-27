@@ -81,20 +81,20 @@ export default async function settingsPage() {
   const currentDefaultSettings = (category) =>
     objEntries(defaultSettings).filter(([k, v]) => v.category === category && k !== "buttplugDevices");
 
-  const PreferenceSubscreenBCESettingsLoad = function () {
+   function PreferenceSubscreenBCESettingsLoad() {
     // @ts-ignore
     ElementCreateInput("WceIntifaceAddress", "text", fbcSettings.toySyncAddress);
     ElementPosition("WceIntifaceAddress", -999, -999, 550);
     currentPageNumber = 0;
-  };
-  const PreferenceSubscreenBCESettingsExit = function () {
+  }
+  function PreferenceSubscreenBCESettingsExit() {
     fbcSettings.toySyncAddress = ElementValue("WceIntifaceAddress");
     ElementRemove("WceIntifaceAddress");
     bceSaveSettings();
     PreferenceSubscreenExtensionsClear();
-  };
-  // eslint-disable-next-line complexity
-  const PreferenceSubscreenBCESettingsRun = function () {
+  }
+
+  function PreferenceSubscreenBCESettingsRun() {
     const ctx = window.MainCanvas.getContext("2d");
     if (!ctx) {
       logError("Could not get canvas context");
@@ -269,9 +269,9 @@ export default async function settingsPage() {
       }
     }
     ctx.textAlign = "center";
-  };
+  }
   // eslint-disable-next-line complexity
-  const PreferenceSubscreenBCESettingsClick = function () {
+  function PreferenceSubscreenBCESettingsClick() {
     let y = settingsYStart;
     if (MouseIn(1815, 75, 90, 90)) {
       if (currentCategory === null) {
@@ -370,7 +370,7 @@ export default async function settingsPage() {
         y += settingsYIncrement;
       }
     }
-  };
+  }
 
   PreferenceRegisterExtensionSetting({
     Identifier: "WCE",
