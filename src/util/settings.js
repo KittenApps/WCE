@@ -36,10 +36,8 @@ let postSettingsHasRun = false;
 export const defaultSettings = {
   animationEngine: {
     label: "Animation Engine",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       if (newValue && Player.ArousalSettings) {
         // Disable conflicting settings
@@ -56,11 +54,9 @@ export const defaultSettings = {
   },
   expressions: {
     label: "Automatic Arousal Expressions (Replaces Vanilla)",
+    type: "checkbox",
     value: false,
     disabled: () => !fbcSettings.animationEngine,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("expressions", newValue);
     },
@@ -69,11 +65,9 @@ export const defaultSettings = {
   },
   activityExpressions: {
     label: "Activity Expressions",
+    type: "checkbox",
     value: false,
     disabled: () => !fbcSettings.animationEngine,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("activityExpressions", newValue);
     },
@@ -82,10 +76,8 @@ export const defaultSettings = {
   },
   alternateArousal: {
     label: "Alternate Arousal (Replaces Vanilla, requires hybrid/locked arousal meter)",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       sendHello();
       Player.BCEArousal = !!newValue;
@@ -97,10 +89,8 @@ export const defaultSettings = {
   },
   stutters: {
     label: "Alternative speech stutter",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("stutters", newValue);
     },
@@ -109,10 +99,8 @@ export const defaultSettings = {
   },
   numericArousalMeter: {
     label: "Show numeric arousal meter",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("numericArousalMeter", newValue);
     },
@@ -121,10 +109,8 @@ export const defaultSettings = {
   },
   copyColor: {
     label: "Enable option to copy color to all item's of the same type",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("copyColor", newValue);
     },
@@ -133,10 +119,8 @@ export const defaultSettings = {
   },
   extendedWardrobe: {
     label: "Extended wardrobe slots (96)",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("extendedWardrobe", newValue);
       if (newValue) {
@@ -161,11 +145,9 @@ export const defaultSettings = {
   },
   localWardrobe: {
     label: "Local Wardrobe (+288)",
+    type: "checkbox",
     value: false,
     disabled: () => !fbcSettings.extendedWardrobe,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("localWardrobe", newValue);
       if (newValue) {
@@ -189,10 +171,8 @@ export const defaultSettings = {
   },
   privateWardrobe: {
     label: "Replace wardrobe list with character previews",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("privateWardrobe", newValue);
     },
@@ -201,10 +181,8 @@ export const defaultSettings = {
   },
   confirmWardrobeSave: {
     label: "Confirm overriding wardrobe outfits",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("confirmWardrobeSave", newValue);
     },
@@ -213,10 +191,8 @@ export const defaultSettings = {
   },
   automateCacheClear: {
     label: "Clear Drawing Cache Hourly",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("automateCacheClear", newValue);
     },
@@ -226,10 +202,8 @@ export const defaultSettings = {
   },
   manualCacheClear: {
     label: "Adds a clear / reload drawing cache button",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("manualCacheClear", newValue);
     },
@@ -239,10 +213,8 @@ export const defaultSettings = {
   },
   instantMessenger: {
     label: "Instant messenger",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("instantMessenger", newValue);
     },
@@ -252,10 +224,8 @@ export const defaultSettings = {
   },
   augmentChat: {
     label: "Chat Links and Embeds",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("augmentChat", newValue);
     },
@@ -264,10 +234,8 @@ export const defaultSettings = {
   },
   ctrlEnterOoc: {
     label: "Use Ctrl+Enter to OOC",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("ctrlEnterOoc", newValue);
     },
@@ -276,10 +244,8 @@ export const defaultSettings = {
   },
   whisperInput: {
     label: "Use italics for input when whispering",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("whisperInput", newValue);
     },
@@ -288,10 +254,8 @@ export const defaultSettings = {
   },
   chatColors: {
     label: "Improve colors for readability",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       if (newValue) {
         document.body.classList.add(BCE_COLOR_ADJUSTMENTS_CLASS_NAME);
@@ -306,10 +270,8 @@ export const defaultSettings = {
   },
   friendPresenceNotifications: {
     label: "Show friend presence notifications",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("friendPresenceNotifications", newValue);
     },
@@ -318,10 +280,8 @@ export const defaultSettings = {
   },
   friendOfflineNotifications: {
     label: "Show friends going offline too",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("friendOfflineNotifications", newValue);
     },
@@ -330,10 +290,8 @@ export const defaultSettings = {
   },
   friendNotificationsInChat: {
     label: "Show friend presence notifications in chat, when possible",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("friendNotificationsInChat", newValue);
     },
@@ -342,10 +300,8 @@ export const defaultSettings = {
   },
   pastProfiles: {
     label: "Save & browse seen profiles (requires refresh)",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("pastProfiles", newValue);
     },
@@ -355,10 +311,8 @@ export const defaultSettings = {
   },
   pendingMessages: {
     label: "Show sent messages while waiting for server",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("showSentMessages", newValue);
     },
@@ -368,10 +322,8 @@ export const defaultSettings = {
   },
   whisperButton: {
     label: "Show whisper button on chat messages",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("whisperButton", newValue);
     },
@@ -380,10 +332,8 @@ export const defaultSettings = {
   },
   richOnlineProfile: {
     label: "Rich online profile",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("richOnlineProfile", newValue);
     },
@@ -392,10 +342,8 @@ export const defaultSettings = {
   },
   whisperTargetFixes: {
     label: "Improved whisper target handling",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("whisperTargetFixes", newValue);
     },
@@ -404,11 +352,8 @@ export const defaultSettings = {
   },
   antiGarble: {
     label: "Anti Garble",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     * @param {boolean} init
-     */
     sideEffects: (newValue, init) => {
       if (!newValue) {
         fbcSettings.antiGarbleChatOptions = false;
@@ -437,11 +382,9 @@ export const defaultSettings = {
   },
   antiGarbleChatOptions: {
     label: "Anti Garble chat options",
+    type: "checkbox",
     value: false,
     disabled: () => !fbcSettings.antiGarble,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("antiGarbleChatoptions", newValue);
       if (newValue) {
@@ -470,9 +413,6 @@ export const defaultSettings = {
       "Chat garble level: full (always only sends the full garbled message, no ungarbled message in brackets)",
     ],
     disabled: () => !fbcSettings.antiGarble,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("antiGarbleChatLevel", newValue);
     },
@@ -491,9 +431,6 @@ export const defaultSettings = {
       "Chat stutters: preserve (always preserve chat stutters in the ungarbled text in brackets)"
     ],
     disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
         fbcSettings.antiGarbleChatStutter = newValue ? "preserve" : "ignore";
@@ -514,9 +451,6 @@ export const defaultSettings = {
       "Chat baby talk: preserve (always preserve chat baby talk in the ungarbled text in brackets)"
     ],
     disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
         fbcSettings.antiGarbleChatBabyTalk = newValue ? "preserve" : "remove";
@@ -540,9 +474,6 @@ export const defaultSettings = {
       "Whisper garble level: off (don't garble whisper messages at all, normal message is ungarbled, no message in brackets)"
     ],
     disabled: () => !fbcSettings.antiGarble,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("antiGarbleWhisperLevel", newValue);
     },
@@ -561,9 +492,6 @@ export const defaultSettings = {
       "Whispers stutters: preserve (always preserve whispers stutters in the ungarbled text in brackets)"
     ],
     disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
         fbcSettings.antiGarbleWhisperStutter = newValue ? "preserve" : "ignore";
@@ -584,9 +512,6 @@ export const defaultSettings = {
       "Whispers baby talk: preserve (always preserve whispers baby talk in the ungarbled text in brackets)"
     ],
     disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
         fbcSettings.antiGarbleWhisperBabyTalk = newValue ? "preserve" : "remove";
@@ -598,10 +523,8 @@ export const defaultSettings = {
   },
   lockpick: {
     label: "Reveal Lockpicking Order Based on Skill",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("lockpick", newValue);
     },
@@ -611,10 +534,8 @@ export const defaultSettings = {
   },
   allowLayeringWhileBound: {
     label: "Allow layering menus while bound",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("allowLayeringWhileBound", newValue);
     },
@@ -623,10 +544,8 @@ export const defaultSettings = {
   },
   autoStruggle: {
     label: "Make automatic progress while struggling",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("autoStruggle", newValue);
     },
@@ -636,10 +555,8 @@ export const defaultSettings = {
   },
   allowIMBypassBCX: {
     label: "Allow IMs to bypass BCX beep restrictions",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("allowIMBypassBCX", newValue);
     },
@@ -648,10 +565,8 @@ export const defaultSettings = {
   },
   antiDeaf: {
     label: "Anti Deafen",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("antiDeaf", newValue);
     },
@@ -660,10 +575,8 @@ export const defaultSettings = {
   },
   toySync: {
     label: "Enable buttplug.io (requires refresh)",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("toySync", newValue);
     },
@@ -673,10 +586,8 @@ export const defaultSettings = {
   },
   blindWithoutGlasses: {
     label: "Require glasses to see",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       if (!newValue) {
         removeCustomEffect("BlurLight");
@@ -688,10 +599,8 @@ export const defaultSettings = {
   },
   leashAlways: {
     label: "Allow leashing without wearing a leashable item (requires leasher to have WCE too)",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("leashAlways", newValue);
       if (newValue) {
@@ -706,10 +615,8 @@ export const defaultSettings = {
   },
   hideHiddenItemsIcon: {
     label: "Hide the hidden items icon",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("hideHiddenItemsIcon", newValue);
     },
@@ -719,10 +626,8 @@ export const defaultSettings = {
   },
   itemAntiCheat: {
     label: "Enable anti-cheat",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("itemAntiCheat", newValue);
     },
@@ -732,10 +637,8 @@ export const defaultSettings = {
   },
   antiCheatBlackList: {
     label: "Blacklist detected cheaters automatically",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("antiCheatBlackList", newValue);
     },
@@ -744,10 +647,8 @@ export const defaultSettings = {
   },
   uwall: {
     label: "Enable uwall anti-cheat",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("uwall", newValue);
       if (Player?.OnlineSharedSettings && typeof newValue === "boolean") {
@@ -764,23 +665,19 @@ export const defaultSettings = {
   },
   relogin: {
     label: "Automatic Relogin on Disconnect",
-    /**
-     * @param {unknown} newValue
-     */
+    type: "checkbox",
+    value: true,
     sideEffects: (newValue) => {
       debug("relogin", newValue);
     },
-    value: true,
     category: "misc",
     description:
       "Automatically re-enter your password after you disconnect from the game. For convenience or AFK. Requires the password for the current account to have been saved in the login screen. Passwords are saved in your browser's local storage in plain text.",
   },
   ghostNewUsers: {
     label: "Automatically ghost+blocklist unnaturally new users",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("ghostNewUsers", newValue);
     },
@@ -790,10 +687,8 @@ export const defaultSettings = {
   },
   confirmLeave: {
     label: "Confirm leaving the game",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("confirmLeave", newValue);
     },
@@ -803,10 +698,8 @@ export const defaultSettings = {
   },
   discreetMode: {
     label: "Discreet mode (disable drawing)",
+    type: "checkbox",
     value: false,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("discreetMode", newValue);
       if (newValue) {
@@ -821,10 +714,8 @@ export const defaultSettings = {
   },
   customContentDomainCheck: {
     label: "Prompt before loading content from a 3rd party domain",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("customContentDomainCheck", newValue);
     },
@@ -833,10 +724,8 @@ export const defaultSettings = {
   },
   shareAddons: {
     label: "Share Addons",
+    type: "checkbox",
     value: true,
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("shareAddons", newValue);
     },
@@ -846,10 +735,8 @@ export const defaultSettings = {
   },
   buttplugDevices: {
     label: "Buttplug Devices",
+    type: "input",
     value: "",
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("buttplugDevices", newValue);
       // Don't handle empty string
@@ -876,10 +763,8 @@ export const defaultSettings = {
   },
   toySyncAddress: {
     label: "Intiface Address",
+    type: "input",
     value: "ws://127.0.0.1:12345",
-    /**
-     * @param {unknown} newValue
-     */
     sideEffects: (newValue) => {
       debug("toySyncAddress", newValue);
     },
@@ -897,19 +782,17 @@ const bceSettingKey = () => `bce.settings.${Player?.AccountName}`;
 /**
  * @type {() => Promise<typeof fbcSettings>}
  */
-export const bceLoadSettings = async () => {
+export async function bceLoadSettings() {
   await waitFor(() => !!Player?.AccountName);
   const key = bceSettingKey();
   debug("loading settings");
   if (Object.keys(fbcSettings).length === 0) {
     let settings = /** @type {typeof fbcSettings | null} */ (parseJSON(localStorage.getItem(key)));
     const onlineSettings = /** @type {typeof fbcSettings | null} */ (
-      parseJSON(
-        LZString.decompressFromBase64(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          Player.ExtensionSettings.FBC || (Player.OnlineSettings?.BCE ?? "")
-        ) || null
-      )
+      parseJSON(LZString.decompressFromBase64(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        Player.ExtensionSettings.FBC || (Player.OnlineSettings?.BCE ?? "")
+      ) || null)
     );
     if (!onlineSettings) {
       logWarn("No online settings found");
@@ -964,7 +847,7 @@ export const bceLoadSettings = async () => {
   return fbcSettings;
 };
 
-export const bceSaveSettings = () => {
+export function bceSaveSettings() {
   debug("saving settings");
   if (toySyncState.deviceSettings.size > 0) {
     fbcSettings.buttplugDevices = JSON.stringify(Array.from(toySyncState.deviceSettings.values()));
@@ -1013,7 +896,7 @@ async function beepChangelog() {
 }
 
 /** @type {(key: string) => boolean | string} */
-export const fbcSettingValue = (key) => {
+export function fbcSettingValue(key) {
   if (isDefaultSettingKey(key)) {
     return fbcSettings[key];
   }
