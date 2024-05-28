@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { toySyncState } from "./toySync";
-import { waitFor, objEntries, drawTooltip } from "../util/utils";
+import { waitFor, drawTooltip } from "../util/utils";
 import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey } from "../util/settings";
 import { displayText } from "../util/localization";
@@ -79,10 +79,9 @@ export default async function settingsPage() {
    * @param {SettingsCategory} category
    */
   const currentDefaultSettings = (category) =>
-    objEntries(defaultSettings).filter(([k, v]) => v.category === category && k !== "buttplugDevices");
+    Object.entries(defaultSettings).filter(([k, v]) => v.category === category && k !== "buttplugDevices");
 
    function PreferenceSubscreenBCESettingsLoad() {
-    // @ts-ignore
     ElementCreateInput("WceIntifaceAddress", "text", fbcSettings.toySyncAddress);
     ElementPosition("WceIntifaceAddress", -999, -999, 550);
     currentPageNumber = 0;

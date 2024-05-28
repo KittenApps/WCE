@@ -27,13 +27,11 @@ export default function antiGarbling() {
         ) {
           if (Player.RestrictionSettings.NoSpeechGarble) {
             originalMsg = msg;
-          // @ts-ignore
           } else if (fbcSettings[`antiGarble${type}Level`] !== "full") {
             originalMsg = msg;
             if (fbcSettings[`antiGarble${type}BabyTalk`] === "preserve" && shouldBabyTalk) {
               originalMsg = SpeechTransformBabyTalk(originalMsg);
             }
-            // @ts-ignore
             if (["low", "medium", "high"].includes(fbcSettings[`antiGarble${type}Level`])) {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               const int = Math.min(gagIntensity, { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]);
@@ -71,7 +69,6 @@ export default function antiGarbling() {
           window.InputChat?.value.startsWith("/whisper ");
         const options = isWhisper ? whisperOptions : chatOptions;
         const setting = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
-        // @ts-ignore
         const idx = options.indexOf(fbcSettings[setting]);
         const len = options.length;
         DrawRect(1810, 878, 185, 120, "Black");
@@ -90,9 +87,7 @@ export default function antiGarbling() {
           // @ts-ignore
           { X: 1000, Y: 910, Width: 200, Height: 90 }
         );
-        // @ts-ignore
         const stidx = effectOptions.indexOf(fbcSettings[isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter"]);
-        // @ts-ignore
         const btidx = effectOptions.indexOf(fbcSettings[isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk"]);
         DrawButton(
           1810,
@@ -141,7 +136,6 @@ export default function antiGarbling() {
           window.InputChat?.value.startsWith("/whisper ");
         const options = isWhisper ? whisperOptions : chatOptions;
         const setting = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
-        // @ts-ignore
         const idx = options.indexOf(fbcSettings[setting]);
         const len = options.length;
         if (MouseIn(1810, 878, 92, 50)) {
@@ -153,9 +147,7 @@ export default function antiGarbling() {
           return null;
         }
         if (idx <= 3) {
-          // @ts-ignore
           const stidx = effectOptions.indexOf(fbcSettings[isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter"]);
-          // @ts-ignore
           const btidx = effectOptions.indexOf(fbcSettings[isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk"]);
           if (MouseIn(1810, 928, 35, 35)) {
             fbcSettings[isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter"] = effectOptions[(stidx + 1) % 3];

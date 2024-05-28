@@ -63,7 +63,6 @@ export default async function layeringMenu() {
      */
     (args, next) => {
       const C = CharacterGetCurrent();
-      // @ts-ignore
       const ret = next(args);
       if (
         isCharacter(C) &&

@@ -8,7 +8,6 @@ import {
   isString,
   parseJSON,
   isNonNullObject,
-  objEntries,
   removeCustomEffect,
   enableLeashing,
   disableLeashing,
@@ -28,13 +27,13 @@ import { displayText } from "./localization";
 import { augmentedChatNotify } from "../functions/chatAugments";
 
 /**
- * @type {Record<keyof defaultSettings, string | boolean> & {version: number}}
+ * @type {{[Property in keyof defaultSettings]: defaultSettings[Property]["value"]} & { version: number }}
  */
 // @ts-ignore -- this is fully initialized in loadSettings
 export let fbcSettings = {};
 let postSettingsHasRun = false;
 
-export const defaultSettings = /** @type {const} */ ({
+export const defaultSettings = {
   animationEngine: {
     label: "Animation Engine",
     value: false,
@@ -561,7 +560,6 @@ export const defaultSettings = /** @type {const} */ ({
       "Whispers stutters: ignore (remove whispers stutters if ungarbling gag speech, but ignore it if it's the only effect)",
       "Whispers stutters: preserve (always preserve whispers stutters in the ungarbled text in brackets)"
     ],
-    // @ts-ignore
     disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
     /**
      * @param {unknown} newValue
@@ -585,7 +583,6 @@ export const defaultSettings = /** @type {const} */ ({
       "Whispers baby talk: ignore (remove whispers baby talk if ungarbling gag speech, but ignore it if it's the only effect)",
       "Whispers baby talk: preserve (always preserve whispers baby talk in the ungarbled text in brackets)"
     ],
-    // @ts-ignore
     disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
     /**
      * @param {unknown} newValue
@@ -889,7 +886,7 @@ export const defaultSettings = /** @type {const} */ ({
     category: "hidden",
     description: "",
   },
-});
+};
 
 export function settingsLoaded() {
   return postSettingsHasRun;
@@ -947,12 +944,13 @@ export const bceLoadSettings = async () => {
       throw new Error("failed to initialize settings");
     }
 
-    for (const [setting] of objEntries(defaultSettings)) {
+    for (const [setting] of Object.entries(defaultSettings)) {
       if (!(setting in settings)) {
         if (setting === "activityExpressions" && "expressions" in settings) {
           settings[setting] = settings.expressions;
           continue;
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         settings[setting] = defaultSettings[setting].value;
       }
     }
@@ -987,7 +985,7 @@ export function isDefaultSettingKey(key) {
 
 export function postSettings() {
   debug("handling settings side effects");
-  for (const [k, v] of objEntries(fbcSettings)) {
+  for (const [k, v] of Object.entries(fbcSettings)) {
     if (k === "version") {
       continue;
     }
