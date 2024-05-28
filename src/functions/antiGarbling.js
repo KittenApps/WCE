@@ -29,21 +29,15 @@ export default function antiGarbling() {
             originalMsg = msg;
           // @ts-ignore
           } else if (fbcSettings[`antiGarble${type}Level`] !== "full") {
+            originalMsg = msg;
             if (fbcSettings[`antiGarble${type}BabyTalk`] === "preserve" && shouldBabyTalk) {
               originalMsg = SpeechTransformBabyTalk(originalMsg);
             }
-            switch (fbcSettings[`antiGarble${type}Level`]) {
-              case "none":
-                originalMsg = msg;
-                break;
-              case "low":
-              case "medium":
-              case "high": {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                const int = Math.min(gagIntensity, { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]);
-                originalMsg = SpeechTransformGagGarble(msg, int);
-                break;
-              }
+            // @ts-ignore
+            if (["low", "medium", "high"].includes(fbcSettings[`antiGarble${type}Level`])) {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              const int = Math.min(gagIntensity, { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]);
+              originalMsg = SpeechTransformGagGarble(originalMsg, int);
             }
             if (fbcSettings[`antiGarble${type}Stutter`] === "preserve" && stutterIntensity > 0) {
               originalMsg = fbcSettings.stutters ? stutterWord(originalMsg, true).results.join("") : SpeechTransformStutter(originalMsg, stutterIntensity);

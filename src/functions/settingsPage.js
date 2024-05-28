@@ -306,7 +306,7 @@ export default async function settingsPage() {
             }
           } else if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
             fbcSettings[settingName] = !fbcSettings[settingName];
-            defaultSetting.sideEffects(fbcSettings[settingName], true);
+            defaultSetting.sideEffects(fbcSettings[settingName], false);
           }
           if (MouseIn(364, y, 1000, 64)) {
             currentSetting = settingName;
