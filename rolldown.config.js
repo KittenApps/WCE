@@ -1,9 +1,6 @@
-import esbuild from 'rollup-plugin-esbuild'
-import nodeResolve from '@rollup/plugin-node-resolve';
-import alias from '@rollup/plugin-alias';
 import { promises as fs } from 'node:fs';
 import LoaderBuilder from './loaderBuilder.js';
-import { defineConfig } from 'rollup'
+import { defineConfig } from 'rolldown';
 
 const LICENSE = `/**
 * @license GPL-3.0-or-later
@@ -22,8 +19,7 @@ const LICENSE = `/**
 *
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-`;
+*/`
 const loaderBuilder = new LoaderBuilder();
 
 export default defineConfig({
@@ -34,24 +30,20 @@ export default defineConfig({
     chunkFileNames: '[name].js',
     generatedCode: 'es2015',
     sourcemap: true,
-    banner: (chunk) => chunk.name === 'index' ? LICENSE : undefined,
+    banner: c => c.isEntry ? LICENSE : undefined,
+    minify: true,
+    define: {
+      PUBLIC_URL: `"${loaderBuilder.URL}"`,
+    },
+  },
+  resolve: {
+    conditionNames: ['import'],
+    alias: { 
+      'dexie': 'dexie/dist/modern/dexie.mjs',
+      'buttplug': 'buttplug/dist/web/buttplug.mjs',
+    },
   },
   plugins: [
-    alias({
-      entries: [
-        { find: 'buttplug', replacement: 'buttplug/dist/web/buttplug.mjs' },
-        { find: 'dexie', replacement: 'dexie/dist/modern/dexie.mjs' }
-      ],
-    }),
-    nodeResolve({ modulesOnly: true }),
-    esbuild({
-      sourceMap: true,
-      minify: true,
-      target: 'es2022',
-      define: {
-        PUBLIC_URL: `"${loaderBuilder.URL}"`,
-      },
-    }),
     {
       name: 'loader-builder-plugin',
       async buildStart() {
