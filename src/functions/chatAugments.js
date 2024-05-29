@@ -304,7 +304,7 @@ export default function chatAugments() {
      * @param {Parameters<typeof SpeechTransformProcess>} args
      */
     ([C, m, effects, ignoreOOC], next) => {
-      const { msg, hasStuttered } = bceMessageReplacements(m);
+      const { msg, hasStuttered } = bceMessageReplacements(m || "");
       const result = next([C, msg, effects.filter((f) => f !== "stutter" || !fbcSettings.stutters), ignoreOOC]);
       if (hasStuttered) result.effects.push("stutter");
       return result;
