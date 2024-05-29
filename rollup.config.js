@@ -2,7 +2,6 @@ import esbuild from 'rollup-plugin-esbuild'
 import nodeResolve from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
 import alias from '@rollup/plugin-alias';
-import replace from '@rollup/plugin-replace';
 import { promises as fs } from 'node:fs';
 
 await fs.rm('dist', { recursive: true, force: true });
@@ -44,14 +43,14 @@ export default {
         { find: 'dexie', replacement: 'dexie/dist/dexie.mjs' }
       ],
     }),
-    replace({ preventAssignment: true, values: {
-      'PUBLIC_URL': URL ? `"${URL}"` : '"http://localhost:4000"'
-    } }),
     nodeResolve({ modulesOnly: true }),
     esbuild({
       sourceMap: true,
       minify: true,
       target: 'esnext',
+      define: {
+        PUBLIC_URL: URL ? `"${URL}"` : '"http://localhost:4000"',
+      },
     }),
     copy({
       targets: [
