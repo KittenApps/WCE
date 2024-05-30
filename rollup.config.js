@@ -32,6 +32,7 @@ export default {
   output: { 
     dir: 'dist',
     entryFileNames: 'wce.js',
+    chunkFileNames: '[name].js',
     generatedCode: 'es2015',
     sourcemap: true,
     banner: (chunk) => chunk.name === 'index' ? LICENSE : undefined,
