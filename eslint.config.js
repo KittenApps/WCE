@@ -1,5 +1,4 @@
 import eslint from "@eslint/js";
-import { fixupPluginRules } from "@eslint/compat";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import * as deprecation from "eslint-plugin-deprecation";
@@ -11,13 +10,13 @@ export default tseslint.config(
   {
     files: ["src/**/*.{j,t}s"],
     ignores: ["node_modules/**/*.*", "types/**/*.d.ts"],
-    plugins: { deprecation: fixupPluginRules(deprecation) },
+    plugins: { deprecation },
     languageOptions: {
-      ecmaVersion: 2021,
+      ecmaVersion: 2022,
       sourceType: "module",
       globals: { ...globals.browser, ...globals.es2021 },
       parser: tseslint.parser,
-      parserOptions: { tsconfigRootDir: ".", project: "./tsconfig.json" },
+      parserOptions: { project: true },
     },
     rules: {
       "accessor-pairs": "error",

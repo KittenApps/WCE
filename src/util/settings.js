@@ -790,7 +790,7 @@ export async function bceLoadSettings() {
     let settings = /** @type {typeof fbcSettings | null} */ (parseJSON(localStorage.getItem(key)));
     const onlineSettings = /** @type {typeof fbcSettings | null} */ (
       parseJSON(LZString.decompressFromBase64(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, deprecation/deprecation
         Player.ExtensionSettings.FBC || (Player.OnlineSettings?.BCE ?? "")
       ) || null)
     );

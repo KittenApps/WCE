@@ -69,14 +69,12 @@ declare global {
     BCECapabilities: readonly string[];
     BCEArousalProgress: number;
     BCEEnjoyment: number;
-    /** @deprecated */
-    BCEWardrobe?: string;
     FBCNoteExists: boolean;
     BCESeen: number;
   }
   interface PlayerOnlineSettings {
-    BCE: string;
-    BCEWardrobe: string;
+    /** @deprecated */ BCE: string;
+    /** @deprecated */ BCEWardrobe: string;
   }
   interface CharacterOnlineSharedSettings {
     Uwall: boolean;

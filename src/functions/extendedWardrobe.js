@@ -63,9 +63,7 @@ export function loadExtendedWardrobe(wardrobe) {
 
   /** @type {string} */
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, deprecation/deprecation
-  const wardrobeData =
-    Player.ExtensionSettings.FBCWardrobe ||
-    Player.OnlineSettings?.BCEWardrobe;
+  const wardrobeData = Player.ExtensionSettings.FBCWardrobe || Player.OnlineSettings?.BCEWardrobe;
   if (wardrobeData) {
     // eslint-disable-next-line deprecation/deprecation
     if (Player.OnlineSettings?.BCEWardrobe) {

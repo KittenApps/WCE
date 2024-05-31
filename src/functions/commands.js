@@ -100,51 +100,54 @@ export default async function commands() {
   await waitFor(() => !!Commands);
   debug("registering additional commands");
 
-  SDK.hookFunction(
-    "ChatRoomAppendChat",
-    HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ChatRoomAppendChat>} args
-     */
-    (args, next) => {
-      if (!fbcSettings.whisperButton) {
+  // ToDo: remove fbcSettings.whisperButton when R105 is out
+  if (GameVersion === 'R104') {
+    SDK.hookFunction(
+      "ChatRoomAppendChat",
+      HOOK_PRIORITIES.AddBehaviour,
+      /**
+       * @param {Parameters<typeof ChatRoomAppendChat>} args
+       */
+      (args, next) => {
+        if (!fbcSettings.whisperButton) {
+          return next(args);
+        }
+
+        const [div] = args;
+        const replyButton = div.querySelector(".ReplyButton");
+        replyButton?.remove();
+
+        const sender = div.getAttribute("data-sender");
+        const matchingCharacters = sender ? findDrawnCharacters(sender) : [];
+        if (
+          sender &&
+          sender !== Player.MemberNumber?.toString() &&
+          matchingCharacters.length > 0 &&
+          (ChatRoomCharacterViewIsActive() || matchingCharacters.some(ChatRoomMapViewCharacterOnWhisperRange))
+        ) {
+          const repl = document.createElement("a");
+          repl.href = "#";
+          repl.onclick = (e) => {
+            e.preventDefault();
+            ElementValue(
+              "InputChat",
+              `/w ${sender} ${ElementValue("InputChat").replace(/^\/(beep|w(hisper)?) \S+ ?/u, "")}`
+            );
+            window.InputChat?.focus();
+          };
+          repl.title = "Whisper";
+          repl.classList.add("bce-line-icon-wrapper");
+          const img = document.createElement("img");
+          img.src = `${PUBLIC_URL}/whisper.png`;
+          img.alt = "Whisper";
+          img.classList.add("bce-line-icon");
+          repl.appendChild(img);
+          div.prepend(repl);
+        }
         return next(args);
       }
-
-      const [div] = args;
-      const replyButton = div.querySelector(".ReplyButton");
-      replyButton?.remove();
-
-      const sender = div.getAttribute("data-sender");
-      const matchingCharacters = sender ? findDrawnCharacters(sender) : [];
-      if (
-        sender &&
-        sender !== Player.MemberNumber?.toString() &&
-        matchingCharacters.length > 0 &&
-        (ChatRoomCharacterViewIsActive() || matchingCharacters.some(ChatRoomMapViewCharacterOnWhisperRange))
-      ) {
-        const repl = document.createElement("a");
-        repl.href = "#";
-        repl.onclick = (e) => {
-          e.preventDefault();
-          ElementValue(
-            "InputChat",
-            `/w ${sender} ${ElementValue("InputChat").replace(/^\/(beep|w(hisper)?) \S+ ?/u, "")}`
-          );
-          window.InputChat?.focus();
-        };
-        repl.title = "Whisper";
-        repl.classList.add("bce-line-icon-wrapper");
-        const img = document.createElement("img");
-        img.src = `${PUBLIC_URL}/whisper.png`;
-        img.alt = "Whisper";
-        img.classList.add("bce-line-icon");
-        repl.appendChild(img);
-        div.prepend(repl);
-      }
-      return next(args);
-    }
-  );
+    );
+  }
 
   /** @type {Command[]} */
   const cmds = [
