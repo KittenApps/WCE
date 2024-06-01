@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { toySyncState } from "./toySync";
 import { waitFor, drawTooltip } from "../util/utils";
 import { debug, logWarn, logError } from "../util/logger";
-import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey } from "../util/settings";
+import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey, type SelectSetting, type SettingsCategory } from "../util/settings";
 import { displayText } from "../util/localization";
 import { BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "../util/constants";
 
@@ -13,7 +9,7 @@ const SelectButtonOffset = 900;
 const SelectButtonWidth = 200;
 
 // Create settings page
-export default async function settingsPage() {
+export default async function settingsPage(): Promise<void> {
   await waitFor(() => !!PreferenceSubscreenList);
 
   debug("initializing");
@@ -22,25 +18,20 @@ export default async function settingsPage() {
     settingsYIncrement = 70,
     settingsYStart = 225;
 
-  /**
-   * @param {SettingsCategory} category
-   */
-  const settingsPageCount = (category) =>
-    Math.ceil(Object.values(defaultSettings).filter((v) => v.category === category).length / settingsPerPage);
+  function settingsPageCount(category: SettingsCategory): number {
+    return Math.ceil(Object.values(defaultSettings).filter((v) => v.category === category).length / settingsPerPage);
+  }    
 
-  const discordInvitePosition = /** @type {const} */ ([1500, 60, 250, 50]);
-  const licensePosition = /** @type {const} */ ([1500, /* 120*/ 60, 250, 50]);
-  const websitePosition = /** @type {const} */ ([1240, 60, 250, 50]);
+  const discordInvitePosition = [1500, 60, 250, 50] as const;
+  const licensePosition = [1500, /* 120*/ 60, 250, 50] as const;
+  const websitePosition = [1240, 60, 250, 50] as const;
   let currentPageNumber = 0;
 
-  /** @type {SettingsCategory | null} */
-  let currentCategory = null;
+  let currentCategory: SettingsCategory | null = null;
   let currentSetting = "";
-  /**
-   * Excludes hidden
-   * @type {SettingsCategory[]}
-   */
-  const settingsCategories = [
+
+  // Excludes hidden
+  const settingsCategories: SettingsCategory[] = [
     "chat",
     "activities",
     "appearance",
@@ -51,7 +42,7 @@ export default async function settingsPage() {
     "cheats",
     "buttplug",
   ];
-  const settingCategoryLabels = /** @type {const} */ ({
+  const settingCategoryLabels = {
     chat: "Chat & Social",
     activities: "Activities & Arousal",
     appearance: "Appearance & Wardrobe",
@@ -62,38 +53,32 @@ export default async function settingsPage() {
     cheats: "Cheats",
     buttplug: "Buttplug.io Toys",
     hidden: "",
-  });
+  } as const;
 
   const vibratingSlots = [
     "None",
-    ...new Set(
-      Asset.filter((a) => a.AllowEffect?.includes("Vibrating") || a.AllowEffect?.includes("Egged")).map(
-        (a) => a.Group.Name
-      )
-    ),
+    ...new Set(Asset.filter((a) => a.AllowEffect?.includes("Vibrating") || a.AllowEffect?.includes("Egged")).map((a) => a.Group.Name)),
   ];
 
-  const scanButtonPosition = /** @type {const} */ ([1650, 225, 150, 50]);
+  const scanButtonPosition = [1650, 225, 150, 50] as const;
 
-  /**
-   * @param {SettingsCategory} category
-   */
-  const currentDefaultSettings = (category) =>
-    Object.entries(defaultSettings).filter(([k, v]) => v.category === category && k !== "buttplugDevices");
+  function currentDefaultSettings(category: SettingsCategory) {
+    return Object.entries(defaultSettings).filter(([k, v]) => v.category === category && k !== "buttplugDevices");
+  }
 
-   function PreferenceSubscreenBCESettingsLoad() {
+  function PreferenceSubscreenBCESettingsLoad(): void {
     ElementCreateInput("WceIntifaceAddress", "text", fbcSettings.toySyncAddress);
     ElementPosition("WceIntifaceAddress", -999, -999, 550);
     currentPageNumber = 0;
   }
-  function PreferenceSubscreenBCESettingsExit() {
+  function PreferenceSubscreenBCESettingsExit(): void {
     fbcSettings.toySyncAddress = ElementValue("WceIntifaceAddress");
     ElementRemove("WceIntifaceAddress");
     bceSaveSettings();
     PreferenceSubscreenExtensionsClear();
   }
 
-  function PreferenceSubscreenBCESettingsRun() {
+  function PreferenceSubscreenBCESettingsRun(): void {
     const ctx = window.MainCanvas.getContext("2d");
     if (!ctx) {
       logError("Could not get canvas context");
@@ -133,10 +118,11 @@ export default async function settingsPage() {
         currentPageNumber * settingsPerPage,
         currentPageNumber * settingsPerPage + settingsPerPage
       )) {
-        if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options)) {
-          const idx = defaultSetting.options.indexOf(fbcSettings[settingName]);
-          const len = defaultSetting.options.length;
-          const disabled = defaultSetting.disabled?.() || false;
+        if (defaultSetting.type === "select" && Array.isArray((defaultSetting as SelectSetting).options)) {
+          const defSetting = defaultSetting as SelectSetting;
+          const idx = defSetting.options.indexOf(fbcSettings[settingName] as string);
+          const len = defSetting.options.length;
+          const disabled = defSetting.disabled?.() || false;
           DrawText(
             displayText(defaultSetting.label),
             400,
@@ -149,11 +135,11 @@ export default async function settingsPage() {
             y,
             SelectButtonWidth,
             64,
-            displayText(defaultSetting.options[idx]),
+            displayText(defSetting.options[idx]),
             disabled ? "#ebebe4" : "White",
             "",
-            () => displayText(`${defaultSetting.label} ${defaultSetting.options[(idx - 1 + len) % len]}`),
-            () => displayText(`${defaultSetting.label} ${defaultSetting.options[(idx + 1 + len) % len]}`),
+            () => displayText(`${defaultSetting.label} ${defSetting.options[(idx - 1 + len) % len]}`),
+            () => displayText(`${defaultSetting.label} ${defSetting.options[(idx + 1 + len) % len]}`),
             disabled
           );
         } else {
@@ -164,7 +150,7 @@ export default async function settingsPage() {
             64,
             displayText(defaultSetting.label),
             !!fbcSettings[settingName],
-            defaultSetting.disabled?.() || false,
+            defaultSetting.disabled(),
             currentSetting === settingName ? "Red" : "Black"
           );
         }
@@ -246,10 +232,11 @@ export default async function settingsPage() {
         DrawText(displayText("Click on a setting to see its description"), 300, 160, "Gray", "Silver");
 
         if (isDefaultSettingKey(currentSetting)) {
-          if (defaultSettings[currentSetting].tooltips) {
-            const idx = defaultSettings[currentSetting].options.indexOf(fbcSettings[currentSetting]);
-            drawTooltip(300, 800, 1600, displayText(defaultSettings[currentSetting].description), "left");
-            drawTooltip(330, 870, 1570, displayText(defaultSettings[currentSetting].tooltips[idx]), "left");
+          if (defaultSettings[currentSetting].type === "select" && Array.isArray((defaultSettings[currentSetting] as SelectSetting).tooltips)) {
+            const defSetting = defaultSettings[currentSetting] as SelectSetting;
+            const idx = defSetting.options.indexOf(fbcSettings[currentSetting] as string);
+            drawTooltip(300, 800, 1600, displayText(defSetting.description), "left");
+            drawTooltip(330, 870, 1570, displayText(defSetting.tooltips[idx]), "left");
           } else {
             drawTooltip(300, 830, 1600, displayText(defaultSettings[currentSetting].description), "left");
           }
@@ -294,14 +281,15 @@ export default async function settingsPage() {
           currentPageNumber * settingsPerPage,
           currentPageNumber * settingsPerPage + settingsPerPage
         )) {
-          if (defaultSetting.type === "select" && Array.isArray(defaultSetting.options)) {
+          if (defaultSetting.type === "select" && Array.isArray((defaultSetting as SelectSetting).options)) {
+            const defSetting = defaultSetting as SelectSetting;
             const segWidth = SelectButtonWidth / 2;
-            const idx = defaultSetting.options.indexOf(fbcSettings[settingName]);
-            const len = defaultSetting.options.length;
-            if (MouseIn(SelectButtonOffset + segWidth, y, segWidth, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
-              fbcSettings[settingName] = defaultSetting.options[(idx + 1 + len) % len];
-            } else if (MouseIn(SelectButtonOffset, y, segWidth, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
-              fbcSettings[settingName] = defaultSetting.options[(idx - 1 + len) % len];
+            const idx = defSetting.options.indexOf(fbcSettings[settingName] as string);
+            const len = defSetting.options.length;
+            if (MouseIn(SelectButtonOffset + segWidth, y, segWidth, 64) && (!defSetting.disabled || !defSetting.disabled())) {
+              fbcSettings[settingName] = defSetting.options[(idx + 1 + len) % len];
+            } else if (MouseIn(SelectButtonOffset, y, segWidth, 64) && (!defSetting.disabled || !defSetting.disabled())) {
+              fbcSettings[settingName] = defSetting.options[(idx - 1 + len) % len];
             }
           } else if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
             fbcSettings[settingName] = !fbcSettings[settingName];
@@ -384,8 +372,7 @@ export default async function settingsPage() {
     unload: () => {},
   });
 
-  /** @type {(e: KeyboardEvent) => void} */
-  function keyHandler(e) {
+  function keyHandler(e: KeyboardEvent): void {
     if (e.key === "Escape" && currentCategory !== null) {
       currentCategory = null;
       e.stopPropagation();

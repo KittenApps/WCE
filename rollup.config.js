@@ -41,7 +41,7 @@ export default {
     alias({
       entries: [
         { find: 'buttplug', replacement: 'buttplug/dist/web/buttplug.mjs' },
-        { find: 'dexie', replacement: 'dexie/dist/dexie.mjs' }
+        { find: 'dexie', replacement: 'dexie/dist/dexie.mjs' } // ToDo: dexie/dist/modern/dexie.mjs in next dexie version
       ],
     }),
     nodeResolve({ modulesOnly: true }),
