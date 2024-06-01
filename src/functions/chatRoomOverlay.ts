@@ -1,13 +1,12 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { isCharacter } from "../util/utils";
 
-export default function chatRoomOverlay() {
+export default function chatRoomOverlay(): void {
   SDK.hookFunction(
     "ChatRoomDrawCharacterStatusIcons",
     HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const ret = next(args);
-      const [C, CharX, CharY, Zoom] = args;
+    ([C, CharX, CharY, Zoom], next) => {
+      const ret = next([C, CharX, CharY, Zoom]);
       if (
         isCharacter(C) &&
         typeof CharX === "number" &&
