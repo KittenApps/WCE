@@ -3,7 +3,7 @@ import { fbcBeepNotify } from "../util/hooks";
 import { displayText } from "../util/localization";
 
 export default function beepImprovements() {
-  if (typeof StartBcUtil === "function") {
+  if (typeof window.StartBcUtil === "function") {
     fbcBeepNotify(
       displayText("Incompatibility"),
       displayText(

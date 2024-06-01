@@ -101,7 +101,8 @@ export default async function automaticReconnect() {
     }
   }
 
-  window.bceUpdatePasswordForReconnect = () => {
+  /** @type {() => void} */
+  function updatePasswordForReconnect() {
     let name = "";
     if (CurrentScreen === "Login") {
       name = ElementValue("InputName").toUpperCase();
@@ -112,16 +113,19 @@ export default async function automaticReconnect() {
     const passwords = loadPasswords();
     passwords[name] = ElementValue("InputPassword");
     storeAccounts(passwords);
-  };
+  }
+  globalThis.bceUpdatePasswordForReconnect = updatePasswordForReconnect;
 
-  window.bceClearPassword = (accountname) => {
+  /** @type {(accountname: string) => void} */
+  function clearPassword(accountname) {
     const passwords = loadPasswords();
     if (!Object.hasOwn(passwords, accountname)) {
       return;
     }
     delete passwords[accountname];
     storeAccounts(passwords);
-  };
+  }
+  globalThis.bceClearPassword = clearPassword;
 
   let lastClick = Date.now();
 
@@ -164,7 +168,7 @@ export default async function automaticReconnect() {
       (args, next) => {
         const ret = next(args);
         if (MouseIn(1250, 385, 180, 60)) {
-          bceUpdatePasswordForReconnect();
+          updatePasswordForReconnect();
           loginData.posMaps = {};
           loginData.passwords = loadPasswords();
         }
@@ -183,7 +187,7 @@ export default async function automaticReconnect() {
             ElementValue("InputPassword", loginData.passwords[loginData.posMaps[idx]]);
             LoginDoLogin();
           } else if (MouseIn(355, idx, 60, 60)) {
-            bceClearPassword(loginData.posMaps[idx]);
+            clearPassword(loginData.posMaps[idx]);
             loginData.posMaps = {};
             loginData.passwords = loadPasswords();
           }

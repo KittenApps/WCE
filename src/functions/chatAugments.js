@@ -4,6 +4,7 @@ import { debug } from "../util/logger";
 import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 import { sessionCustomOrigins } from "./customContentDomainCheck";
+import { fbcChatNotify } from "../util/utils";
 
 const CLOSINGBRACKETINDICATOR = "\\uf130\\u005d";
 const EMBED_TYPE = /** @type {const} */ ({
@@ -252,7 +253,7 @@ export default function chatAugments() {
     ([event], next) => {
       if (document.activeElement.id === "InputChat") {
         if (event.key === "Enter" && !event.shiftKey) {
-          if (fbcSettingValue("ctrlEnterOoc") && event.ctrlKey && ElementValue("InputChat")?.trim()) {
+          if (fbcSettings.ctrlEnterOoc && event.ctrlKey && ElementValue("InputChat")?.trim()) {
             let text = ElementValue("InputChat");
             let prefix = "";
             if (!text) {

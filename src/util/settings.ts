@@ -886,7 +886,7 @@ export async function bceLoadSettings(): Promise<void> {
       debug("no settings", key);
       fbcBeepNotify(
         "Welcome to WCE",
-        `Welcome to Wholesome Club Extensions v${window.FBC_VERSION}! As this is your first time using WCE on this account, you may want to check out the settings page for some options to customize your experience. You can find it in the game preferences. Enjoy!` // In case of problems, you can contact us via Discord at ${DISCORD_INVITE_URL}`
+        `Welcome to Wholesome Club Extensions v${globalThis.FBC_VERSION}! As this is your first time using WCE on this account, you may want to check out the settings page for some options to customize your experience. You can find it in the game preferences. Enjoy!` // In case of problems, you can contact us via Discord at ${DISCORD_INVITE_URL}`
       );
       // @ts-expect-error -- this is fully populated in the loop below
       settings = {};

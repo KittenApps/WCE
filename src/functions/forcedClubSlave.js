@@ -49,7 +49,7 @@ export const bceStartClubSlave = async () => {
 
   await waitFor(() => CurrentScreen !== managementScreen || !CurrentCharacter);
 
-  window.bceGotoRoom(room);
+  bceGotoRoom(room);
 };
 
 /** @type {(roomName: string) => void} */
@@ -137,6 +137,7 @@ export default async function forcedClubSlave() {
     );
   })();
 
+  /** @type {() => void} */
   function bceSendToClubSlavery() {
     /** @type {ServerChatRoomMessage} */
     const message = {
@@ -158,6 +159,7 @@ export default async function forcedClubSlave() {
     DialogLeave();
   }
 
+  /** @type {() => boolean} */
   function bceCanSendToClubSlavery() {
     const C = CurrentCharacter;
     if (!C) {
@@ -166,9 +168,9 @@ export default async function forcedClubSlave() {
     return C.BCECapabilities?.includes("clubslave") && !C.Appearance.some((a) => a.Asset.Name === "ClubSlaveCollar");
   }
 
-  window.bceGotoRoom = bceGotoRoom;
-  window.ChatRoombceSendToClubSlavery = bceSendToClubSlavery;
-  window.ChatRoombceCanSendToClubSlavery = bceCanSendToClubSlavery;
+  globalThis.bceGotoRoom = bceGotoRoom;
+  globalThis.ChatRoombceSendToClubSlavery = bceSendToClubSlavery;
+  globalThis.ChatRoombceCanSendToClubSlavery = bceCanSendToClubSlavery;
 
   await patch;
 }

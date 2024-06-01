@@ -47,6 +47,7 @@ export default function cacheClearer() {
     "manual clearing and reloading of drawing cache"
   );
 
+  /**@type {() => Promise<void>} */
   async function bceClearCaches() {
     const start = Date.now();
     if (
@@ -64,7 +65,7 @@ export default function cacheClearer() {
     doClearCaches();
   }
 
-  window.bceClearCaches = bceClearCaches;
+  globalThis.bceClearCaches = bceClearCaches;
 
   function doClearCaches() {
     debug("Clearing caches");

@@ -9,7 +9,11 @@ import { fbcSettings } from "../util/settings";
 
 // BcUtil-compatible instant messaging with friends
 export default function instantMessenger() {
-  window.bceStripBeepMetadata = (msg) => msg.split("\uf124")[0].trimEnd();
+  /** @type {(text: string) => string} */
+  function stripBeepMetadata(msg) {
+    return msg.split("\uf124")[0].trimEnd();
+  }
+  globalThis.bceStripBeepMetadata = stripBeepMetadata;
 
   // Build the DOM
   const container = document.createElement("div");
@@ -536,7 +540,7 @@ export default function instantMessenger() {
     HOOK_PRIORITIES.ModifyBehaviourHigh,
     (args, next) => {
       if (args[0] === "Beep" && args[1]?.body) {
-        args[1].body = bceStripBeepMetadata(args[1].body);
+        args[1].body = stripBeepMetadata(args[1].body);
       }
       return next(args);
     }

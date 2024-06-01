@@ -49,7 +49,9 @@ export default async function automaticExpressions() {
     "Resetting blush, eyes, and eyebrows after struggling"
   );
 
-  window.bceAnimationEngineEnabled = () => !!fbcSettings.animationEngine;
+  /** @type {() => boolean} */
+  const animationEngineEnabled = () => !!fbcSettings.animationEngine;
+  globalThis.bceAnimationEngineEnabled = animationEngineEnabled;
 
   SDK.hookFunction(
     "StruggleMinigameStop",
@@ -64,9 +66,9 @@ export default async function automaticExpressions() {
     }
   );
 
-  if (!window.bce_ArousalExpressionStages) {
+  if (!globalThis.bce_ArousalExpressionStages) {
     // eslint-disable-next-line camelcase
-    window.bce_ArousalExpressionStages = {
+    globalThis.bce_ArousalExpressionStages = {
       Blush: [
         { Expression: "High", Limit: 100 },
         { Expression: "Medium", Limit: 60 },
@@ -182,11 +184,11 @@ export default async function automaticExpressions() {
     }
     bceExpressionsQueue.push(event);
   }
-  window.fbcPushEvent = pushEvent;
+  globalThis.fbcPushEvent = pushEvent;
 
-  if (!window.bce_EventExpressions) {
+  if (!globalThis.bce_EventExpressions) {
     // eslint-disable-next-line camelcase
-    window.bce_EventExpressions = {
+    globalThis.bce_EventExpressions = {
       PostOrgasm: {
         Type: POST_ORGASM_EVENT_TYPE,
         Duration: 20000,
@@ -767,9 +769,9 @@ export default async function automaticExpressions() {
     };
   }
 
-  if (!window.bce_ActivityTriggers) {
+  if (!globalThis.bce_ActivityTriggers) {
     // eslint-disable-next-line camelcase
-    window.bce_ActivityTriggers = [
+    globalThis.bce_ActivityTriggers = [
       {
         Event: "Blush",
         Type: "Activity",
@@ -1279,7 +1281,7 @@ export default async function automaticExpressions() {
   }
 
   registerSocketListener("ChatRoomMessage", (data) => {
-    activityTriggers: for (const trigger of window.bce_ActivityTriggers.filter((t) => t.Type === data.Type)) {
+    activityTriggers: for (const trigger of globalThis.bce_ActivityTriggers.filter((t) => t.Type === data.Type)) {
       for (const matcher of trigger.Matchers) {
         if (matcher.Tester.test(data.Content)) {
           if (matcher.Criteria) {
@@ -1299,10 +1301,10 @@ export default async function automaticExpressions() {
               continue;
             }
             // Criteria met
-            pushEvent(window.bce_EventExpressions[trigger.Event]);
+            pushEvent(globalThis.bce_EventExpressions[trigger.Event]);
           } else if (data.Sender === Player.MemberNumber || dictHasPlayerTarget(data.Dictionary)) {
             // Lacking criteria, check for presence of player as source or target
-            pushEvent(window.bce_EventExpressions[trigger.Event]);
+            pushEvent(globalThis.bce_EventExpressions[trigger.Event]);
             break activityTriggers;
           }
         }
@@ -1453,15 +1455,15 @@ export default async function automaticExpressions() {
       if (args[0] === "list") {
         fbcChatNotify(
           displayText(`Available animations: $anims`, {
-            $anims: Object.keys(window.bce_EventExpressions).join(", "),
+            $anims: Object.keys(globalThis.bce_EventExpressions).join(", "),
           })
         );
       }
-      const animation = Object.keys(window.bce_EventExpressions).find(
+      const animation = Object.keys(globalThis.bce_EventExpressions).find(
         (a) => a.toLowerCase() === args[0]?.toLowerCase()
       );
       if (animation) {
-        pushEvent(window.bce_EventExpressions[animation]);
+        pushEvent(globalThis.bce_EventExpressions[animation]);
       }
     },
   });
@@ -1760,7 +1762,7 @@ export default async function automaticExpressions() {
       Player.ArousalSettings.OrgasmStage === OrgasmRecoveryStage &&
       bceExpressionsQueue.filter((a) => a.Type === POST_ORGASM_EVENT_TYPE).length === 0
     ) {
-      pushEvent(window.bce_EventExpressions.PostOrgasm);
+      pushEvent(globalThis.bce_EventExpressions.PostOrgasm);
       lastOrgasm = Date.now();
     }
 
@@ -1961,12 +1963,12 @@ export default async function automaticExpressions() {
     }
 
     // Handle arousal-based expressions
-    outer: for (const t of Object.keys(window.bce_ArousalExpressionStages)) {
+    outer: for (const t of Object.keys(globalThis.bce_ArousalExpressionStages)) {
       const [exp] = expression(t);
       /** @type {ExpressionName} */
       let chosenExpression = null;
       let expressionChosen = false;
-      for (const face of window.bce_ArousalExpressionStages[t]) {
+      for (const face of globalThis.bce_ArousalExpressionStages[t]) {
         const limit = face.Limit - (direction === ArousalMeterDirection.Up ? 0 : 1);
         if (arousal + lastOrgasmAdjustment() >= limit) {
           if (face.Expression !== exp) {

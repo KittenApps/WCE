@@ -5,34 +5,16 @@ declare global {
     InputChat?: HTMLTextAreaElement;
     MainCanvas: HTMLCanvasElement;
   }
-  var PUBLIC_URL: string;
-  var FBC_VERSION: string;
-  var fbcSendAction: (text: string) => void;
-  var fbcChatNotify: (node: HTMLElement | HTMLElement[] | string) => void;
-  var fbcPushEvent: (evt: ExpressionEvent) => void;
-  var fbcDebug: (copy?: boolean) => Promise<string>;
-  var fbcSettingValue: (key: string) => boolean | number | string;
-  var fbcCopyColors: (C: Character, focusItem: Item) => void;
-  var bceAnimationEngineEnabled: () => boolean;
-  var bce_initializeDefaultExpression: () => void;
-  var bceUpdatePasswordForReconnect: () => void;
-  var bceClearPassword: (name: string) => void;
-  var bceClearCaches: () => Promise<void>;
-  var ChatRoombceSendToClubSlavery: () => void;
-  var ChatRoombceCanSendToClubSlavery: () => boolean;
-  var bceGotoRoom: (room: string) => void;
+
   var bce_ArousalExpressionStages: ArousalExpressionStages;
   var bce_ActivityTriggers: ActivityTrigger[];
   var bce_EventExpressions: { [key: string]: Expression };
+
+  var PUBLIC_URL: string;
   var StartBcUtil: () => void;
   var bcx:
   | import("./bcxExternalInterface").BCX_ConsoleInterface
   | undefined;
-  var fbcDisplayText: (
-    original: string,
-    replacements?: Record<string, string>
-  ) => string;
-  var bceStripBeepMetadata: (text: string) => string;
   var bcModSdk: import("bondage-club-mod-sdk").ModSDKGlobalAPI | undefined;
   var FUSAM: FUSAMPublicAPI | undefined;
 

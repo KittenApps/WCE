@@ -21,21 +21,21 @@ function pushLog(level: LogLevel, ...args: unknown[]): void {
 };
 
 export function debug(...args: unknown[]): void {
-  console.debug("WCE", `${window.FBC_VERSION}:`, ...args);
+  console.debug("WCE", `${globalThis.FBC_VERSION}:`, ...args);
   pushLog("debug", ...args);
 };
 
 export function logInfo(...args: unknown[]): void {
-  console.info("WCE", `${window.FBC_VERSION}:`, ...args);
+  console.info("WCE", `${globalThis.FBC_VERSION}:`, ...args);
   pushLog("info", ...args);
 };
 
 export function logWarn(...args: unknown[]): void {
-  console.warn("WCE", `${window.FBC_VERSION}:`, ...args);
+  console.warn("WCE", `${globalThis.FBC_VERSION}:`, ...args);
   pushLog("warn", ...args);
 };
 
 export function logError(...args: unknown[]): void {
-  console.error("WCE", `${window.FBC_VERSION}:`, ...args);
+  console.error("WCE", `${globalThis.FBC_VERSION}:`, ...args);
   pushLog("error", ...args);
 };
