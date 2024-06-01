@@ -4,7 +4,7 @@ import { fbcSettings } from "../util/settings";
 import { waitFor } from "../util/utils";
 import { debug } from "../util/logger";
 
-export default function cacheClearer() {
+export default function cacheClearer(): void {
   const cacheClearInterval = 1 * 60 * 60 * 1000;
 
   SDK.hookFunction(
@@ -47,8 +47,7 @@ export default function cacheClearer() {
     "manual clearing and reloading of drawing cache"
   );
 
-  /**@type {() => Promise<void>} */
-  async function bceClearCaches() {
+  async function clearCaches(): Promise<void> {
     const start = Date.now();
     if (
       !(await waitFor(
@@ -65,9 +64,9 @@ export default function cacheClearer() {
     doClearCaches();
   }
 
-  globalThis.bceClearCaches = bceClearCaches;
+  globalThis.bceClearCaches = clearCaches;
 
-  function doClearCaches() {
+  function doClearCaches(): void {
     debug("Clearing caches");
     if (GLDrawCanvas.GL?.textureCache) {
       GLDrawCanvas.GL.textureCache.clear();
@@ -82,11 +81,9 @@ export default function cacheClearer() {
     Character.filter((c) => c.IsOnline?.()).forEach((c) => CharacterRefresh(c, false, false));
   }
 
-  const clearCaches = () => {
+  createTimer(() => {
     if (fbcSettings.automateCacheClear) {
-      bceClearCaches();
+      clearCaches();
     }
-  };
-
-  createTimer(clearCaches, cacheClearInterval);
+  }, cacheClearInterval);
 }
