@@ -105,9 +105,6 @@ export default async function commands() {
     SDK.hookFunction(
       "ChatRoomAppendChat",
       HOOK_PRIORITIES.AddBehaviour,
-      /**
-       * @param {Parameters<typeof ChatRoomAppendChat>} args
-       */
       (args, next) => {
         if (!fbcSettings.whisperButton) {
           return next(args);

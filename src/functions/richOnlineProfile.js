@@ -63,9 +63,6 @@ export default function richOnlineProfile() {
   SDK.hookFunction(
     "OnlineProfileLoad",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof OnlineProfileLoad>} args
-     */
     (args, next) => {
       originalShown = true;
       const ret = next(args);
@@ -83,9 +80,6 @@ export default function richOnlineProfile() {
   SDK.hookFunction(
     "ChatRoomHideElements",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof ChatRoomHideElements>} args
-     */
     (args, next) => {
       disableRichTextArea();
       return next(args);
@@ -96,9 +90,6 @@ export default function richOnlineProfile() {
   SDK.hookFunction(
     "OnlineProfileRun",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof OnlineProfileRun>} args
-     */
     (args, next) => {
       if (!fbcSettings.richOnlineProfile) {
         return next(args);
@@ -117,9 +108,6 @@ export default function richOnlineProfile() {
   SDK.hookFunction(
     "OnlineProfileClick",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof OnlineProfileClick>} args
-     */
     (args, next) => {
       if (!fbcSettings.richOnlineProfile) {
         return next(args);
@@ -139,9 +127,6 @@ export default function richOnlineProfile() {
   SDK.hookFunction(
     "OnlineProfileExit",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof OnlineProfileExit>} args
-     */
     (args, next) => {
       if (!originalShown) {
         disableRichTextArea();

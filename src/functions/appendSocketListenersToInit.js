@@ -18,9 +18,6 @@ export default function appendSocketListenersToInit() {
   SDK.hookFunction(
     "ServerInit",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ServerInit>} args
-     */
     (args, next) => {
       const ret = next(args);
       for (const [event, cb] of listeners) {

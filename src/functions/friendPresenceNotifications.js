@@ -81,9 +81,6 @@ export default async function friendPresenceNotifications() {
   SDK.hookFunction(
     "ServerClickBeep",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof ServerClickBeep>} args
-     */
     (args, next) => {
       if (
         ServerBeep.Timer > Date.now() &&

@@ -1,10 +1,10 @@
 import { logWarn } from "./logger";
 import { SUPPORTED_GAME_VERSIONS, FBC_VERSION } from "./constants";
+import type { ModSDKModAPI } from "bondage-club-mod-sdk";
 
-/** @type {string[]} */
-export const deviatingHashes = [];
-
-export const HOOK_PRIORITIES = /** @type {const} */ ({
+export const deviatingHashes: string[] = [];
+export const skippedFunctionality: string[] = [];
+export const HOOK_PRIORITIES = {
   Top: 11,
   OverrideBehaviour: 10,
   ModifyBehaviourHigh: 6,
@@ -12,9 +12,9 @@ export const HOOK_PRIORITIES = /** @type {const} */ ({
   ModifyBehaviourLow: 4,
   AddBehaviour: 3,
   Observe: 0,
-});
+} as const;
 
-export const SDK = bcModSdk.registerMod(
+export const SDK: ModSDKModAPI = bcModSdk.registerMod(
   {
     name: "WCE",
     version: FBC_VERSION,
@@ -26,11 +26,7 @@ export const SDK = bcModSdk.registerMod(
   }
 );
 
-/** @type {string[]} */
-export const skippedFunctionality = [];
-
-/** @type {(functionName: string, patches: Record<string,string>, affectedFunctionality: string) => void} */
-export const patchFunction = (functionName, patches, affectedFunctionality) => {
+export function patchFunction(functionName: string, patches: Record<string,string>, affectedFunctionality: string): void {
   // Guard against patching a function that has been modified by another addon not using the shared SDK on supported versions.
   if (deviatingHashes.includes(functionName) && SUPPORTED_GAME_VERSIONS.includes(GameVersion)) {
     logWarn(

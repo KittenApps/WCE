@@ -161,9 +161,6 @@ export default function itemAntiCheat() {
   SDK.hookFunction(
     "ChatRoomSyncItem",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof ChatRoomSyncItem>} args
-     */
     (args, next) => {
       const [data] = args;
       if (!fbcSettings.itemAntiCheat) {
@@ -201,9 +198,6 @@ export default function itemAntiCheat() {
   SDK.hookFunction(
     "ChatRoomSyncSingle",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof ChatRoomSyncSingle>} args
-     */
     (args, next) => {
       const [data] = args;
       if (!fbcSettings.itemAntiCheat) {

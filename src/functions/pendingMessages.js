@@ -18,9 +18,6 @@ export default function pendingMessages() {
   SDK.hookFunction(
     "ChatRoomMessage",
     HOOK_PRIORITIES.Observe,
-    /**
-     * @param {Parameters<typeof ChatRoomMessage>} args
-     */
     (args, next) => {
       const ret = next(args);
       if (fbcSettings.pendingMessages && args?.length && isChatMessage(args[0]) && Array.isArray(args[0].Dictionary)) {
@@ -42,9 +39,6 @@ export default function pendingMessages() {
   SDK.hookFunction(
     "ServerSend",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ServerSend>} args
-     */
     (args, next) => {
       if (
         fbcSettings.pendingMessages &&

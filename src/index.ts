@@ -1,6 +1,6 @@
 import { waitFor, fbcChatNotify, fbcNotify, fbcSendAction } from "./util/utils";
 import { fbcSettingValue } from "./util/settings";
-import { fbcDisplayText } from "./util/localization";
+import { displayText } from "./util/localization";
 import { registerAllFunctions } from "./registerFunctions";
 import { FBC_VERSION } from "./util/constants";
 import { fbcDebug } from "./functions/commands";
@@ -17,7 +17,7 @@ if (typeof ChatRoomCharacter === "undefined") {
 
 GameVersion = new URLSearchParams(location.hash.slice(1)).get('version') ?? GameVersion;
 window.FBC_VERSION = FBC_VERSION;
-window.fbcDisplayText = fbcDisplayText;
+window.fbcDisplayText = displayText;
 window.fbcChatNotify = fbcChatNotify;
 window.fbcSendAction = fbcSendAction;
 window.fbcSettingValue = fbcSettingValue;

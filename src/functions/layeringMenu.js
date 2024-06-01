@@ -20,9 +20,6 @@ export default async function layeringMenu() {
     SDK.hookFunction(
       "Layering.Init",
       HOOK_PRIORITIES.AddBehaviour,
-      /**
-       * @param {Parameters<typeof Layering.Init>} args
-       */
       (args, next) => {
         const ret = next(args);
         // @ts-ignore
@@ -58,9 +55,6 @@ export default async function layeringMenu() {
   SDK.hookFunction(
     "DialogMenuButtonBuild",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof DialogMenuButtonBuild>} args
-     */
     (args, next) => {
       const C = CharacterGetCurrent();
       const ret = next(args);
@@ -85,9 +79,6 @@ export default async function layeringMenu() {
   SDK.hookFunction(
     "InterfaceTextGet",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<InterfaceTextGet>} args
-     */
     (args, next) => {
       if (args[0] === "DialogMenuPaint") return displayText("[WCE] Copy colors to other items of same type");
       return next(args);
@@ -97,9 +88,6 @@ export default async function layeringMenu() {
   SDK.hookFunction(
     "DialogMenuButtonClick",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<DialogMenuButtonClick>} args
-     */
     (args, next) => {
       const ret = next(args);
       if (!ret && !["colorExpression", "colorItem", "extended", "layering", "tighten"].includes(DialogMenuMode)) {

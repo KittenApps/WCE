@@ -1,13 +1,5 @@
-import { objEntries } from "./utils";
-
-/**
- * @param {string} original - The English message
- * @param {Record<string, string>} [replacements] - The replacements
- * @returns {string} - The translated message
- */
-export function displayText(original, replacements = {}) {
-  /** @type {Readonly<Record<string, Record<string, string>>>} */
-  const translations = Object.freeze({
+export function displayText(original: string, replacements: Record<string, string> = {}): string {
+  const translations: Readonly<Record<string, Record<string, string>>> = Object.freeze({
     CN: {
       "Automatic Arousal Expressions (Replaces Vanilla)": "自动欲望表情 (替换原版)",
       "Activity Expressions": "活动表示",
@@ -147,17 +139,11 @@ export function displayText(original, replacements = {}) {
     },
   });
 
-  let text =
-    TranslationLanguage in translations && original in translations[TranslationLanguage]
-      ? translations[TranslationLanguage][original]
-      : original;
-  for (const [key, val] of objEntries(replacements)) {
+  let text = translations[TranslationLanguage]?.[original] ?? original;
+  for (const [key, val] of Object.entries(replacements)) {
     while (text.includes(key)) {
       text = text.replace(key, val);
     }
   }
   return text;
 }
-
-/** @type {(original: string, replacements?: Record<string, string>) => string} */
-export const fbcDisplayText = (original, replacements = {}) => displayText(original, replacements);

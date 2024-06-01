@@ -101,9 +101,6 @@ export default async function extendedWardrobe() {
   SDK.hookFunction(
     "CharacterCompressWardrobe",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof CharacterCompressWardrobe>} args
-     */
     (args, next) => {
       const [wardrobe] = args;
       if (isWardrobe(wardrobe)) {
@@ -123,9 +120,6 @@ export default async function extendedWardrobe() {
   SDK.hookFunction(
     "WardrobeLoadCharacterNames",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof WardrobeLoadCharacterNames>} args
-     */
     (args, next) => {
       if (!fbcSettings.localWardrobe) return next(args);
       if (!Player.WardrobeCharacterNames) Player.WardrobeCharacterNames = [];

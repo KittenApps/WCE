@@ -126,9 +126,6 @@ export default async function forcedClubSlave() {
     SDK.hookFunction(
       "CharacterBuildDialog",
       HOOK_PRIORITIES.AddBehaviour,
-      /**
-       * @param {Parameters<typeof CharacterBuildDialog>} args
-       */
       (args, next) => {
         const ret = next(args);
         const [C] = args;

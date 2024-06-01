@@ -4,27 +4,23 @@ import { isString } from "../util/utils";
 import { displayText } from "../util/localization";
 
 export default function discreetMode() {
-  /**
-   * @param {any} args
-   * @param {(args: any) => void} next
-   */
-  const discreetModeHook = (args, next) => {
-    if (fbcSettings.discreetMode) {
-      return;
-    }
-    // eslint-disable-next-line consistent-return
-    return next(args);
-  };
-
-  SDK.hookFunction("DrawCharacter", HOOK_PRIORITIES.Top, discreetModeHook);
-  SDK.hookFunction("NotificationDrawFavicon", HOOK_PRIORITIES.Top, discreetModeHook);
+  const discreetModeFuncs = /** @type {const} */ (["CharacterSetActivePose", "PoseSetActive"]);
+  for (const discreetModeFunc of discreetModeFuncs) {
+    SDK.hookFunction(
+      discreetModeFunc,
+      HOOK_PRIORITIES.Top,
+      (args, next) => {
+        if (fbcSettings.discreetMode) {
+          return null;
+        }
+        return next(args);
+      }
+    )
+  }
 
   SDK.hookFunction(
     "DrawImageEx",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof DrawImageEx>} args
-     */
     (args, next) => {
       if (fbcSettings.discreetMode) {
         if (!args) {
@@ -53,9 +49,6 @@ export default function discreetMode() {
   SDK.hookFunction(
     "ChatRoomCharacterViewDraw",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof ChatRoomCharacterViewDraw>} args
-     */
     (args, next) => {
       if (fbcSettings.discreetMode) {
         // Check if we should use a custom background
@@ -111,9 +104,6 @@ export default function discreetMode() {
   SDK.hookFunction(
     "NotificationTitleUpdate",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof NotificationTitleUpdate>} args
-     */
     (args, next) => {
       if (fbcSettings.discreetMode) {
         const notificationCount = NotificationGetTotalCount(1);

@@ -249,9 +249,6 @@ export default function chatAugments() {
   SDK.hookFunction(
     "ChatRoomKeyDown",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof ChatRoomKeyDown>} args
-     */
     ([event], next) => {
       if (document.activeElement.id === "InputChat") {
         if (event.key === "Enter" && !event.shiftKey) {
@@ -289,9 +286,6 @@ export default function chatAugments() {
   SDK.hookFunction(
     "ChatRoomMessageDisplay",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof ChatRoomMessageDisplay>} args
-     */
     ([data, msg, SenderCharacter, metadata], next) => next(
       [data, msg.replace(new RegExp(CLOSINGBRACKETINDICATOR, "g"), ")"), SenderCharacter, metadata]
     )
@@ -300,9 +294,6 @@ export default function chatAugments() {
   SDK.hookFunction(
     "SpeechTransformProcess",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof SpeechTransformProcess>} args
-     */
     ([C, m, effects, ignoreOOC], next) => {
       const { msg, hasStuttered } = bceMessageReplacements(m || "");
       const result = next([C, msg, effects.filter((f) => f !== "stutter" || !fbcSettings.stutters), ignoreOOC]);

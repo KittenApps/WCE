@@ -20,9 +20,6 @@ export default async function lockpickHelp() {
   SDK.hookFunction(
     "StruggleLockPickDraw",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof StruggleLockPickDraw>} args
-     */
     (args, next) => {
       if (fbcSettings.lockpick && StruggleLockPickOrder) {
         const seed = parseInt(StruggleLockPickOrder.join(""));

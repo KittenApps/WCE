@@ -40,9 +40,6 @@ export default function commonPatches() {
   SDK.hookFunction(
     "InformationSheetRun",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof InformationSheetRun>} args
-     */
     (args, next) => {
       if (!InformationSheetSelection || !InformationSheetSelection.MemberNumber) {
         return next(args);
@@ -76,9 +73,6 @@ export default function commonPatches() {
   SDK.hookFunction(
     "ServerSend",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof ServerSend>} args
-     */
     (args, next) => {
       const [msgType, data] = args;
       if (msgType !== "AccountUpdate") {
@@ -98,9 +92,6 @@ export default function commonPatches() {
   SDK.hookFunction(
     "FriendListLoadFriendList",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof FriendListLoadFriendList>} args
-     */
     (args, next) => {
       if (!document.getElementById("FriendList")) {
         return;
@@ -114,9 +105,6 @@ export default function commonPatches() {
   SDK.hookFunction(
     "ServerSendQueueProcess",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof ServerSendQueueProcess>} args
-     */
     (args, next) => {
       if (!ServerIsConnected) {
         return null;

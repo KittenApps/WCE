@@ -45,11 +45,9 @@ import toySync from "./functions/toySync";
 import chatRoomWhisperFixes from "./functions/chatRoomWhisperFixes";
 import allowCustomEffect from "./functions/allowCustomEffects";
 
-/** @type {string[]} */
-export const incompleteFunctions = [];
+export const incompleteFunctions: string[] = [];
 
-/** @type {(func: () => (Promise<unknown> | unknown), label: string) => Promise<void>} */
-const registerFunction = async (func, label) => {
+async function registerFunction(func: () => (Promise<void> | void), label: string): Promise<void> {
   incompleteFunctions.push(label);
   try {
     const ret = func();
@@ -58,23 +56,19 @@ const registerFunction = async (func, label) => {
     }
     incompleteFunctions.splice(incompleteFunctions.indexOf(label), 1);
   } catch (err) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const e = /** @type {Error} */ (err);
+    const e = err as Error;
     logError(`Error in ${label}: ${e?.toString()}\n${e?.stack ?? ""}`);
   }
 };
 
-export async function registerAllFunctions() {
+export async function registerAllFunctions(): Promise<void>  {
   // Delay game processes until registration is complete
-  /** @type {"init" | "enable" | "disable"} */
-  let funcsRegistered = "init";
+  let funcsRegistered: "init" | "enable" | "disable" = "init";
 
   SDK.hookFunction(
     "LoginResponse",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof LoginResponse>} args
-     */ (args, next) => {
+    (args, next) => {
       if (funcsRegistered === "init") {
         funcsRegistered = "disable";
       }
@@ -84,9 +78,7 @@ export async function registerAllFunctions() {
   SDK.hookFunction(
     "LoginStatusReset",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof LoginStatusReset>} args
-     */ (args, next) => {
+    (args, next) => {
       if (funcsRegistered === "disable") {
         funcsRegistered = "init";
       }
@@ -96,9 +88,7 @@ export async function registerAllFunctions() {
   SDK.hookFunction(
     "GameRun",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof GameRun>} args
-     */ (args, next) => {
+    (args, next) => {
       if (funcsRegistered === "disable") {
         GameAnimationFrameId = requestAnimationFrame(GameRun);
         return null;

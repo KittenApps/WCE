@@ -10,9 +10,6 @@ export default function cacheClearer() {
   SDK.hookFunction(
     "ChatRoomMenuBuild",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ChatRoomMenuBuild>} args
-     */
     (args, next) => {
       const ret = next(args);
       if (fbcSettings.manualCacheClear) ChatRoomMenuButtons.splice(ChatRoomMenuButtons.indexOf("Cut"), 0, "clearCache");
@@ -23,9 +20,6 @@ export default function cacheClearer() {
   SDK.hookFunction(
     "ChatRoomMenuClick",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ChatRoomMenuBuild>} args
-     */
     (args, next) => {
       const ret = next(args);
       if (fbcSettings.manualCacheClear) {

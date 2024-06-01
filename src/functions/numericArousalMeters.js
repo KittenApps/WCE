@@ -7,9 +7,6 @@ export default function numericArousalMeters() {
   SDK.hookFunction(
     "DrawArousalMeter",
     HOOK_PRIORITIES.Observe,
-    /**
-     * @param {Parameters<typeof DrawArousalMeter>} args
-     */
     (args, next) => {
       const [C] = args;
       isExpanded = !!C.ArousalZoom;
@@ -29,9 +26,7 @@ export default function numericArousalMeters() {
   SDK.hookFunction(
     "DrawArousalThermometer",
     HOOK_PRIORITIES.Observe,
-    /**
-     * @param {Parameters<typeof DrawArousalThermometer>} args
-     */ (args, next) => {
+    (args, next) => {
       const ret = next(args);
       if (fbcSettings.numericArousalMeter && isExpanded) {
         const [x, y, zoom, progress] = args;

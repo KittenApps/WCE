@@ -28,7 +28,7 @@ const LICENSE = `/**
 const URL = process.env.CONTEXT === 'production' ? process.env.URL : process.env.DEPLOY_PRIME_URL;
 
 export default {
-  input: 'src/index.js',
+  input: 'src/index.ts',
   output: { 
     dir: 'dist',
     entryFileNames: 'wce.js',

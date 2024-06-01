@@ -8,9 +8,6 @@ export default function chatRoomWhisperFixes() {
   SDK.hookFunction(
     "ChatRoomMessageDisplay",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ChatRoomMessageDisplay>} args
-     */
     (args, next) => {
       if (fbcSettings.whisperTargetFixes && args[0].Type === "Action" && args[0].Sender === ChatRoomTargetMemberNumber) {
         if (["ServerLeave", "ServerBan", "ServerKick", "ServerDisconnect"].some((m) => args[0].Content.startsWith(m))) {

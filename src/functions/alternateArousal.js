@@ -85,9 +85,6 @@ export default async function alternateArousal() {
   SDK.hookFunction(
     "ActivityChatRoomArousalSync",
     HOOK_PRIORITIES.Observe,
-    /**
-     * @param {Parameters<typeof ActivityChatRoomArousalSync>} args
-     */
     (args, next) => {
       const [C] = args;
       if (isCharacter(C) && C.IsPlayer() && CurrentScreen === "ChatRoom") {
@@ -117,9 +114,6 @@ export default async function alternateArousal() {
   SDK.hookFunction(
     "ActivitySetArousal",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ActivitySetArousal>} args
-     */
     (args, next) => {
       const [C, Progress] = args;
       const ret = next(args);
@@ -133,9 +127,6 @@ export default async function alternateArousal() {
   SDK.hookFunction(
     "ActivitySetArousalTimer",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ActivitySetArousalTimer>} args
-     */
     (args, next) => {
       const [C, , , Factor] = args;
       if (isCharacter(C) && typeof Factor === "number") {
@@ -148,9 +139,6 @@ export default async function alternateArousal() {
   SDK.hookFunction(
     "ActivityTimerProgress",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ActivityTimerProgress>} args
-     */
     (args, next) => {
       const [C, progress] = args;
       if (isCharacter(C) && typeof progress === "number") {

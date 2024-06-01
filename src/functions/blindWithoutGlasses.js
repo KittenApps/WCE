@@ -40,9 +40,7 @@ export default async function blindWithoutGlasses() {
   SDK.hookFunction(
     "CharacterAppearanceBuildCanvas",
     HOOK_PRIORITIES.Observe,
-    /**
-     * @param {Parameters<typeof CharacterAppearanceBuildCanvas>} args
-     */ (args, next) => {
+    (args, next) => {
       if (fbcSettings.blindWithoutGlasses && args[0].IsPlayer()) checkBlindness();
       return next(args);
     }

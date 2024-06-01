@@ -38,9 +38,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "CharacterAppearanceWardrobeLoad",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof CharacterAppearanceWardrobeLoad>} args
-     */
     (args, next) => {
       const [C] = args;
       if (fbcSettings.privateWardrobe && CurrentScreen === "Appearance") {
@@ -56,9 +53,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "AppearanceLoad",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof AppearanceLoad>} args
-     */
     (args, next) => {
       const ret = next(args);
       if (inCustomWardrobe) {
@@ -71,9 +65,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "AppearanceRun",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof AppearanceRun>} args
-     */
     (args, next) => {
       if (CharacterAppearanceMode === "Wardrobe" && currentWardrobeTargetIsPlayer()) {
         DrawCheckbox(1300, 350, 64, 64, "", excludeBodyparts, false, "white");
@@ -86,9 +77,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "AppearanceClick",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof AppearanceClick>} args
-     */
     (args, next) => {
       if (CharacterAppearanceMode === "Wardrobe" && MouseIn(1300, 350, 64, 64) && currentWardrobeTargetIsPlayer()) {
         excludeBodyparts = !excludeBodyparts;
@@ -101,9 +89,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "WardrobeLoad",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof WardrobeLoad>} args
-     */
     (args, next) => {
       appearanceBackup = CharacterAppearanceBackup;
       return next(args);
@@ -113,9 +98,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "WardrobeRun",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof WardrobeRun>} args
-     */
     (args, next) => {
       const playerBackup = Player;
       // Replace Player with target character in rendering
@@ -137,9 +119,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "WardrobeClick",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof WardrobeClick>} args
-     */
     (args, next) => {
       if (MouseIn(10, 74, 64, 64)) {
         excludeBodyparts = !excludeBodyparts;
@@ -152,9 +131,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "WardrobeExit",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof WardrobeExit>} args
-     */
     (args, next) => {
       if (!inCustomWardrobe) {
         return next(args);
@@ -168,9 +144,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "WardrobeFastLoad",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof WardrobeFastLoad>} args
-     */
     (args, next) => {
       let [C] = args;
       const base = C.Appearance.filter((a) => a.Asset.Group.IsDefault && !a.Asset.Group.Clothing);
@@ -194,9 +167,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "WardrobeFastSave",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof WardrobeFastSave>} args
-     */
     (args, next) => {
       const [C] = args;
       if (inCustomWardrobe && isCharacter(C) && C.IsPlayer()) {
@@ -218,9 +188,6 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "ServerPlayerIsInChatRoom",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ServerPlayerIsInChatRoom>} args
-     */
     (args, next) => (inCustomWardrobe && CharacterAppearanceReturnRoom === "ChatRoom") || next(args)
   );
 

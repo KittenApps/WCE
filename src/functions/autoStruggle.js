@@ -6,9 +6,6 @@ export default function autoStruggle() {
   SDK.hookFunction(
     "StruggleFlexibilityCheck",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof StruggleFlexibilityCheck>} args
-     */
     (args, next) => {
       if (fbcSettings.autoStruggle) {
         if (StruggleProgressFlexCircles && StruggleProgressFlexCircles.length > 0) {

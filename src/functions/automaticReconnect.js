@@ -137,9 +137,7 @@ export default async function automaticReconnect() {
     SDK.hookFunction(
       "LoginRun",
       HOOK_PRIORITIES.Top,
-      /**
-       * @param {Parameters<typeof LoginRun>} args
-       */ (args, next) => {
+      (args, next) => {
         const ret = next(args);
         if (Object.keys(loginData.passwords).length > 0) {
           DrawText(displayText("Saved Logins (WCE)"), 170, 35, "White", "Black");
@@ -163,9 +161,7 @@ export default async function automaticReconnect() {
     SDK.hookFunction(
       "LoginClick",
       HOOK_PRIORITIES.Top,
-      /**
-       * @param {Parameters<typeof LoginClick>} args
-       */ (args, next) => {
+      (args, next) => {
         const ret = next(args);
         if (MouseIn(1250, 385, 180, 60)) {
           bceUpdatePasswordForReconnect();
@@ -253,9 +249,7 @@ export default async function automaticReconnect() {
   SDK.hookFunction(
     "RelogRun",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof RelogRun>} args
-     */ (args, next) => {
+    (args, next) => {
       const forbiddenReasons = ["ErrorDuplicatedLogin"];
       if (!forbiddenReasons.includes(LoginErrorMessage)) {
         relog();
@@ -283,9 +277,7 @@ export default async function automaticReconnect() {
   SDK.hookFunction(
     "RelogExit",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof RelogExit>} args
-     */ (args, next) => {
+    (args, next) => {
       breakCircuit = false;
       breakCircuitFull = false;
       return next(args);
@@ -299,9 +291,6 @@ export default async function automaticReconnect() {
   SDK.hookFunction(
     "ServerDisconnect",
     HOOK_PRIORITIES.ModifyBehaviourHigh,
-    /**
-     * @param {Parameters<typeof ServerDisconnect>} args
-     */
     (args, next) => {
       const [, force] = args;
       args[1] = false;

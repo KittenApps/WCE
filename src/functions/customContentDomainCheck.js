@@ -41,9 +41,6 @@ export default function customContentDomainCheck() {
   SDK.hookFunction(
     "ChatAdminRoomCustomizationProcess",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof ChatAdminRoomCustomizationProcess>} args
-     */
     (args, next) => {
       if (!fbcSettings.customContentDomainCheck) {
         return next(args);
@@ -79,9 +76,6 @@ export default function customContentDomainCheck() {
   SDK.hookFunction(
     "ChatAdminRoomCustomizationClick",
     HOOK_PRIORITIES.Observe,
-    /**
-     * @param {Parameters<typeof ChatAdminRoomCustomizationClick>} args
-     */
     (args, next) => {
       for (const s of [ElementValue("InputImageURL").trim(), ElementValue("InputMusicURL").trim()]) {
         try {

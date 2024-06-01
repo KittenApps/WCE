@@ -1,17 +1,11 @@
 import { logWarn, logError } from "./logger";
 
-/**
- * @param {number} ms
- */
-export function sleep(ms) {
+export function sleep(ms: number): Promise<number> {
   // eslint-disable-next-line no-promise-executor-return
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
-/**
- * @type {(func: () => boolean, cancelFunc?: () => boolean) => Promise<boolean>}
- */
-export async function waitFor(func, cancelFunc = () => false) {
+export async function waitFor(func: () => boolean, cancelFunc: () => boolean = () => false): Promise<boolean> {
   while (!func()) {
     if (cancelFunc()) {
       return false;
@@ -22,18 +16,15 @@ export async function waitFor(func, cancelFunc = () => false) {
   return true;
 }
 
-/** @type {(s: unknown) => s is string} */
-export function isString(s) {
+export function isString(s: unknown): s is string {
   return typeof s === "string";
 }
 
-/** @type {(o: unknown) => o is Record<string, any>} */
-export function isNonNullObject(o) {
+export function isNonNullObject(o: unknown): o is Record<string, unknown> {
   return !!o && typeof o === "object" && !Array.isArray(o);
 }
 
-/** @type {(m: unknown) => m is ServerChatRoomMessage} */
-export function isChatMessage(m) {
+export function isChatMessage(m: unknown): m is ServerChatRoomMessage {
   return (
     isNonNullObject(m) &&
     typeof m.Type === "string" &&
@@ -41,28 +32,19 @@ export function isChatMessage(m) {
   );
 }
 
-/** @type {(c: unknown) => c is Character} */
-export function isCharacter(c) {
+export function isCharacter(c: unknown): c is Character {
   return isNonNullObject(c) && typeof c.IsPlayer === "function";
 }
 
-/** @type {(c: unknown) => c is (string | string[])} */
-export function isStringOrStringArray(c) {
+export function isStringOrStringArray(c: unknown): c is (string | string[]) {
   return isString(c) || (Array.isArray(c) && c.every(isString));
 }
 
-/** @type {(o: unknown) => o is ItemBundle[][]} */
-export function isWardrobe(o) {
+export function isWardrobe(o: unknown): o is ItemBundle[][] {
   return Array.isArray(o) && o.every((b) => isItemBundleArray(b) || b === null);
 }
 
-/** @type {(o: unknown) => o is ItemBundle[]} */
-function isItemBundleArray(o) {
-  return Array.isArray(o) && o.every(isItemBundle);
-}
-
-/** @type {(o: unknown) => o is ItemBundle} */
-function isItemBundle(o) {
+function isItemBundle(o: unknown): o is ItemBundle {
   return (
     isNonNullObject(o) &&
     typeof o.Name === "string" &&
@@ -70,52 +52,38 @@ function isItemBundle(o) {
   );
 }
 
-/**
- * @param {number} [id]
- * @param {number} [def]
- */
-export function mustNum(id, def = -Number.MAX_SAFE_INTEGER) {
+function isItemBundleArray(o: unknown): o is ItemBundle[] {
+  return Array.isArray(o) && o.every(isItemBundle);
+}
+
+export function mustNum(id: number, def: number = -Number.MAX_SAFE_INTEGER): number {
   return id ?? def;
 }
 
-/** @type {<T>(o: T) => T} */
-export function deepCopy(o) {
+export function deepCopy<T>(o: T): T {
   return structuredClone(o);
 }
 
-/**
- * @template T
- * @param {T} obj
- */
-export function objEntries(obj) {
+export function objEntries<T>(obj: T): [keyof T, T[keyof T]][] {
   if (!isNonNullObject(obj)) {
     return [];
   }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return /** @type {[keyof T, T[keyof T]][]} */ (Object.entries(obj));
+  return Object.entries(obj) as [keyof T, T[keyof T]][];
 }
 
-/**
- * @template T
- * @param {string | null} jsonString
- * @throws {SyntaxError} If the string to parse is not valid JSON.
- */
-export function parseJSON(jsonString) {
+export function parseJSON<T>(jsonString: string | null): T {
   if (jsonString === null) {
     return null;
   }
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return /** @type {T} */ (/** @type {unknown} */ (JSON.parse(jsonString)));
+    return JSON.parse(jsonString) as T;
   } catch (e) {
     logError("parsing JSON", e);
     return null;
   }
 }
 
-/** @type {(text: string, x: number, y: number, width: number, color: string, backColor?: string) => void} */
-// eslint-disable-next-line no-undefined
-export function drawTextFitLeft(text, x, y, width, color, backColor = undefined) {
+export function drawTextFitLeft(text: string, x: number, y: number, width: number, color: string, backColor?: string): void {
   const ctx = window.MainCanvas.getContext("2d");
   if (!ctx) {
     throw new Error("could not get canvas 2d context");
@@ -126,8 +94,7 @@ export function drawTextFitLeft(text, x, y, width, color, backColor = undefined)
   ctx.textAlign = bk;
 }
 
-/** @type {(x: number, y: number, width: number, text: string, align: "left" | "center") => void} */
-export function drawTooltip(x, y, width, text, align) {
+export function drawTooltip(x: number, y: number, width: number, text: string, align: CanvasTextAlign): void {
   const canvas = window.MainCanvas.getContext("2d");
   if (!canvas) {
     throw new Error("could not get canvas 2d context");
@@ -140,10 +107,7 @@ export function drawTooltip(x, y, width, text, align) {
   canvas.textAlign = bak;
 }
 
-/**
- * @type {(node: HTMLElement | HTMLElement[] | string) => void}
- */
-export const fbcChatNotify = (node) => {
+export function fbcChatNotify(node: HTMLElement | HTMLElement[] | string): void {
   const div = document.createElement("div");
   div.setAttribute("class", "ChatMessage bce-notification");
   div.setAttribute("data-time", ChatRoomCurrentTime());
@@ -159,10 +123,7 @@ export const fbcChatNotify = (node) => {
   ChatRoomAppendChat(div);
 };
 
-/**
- * @type {(text: string, duration?: number, properties?: Partial<ServerBeep>) => Promise<void>}
- */
-export const fbcNotify = async (text, duration = 5000, properties = {}) => {
+export async function fbcNotify(text: string, duration: number = 5000, properties: Partial<ServerBeep> = {}) {
   await waitFor(() => !!Player && new Date(ServerBeep?.Timer || 0) < new Date());
 
   ServerBeep = {
@@ -172,8 +133,7 @@ export const fbcNotify = async (text, duration = 5000, properties = {}) => {
   };
 };
 
-/** @type {(text: string) => void} */
-export const fbcSendAction = (text) => {
+export function fbcSendAction(text: string): void {
   ServerSend("ChatRoomChat", {
     Content: "Beep",
     Type: "Action",
@@ -192,8 +152,7 @@ export const fbcSendAction = (text) => {
   });
 };
 
-/** @type {(effect: EffectName) => boolean} */
-export function addCustomEffect(effect) {
+export function addCustomEffect(effect: EffectName): boolean {
   let updated = false;
   const pronouns = Player.Appearance.find((a) => a.Asset.Group.Name === "Pronouns");
   if (!pronouns) {
@@ -216,8 +175,7 @@ export function addCustomEffect(effect) {
   return updated;
 }
 
-/** @type {(effect: EffectName) => boolean} */
-export function removeCustomEffect(effect) {
+export function removeCustomEffect(effect: EffectName): boolean {
   const pronouns = Player.Appearance.find((a) => a.Asset.Group.Name === "Pronouns");
   let updated = false;
   if (pronouns?.Property?.Effect?.includes(effect)) {
@@ -230,10 +188,10 @@ export function removeCustomEffect(effect) {
   return updated;
 }
 
-export function enableLeashing() {
+export function enableLeashing(): void {
   addCustomEffect("Leash");
 }
 
-export function disableLeashing() {
+export function disableLeashing(): void {
   removeCustomEffect("Leash");
 }

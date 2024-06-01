@@ -5,9 +5,6 @@ export default function chatRoomOverlay() {
   SDK.hookFunction(
     "ChatRoomDrawCharacterStatusIcons",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof ChatRoomDrawCharacterStatusIcons>} args
-     */
     (args, next) => {
       const ret = next(args);
       const [C, CharX, CharY, Zoom] = args;

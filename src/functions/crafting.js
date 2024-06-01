@@ -51,9 +51,6 @@ export default async function crafting() {
   SDK.hookFunction(
     "CraftingClick",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof CraftingClick>} args
-     */
     (args, next) => {
       switch (CraftingMode) {
         case "Name":
@@ -83,9 +80,6 @@ export default async function crafting() {
   SDK.hookFunction(
     "CraftingRun",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof CraftingRun>} args
-     */
     (args, next) => {
       const ret = next(args);
       if (CraftingMode === "Name") {
@@ -99,9 +93,6 @@ export default async function crafting() {
   SDK.hookFunction(
     "DrawItemPreview",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof DrawItemPreview>} args
-     */
     (args, next) => {
       const ret = next(args);
       const [item, , x, y] = args;

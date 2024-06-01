@@ -1,10 +1,7 @@
-/**
- * @param {string} gameVersion
- */
-export const expectedHashes = (gameVersion) => {
+export function expectedHashes(gameVersion: string): Readonly<Record<string, string>> {
   switch (gameVersion.toLowerCase()) {
     default:
-      return /** @type {const} */ ({
+      return {
         ActivityChatRoomArousalSync: "BFF3DED7",
         ActivitySetArousal: "3AE28123",
         ActivitySetArousalTimer: "1342AFE2",
@@ -149,6 +146,6 @@ export const expectedHashes = (gameVersion) => {
         WardrobeLoad: "C343A4C7",
         WardrobeLoadCharacterNames: "F39DF5E3",
         WardrobeRun: "633B3570",
-      });
+      } as const;
   }
 };

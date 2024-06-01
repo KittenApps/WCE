@@ -1,10 +1,8 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
+import { SDK, HOOK_PRIORITIES } from "./modding";
 
-/** @type {{ lastTime: number; cb: () => void; intval: number; }[]} */
-const timers = [];
+const timers: { lastTime: number; cb: () => void; intval: number; }[] = [];
 
-/** @type {(cb: () => void, intval: number) => (() => void)} */
-export function createTimer(cb, intval) {
+export function createTimer(cb: () => void, intval: number): () => void {
   timers.push({ cb, intval, lastTime: performance.now() });
   return () => {
     timers.splice(timers.findIndex((t) => t.cb === cb), 1);
@@ -14,9 +12,6 @@ export function createTimer(cb, intval) {
 SDK.hookFunction(
   "GameRun",
   HOOK_PRIORITIES.Top,
-  /**
-   * @param {Parameters<typeof GameRun>} args
-   */
   (args, next) => {
     const ts = performance.now();
     timers.forEach((t) => {
@@ -29,10 +24,7 @@ SDK.hookFunction(
   }
 );
 
-/**
- * @type {(title: string, text: string) => void}
- */
-export function fbcBeepNotify(title, text) {
+export function fbcBeepNotify(title: string, text: string) {
   SDK.callOriginal("ServerAccountBeep", [
     {
       MemberNumber: Player.MemberNumber || -1,

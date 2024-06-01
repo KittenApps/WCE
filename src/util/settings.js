@@ -780,7 +780,7 @@ export function settingsLoaded() {
 const bceSettingKey = () => `bce.settings.${Player?.AccountName}`;
 
 /**
- * @type {() => Promise<typeof fbcSettings>}
+ * @type {() => Promise<void>}
  */
 export async function bceLoadSettings() {
   await waitFor(() => !!Player?.AccountName);
@@ -842,9 +842,7 @@ export async function bceLoadSettings() {
     }
     settings.version = settingsVersion;
     fbcSettings = settings;
-    return settings;
   }
-  return fbcSettings;
 };
 
 export function bceSaveSettings() {

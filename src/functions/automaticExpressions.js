@@ -35,9 +35,6 @@ export default async function automaticExpressions() {
   SDK.hookFunction(
     "PreferenceSubscreenArousalClick",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof PreferenceSubscreenArousalClick>} args
-     */
     (args, next) => {
       if (fbcSettings.animationEngine && PreferenceArousalIsActive() && MouseIn(1250, 276, 64, 64)) return null;
       return next(args);
@@ -57,9 +54,6 @@ export default async function automaticExpressions() {
   SDK.hookFunction(
     "StruggleMinigameStop",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof StruggleMinigameStop>} args
-     */
     (args, next) => {
       if (fbcSettings.animationEngine) {
         // eslint-disable-next-line no-undefined
@@ -1567,9 +1561,6 @@ export default async function automaticExpressions() {
   SDK.hookFunction(
     "CharacterSetFacialExpression",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof CharacterSetFacialExpression>} args
-     */
     (args, next) => {
       // eslint-disable-next-line prefer-const
       let [C, AssetGroup, Expression, Timer, Color] = args;
@@ -1624,9 +1615,6 @@ export default async function automaticExpressions() {
     SDK.hookFunction(
       poseFunc,
       HOOK_PRIORITIES.OverrideBehaviour,
-      /**
-       * @param {Parameters<typeof PoseSetActive>} args
-       */
       (args, next) => {
         const [C, Pose] = args;
         if (

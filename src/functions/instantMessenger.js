@@ -438,7 +438,6 @@ export default function instantMessenger() {
   SDK.hookFunction(
     "ServerAccountBeep",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /** @type {(args: [ServerAccountBeepResponse], next: (args: [ServerAccountBeepResponse]) => void) => void} */
     (args, next) => {
       const [beep] = args;
       if (beep && isNonNullObject(beep) && !beep.BeepType && fbcSettings.instantMessenger) {
@@ -451,9 +450,6 @@ export default function instantMessenger() {
   SDK.hookFunction(
     "ServerSend",
     HOOK_PRIORITIES.Observe,
-    /**
-     * @param {Parameters<typeof ServerSend>} args
-     */
     (args, next) => {
       const [command, b] = args;
       if (command !== "AccountBeep") {
@@ -481,9 +477,6 @@ export default function instantMessenger() {
   SDK.hookFunction(
     "DrawProcess",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof DrawProcess>} args
-     */
     (args, next) => {
       next(args);
       if (fbcSettings.instantMessenger) {
@@ -520,9 +513,6 @@ export default function instantMessenger() {
   SDK.hookFunction(
     "CommonClick",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof CommonClick>} args
-     */
     (args, next) => {
       if (fbcSettings.instantMessenger && MouseIn(...buttonPosition())) {
         if (!container.classList.contains("bce-hidden")) {
@@ -544,9 +534,6 @@ export default function instantMessenger() {
   SDK.hookFunction(
     "NotificationRaise",
     HOOK_PRIORITIES.ModifyBehaviourHigh,
-    /**
-     * @param {Parameters<typeof NotificationRaise>} args
-     */
     (args, next) => {
       if (args[0] === "Beep" && args[1]?.body) {
         args[1].body = bceStripBeepMetadata(args[1].body);

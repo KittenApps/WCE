@@ -112,9 +112,6 @@ export default async function pastProfiles() {
   SDK.hookFunction(
     "ChatRoomSync",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof ChatRoomSync>} args
-     */
     (args, next) => {
       const [data] = args;
       if (data?.Character?.length) {
@@ -129,9 +126,6 @@ export default async function pastProfiles() {
   SDK.hookFunction(
     "ChatRoomSyncSingle",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof ChatRoomSyncSingle>} args
-     */
     (args, next) => {
       const [data] = args;
       if (data?.Character?.MemberNumber) {
@@ -144,9 +138,6 @@ export default async function pastProfiles() {
   SDK.hookFunction(
     "InformationSheetRun",
     HOOK_PRIORITIES.AddBehaviour,
-    /**
-     * @param {Parameters<typeof InformationSheetRun>} args
-     */
     (args, next) => {
       if (!InformationSheetSelection) {
         throw new Error("InformationSheetSelection is null in InformationSheetRun");
@@ -283,9 +274,6 @@ export default async function pastProfiles() {
   SDK.hookFunction(
     "CharacterLoadOnline",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof CharacterLoadOnline>} args
-     */
     (args, next) => {
       const C = next(args);
       if (isCharacter(C) && C.MemberNumber) {
@@ -317,9 +305,6 @@ export default async function pastProfiles() {
   SDK.hookFunction(
     "OnlineProfileRun",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof OnlineProfileRun>} args
-     */
     (args, next) => {
       if (inNotes) {
         DrawText(displayText("Personal notes (only you can read these):"), 910, 105, "Black", "Gray");
@@ -349,9 +334,6 @@ export default async function pastProfiles() {
   SDK.hookFunction(
     "OnlineProfileClick",
     HOOK_PRIORITIES.OverrideBehaviour,
-    /**
-     * @param {Parameters<typeof OnlineProfileClick>} args
-     */
     (args, next) => {
       if (inNotes) {
         if (MouseIn(1720, 60, 90, 90)) {

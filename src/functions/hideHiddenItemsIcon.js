@@ -5,9 +5,6 @@ export default function hideHiddenItemsIcon() {
   SDK.hookFunction(
     "DrawCharacter",
     HOOK_PRIORITIES.ModifyBehaviourLow,
-    /**
-     * @param {Parameters<typeof DrawCharacter>} args
-     */
     (args, next) => {
       const [c] = args;
       if (!c || !fbcSettings.hideHiddenItemsIcon) {

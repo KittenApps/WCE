@@ -7,9 +7,6 @@ export default function antiGarbling() {
   SDK.hookFunction(
     "ChatRoomGenerateChatRoomChatMessage",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof ChatRoomGenerateChatRoomChatMessage>} args
-     */
     (args, next) => {
       if (!fbcSettings.antiGarble) return next(args);
       const [type, msg] = args;
@@ -58,9 +55,6 @@ export default function antiGarbling() {
   SDK.hookFunction(
     "ChatRoomRun",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
-    /**
-     * @param {Parameters<typeof ChatRoomRun>} args
-     */
     (args, next) => {
       const ret = next(args);
       if (fbcSettings.antiGarbleChatOptions) {
@@ -125,9 +119,6 @@ export default function antiGarbling() {
   SDK.hookFunction(
     "ChatRoomClick",
     HOOK_PRIORITIES.ModifyBehaviourHigh,
-    /**
-     * @param {Parameters<typeof ChatRoomClick>} args
-     */
     (args, next) => {
       if (fbcSettings.antiGarbleChatOptions && MouseIn(1810, 878, 185, 120)) {
         if (MouseIn(1845, 928, 150, 70)) return ChatRoomSendChat();
