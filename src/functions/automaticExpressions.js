@@ -1280,7 +1280,7 @@ export default async function automaticExpressions() {
     return dict?.some((t) => t && "TargetCharacter" in t && t.TargetCharacter === Player.MemberNumber) || false;
   }
 
-  registerSocketListener("ChatRoomMessage", (data) => {
+  registerSocketListener("ChatRoomMessage", (/** @type {ServerChatRoomMessage} */ data) => {
     activityTriggers: for (const trigger of globalThis.bce_ActivityTriggers.filter((t) => t.Type === data.Type)) {
       for (const matcher of trigger.Matchers) {
         if (matcher.Tester.test(data.Content)) {
@@ -1646,7 +1646,7 @@ export default async function automaticExpressions() {
     );
   }
 
-  registerSocketListener("ChatRoomSyncPose", (data) => {
+  registerSocketListener("ChatRoomSyncPose", (/** @type {ServerCharacterPoseResponse} */ data) => {
     if (data === null || !isNonNullObject(data)) {
       return;
     }
@@ -1662,7 +1662,7 @@ export default async function automaticExpressions() {
     }
   });
 
-  registerSocketListener("ChatRoomSyncSingle", (data) => {
+  registerSocketListener("ChatRoomSyncSingle", (/** @type {ServerChatRoomSyncCharacterResponse} */ data) => {
     if (data === null || !isNonNullObject(data)) {
       return;
     }

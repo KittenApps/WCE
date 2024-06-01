@@ -5,7 +5,7 @@ import { fbcSettings } from "../util/settings";
 
 export default async function autoGhostBroadcast() {
   await waitFor(() => !!ServerSocket && ServerIsConnected);
-  registerSocketListener("ChatRoomSyncMemberJoin", (data) => {
+  registerSocketListener("ChatRoomSyncMemberJoin", (/** @type {ServerChatRoomSyncMemberJoinResponse} */ data) => {
     if (fbcSettings.ghostNewUsers && Date.now() - data.Character.Creation < 30000) {
       ChatRoomListManipulation(Player.BlackList, true, data.Character.MemberNumber.toString());
       if (!Player.GhostList) {

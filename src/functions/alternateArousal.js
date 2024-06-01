@@ -12,35 +12,29 @@ export default async function alternateArousal() {
   Player.BCEEnjoyment = 1;
   const enjoymentMultiplier = 0.2;
 
-  registerSocketListener(
-    "ChatRoomSyncArousal",
-    (
-      /** @type {{ MemberNumber: number; Progress: number; }} */
-      data
-    ) => {
-      if (data.MemberNumber === Player.MemberNumber) {
-        // Skip player's own sync messages since we're tracking locally
-        return;
-      }
-
-      const target = ChatRoomCharacter.find((c) => c.MemberNumber === data.MemberNumber);
-
-      if (!target) {
-        return;
-      }
-
-      queueMicrotask(() => {
-        target.BCEArousalProgress = Math.min(BCE_MAX_AROUSAL, data.Progress || 0);
-
-        if (!target?.ArousalSettings) {
-          logWarn("No arousal settings found for", target);
-          return;
-        }
-
-        target.ArousalSettings.Progress = Math.round(target.BCEArousalProgress);
-      });
+  registerSocketListener("ChatRoomSyncArousal", (/** @type {ServerCharacterArousalResponse} */ data) => {
+    if (data.MemberNumber === Player.MemberNumber) {
+      // Skip player's own sync messages since we're tracking locally
+      return;
     }
-  );
+
+    const target = ChatRoomCharacter.find((c) => c.MemberNumber === data.MemberNumber);
+
+    if (!target) {
+      return;
+    }
+
+    queueMicrotask(() => {
+      target.BCEArousalProgress = Math.min(BCE_MAX_AROUSAL, data.Progress || 0);
+
+      if (!target?.ArousalSettings) {
+        logWarn("No arousal settings found for", target);
+        return;
+      }
+
+      target.ArousalSettings.Progress = Math.round(target.BCEArousalProgress);
+    });
+  });
 
   patchFunction(
     "ActivitySetArousalTimer",

@@ -87,24 +87,21 @@ export default async function hiddenMessageHandler() {
     sender.FBCOtherAddons = message.otherAddons;
   }
 
-  registerSocketListener(
-    "ChatRoomMessage",
-    (data) => {
-      if (data.Type !== HIDDEN) {
+  registerSocketListener("ChatRoomMessage",(/** @type {ServerChatRoomMessage} */ data) => {
+    if (data.Type !== HIDDEN) {
+      return;
+    }
+    if (data.Content === "BCEMsg") {
+      const sender = Character.find((a) => a.MemberNumber === data.Sender);
+      if (!sender) {
         return;
       }
-      if (data.Content === "BCEMsg") {
-        const sender = Character.find((a) => a.MemberNumber === data.Sender);
-        if (!sender) {
-          return;
-        }
-        const message = parseBCEMessage(data);
-        processBCEMessage(sender, message);
-      }
+      const message = parseBCEMessage(data);
+      processBCEMessage(sender, message);
     }
-  );
+  });
 
-  registerSocketListener("ChatRoomSyncMemberJoin", (data) => {
+  registerSocketListener("ChatRoomSyncMemberJoin", (/** @type {ServerChatRoomSyncMemberJoinResponse} */ data) => {
     if (data.SourceMemberNumber !== Player.MemberNumber) {
       sendHello(data.SourceMemberNumber);
     }

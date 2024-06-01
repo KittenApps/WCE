@@ -382,7 +382,7 @@ export default function instantMessenger() {
     sortIM();
   };
 
-  registerSocketListener("AccountQueryResult", (data) => {
+  registerSocketListener("AccountQueryResult", (/** @type {ServerAccountQueryResponse} */ data) => {
     if (data.Query !== "OnlineFriends") {
       return;
     }

@@ -26,7 +26,7 @@ export default async function friendPresenceNotifications() {
 
   /** @type {Friend[]} */
   let lastFriends = [];
-  registerSocketListener("AccountQueryResult", (data) => {
+  registerSocketListener("AccountQueryResult", (/** @type {ServerAccountQueryResponse} */ data) => {
     if (CurrentScreen === "FriendList" || CurrentScreen === "Relog" || CurrentScreen === "Login") {
       return;
     }
