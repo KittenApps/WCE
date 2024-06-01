@@ -3,15 +3,15 @@ import { fbcSettings, defaultSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 import { stutterWord } from "./chatAugments";
 
-export default function antiGarbling() {
+export default function antiGarbling(): void {
   SDK.hookFunction(
     "ChatRoomGenerateChatRoomChatMessage",
     HOOK_PRIORITIES.Top,
     (args, next) => {
       if (!fbcSettings.antiGarble) return next(args);
       const [type, msg] = args;
-      let process = { effects: [], text: msg };
-      let originalMsg;
+      let process: {effects: SpeechTransformName[]; text: string;} = { effects: [], text: msg };
+      let originalMsg: string;
 
       if (type !== "Whisper" || fbcSettings.antiGarbleWhisperLevel !== "off") {
         process = SpeechTransformProcess(Player, msg, SpeechTransformSenderEffects);
@@ -43,7 +43,7 @@ export default function antiGarbling() {
         if (process.text === originalMsg) originalMsg = undefined;
       }
 
-      const Dictionary = [{ Effects: process.effects, Original: originalMsg }];
+      const Dictionary: ChatMessageDictionary = [{ Effects: process.effects, Original: originalMsg }];
       return { Content: process.text, Type: type, Dictionary };
     }
   );
@@ -170,7 +170,7 @@ export default function antiGarbling() {
   ChatRoomRegisterMessageHandler({
     Description: "show OriginalMsg while deafened",
     Priority: 90,
-    Callback: (data, sender, msg, metadata) => {
+    Callback: (data, _, msg, metadata) => {
       if (data.Type === "Chat" && fbcSettings.antiDeaf && Player.GetDeafLevel() > 0) {
         metadata.OriginalMsg = msg;
       }
