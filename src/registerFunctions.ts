@@ -2,7 +2,7 @@ import { SDK, HOOK_PRIORITIES } from "./util/modding";
 import { debug, logError } from "./util/logger";
 import { fbcSettings, postSettings, bceLoadSettings } from "./util/settings";
 import functionIntegrityCheck from "./functions/functionIntegrityCheck";
-import bceStyles from "./functions/bceStyles";
+import wceStyles from "./functions/wceStyles";
 import commonPatches from "./functions/commonPatches";
 import beepImprovements from "./functions/beepImprovements";
 import commands from "./functions/commands";
@@ -108,7 +108,7 @@ export async function registerAllFunctions(): Promise<void>  {
   );
 
   await registerFunction(functionIntegrityCheck, "functionIntegrityCheck");
-  registerFunction(bceStyles, "bceStyles");
+  registerFunction(wceStyles, "wceStyles");
   registerFunction(commonPatches, "commonPatches");
   registerFunction(extendedWardrobe, "extendedWardrobe");
   registerFunction(allowCustomEffect, "allowCustomEffect");

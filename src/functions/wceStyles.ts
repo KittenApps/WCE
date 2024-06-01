@@ -2,7 +2,7 @@ import { BCE_COLOR_ADJUSTMENTS_CLASS_NAME, DARK_INPUT_CLASS, WHISPER_CLASS } fro
 
 const INPUT_WARN_CLASS = "bce-input-warn";
 
-export default function bceStyles() {
+export default function wceStyles(): void {
   const css = /* CSS */ `
   .bce-beep-link {
     text-decoration: none;

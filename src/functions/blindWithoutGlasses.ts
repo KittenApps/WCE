@@ -3,10 +3,10 @@ import { waitFor, fbcChatNotify, addCustomEffect, removeCustomEffect } from "../
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
-export default async function blindWithoutGlasses() {
+export default async function blindWithoutGlasses(): Promise<void> {
   await waitFor(() => !!Player && !!Player.Appearance);
 
-  function checkBlindness() {
+  function checkBlindness(): void {
     const glasses = [
         "Glasses1",
         "Glasses2",

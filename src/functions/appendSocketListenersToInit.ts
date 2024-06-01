@@ -18,7 +18,7 @@ export function registerSocketListener(event: ReservedOrUserEventNames<SocketRes
   return null;
 }
 
-export default function appendSocketListenersToInit() {
+export default function appendSocketListenersToInit(): void {
   // This will be called after reconnect, but not during initial load
   SDK.hookFunction(
     "ServerInit",
