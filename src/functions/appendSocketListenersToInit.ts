@@ -8,9 +8,9 @@ interface SocketReservedEvents {
 type EventNames<Map> = keyof Map & (string | symbol);
 type ReservedOrUserEventNames<ReservedEventsMap, UserEvents> = EventNames<ReservedEventsMap> | EventNames<UserEvents>;
 
-const listeners: [ReservedOrUserEventNames<SocketReservedEvents, ServerToClientEvents>, () => unknown][] = [];
+const listeners: [ReservedOrUserEventNames<SocketReservedEvents, ServerToClientEvents>, (...args: unknown[]) => unknown][] = [];
 
-export function registerSocketListener(event: ReservedOrUserEventNames<SocketReservedEvents, ServerToClientEvents>, cb: () => unknown) {
+export function registerSocketListener(event: ReservedOrUserEventNames<SocketReservedEvents, ServerToClientEvents>, cb: (...args: unknown[]) => unknown) {
   if (!listeners.some((l) => l[1] === cb)) {
     listeners.push([event, cb]);
     return ServerSocket.on(event, cb);

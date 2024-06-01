@@ -5,7 +5,7 @@ import { fbcSettings } from "../util/settings";
 
 export default async function autoGhostBroadcast() {
   await waitFor(() => !!ServerSocket && ServerIsConnected);
-  registerSocketListener("ChatRoomSyncMemberJoin", (/** @type {ServerChatRoomSyncMemberJoinResponse} */ data) => {
+  registerSocketListener("ChatRoomSyncMemberJoin", (data: ServerChatRoomSyncMemberJoinResponse) => {
     if (fbcSettings.ghostNewUsers && Date.now() - data.Character.Creation < 30000) {
       ChatRoomListManipulation(Player.BlackList, true, data.Character.MemberNumber.toString());
       if (!Player.GhostList) {
@@ -15,8 +15,7 @@ export default async function autoGhostBroadcast() {
       debug(
         "Blacklisted",
         data.Character.Name,
-        // @ts-ignore - CharacterNickname works with this too
-        CharacterNickname(data.Character),
+        CharacterNickname(CharacterLoadOnline(data.Character, data.SourceMemberNumber)),
         data.Character.MemberNumber,
         "registered",
         (Date.now() - data.Character.Creation) / 1000,
