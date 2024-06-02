@@ -5,9 +5,13 @@ import { displayText } from "../util/localization";
 import { logError } from "../util/logger";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 
-export const bceStartClubSlave = async () => {
-  const managementScreen = "Management";
+declare global {
+  interface DialogLine {
+    FBC: boolean;
+  }
+}
 
+export async function bceStartClubSlave(): Promise<void> {
   if (BCX?.getRuleState("block_club_slave_work")?.isEnforced) {
     fbcSendAction(
       displayText(`BCX rules forbid $PlayerName from becoming a Club Slave.`, {
@@ -32,7 +36,7 @@ export const bceStartClubSlave = async () => {
   ChatRoomClearAllElements();
   ServerSend("ChatRoomLeave", "");
   ChatRoomLeashPlayer = null;
-  CommonSetScreen("Room", managementScreen);
+  CommonSetScreen("Room", "Management");
 
   await waitFor(() => !!ManagementMistress);
   if (!ManagementMistress) {
@@ -47,13 +51,12 @@ export const bceStartClubSlave = async () => {
   );
   CharacterSetCurrent(ManagementMistress);
 
-  await waitFor(() => CurrentScreen !== managementScreen || !CurrentCharacter);
+  await waitFor(() => CurrentScreen !== "Management" || !CurrentCharacter);
 
   bceGotoRoom(room);
 };
 
-/** @type {(roomName: string) => void} */
-export function bceGotoRoom(roomName) {
+export function bceGotoRoom(roomName: string): void {
   ChatRoomJoinLeash = roomName;
   ChatRoomCharacter = [];
   DialogLeave();
@@ -67,12 +70,11 @@ export function bceGotoRoom(roomName) {
   }
 }
 
-export default async function forcedClubSlave() {
-  const patch = (async function patchDialog() {
-    await waitFor(
-      () =>
-        !!CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"] &&
-        CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"].length > 150
+export default async function forcedClubSlave(): Promise<void> {
+  async function patchDialog(): Promise<void> {
+    await waitFor(() =>
+      !!CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"] &&
+      CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"].length > 150
     );
 
     const clubSlaveDialog = [
@@ -97,16 +99,13 @@ export default async function forcedClubSlave() {
     const idx = CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"].findIndex((v) => v[0] === "160") + 1;
     CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"].splice(idx, 0, ...clubSlaveDialog);
 
-    /** @type {(c: Character) => void} */
-    const appendDialog = (c) => {
-      // @ts-ignore - FBC is not a valid property in the game, but we use it here to mark that we've already added the dialog
-      if (!c.Dialog || c.Dialog.some((v) => v.FBC)) {
+    function appendDialog(C: Character): void {
+      if (!C.Dialog || C.Dialog.some(v => v.FBC)) {
         return;
       }
-      c.Dialog.splice(
+      C.Dialog.splice(
         idx,
         0,
-        // @ts-ignore - FBC is not a valid property in the game, but we use it here to mark that we've already added the dialog
         ...clubSlaveDialog.map((v) => ({
           Stage: v[0],
           NextStage: v[1],
@@ -114,6 +113,8 @@ export default async function forcedClubSlave() {
           Result: v[3],
           Function: v[4] === "" ? null : `ChatRoom${v[4]}`,
           Prerequisite: v[5],
+          Group: null,
+          Trait: null,
           FBC: true,
         }))
       );
@@ -135,12 +136,12 @@ export default async function forcedClubSlave() {
         return ret;
       }
     );
-  })();
+  }
 
-  /** @type {() => void} */
-  function bceSendToClubSlavery() {
-    /** @type {ServerChatRoomMessage} */
-    const message = {
+  const patch = patchDialog();
+
+  function bceSendToClubSlavery(): void {
+    const message: ServerChatRoomMessage = {
       Type: HIDDEN,
       Content: BCE_MSG,
       Sender: Player.MemberNumber,
@@ -159,8 +160,7 @@ export default async function forcedClubSlave() {
     DialogLeave();
   }
 
-  /** @type {() => boolean} */
-  function bceCanSendToClubSlavery() {
+  function bceCanSendToClubSlavery(): boolean {
     const C = CurrentCharacter;
     if (!C) {
       return false;

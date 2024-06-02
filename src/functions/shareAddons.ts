@@ -3,33 +3,23 @@ import { waitFor } from "../util/utils";
 import { createTimer } from "../util/hooks";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 
-const CAPABILITIES = /** @type {const} */ (["clubslave"]);
+export function sendHello(target: number | null = null, requestReply: boolean = false): void {
+  if (!settingsLoaded()) return; // Don't send hello until settings are loaded
+  if (!ServerIsConnected || !ServerPlayerIsInChatRoom()) return; // Don't send hello if not in chat room
 
-/** @type {(target?: number | null, requestReply?: boolean) => void} */
-export function sendHello(target = null, requestReply = false) {
-  if (!settingsLoaded()) {
-    // Don't send hello until settings are loaded
-    return;
-  }
-  if (!ServerIsConnected || !ServerPlayerIsInChatRoom()) {
-    // Don't send hello if not in chat room
-    return;
-  }
-  /** @type {ServerChatRoomMessage} */
-  const message = {
+  const message: ServerChatRoomMessage = {
     Type: HIDDEN,
     Content: BCE_MSG,
     Sender: Player.MemberNumber,
     Dictionary: [],
   };
-  /** @type {FBCDictionaryEntry} */
-  const fbcMessage = {
+  const fbcMessage: FBCDictionaryEntry = {
     message: {
       type: MESSAGE_TYPES.Hello,
       version: FBC_VERSION,
       alternateArousal: !!fbcSettings.alternateArousal,
       replyRequested: requestReply,
-      capabilities: CAPABILITIES,
+      capabilities: ["clubslave"],
     },
   };
   if (target) {
@@ -45,11 +35,10 @@ export function sendHello(target = null, requestReply = false) {
 
   // @ts-ignore - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
   message.Dictionary.push(fbcMessage);
-
   ServerSend("ChatRoomChat", message);
 }
 
-export default function shareAddons() {
+export default function shareAddons(): void {
   waitFor(() => ServerIsConnected && ServerPlayerIsInChatRoom());
 
   sendHello(null, true);

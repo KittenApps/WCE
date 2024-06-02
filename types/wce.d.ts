@@ -46,7 +46,7 @@ declare global {
     FBC: string;
     FBCOtherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
     BCEArousal: boolean;
-    BCECapabilities: readonly string[];
+    BCECapabilities: readonly "clubslave"[];
     BCEArousalProgress: number;
     BCEEnjoyment: number;
     FBCNoteExists: boolean;
@@ -93,7 +93,7 @@ declare global {
   type BCEMessage = {
     type: string;
     version: string;
-    capabilities?: readonly string[];
+    capabilities?: readonly "clubslave"[];
     alternateArousal?: boolean;
     replyRequested?: boolean;
     progress?: number;
