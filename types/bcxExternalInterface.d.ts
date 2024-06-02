@@ -43,8 +43,8 @@ export interface BCX_RuleStateAPI_Generic {
   triggerAttempt(targetCharacter?: number | null, dictionary?: Record<string, string>): void;
 }
 
-// If using full BCX declarations (remove if not)
-export interface BCX_RuleStateAPI<ID extends BCX_Rule> extends BCX_RuleStateAPI_Generic {
+// If using full BCX declarations
+/* export interface BCX_RuleStateAPI<ID extends BCX_Rule> extends BCX_RuleStateAPI_Generic {
   readonly rule: ID;
   readonly ruleDefinition: RuleDisplayDefinition<ID>;
 
@@ -52,11 +52,11 @@ export interface BCX_RuleStateAPI<ID extends BCX_Rule> extends BCX_RuleStateAPI_
 
   readonly customData: ID extends keyof RuleCustomData ? (RuleCustomData[ID] | undefined) : undefined;
   readonly internalData: ID extends keyof RuleInternalData ? (RuleInternalData[ID] | undefined) : undefined;
-}
+} */
 
-// If not using full BCX declarations (uncomment if not)
-// type BCX_Rule = string;
-// type BCX_RuleStateAPI<ID extends BCX_Rule> = BCX_RuleStateAPI_Generic;
+// If not using full BCX declarations
+type BCX_Rule = string;
+type BCX_RuleStateAPI<ID extends BCX_Rule> = BCX_RuleStateAPI_Generic;
 
 //#endregion
 

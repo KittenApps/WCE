@@ -30,7 +30,6 @@ export default function antiGarbling(): void {
               originalMsg = SpeechTransformBabyTalk(originalMsg);
             }
             if (["low", "medium", "high"].includes(fbcSettings[`antiGarble${type}Level`])) {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               const int = Math.min(gagIntensity, { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]);
               originalMsg = SpeechTransformGagGarble(originalMsg, int);
             }
