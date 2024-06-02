@@ -216,8 +216,9 @@ export default async function commands(): Promise<void> {
           buttons: { submit: "Done" },
         });
 
-        await navigator.clipboard.writeText(exportString);
-        fbcChatNotify(displayText(`Exported looks for $TargetName copied to clipboard`, { $TargetName: targetName }));
+        navigator.clipboard.writeText(exportString).then(() => {
+          fbcChatNotify(displayText(`Exported looks for $TargetName copied to clipboard`, { $TargetName: targetName }));
+        });
       },
     },
     {

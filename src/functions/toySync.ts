@@ -3,13 +3,11 @@ import { fbcSettings } from "../util/settings";
 import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { displayText } from "../util/localization";
 import { fbcChatNotify } from "../util/utils";
+import type { ButtplugClientDevice } from "buttplug";
 
-/** @type {FBCToySyncState} */
-export const toySyncState = {
-  deviceSettings: new Map(),
-};
+export const toySyncState: FBCToySyncState = { deviceSettings: new Map() };
 
-export default async function toySync() {
+export default async function toySync(): Promise<void> {
   // Handles synchronizing in-game vibrators with real bluetooth devices via buttplut.io
   if (!fbcSettings.toySync) {
     return;
@@ -22,41 +20,24 @@ export default async function toySync() {
   const client = new ButtplugClient("WCE Toy Sync");
   client.addListener(
     "deviceadded",
-    /**
-     * @param {import("buttplug").ButtplugClientDevice} device
-     */
-    (device) => {
+    (device: ButtplugClientDevice) => {
       debug("Device connected", device);
-      fbcChatNotify(
-        displayText(`Vibrator connected: $DeviceName`, {
-          $DeviceName: device.name,
-        })
-      );
+      fbcChatNotify(displayText(`Vibrator connected: $DeviceName`, { $DeviceName: device.name }));
       const deviceSettings = toySyncState.deviceSettings.get(device.name);
-      if (deviceSettings) {
-        delete deviceSettings.LastIntensity;
-      }
+      if (deviceSettings) delete deviceSettings.LastIntensity;
     }
   );
   client.addListener(
     "deviceremoved",
-    /**
-     * @param {import("buttplug").ButtplugClientDevice} device
-     */
-    (device) => {
+    (device: ButtplugClientDevice) => {
       debug("Device disconnected", device);
-      fbcChatNotify(
-        displayText(`Vibrator disconnected: $DeviceName`, {
-          $DeviceName: device.name,
-        })
-      );
+      fbcChatNotify(displayText(`Vibrator disconnected: $DeviceName`, { $DeviceName: device.name }));
     }
   );
   client.addListener("scanningfinished", (data) => {
     debug("Scanning finished", data);
   });
 
-  // @ts-ignore
   const connector = new ButtplugBrowserWebsocketClientConnector(fbcSettings.toySyncAddress || "ws://127.0.0.1:12345");
   try {
     await client.connect(connector);
@@ -65,7 +46,6 @@ export default async function toySync() {
     FUSAM.modals.openAsync({
       prompt: displayText(
         "buttplug.io is enabled, but server could not be contacted at $toySyncAddress. Is Intiface Desktop running? Is another client connected to it?",
-        // @ts-ignore
         { $toySyncAddress: fbcSettings.toySyncAddress }
       ),
       buttons: { submit: "OK" },
@@ -84,16 +64,12 @@ export default async function toySync() {
     }
     for (const d of client.devices.filter((dev) => dev.vibrateAttributes.length > 0)) {
       const deviceSettings = toySyncState.deviceSettings?.get(d.name);
-      if (!deviceSettings) {
-        continue;
-      }
+      if (!deviceSettings) continue;
 
       const slot = deviceSettings.SlotName;
       const intensity = Player.Appearance.find((a) => a.Asset.Group.Name === slot)?.Property?.Intensity;
 
-      if (deviceSettings.LastIntensity === intensity) {
-        continue;
-      }
+      if (deviceSettings.LastIntensity === intensity) continue;
       deviceSettings.LastIntensity = intensity;
 
       if (typeof intensity !== "number" || intensity < 0) {
@@ -128,24 +104,23 @@ export default async function toySync() {
     Tag: "toybatteries",
     Description: displayText("Shows the battery status of all connected buttplug.io toys"),
     Action: () => {
-      (async () => {
-        if (!client.connected) {
-          fbcChatNotify("buttplug.io is not connected");
-          return;
-        }
+      if (!client.connected) {
+        fbcChatNotify("buttplug.io is not connected");
+        return;
+      }
 
-        const batteryDevices = client.devices.filter((dev) => dev.hasBattery);
-        if (batteryDevices.length === 0) {
-          fbcChatNotify("No battery devices connected");
-          return;
-        }
+      const batteryDevices: ButtplugClientDevice[] = client.devices.filter((dev) => dev.hasBattery);
+      if (batteryDevices.length === 0) {
+        fbcChatNotify("No battery devices connected");
+        return;
+      }
 
-        const batteryStatus = await Promise.all(batteryDevices.map((dev) => dev.battery()));
+      Promise.all(batteryDevices.map((dev) => dev.battery())).then((batteryStatus: number[]) => {
         for (let i = 0; i < batteryDevices.length; i++) {
           const battery = batteryStatus[i] * 100;
           fbcChatNotify(`${batteryDevices[i].name}: ${battery}%`);
         }
-      })();
+      });
     },
   });
 
