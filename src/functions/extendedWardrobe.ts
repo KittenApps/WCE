@@ -4,66 +4,48 @@ import { waitFor, isWardrobe, parseJSON } from "../util/utils";
 import { logInfo, logError } from "../util/logger";
 import { fbcSettings } from "../util/settings";
 import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE } from "../util/constants";
+import type { Table, IndexableType } from "dexie";
 
-/** @type {import("dexie").Table<any, import("dexie").IndexableType, any>} */
-let localWardrobeTable;
+let localWardrobeTable: Table<{id: number, appearance: ServerItemBundle[]}, IndexableType, unknown>;
 
-/** @type {(wardrobe: ItemBundle[][]) => Promise<void>} */
-export async function loadLocalWardrobe(wardrobe) {
+export async function loadLocalWardrobe(wardrobe: ItemBundle[][]): Promise<void> {
   const { Dexie } = await import("dexie");
   const db = new Dexie("wce-local-wardrobe");
   db.version(1).stores({
     wardrobe: "id, appearance",
   });
   localWardrobeTable = db.table("wardrobe");
-  /** @type {{id: number, appearance: ServerItemBundle[]}[]} */
-  const localWardrobe = (await localWardrobeTable.toArray()) || [];
+  const localWardrobe: {id: number, appearance: ServerItemBundle[]}[] = (await localWardrobeTable.toArray()) || [];
   await waitFor(() => wardrobe.length === EXPANDED_WARDROBE_SIZE);
   wardrobe.push(...localWardrobe.map((w) => sanitizeBundles(w.appearance)));
 }
 
-/** @type {(wardrobe: ServerItemBundle[][]) => Promise<void>} */
-async function saveLocalWardrobe(wardrobe) {
+async function saveLocalWardrobe(wardrobe: ServerItemBundle[][]): Promise<void> {
   await localWardrobeTable.bulkPut(wardrobe.map((appearance, id) => ({ id, appearance })));
 }
 
-/**
- * Convert old {@link ItemProperties.Type} remnants into {@link ItemProperties.TypeRecord} in the passed item bundles.
- * @param {ItemBundle[]} bundleList
- */
-function sanitizeBundles(bundleList) {
-  if (!Array.isArray(bundleList)) {
-    return bundleList;
-  }
-  return bundleList.map((bundle) => {
-    if (
-      // eslint-disable-next-line deprecation/deprecation
-      typeof bundle.Property?.Type === "string" &&
-      !CommonIsObject(bundle.Property?.TypeRecord)
-    ) {
+/** Convert old {@link ItemProperties.Type} remnants into {@link ItemProperties.TypeRecord} in the passed item bundles. */
+function sanitizeBundles(bundleList: ItemBundle[]): ItemBundle[] {
+  if (!Array.isArray(bundleList)) return bundleList;
+  return bundleList.map(bundle => {
+    // eslint-disable-next-line deprecation/deprecation
+    if (typeof bundle.Property?.Type === "string" && !CommonIsObject(bundle.Property?.TypeRecord)) {
       const asset = AssetGet("Female3DCG", bundle.Group, bundle.Name);
-      if (asset) {
-        bundle.Property.TypeRecord = ExtendedItemTypeToRecord(
-          asset,
-          // eslint-disable-next-line deprecation/deprecation
-          bundle.Property.Type
-        );
-      }
+      // eslint-disable-next-line deprecation/deprecation
+      if (asset) bundle.Property.TypeRecord = ExtendedItemTypeToRecord(asset, bundle.Property.Type);
     }
     return bundle;
   });
 }
 
-/** @type {(wardrobe: ItemBundle[][]) => ItemBundle[][]} */
-export function loadExtendedWardrobe(wardrobe) {
+export function loadExtendedWardrobe(wardrobe: ItemBundle[][]): ItemBundle[][] {
   if (fbcSettings.extendedWardrobe) {
     WardrobeSize = EXPANDED_WARDROBE_SIZE;
     WardrobeFixLength();
   }
 
-  /** @type {string} */
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, deprecation/deprecation
-  const wardrobeData = Player.ExtensionSettings.FBCWardrobe || Player.OnlineSettings?.BCEWardrobe;
+  const wardrobeData: string = Player.ExtensionSettings.FBCWardrobe || Player.OnlineSettings?.BCEWardrobe;
   if (wardrobeData) {
     // eslint-disable-next-line deprecation/deprecation
     if (Player.OnlineSettings?.BCEWardrobe) {
@@ -74,9 +56,7 @@ export function loadExtendedWardrobe(wardrobe) {
       delete Player.OnlineSettings.BCEWardrobe;
     }
     try {
-      const additionalItemBundle = /** @type {ItemBundle[][]} */ (
-        parseJSON(LZString.decompressFromUTF16(wardrobeData))
-      );
+      const additionalItemBundle: ItemBundle[][] = parseJSON(LZString.decompressFromUTF16(wardrobeData));
       if (isWardrobe(additionalItemBundle)) {
         for (let i = DEFAULT_WARDROBE_SIZE; i < EXPANDED_WARDROBE_SIZE; i++) {
           const additionalIdx = i - DEFAULT_WARDROBE_SIZE;
@@ -95,25 +75,24 @@ export function loadExtendedWardrobe(wardrobe) {
   return wardrobe;
 }
 
-export default async function extendedWardrobe() {
+export default async function extendedWardrobe(): Promise<void> {
   await waitFor(() => !!ServerSocket);
 
   SDK.hookFunction(
     "CharacterCompressWardrobe",
     HOOK_PRIORITIES.Top,
-    (args, next) => {
-      const [wardrobe] = args;
+    ([wardrobe], next) => {
       if (isWardrobe(wardrobe)) {
         const additionalWardrobe = wardrobe.slice(DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE);
         if (additionalWardrobe.length > 0) {
           Player.ExtensionSettings.FBCWardrobe = LZString.compressToUTF16(JSON.stringify(additionalWardrobe));
-          args[0] = wardrobe.slice(0, DEFAULT_WARDROBE_SIZE);
+          wardrobe = wardrobe.slice(0, DEFAULT_WARDROBE_SIZE);
           ServerPlayerExtensionSettingsSync("FBCWardrobe");
           const additionalLocalWardrobe = wardrobe.slice(EXPANDED_WARDROBE_SIZE);
           if (additionalLocalWardrobe.length > 0) saveLocalWardrobe(additionalLocalWardrobe);
         }
       }
-      return next(args);
+      return next([wardrobe]);
     }
   );
 
