@@ -3,21 +3,20 @@ import { waitFor, isNonNullObject, parseJSON, objEntries, isString, drawTooltip 
 import { displayText } from "../util/localization";
 import { debug, logWarn, logError } from "../util/logger";
 
-export default async function crafting() {
+export default async function crafting(): Promise<void> {
   await waitFor(() => Array.isArray(Commands) && Commands.length > 0);
 
-  const importPosition = /** @type {const} */ ([1485, 15, 90, 90]);
-  const exportPosition = /** @type {const} */ ([1585, 15, 90, 90]);
+  const importPosition = [1485, 15, 90, 90] as const;
+  const exportPosition = [1585, 15, 90, 90] as const;
 
-  function importCraft() {
+  function importCraft(): void {
     FUSAM.modals.open({
       prompt: displayText("Paste the craft here"),
+      input: { initial: "", readonly: false, type: "textarea" },
       callback: (action, str) => {
-        if (action !== "submit" || !str) {
-          return;
-        }
+        if (action !== "submit" || !str) return;
         try {
-          const craft = /** @type {CraftingItem} */ (parseJSON(LZString.decompressFromBase64(str)));
+          const craft: CraftingItem = parseJSON(LZString.decompressFromBase64(str));
           if (!isNonNullObject(craft)) {
             logError(craft);
             throw new Error(`invalid craft type ${typeof craft} ${str}`);
@@ -40,11 +39,6 @@ export default async function crafting() {
           logError("importing craft", e);
         }
       },
-      input: {
-        initial: "",
-        readonly: false,
-        type: "textarea",
-      },
     });
   }
 
@@ -52,26 +46,20 @@ export default async function crafting() {
     "CraftingClick",
     HOOK_PRIORITIES.AddBehaviour,
     (args, next) => {
-      switch (CraftingMode) {
-        case "Name":
-          if (MouseIn(...exportPosition)) {
-            FUSAM.modals.open({
-              prompt: displayText("Copy the craft here"),
-              input: {
-                initial: LZString.compressToBase64(JSON.stringify(CraftingConvertSelectedToItem())),
-                readonly: true,
-                type: "textarea",
-              },
-              callback: () => {
-                debug("exported craft");
-              },
-            });
-          } else if (MouseIn(...importPosition)) {
-            importCraft();
-          }
-          break;
-        default:
-          break;
+      if (CraftingMode === "Name") {
+        if (MouseIn(...exportPosition)) {
+          const exportString = LZString.compressToBase64(JSON.stringify(CraftingConvertSelectedToItem()));
+          FUSAM.modals.open({
+            prompt: displayText("Copy the craft here"),
+            input: { initial: exportString, readonly: true, type: "textarea" },
+            callback: () => {
+              debug("exported craft");
+            },
+          });
+          navigator.clipboard.writeText(exportString);
+        } else if (MouseIn(...importPosition)) {
+          importCraft();
+        }
       }
       return next(args);
     }
@@ -100,13 +88,7 @@ export default async function crafting() {
         const { Craft } = item;
         if (MouseIn(x, y, DialogInventoryGrid.itemWidth, DialogInventoryGrid.itemHeight) && Craft) {
           drawTooltip(x, y, DialogInventoryGrid.itemWidth, displayText(Craft.Property), "center");
-          drawTooltip(
-            1000,
-            y - 70,
-            975,
-            `${displayText("Description:")} ${Craft.Description || "<no description>"}`,
-            "left"
-          );
+          drawTooltip(1000, y - 70, 975, `${displayText("Description:")} ${Craft.Description || "<no description>"}`, "left");
         }
       }
       return ret;

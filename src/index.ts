@@ -26,7 +26,7 @@ globalThis.fbcSettingValue = fbcSettingValue;
 globalThis.bce_initializeDefaultExpression = () => {};
 globalThis.fbcDebug = fbcDebug;
 
-FUSAM.registerDebugMethod("WCE", fbcDebug);
+FUSAM.registerDebugMethod("WCE", () => fbcDebug(false));
 
 await registerAllFunctions();
 
