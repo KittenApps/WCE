@@ -5,7 +5,7 @@ import { isNonNullObject } from "../util/utils";
 const FBC_DEVS = [23476, 27006, 24890];
 const WCE_DEVS = [129178];
 
-export default function commonPatches() {
+export default function commonPatches(): void {
   // DrawBackNextButton patch to allow overriding hover text position
   patchFunction(
     "DrawBackNextButton",
@@ -94,9 +94,8 @@ export default function commonPatches() {
     HOOK_PRIORITIES.OverrideBehaviour,
     (args, next) => {
       if (!document.getElementById("FriendList")) {
-        return;
+        return null;
       }
-      // eslint-disable-next-line consistent-return
       return next(args);
     }
   );

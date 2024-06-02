@@ -12,9 +12,7 @@ declare global {
 
   var PUBLIC_URL: string;
   var StartBcUtil: () => void;
-  var bcx:
-  | import("./bcxExternalInterface").BCX_ConsoleInterface
-  | undefined;
+  var bcx: import("./bcxExternalInterface").BCX_ConsoleInterface | undefined;
   var bcModSdk: import("bondage-club-mod-sdk").ModSDKGlobalAPI | undefined;
   var FUSAM: FUSAMPublicAPI | undefined;
 

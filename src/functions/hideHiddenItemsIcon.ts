@@ -1,19 +1,19 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 
-export default function hideHiddenItemsIcon() {
+export default function hideHiddenItemsIcon(): void {
   SDK.hookFunction(
     "DrawCharacter",
     HOOK_PRIORITIES.ModifyBehaviourLow,
     (args, next) => {
-      const [c] = args;
-      if (!c || !fbcSettings.hideHiddenItemsIcon) {
+      const [C] = args;
+      if (!C || !fbcSettings.hideHiddenItemsIcon) {
         return next(args);
       }
-      const backup = c.HasHiddenItems;
-      c.HasHiddenItems = false;
+      const backup = C.HasHiddenItems;
+      C.HasHiddenItems = false;
       const ret = next(args);
-      c.HasHiddenItems = backup;
+      C.HasHiddenItems = backup;
       return ret;
     }
   );
