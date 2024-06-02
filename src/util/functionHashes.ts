@@ -56,6 +56,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         CraftingClick: "9169F897", // Screens/Room/Crafting/Crafting.js
         CraftingConvertSelectedToItem: "48270B42",
         CraftingRun: "51577F65", // Screens/Room/Crafting/Crafting.js
+        DialogCanUnlock: "A86B2558",
         DialogDrawItemMenu: "FCE556C2",
         DialogLeave: "C37553DC",
         DialogMenuButtonBuild: "AC1C6466", // Scripts/Dialog.js (13.5.2024)

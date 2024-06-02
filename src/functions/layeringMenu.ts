@@ -3,12 +3,11 @@ import { waitFor, isCharacter, deepCopy, fbcSendAction } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 
-export default async function layeringMenu() {
+export default async function layeringMenu(): Promise<void> {
   await waitFor(() => !!Player?.AppearanceLayers);
 
-  // ToDo: remove once r105 is out and add typecheck back in
   if (GameVersion === 'R104') {
-    patchFunction(
+    patchFunction( // ToDo: remove once r105 is out
       "DialogMenuButtonBuild",
       {
         "if (Item != null && !C.IsNpc() && Player.CanInteract()) {":
@@ -17,47 +16,52 @@ export default async function layeringMenu() {
       "Built-in layering menus options for allow on others and allow while bound"
     );
   } else {
+    // DialogCanUnlock with Player.CanInteract() requirement removed
+    function DialogCanUnlock2(C: Character, Item: Item) {
+      if (Item?.Property?.LockedBy === "ExclusivePadlock") return (!C.IsPlayer());
+      if (LogQuery("KeyDeposit", "Cell")) return false;
+      if (Item?.Asset?.OwnerOnly) return Item.Asset.Enable && C.IsOwnedByPlayer();
+      if (Item?.Asset?.LoverOnly) return Item.Asset.Enable && C.IsLoverOfPlayer();
+      if (Item?.Asset?.FamilyOnly) return Item.Asset.Enable && C.IsFamilyOfPlayer();
+      return DialogHasKey(C, Item);
+    }
     SDK.hookFunction(
       "Layering.Init",
       HOOK_PRIORITIES.AddBehaviour,
-      (args, next) => {
-        const ret = next(args);
-        // @ts-ignore
-        Layering.Readonly = args[4] && !fbcSettings.allowLayeringWhileBound;
+      // @ts-ignore - ToDo remove once r105 types are out
+      ([item, C, display, reload, readonly], next) => {
+        // @ts-ignore - ToDo remove once r105 types are out
+        const ret = next([item, C, display, reload, readonly]);
+        if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(item, "Lock") || DialogCanUnlock2(C, item))) {
+          // @ts-ignore - ToDo remove once r105 types are out
+          Layering.Readonly = false;
+        }
         return ret;
       }
     );
   }
 
   // Pseudo-items that we do not want to process for color copying
-  const ignoredColorCopiableAssets = [
+  const ignoredColorCopyableAssets = [
     "LeatherCrop",
     "LeatherWhip",
     "ShockCollarRemote",
     "SpankingToys",
     "VibratorRemote",
   ];
-  const colorCopiableAssets = Asset.filter(
-    (ass) =>
-      AssetGroup.filter(
-        (a) => a.Name.startsWith("Item") && !/\d$/u.test(a.Name) && a.Asset.find((b) => b.Name === ass.Name)
-      ).length > 1
-  )
-    .filter((v, i, a) => a.findIndex((as) => as.Name === v.Name) === i)
-    .map((a) => a.Name)
-    .filter((a) => !ignoredColorCopiableAssets.includes(a));
+  const colorCopyableAssets = Asset.filter(ass =>
+    AssetGroup.filter(a => a.Name.startsWith("Item") && !/\d$/u.test(a.Name) && a.Asset.find((b) => b.Name === ass.Name)).length > 1
+  ).filter((v, i, a) => a.findIndex(as => as.Name === v.Name) === i).map(a => a.Name).filter(a => !ignoredColorCopyableAssets.includes(a));
 
-  /** @type {(C: Character, item?: Item | null) => boolean} */
-  function assetWorn(C, item) {
-    return !!item && !!C.Appearance.find((a) => a === item);
+  function assetWorn(C: Character, item?: Item): boolean {
+    return !!item && !!C.Appearance.find(a => a === item);
   }
 
   SDK.hookFunction(
     "DialogMenuButtonBuild",
     HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const C = CharacterGetCurrent();
-      const ret = next(args);
+    ([C], next) => {
+      const ret = next([C]);
       if (
         isCharacter(C) &&
         fbcSettings.copyColor &&
@@ -67,7 +71,7 @@ export default async function layeringMenu() {
         DialogMenuMode === "items"
       ) {
         const focusItem = InventoryGet(C, C.FocusGroup.Name);
-        if (assetWorn(C, focusItem) && colorCopiableAssets.includes(focusItem.Asset.Name)) {
+        if (assetWorn(C, focusItem) && colorCopyableAssets.includes(focusItem.Asset.Name)) {
           // @ts-ignore
           DialogMenuButton.push("Paint");
         }
@@ -108,19 +112,37 @@ export default async function layeringMenu() {
     }
   );
 
-  /** @type {(C: Character, focusItem: Item) => void} */
-  function copyColors(C, focusItem) {
+  function copyColorTo(item: Item, focusItem: Item): void {
+    if (item.Asset.Name === focusItem.Asset.Name) {
+      if (Array.isArray(focusItem.Color)) {
+        if (Array.isArray(item.Color)) {
+          for (let i = item.Color.length - 1; i >= 0; i--) {
+            item.Color[i] = focusItem.Color[i % focusItem.Color.length];
+          }
+        } else {
+          item.Color = focusItem.Color[focusItem.Color.length - 1];
+        }
+      } else if (Array.isArray(item.Color)) {
+        for (let i = 0; i < item.Color.length; i++) {
+          item.Color[i] = focusItem.Color ?? "Default";
+        }
+      } else { // Both are array
+        item.Color = deepCopy(focusItem.Color);
+      }
+    }
+  }
+
+  function copyColors(C: Character, focusItem: Item): void {
     if (
       !fbcSettings.copyColor ||
       !Player.CanInteract() ||
       InventoryGroupIsBlocked(C, C.FocusGroup.Name) ||
       !assetWorn(C, focusItem) ||
-      !colorCopiableAssets.includes(focusItem.Asset.Name)
-    )
-      return;
+      !colorCopyableAssets.includes(focusItem.Asset.Name)
+    ) return;
     console.log("copying color to all: ", focusItem);
     for (const item of C.Appearance) {
-      copyColorTo(item);
+      copyColorTo(item, focusItem);
     }
     if (CurrentScreen === "ChatRoom") {
       ChatRoomCharacterUpdate(C);
@@ -133,28 +155,6 @@ export default async function layeringMenu() {
       );
     } else {
       CharacterRefresh(C);
-    }
-
-    /** @type {(item: Item) => void} */
-    function copyColorTo(item) {
-      if (item.Asset.Name === focusItem.Asset.Name) {
-        if (Array.isArray(focusItem.Color)) {
-          if (Array.isArray(item.Color)) {
-            for (let i = item.Color.length - 1; i >= 0; i--) {
-              item.Color[i] = focusItem.Color[i % focusItem.Color.length];
-            }
-          } else {
-            item.Color = focusItem.Color[focusItem.Color.length - 1];
-          }
-        } else if (Array.isArray(item.Color)) {
-          for (let i = 0; i < item.Color.length; i++) {
-            item.Color[i] = focusItem.Color ?? "Default";
-          }
-        } else {
-          // Both are array
-          item.Color = deepCopy(focusItem.Color);
-        }
-      }
     }
   }
 }
