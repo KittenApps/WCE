@@ -1,6 +1,9 @@
 # Changelog of Wholesome Club Extensions (WCE)
 
 ## Wholesome Club Extensions (WCE) v6.2
+* [HOTFIX] fix crash in 'take photo' character action menu
+* [HOTFIX] antiGarble: fix preserve Baby Talk not working
+* [HOTFIX] fix anti Garble settings resetting to default after reload (improved WCE's settings `sideEffects` handling)
 * improved Anti Garble system ([read the updated docs](https://github.com/KittenApps/WCE/wiki/Anti-Garble-system))
   * improved controll over `stutter` and `baby talk`
     * in addition to always remove and always preserve you can now set it to the new option:
