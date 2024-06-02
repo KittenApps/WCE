@@ -1,0 +1,116 @@
+import { registerSocketListener } from "./appendSocketListenersToInit";
+import { waitFor } from "../util/utils";
+import { debug, logWarn } from "../util/logger";
+import { fbcSettings, settingsLoaded } from "../util/settings";
+import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
+import { bceStartClubSlave } from "./forcedClubSlave";
+
+export function sendHello(target: number | null = null, requestReply: boolean = false): void {
+  if (!settingsLoaded()) return; // Don't send hello until settings are loaded
+  if (!ServerIsConnected || !ServerPlayerIsInChatRoom()) return; // Don't send hello if not in chat room
+
+  const message: ServerChatRoomMessage = {
+    Type: HIDDEN,
+    Content: BCE_MSG,
+    Sender: Player.MemberNumber,
+    Dictionary: [],
+  };
+  const fbcMessage: FBCDictionaryEntry = {
+    message: {
+      type: MESSAGE_TYPES.Hello,
+      version: FBC_VERSION,
+      alternateArousal: !!fbcSettings.alternateArousal,
+      replyRequested: requestReply,
+      capabilities: ["clubslave"],
+    },
+  };
+  if (target) {
+    message.Target = target;
+  }
+  if (fbcSettings.alternateArousal) {
+    fbcMessage.message.progress = Player.BCEArousalProgress || Player.ArousalSettings?.Progress || 0;
+    fbcMessage.message.enjoyment = Player.BCEEnjoyment || 1;
+  }
+  if (fbcSettings.shareAddons) {
+    fbcMessage.message.otherAddons = bcModSdk.getModsInfo();
+  }
+
+  // @ts-ignore - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
+  message.Dictionary.push(fbcMessage);
+  ServerSend("ChatRoomChat", message);
+}
+
+export default async function hiddenMessageHandler(): Promise<void> {
+  await waitFor(() => ServerSocket && ServerIsConnected);
+
+  function parseBCEMessage(data: ServerChatRoomMessage): Partial<BCEMessage> {
+    let message: Partial<BCEMessage> = {};
+    if (Array.isArray(data.Dictionary)) {
+      const dicts: FBCDictionaryEntry[] = data.Dictionary as FBCDictionaryEntry[];
+      message = dicts?.find((t) => t.message)?.message || message;
+    } else {
+      const dict: FBCDictionaryEntry = data.Dictionary;
+      message = dict?.message || message;
+    }
+    return message;
+  }
+
+  function processBCEMessage(sender: Character, message: Partial<BCEMessage>, deferred: boolean = false): void {
+    debug("Processing BCE message", sender, message, deferred ? "(deferred)" : "");
+    /**
+     * FBC's socket listener may in some cases run before the game's socket listener initializes the character
+     * This is an attempt to fix the issue by ensuring the message gets processed at the end of the current event loop.
+     */
+    if (!sender?.ArousalSettings && !deferred) {
+      logWarn("No arousal settings found for", sender, "; deferring execution to microtask.");
+      queueMicrotask(() => processBCEMessage(sender, message, true));
+      return;
+    }
+    if (!sender?.ArousalSettings) logWarn("No arousal settings found for", sender);
+
+    switch (message.type) {
+      case MESSAGE_TYPES.Hello:
+        processHello(sender, message);
+        break;
+      case MESSAGE_TYPES.ArousalSync:
+        sender.BCEArousal = message.alternateArousal || false;
+        sender.BCEArousalProgress = message.progress || 0;
+        sender.BCEEnjoyment = message.enjoyment || 1;
+        break;
+      case MESSAGE_TYPES.Activity:
+        // Sender is owner and player is not already wearing a club slave collar
+        if (sender.MemberNumber === Player.Ownership?.MemberNumber && !Player.Appearance.some((a) => a.Asset.Name === "ClubSlaveCollar")) {
+          bceStartClubSlave();
+        }
+        break;
+    }
+  }
+
+  function processHello(sender: Character, message: Partial<BCEMessage>) {
+    sender.FBC = message.version ?? "0.0";
+    sender.BCEArousal = message.alternateArousal || false;
+    sender.BCEArousalProgress = message.progress || sender.ArousalSettings?.Progress || 0;
+    sender.BCEEnjoyment = message.enjoyment || 1;
+    sender.BCECapabilities = message.capabilities ?? [];
+    if (message.replyRequested) sendHello(sender.MemberNumber);
+    sender.FBCOtherAddons = message.otherAddons;
+  }
+
+  registerSocketListener("ChatRoomMessage", (data: ServerChatRoomMessage) => {
+    if (data.Type !== HIDDEN) return;
+    if (data.Content === "BCEMsg") {
+      const sender = Character.find(a => a.MemberNumber === data.Sender);
+      if (!sender) return;
+      const message = parseBCEMessage(data);
+      processBCEMessage(sender, message);
+    }
+  });
+
+  registerSocketListener("ChatRoomSyncMemberJoin", (data: ServerChatRoomSyncMemberJoinResponse) => {
+    if (data.SourceMemberNumber !== Player.MemberNumber) sendHello(data.SourceMemberNumber);
+  });
+
+  registerSocketListener("ChatRoomSync", () => {
+    sendHello();
+  });
+}
