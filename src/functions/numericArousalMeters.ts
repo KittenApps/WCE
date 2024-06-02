@@ -1,7 +1,7 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 
-export default function numericArousalMeters() {
+export default function numericArousalMeters(): void {
   let isExpanded = false;
   let increasing = false;
   SDK.hookFunction(
@@ -30,7 +30,7 @@ export default function numericArousalMeters() {
       const ret = next(args);
       if (fbcSettings.numericArousalMeter && isExpanded) {
         const [x, y, zoom, progress] = args;
-        let color = "white";
+        let color: "white" | "red" | "hotpink" | "pink" = "white";
         if (progress >= 95) {
           if (increasing) {
             color = "red";
@@ -49,7 +49,6 @@ export default function numericArousalMeters() {
           "black"
         );
       }
-
       return ret;
     }
   );
