@@ -292,6 +292,34 @@ export default function wceStyles(): void {
     z-index: 100 !important;
   }
 
+  #layering {
+    overflow-y: scroll;
+    grid-template:
+      "asset-header button-grid" min-content
+      "asset-grid asset-grid" min-content
+      "layer-header layer-header" min-content
+      "layer-grid layer-grid" auto
+      "layer-hide-header layer-hide-header" min-content
+      "layer-hide-grid layer-hide-grid" auto
+      / auto min-content
+    ;
+  }
+  #layering-layer-div {
+    overflow-y: visible;
+  }
+  #layering-button-grid {
+    top: 0;
+    position: sticky;
+  }
+  .layering-button-container {
+    position: relative;
+  }
+  #layering-hide-header {
+    grid-area: layer-hide-header;
+  }
+  #layering-hide-div {
+    grid-area: layer-hide-grid;
+  }
   `;
   const head = document.head || document.getElementsByTagName("head")[0];
   const style = document.createElement("style");
