@@ -1,7 +1,16 @@
 import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
-import { waitFor, isCharacter, deepCopy, fbcSendAction } from "../util/utils";
+import { waitFor, isCharacter, deepCopy, fbcSendAction, parseJSON } from "../util/utils";
 import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
+
+declare global {
+  interface ItemProperties {
+    wceOverrideHide?: AssetGroupName[];
+  }
+}
+interface WCEOverrideSetting {
+  Hide: Record<string, AssetGroupName[]>;
+}
 
 export default async function layeringMenu(): Promise<void> {
   await waitFor(() => !!Player?.AppearanceLayers);
@@ -15,7 +24,10 @@ export default async function layeringMenu(): Promise<void> {
       },
       "Built-in layering menus options for allow on others and allow while bound"
     );
-  } else {
+  }
+
+  // ToDo: remove once r105 is out
+  if (GameVersion.startsWith('R105')) {
     // DialogCanUnlock with Player.CanInteract() requirement removed
     function DialogCanUnlock2(C: Character, Item: Item) {
       if (Item?.Property?.LockedBy === "ExclusivePadlock") return (!C.IsPlayer());
@@ -25,21 +37,143 @@ export default async function layeringMenu(): Promise<void> {
       if (Item?.Asset?.FamilyOnly) return Item.Asset.Enable && C.IsFamilyOfPlayer();
       return DialogHasKey(C, Item);
     }
+
     SDK.hookFunction(
-      "Layering.Init",
+      "Layering.Load",
       HOOK_PRIORITIES.AddBehaviour,
-      // @ts-ignore - ToDo remove once r105 types are out
-      ([item, C, display, reload, readonly], next) => {
-        // @ts-ignore - ToDo remove once r105 types are out
-        const ret = next([item, C, display, reload, readonly]);
-        if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(item, "Lock") || DialogCanUnlock2(C, item))) {
+      (args, next) => {
+        if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(Layering.Item, "Lock") || DialogCanUnlock2(Layering.Character, Layering.Item,))) {
           // @ts-ignore - ToDo remove once r105 types are out
           Layering.Readonly = false;
         }
+        const ret = next(args);
+        const defaultItemHide = Layering.Asset.Hide || [];
+        const overrideItemHide = Layering.Item.Property.wceOverrideHide || defaultItemHide;
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        ElementCreate({
+          tag: "h1",
+          attributes: { id: "layering-hide-header" },
+          parent: document.getElementById("layering"),
+          children: [displayText("[WCE] Configure layer hiding")]
+        });
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        ElementCreate({
+          tag: "form",
+          attributes: { id: "layering-hide-div" },
+          classList: ["layering-layer-inner-grid"],
+          parent: document.getElementById("layering"),
+          children: defaultItemHide.map(h => ({
+            tag: "div",
+            classList: ["layering-pair"],
+            children: [
+              {
+                tag: "input",
+                // @ts-ignore
+                // eslint-disable-next-line no-undefined
+                attributes: { type: "checkbox", name: "checkbox-hide", value: h, disabled: Layering.Readonly ? true : undefined, checked: overrideItemHide.includes(h) ? true : undefined },
+                classList: [],
+                eventListeners: {
+                  input: () => {
+                    const hideForm: HTMLFormElement = document.getElementById('layering-hide-div') as HTMLFormElement;
+                    Layering.Item.Property.wceOverrideHide = new FormData(hideForm).getAll("checkbox-hide") as AssetGroupName[];
+                    if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
+                    // eslint-disable-next-line no-underscore-dangle
+                    Layering._CharacterRefresh(Layering.Character, false, false);
+                  },
+                },
+              },
+              {
+                tag: "span",
+                classList: ["layering-pair-text"],
+                children: [h],
+              },
+            ],
+
+          }))
+        });
         return ret;
       }
     );
+
+    SDK.hookFunction(
+      "Layering._ResetClickListener",
+      HOOK_PRIORITIES.AddBehaviour,
+      (args, next) => {
+        delete Layering.Item.Property.wceOverrideHide;
+        document.querySelectorAll('input[name=checkbox-hide]').forEach((e: HTMLInputElement) => {e.checked = true;})
+        return next(args);
+      }
+    );
   }
+
+  patchFunction(
+    "CharacterAppearanceVisible",
+    {
+      "if ((item.Asset.Hide != null) && (item.Asset.Hide.indexOf(GroupName) >= 0) && !Excluded) HidingItem = true;": `
+        const hide = item.Property?.wceOverrideHide != null ? item.Property.wceOverrideHide : item.Asset.Hide;
+        if ((hide != null) && (hide.indexOf(GroupName) >= 0) && !Excluded) HidingItem = true;`
+    },
+    "Override C.Appeareance.Asset.Hide won't work"
+  );
+
+  patchFunction( // Maybe not needed
+    "CharacterAppearanceMustHide",
+    {
+      "if ((C.Appearance[A].Asset.Hide != null) && (C.Appearance[A].Asset.Hide.indexOf(GroupName) >= 0)) return true;": `
+        const hide = C.Appearance[A].Property?.wceOverrideHide != null ? C.Appearance[A].Property.wceOverrideHide : C.Appearance[A].Asset.Hide;
+        if ((hide != null) && (hide.indexOf(GroupName) >= 0)) return true;`
+    },
+    "Override C.Appeareance.Asset.Hide won't work"
+  );
+
+  function serverAppearance(appearance: AppearanceBundle): AppearanceBundle {
+    const WCEOverrides: WCEOverrideSetting = { Hide: {} };
+    for (const a of appearance) {
+      if (Array.isArray(a.Property?.wceOverrideHide)) {
+        WCEOverrides.Hide[a.Group] = a.Property.wceOverrideHide;
+        delete a.Property.wceOverrideHide;
+      }
+    }
+    Player.ExtensionSettings.WCEOverrides = LZString.compressToUTF16(JSON.stringify(WCEOverrides));
+    ServerPlayerExtensionSettingsSync("WCEOverrides");
+    return appearance;
+  }
+
+  globalThis.wceServerAppearance = serverAppearance
+  
+  patchFunction(
+    "ServerPlayerAppearanceSync",
+    {
+      "D.Appearance = ServerAppearanceBundle(Player.Appearance);":
+        "D.Appearance = wceServerAppearance(ServerAppearanceBundle(Player.Appearance));"
+    },
+    "wceOverrideHide would be stored in the BC database"
+  );
+
+  SDK.hookFunction(
+    "ServerAppearanceLoadFromBundle",
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    (args, next) => {
+      const ret = next(args);
+      const [C] = args;
+      if (C.IsPlayer() && Array.isArray(C.Appearance)) {
+        let updated = false;
+        const WCEOverrides: WCEOverrideSetting = parseJSON(LZString.decompressFromUTF16(Player.ExtensionSettings.WCEOverrides));
+        for (const [Group, Hide] of Object.entries(WCEOverrides.Hide)) {
+          const item = InventoryGet(C, Group as AssetGroupName);
+          if (item && !Array.isArray(item.Property?.wceOverrideHide)) {
+            item.Property ??= {};
+            item.Property.wceOverrideHide = Hide;
+            updated = true;
+          }
+        }
+        if (updated) ChatRoomCharacterUpdate(C);
+      }
+      return ret;
+    }
+  );
 
   // Pseudo-items that we do not want to process for color copying
   const ignoredColorCopyableAssets = [
@@ -140,7 +274,6 @@ export default async function layeringMenu(): Promise<void> {
       !assetWorn(C, focusItem) ||
       !colorCopyableAssets.includes(focusItem.Asset.Name)
     ) return;
-    console.log("copying color to all: ", focusItem);
     for (const item of C.Appearance) {
       copyColorTo(item, focusItem);
     }
