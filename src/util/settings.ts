@@ -67,6 +67,13 @@ export interface InputSetting {
   category: SettingsCategory | "hidden";
   description: string;
 }
+declare global {
+  interface ExtensionSettings {
+    FBC: string;
+    FBCWardrobe: string;
+    WCEOverrides: string;
+  }
+}
 
 // @ts-ignore -- this is fully initialized in loadSettings
 export let fbcSettings: {[Property in keyof (typeof defaultSettings)]: (typeof defaultSettings)[Property]["value"]} & { version: number } = {};
@@ -870,7 +877,7 @@ export async function bceLoadSettings(): Promise<void> {
   if (Object.keys(fbcSettings).length === 0) {
     let settings: typeof fbcSettings | null = parseJSON(localStorage.getItem(key));
     const onlineSettings: typeof fbcSettings | null = parseJSON(LZString.decompressFromBase64(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, deprecation/deprecation
+      // eslint-disable-next-line deprecation/deprecation
       Player.ExtensionSettings.FBC || (Player.OnlineSettings?.BCE ?? "")
     ) || null);
     if (!onlineSettings) {
