@@ -3,6 +3,7 @@
 	"type": "module",
 	"license": "GPL-3.0-or-later",
 	"scripts": {
+		"postinstall": "patch-package",
 		"start": "esbuild src/index.ts --bundle --outfile=public/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=public --define:PUBLIC_URL=\\'http://localhost:4000\\'",
 		"build": "rollup -c",
 		"test": "npm run typecheck ; npm run lint",
@@ -12,7 +13,8 @@
 	},
 	"dependencies": {
 		"buttplug": "^3.2.2",
-		"dexie": "^4.0.7"
+		"dexie": "^4.0.7",
+		"patch-package": "^8.0.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.4.0",

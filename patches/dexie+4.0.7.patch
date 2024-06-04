@@ -1,0 +1,13 @@
+diff --git a/node_modules/dexie/package.json b/node_modules/dexie/package.json
+index 16d81e8..3921f58 100644
+--- a/node_modules/dexie/package.json
++++ b/node_modules/dexie/package.json
+@@ -27,7 +27,7 @@
+       }
+     },
+     "./package.json": "./package.json",
+-    "./dist/dexie.mjs": "./dist/dexie.mjs"
++    "./dist/*": "./dist/*"
+   },
+   "typings": "dist/dexie.d.ts",
+   "jspm": {
