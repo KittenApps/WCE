@@ -1,5 +1,5 @@
 import { sendHello } from "../functions/hiddenMessageHandler";
-import { toySyncState } from "../functions/toySync";
+import { toySyncState, type FBCToySetting } from "../functions/toySync";
 import { fbcBeepNotify } from "./hooks";
 import { debug, logInfo, logWarn, logError } from "./logger";
 import {
@@ -25,6 +25,16 @@ import {
 } from "./constants";
 import { displayText } from "./localization";
 import { augmentedChatNotify } from "../functions/chatAugments";
+
+declare global {
+  interface PlayerOnlineSettings {
+    /** @deprecated */ BCE: string;
+    /** @deprecated */ BCEWardrobe: string;
+  }
+  interface CharacterOnlineSharedSettings {
+    Uwall: boolean;
+  }
+}
 
 export type SettingsCategory = "chat" | "activities" | "appearance" | "immersion" | "antigarble" | "performance" | "misc" | "cheats" | "buttplug";
 type SideEffects<Type> = (newValue: Type, init: boolean) => void;

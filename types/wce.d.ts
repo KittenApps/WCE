@@ -15,7 +15,6 @@ declare global {
   var bcx: import("./bcxExternalInterface").BCX_ConsoleInterface | undefined;
   var bcModSdk: import("bondage-club-mod-sdk").ModSDKGlobalAPI | undefined;
   var FUSAM: FUSAMPublicAPI | undefined;
-
   type FUSAMPublicAPI = {
     present: true;
     addons: Record<string, FUSAMAddonState>;
@@ -41,88 +40,20 @@ declare global {
     status: "loading" | "loaded" | "error";
   };
 
-  // extends BC Character interface with additional FBC properties
-  interface Character {
-    FBC: string;
-    FBCOtherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
-    BCEArousal: boolean;
-    BCECapabilities: readonly "clubslave"[];
-    BCEArousalProgress: number;
-    BCEEnjoyment: number;
-    FBCNoteExists: boolean;
-    BCESeen: number;
-  }
-  interface PlayerOnlineSettings {
-    /** @deprecated */ BCE: string;
-    /** @deprecated */ BCEWardrobe: string;
-  }
-  interface CharacterOnlineSharedSettings {
-    Uwall: boolean;
-  }
-
-  type Relationship = {
-    Name: string;
-    MemberNumber: number;
-    Start: number;
-    Stage: number;
-  };
-  type Craft = {
-    Color: string;
-    Description: string;
-    Item: string;
-    Lock: string;
-    Name: string;
-    Property: string;
-  };
-
   type FBCNote = {
     note: string;
     updatedAt?: number;
-  };
-  type Position = {
-    X: number;
-    Y: number;
-    Width: number;
-    Height: number;
   };
   type Friend = {
     MemberName: string;
     MemberNumber: number;
   };
-  type BCEActivity = "ClubSlavery";
-  type BCEMessage = {
-    type: string;
-    version: string;
-    capabilities?: readonly "clubslave"[];
-    alternateArousal?: boolean;
-    replyRequested?: boolean;
-    progress?: number;
-    enjoyment?: number;
-    activity?: BCEActivity;
-    otherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
-  };
-  type SettingsCategory =
-    | "performance"
-    | "chat"
-    | "activities"
-    | "immersion"
-    | "appearance"
-    | "antigarble"
-    | "misc"
-    | "cheats"
-    | "buttplug"
-    | "hidden";
   type Passwords = Record<string, string>;
   type ArousalExpressionStage = {
     Expression: ExpressionName;
     Limit: number;
   };
   type ArousalExpressionStages = Record<string, ArousalExpressionStage[]>;
-  type ClubPose = {
-    Name: string;
-    Category?: string;
-    AllowMenu?: boolean;
-  };
   type ExpressionStage = {
     Id?: number;
     Expression?: ExpressionName | null;
@@ -185,30 +116,5 @@ declare global {
     lastNick?: string;
     seen: number;
     characterBundle: string;
-  };
-  type ServerBeep = {
-    Timer: number;
-    MemberNumber?: number;
-    Message: string;
-    ChatRoomName?: string;
-    IsMail?: boolean;
-    ClickAction?: "FriendList";
-  };
-  type FBCDictionaryEntry = {
-    Tag?: string;
-    message?: BCEMessage;
-    MemberNumber?: number;
-    Text?: string;
-    TargetCharacter?: number;
-    SourceCharacter?: number;
-  };
-  type FBCToySetting = {
-    Name: string;
-    SlotName: string;
-    LastIntensity?: number;
-  };
-  type FBCToySyncState = {
-    client?: import("buttplug").ButtplugClient;
-    deviceSettings: Map<string, FBCToySetting>;
   };
 }

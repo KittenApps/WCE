@@ -1,5 +1,14 @@
 import { logWarn, logError } from "./logger";
 
+type ServerBeep = {
+  Timer: number;
+  MemberNumber?: number;
+  Message: string;
+  ChatRoomName?: string;
+  IsMail?: boolean;
+  ClickAction?: "FriendList";
+};
+
 export function sleep(ms: number): Promise<number> {
   // eslint-disable-next-line no-promise-executor-return
   return new Promise((resolve) => window.setTimeout(resolve, ms));

@@ -5,6 +5,38 @@ import { fbcSettings, settingsLoaded } from "../util/settings";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 import { bceStartClubSlave } from "./forcedClubSlave";
 
+declare global {
+   interface Character {
+    FBC: string;
+    FBCOtherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
+    BCEArousal: boolean;
+    BCECapabilities: readonly "clubslave"[];
+    BCEArousalProgress: number;
+    BCEEnjoyment: number;
+    FBCNoteExists: boolean;
+    BCESeen: number;
+  }
+}
+type FBCDictionaryEntry = {
+  Tag?: string;
+  message?: BCEMessage;
+  MemberNumber?: number;
+  Text?: string;
+  TargetCharacter?: number;
+  SourceCharacter?: number;
+};
+type BCEMessage = {
+  type: string;
+  version: string;
+  capabilities?: readonly "clubslave"[];
+  alternateArousal?: boolean;
+  replyRequested?: boolean;
+  progress?: number;
+  enjoyment?: number;
+  activity?: "ClubSlavery";
+  otherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
+};
+
 export function sendHello(target: number | null = null, requestReply: boolean = false): void {
   if (!settingsLoaded()) return; // Don't send hello until settings are loaded
   if (!ServerIsConnected || !ServerPlayerIsInChatRoom()) return; // Don't send hello if not in chat room
