@@ -27,11 +27,11 @@
 		"esbuild": "^0.21.4",
 		"eslint": "^9.4.0",
 		"eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^3.1.0",
-		"globals": "^15.3.0",
+		"globals": "^15.4.0",
 		"rollup": "^4.18.0",
 		"rollup-plugin-copy": "^3.5.0",
 		"rollup-plugin-esbuild": "^6.1.1",
 		"typescript": "^5.4.5",
-		"typescript-eslint": "^8.0.0-alpha.26"
+		"typescript-eslint": "^8.0.0-alpha.28"
 	}
 }
