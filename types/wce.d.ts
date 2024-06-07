@@ -88,15 +88,6 @@ declare global {
     Id?: number;
   };
   type ExpressionEvent = Expression & EventParams;
-  type Command = {
-    Tag: string;
-    Description?: string;
-    Reference?: string;
-    Action?: (args: string, msg: string, parsed: string[]) => unknown;
-    Prerequisite?: () => boolean;
-    AutoComplete?: (parsed: string[], low: string, msg: string) => void;
-    Clear?: false;
-  };
   type ActivityTriggerMatcher = {
     Tester: RegExp;
     Criteria?: {

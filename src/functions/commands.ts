@@ -121,36 +121,48 @@ export default async function commands(): Promise<void> {
     );
   }
 
-  const cmds: Command[] = [
+  const cmds: ICommand[] = [
     {
       Tag: "fbcdebug",
       Description: displayText("Get debug information to share with developers."),
-      Action: () => fbcDebug(true),
+      Action: () => {
+        fbcChatNotify("Warning: /fbcdebug is deprecated, use /wcedebug instead!");
+        fbcDebug(true);
+      },
     },
     {
       Tag: "fbcchangelog",
       Description: displayText("Show recent WCE changelog"),
-      Action: () => augmentedChatNotify(fbcChangelog),
+      Action: () => {
+        augmentedChatNotify(fbcChangelog);
+        fbcChatNotify("Warning: /fbcchangelog is deprecated, use /wcechangelog instead!");
+      },
     },
     {
       Tag: "wcedebug",
       Description: displayText("Get debug information to share with developers."),
-      Action: () => fbcDebug(true),
+      Action: () => {
+        fbcDebug(true);
+      },
     },
     {
       Tag: "wcechangelog",
       Description: displayText("Show recent WCE changelog"),
-      Action: () => augmentedChatNotify(fbcChangelog),
+      Action: () => {
+        augmentedChatNotify(fbcChangelog);
+      },
     },
     {
       Tag: "wcegotoroom",
       Description: displayText("[room name or empty] switches to the room or leaves room if empty (ignoring all restrictions)"),
-      Action: (_, command) => bceGotoRoom(command.substring(13).trim()),
+      Action: (_, command) => {
+        bceGotoRoom(command.substring(13).trim());
+      },
     },
     {
       Tag: "exportlooks",
       Description: displayText("[target member number]: Copy your or another player's appearance in a format that can be imported with WCE or BCX"),
-      Action: async (_, _command, [target]) => {
+      Action: (_, _command, [target]) => {
         let targetCharacter: Character | null = null;
         if (!target) {
           targetCharacter = Player;
@@ -161,63 +173,66 @@ export default async function commands(): Promise<void> {
           logInfo("Could not find member", target);
           return;
         }
-        const [bindSubmit] = await FUSAM.modals.openAsync({
+        let includeBase = false,
+          includeBinds = false,
+          includeLocks = false;
+        FUSAM.modals.openAsync({
           prompt: displayText("Include binds?"),
           buttons: { cancel: "No", submit: "Yes" },
-        });
-        const includeBinds = bindSubmit === "submit";
-        let includeLocks = false;
-        if (includeBinds) {
-          const [lockSubmit] = await FUSAM.modals.openAsync({
-            prompt: displayText("Include locks?"),
-            buttons: { cancel: "No", submit: "Yes" },
-          });
-          includeLocks = lockSubmit === "submit";
-        }
-        const [baseSubmit] = await FUSAM.modals.openAsync({
+        }).then(([bindSubmit]) => {
+          includeBinds = bindSubmit === "submit";
+          if (includeBinds) {
+            return FUSAM.modals.openAsync({
+              prompt: displayText("Include locks?"),
+              buttons: { cancel: "No", submit: "Yes" },
+            }).then(([lockSubmit]) => {includeLocks = lockSubmit === "submit";});
+          }
+          return null;
+        }).then(() => FUSAM.modals.openAsync({
           prompt: displayText("Include height, body type, hair, etc?"),
           buttons: { cancel: "No", submit: "Yes" },
-        });
-        const includeBase = baseSubmit === "submit";
+        })).then(([baseSubmit]) => {
+          includeBase = baseSubmit === "submit";
 
-        const base: Item[] = targetCharacter.Appearance.filter(a => a.Asset.Group.IsDefault && !a.Asset.Group.Clothing);
-        const clothes: Item[] = targetCharacter.Appearance.filter(a => a.Asset.Group.Category === "Appearance" && a.Asset.Group.Clothing);
-        const binds: Item[] = targetCharacter.Appearance.filter(a => a.Asset.Group.Category === "Item" && !a.Asset.Group.BodyCosplay);
+          const base: Item[] = targetCharacter.Appearance.filter(a => a.Asset.Group.IsDefault && !a.Asset.Group.Clothing);
+          const clothes: Item[] = targetCharacter.Appearance.filter(a => a.Asset.Group.Category === "Appearance" && a.Asset.Group.Clothing);
+          const binds: Item[] = targetCharacter.Appearance.filter(a => a.Asset.Group.Category === "Item" && !a.Asset.Group.BodyCosplay);
 
-        const appearance = [...clothes];
-        if (includeBinds) appearance.push(...binds);
-        if (includeBase) appearance.push(...base);
+          const appearance = [...clothes];
+          if (includeBinds) appearance.push(...binds);
+          if (includeBase) appearance.push(...base);
 
-        const looks: ItemBundle[] = appearance.map((i) => {
-          const property = i.Property ? { ...i.Property } : {};
-          if (!includeLocks && property.LockedBy) {
-            delete property.LockedBy;
-            delete property.LockMemberNumber;
-          }
-          if (property?.LockMemberNumber) {
-            property.LockMemberNumber = Player.MemberNumber;
-          }
-          return {
-            Group: i.Asset.Group.Name,
-            Name: i.Asset.Name,
-            Color: i.Color,
-            Difficulty: i.Difficulty,
-            Property: property,
-            Craft: i.Craft,
-          };
-        });
+          const looks: ItemBundle[] = appearance.map((i) => {
+            const property = i.Property ? { ...i.Property } : {};
+            if (!includeLocks && property.LockedBy) {
+              delete property.LockedBy;
+              delete property.LockMemberNumber;
+            }
+            if (property?.LockMemberNumber) {
+              property.LockMemberNumber = Player.MemberNumber;
+            }
+            return {
+              Group: i.Asset.Group.Name,
+              Name: i.Asset.Name,
+              Color: i.Color,
+              Difficulty: i.Difficulty,
+              Property: property,
+              Craft: i.Craft,
+            };
+          });
 
-        const targetName = targetCharacter.IsPlayer() ? "yourself" : CharacterNickname(targetCharacter);
-        const exportString = LZString.compressToBase64(JSON.stringify(looks));
+          const targetName = targetCharacter.IsPlayer() ? "yourself" : CharacterNickname(targetCharacter);
+          const exportString = LZString.compressToBase64(JSON.stringify(looks));
 
-        FUSAM.modals.openAsync({
-          prompt: displayText(displayText("Copy the looks string below")),
-          input: { initial: exportString, readonly: true, type: "textarea" },
-          buttons: { submit: "Done" },
-        });
+          FUSAM.modals.openAsync({
+            prompt: displayText(displayText("Copy the looks string below")),
+            input: { initial: exportString, readonly: true, type: "textarea" },
+            buttons: { submit: "Done" },
+          });
 
-        navigator.clipboard.writeText(exportString).then(() => {
-          fbcChatNotify(displayText(`Exported looks for $TargetName copied to clipboard`, { $TargetName: targetName }));
+          return navigator.clipboard.writeText(exportString).then(() => {
+            fbcChatNotify(displayText(`Exported looks for $TargetName copied to clipboard`, { $TargetName: targetName }));
+          });
         });
       },
     },
