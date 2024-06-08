@@ -157,6 +157,20 @@ export const defaultSettings = {
     category: "activities",
     description: "Shows the numeric value of arousal meters when expanded.",
   },
+  layeringHide: {
+    label: "[Beta] Allow configuring layer hiding in layering menu",
+    type: "checkbox",
+    value: false,
+    disabled: () => GameVersion === 'R104',
+    sideEffects: (newValue, init) => {
+      debug("layeringHide", newValue);
+      // ToDo: remove this once R105 is out
+      if (init && GameVersion === 'R104') fbcSettings.layeringHide = false;
+      // ToDo: add cleanup code here
+    },
+    category: "appearance",
+    description: "Allows you to configure which lower layers an item should hide or not (changes only visible to other WCE players).",
+  },
   copyColor: {
     label: "Enable option to copy color to all item's of the same type",
     type: "checkbox",
@@ -390,9 +404,10 @@ export const defaultSettings = {
     label: "Show whisper button on chat messages",
     type: "checkbox",
     value: true,
-    disabled: () => false,
-    sideEffects: (newValue) => {
+    disabled: () => GameVersion !== 'R104',
+    sideEffects: (newValue, init) => {
       debug("whisperButton", newValue);
+      if (init && GameVersion !== 'R104') fbcSettings.whisperButton = false;
     },
     category: "chat",
     description: "Adds a whisper button to chat messages, allowing you to whisper to the sender more conveniently.",

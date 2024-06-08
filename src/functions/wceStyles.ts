@@ -293,7 +293,7 @@ export default function wceStyles(): void {
   }
 
   #layering {
-    overflow-y: scroll;
+    overflow-y: auto;
     grid-template:
       "asset-header button-grid" min-content
       "asset-grid asset-grid" min-content

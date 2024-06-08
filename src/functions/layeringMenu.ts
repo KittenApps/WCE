@@ -46,8 +46,10 @@ export default async function layeringMenu(): Promise<void> {
           // @ts-ignore - ToDo remove once r105 types are out
           Layering.Readonly = false;
         }
+        if (!fbcSettings.layeringHide || CurrentScreen === 'Crafting') return next(args);
         const ret = next(args);
         const defaultItemHide = Layering.Asset.Hide || [];
+        if (defaultItemHide.length === 0) return ret;
         const overrideItemHide = Layering.Item.Property.wceOverrideHide || defaultItemHide;
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -101,6 +103,7 @@ export default async function layeringMenu(): Promise<void> {
       "Layering._ResetClickListener",
       HOOK_PRIORITIES.AddBehaviour,
       (args, next) => {
+        if (!fbcSettings.layeringHide || CurrentScreen === 'Crafting') return next(args);
         delete Layering.Item.Property.wceOverrideHide;
         document.querySelectorAll('input[name=checkbox-hide]').forEach((e: HTMLInputElement) => {e.checked = true;})
         return next(args);
