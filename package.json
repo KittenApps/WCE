@@ -24,7 +24,7 @@
 		"@types/events": "^3.0.3",
 		"bc-stubs": "^105.0.0-Beta.1",
 		"bondage-club-mod-sdk": "^1.2.0",
-		"esbuild": "^0.21.4",
+		"esbuild": "^0.21.5",
 		"eslint": "^9.4.0",
 		"eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^3.1.0",
 		"globals": "^15.4.0",
