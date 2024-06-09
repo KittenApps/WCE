@@ -1,6 +1,6 @@
 export const FBC_VERSION = "6.2.2b";
 export const settingsVersion = 62.1;
-export const SUPPORTED_GAME_VERSIONS = ["R104"];
+export const SUPPORTED_GAME_VERSIONS = ["R104", "R105"];
 
 export const fbcChangelog = `WCE v6.2.1
 * improved Anti Garble system
