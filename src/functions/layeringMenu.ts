@@ -46,7 +46,7 @@ export default async function layeringMenu(): Promise<void> {
           // @ts-ignore - ToDo remove once r105 types are out
           Layering.Readonly = false;
         }
-        if (!fbcSettings.layeringHide || CurrentScreen === 'Crafting') return next(args);
+        if (!fbcSettings.layeringHide || CurrentScreen === "Crafting" || !Layering.Character.BCECapabilities.includes("layeringHide")) return next(args);
         const ret = next(args);
         const defaultItemHide = Layering.Asset.Hide || [];
         if (defaultItemHide.length === 0) return ret;

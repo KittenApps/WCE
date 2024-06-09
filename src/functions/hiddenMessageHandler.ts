@@ -5,12 +5,13 @@ import { fbcSettings, settingsLoaded } from "../util/settings";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 import { bceStartClubSlave } from "./forcedClubSlave";
 
+type BCECapabilities = "clubslave" | "layeringHide";
 declare global {
-   interface Character {
+  interface Character {
     FBC: string;
     FBCOtherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
     BCEArousal: boolean;
-    BCECapabilities: readonly "clubslave"[];
+    BCECapabilities: readonly BCECapabilities[];
     BCEArousalProgress: number;
     BCEEnjoyment: number;
     FBCNoteExists: boolean;
@@ -28,7 +29,7 @@ type FBCDictionaryEntry = {
 type BCEMessage = {
   type: string;
   version: string;
-  capabilities?: readonly "clubslave"[];
+  capabilities?: readonly BCECapabilities[];
   alternateArousal?: boolean;
   replyRequested?: boolean;
   progress?: number;
@@ -53,7 +54,7 @@ export function sendHello(target: number | null = null, requestReply: boolean = 
       version: FBC_VERSION,
       alternateArousal: !!fbcSettings.alternateArousal,
       replyRequested: requestReply,
-      capabilities: ["clubslave"],
+      capabilities: ["clubslave", "layeringHide"],
     },
   };
   if (target) {
