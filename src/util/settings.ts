@@ -469,9 +469,13 @@ export const defaultSettings = {
     label: "Anti Garble chat options",
     type: "checkbox",
     value: false,
-    disabled: () => !fbcSettings.antiGarble,
+    disabled: () => !fbcSettings.antiGarble || GameVersion.startsWith('R105'),
     sideEffects: (newValue) => {
       debug("antiGarbleChatoptions", newValue);
+      if (GameVersion.startsWith('R105')) {
+        fbcSettings.antiGarbleChatOptions = false;
+        return;
+      }
       if (newValue) {
         ChatRoomChatLogRect = [1005, 66, 988, 805];
         ChatRoomChatInputRect = [1405, 938, 800, 120];

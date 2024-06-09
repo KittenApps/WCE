@@ -179,13 +179,12 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         ChatRoomCharacterViewDraw: "CA108410", // Screens/Online/ChatRoom/ChatRoomCharacterView.js (19.4.2024 )
         ChatRoomCharacterViewIsActive: "CD8066FA",
         ChatRoomClearAllElements: "629DEB2F", // Screens/Online/ChatRoom/ChatRoom.js
-        ChatRoomClick: "FF225068", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomCurrentTime: "A462DD3A",
         ChatRoomDrawCharacterStatusIcons: "B5209E11", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomGenerateChatRoomChatMessage: "6BFAC520", // Screens/Online/ChatRoom/ChatRoom.js
-        ChatRoomHideElements: "E1435FF3", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomHideElements: "D58ECB5C", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomHTMLEntities: "0A7ADB1D",
-        ChatRoomKeyDown: "B00D692C", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomKeyDown: "BAF38D83", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomListManipulation: "75D28A8B",
         ChatRoomMapViewCharacterIsVisible: "286C447D",
         ChatRoomMapViewCharacterOnWhisperRange: "B0D08E96",
@@ -195,9 +194,9 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomMessage: "EA9F35DE", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomRegisterMessageHandler: "C432923A",
-        ChatRoomRun: "BB97B6F1", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomSendChat: "21606D2F", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomStart: "9B822A9A",
+        ChatRoomSyncMemberJoin: "92AB3558", // Screens/Online/ChatRoom/ChatRoom.js
         CommandExecute: "C5477FA1", // Screens/Online/ChatRoom/Commands.js
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
@@ -234,8 +233,8 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         InformationSheetRun: "F5D94308", // Screens/Character/InformationSheet/InformationSheet.js
         InterfaceTextGet: "66603471", // Scripts/Text.js (2.5.2024)
         InventoryGet: "E666F671",
-        "Layering.Load": "EF69E984",
-        "Layering._ResetClickListener": "A6B9BEA8",
+        "Layering.Load": "3A35BB45", // Scripts/Layering.js
+        "Layering._ResetClickListener": "B24041E1", // Scripts/Layering.js
         LoginClick: "ADA7E2B7", // Screens/Character/Login/Login.js
         LoginDoLogin: "D4000B03", // Screens/Character/Login/Login.js
         LoginRun: "D1DB7A8A", // Screens/Character/Login/Login.js

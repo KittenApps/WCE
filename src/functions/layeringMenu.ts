@@ -15,8 +15,9 @@ interface WCEOverrideSetting {
 export default async function layeringMenu(): Promise<void> {
   await waitFor(() => !!Player?.AppearanceLayers);
 
+  // ToDo: remove once r105 is out
   if (GameVersion === 'R104') {
-    patchFunction( // ToDo: remove once r105 is out
+    patchFunction(
       "DialogMenuButtonBuild",
       {
         "if (Item != null && !C.IsNpc() && Player.CanInteract()) {":
@@ -24,10 +25,7 @@ export default async function layeringMenu(): Promise<void> {
       },
       "Built-in layering menus options for allow on others and allow while bound"
     );
-  }
-
-  // ToDo: remove once r105 is out
-  if (GameVersion.startsWith('R105')) {
+  } else {
     // DialogCanUnlock with Player.CanInteract() requirement removed
     function DialogCanUnlock2(C: Character, Item: Item) {
       if (Item?.Property?.LockedBy === "ExclusivePadlock") return (!C.IsPlayer());

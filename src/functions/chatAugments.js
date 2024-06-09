@@ -99,12 +99,15 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
   let originalText = "";
   for (const node of chatMessageElement.childNodes) {
     if (node.nodeType !== Node.TEXT_NODE) {
-      newChildren.push(node);
       /** @type {HTMLElement} */
       // @ts-ignore
       const el = node;
       if (el.classList.contains("ChatMessageName") || el.classList.contains("bce-message-Message")) {
         newChildren.push(document.createTextNode(" "));
+        newChildren.push(node);
+        newChildren.push(document.createTextNode(" "));
+      } else {
+        newChildren.push(node);
       }
       continue;
     }
@@ -247,42 +250,83 @@ export const augmentedChatNotify = (node) => {
 
 export default function chatAugments() {
   // CTRL+Enter OOC implementation
-  SDK.hookFunction(
-    "ChatRoomKeyDown",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    ([event], next) => {
-      if (document.activeElement.id === "InputChat") {
-        if (event.key === "Enter" && !event.shiftKey) {
-          if (fbcSettings.ctrlEnterOoc && event.ctrlKey && ElementValue("InputChat")?.trim()) {
-            let text = ElementValue("InputChat");
-            let prefix = "";
-            if (!text) {
-              fbcChatNotify("Nothing to send!");
-              return true;
+  // ToDo: remove once r105 is out
+  if (GameVersion === 'R104') {
+    SDK.hookFunction(
+      "ChatRoomKeyDown",
+      HOOK_PRIORITIES.ModifyBehaviourMedium,
+      ([event], next) => {
+        if (document.activeElement.id === "InputChat") {
+          if (event.key === "Enter" && !event.shiftKey) {
+            if (fbcSettings.ctrlEnterOoc && event.ctrlKey && ElementValue("InputChat")?.trim()) {
+              let text = ElementValue("InputChat");
+              let prefix = "";
+              if (!text) {
+                fbcChatNotify("Nothing to send!");
+                return true;
+              }
+              // Whisper command
+              if (text.startsWith("/w ")) {
+                const textParts = text.split(' ');
+                text = textParts.slice(2).join(' ');
+                prefix = `${textParts.slice(0, 2).join(' ')} `;
+              } else if (text.startsWith("/") && !text.startsWith("//")) {
+                fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
+                return true;
+              }
+  
+              ElementValue("InputChat", `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`);
             }
-            // Whisper command
-            if (text.startsWith("/w ")) {
-              const textParts = text.split(' ');
-              text = textParts.slice(2).join(' ');
-              prefix = `${textParts.slice(0, 2).join(' ')} `;
-            } else if (text.startsWith("/") && !text.startsWith("//")) {
-              fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
-              return true;
-            }
-
-            ElementValue("InputChat", `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`);
+            ChatRoomSendChat();
+            return true;
           }
-          ChatRoomSendChat();
-          return true;
+          if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+            ChatRoomScrollHistory(event.key === "ArrowUp");
+            return true;
+          }
         }
-        if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
-          ChatRoomScrollHistory(event.key === "ArrowUp");
-			    return true;
-        }
+        return next([event]);
       }
-      return next([event]);
-    }
-  );
+    );  
+  } else {
+    SDK.hookFunction(
+      "ChatRoomKeyDown",
+      HOOK_PRIORITIES.ModifyBehaviourMedium,
+      ([event], next) => {
+        const inputChat = /** @type {HTMLInputElement} */(document.getElementById("InputChat"));
+        if (inputChat && document.activeElement === inputChat) {
+          if (event.key === "Enter" && !event.shiftKey) {
+            if (fbcSettings.ctrlEnterOoc && event.ctrlKey && inputChat.value.trim().length !== 0) {
+              let text =  inputChat.value;
+              let prefix = "";
+              if (!text) {
+                fbcChatNotify("Nothing to send!");
+                return true;
+              }
+              // Whisper command
+              if (text.startsWith("/w ")) {
+                const textParts = text.split(' ');
+                text = textParts.slice(2).join(' ');
+                prefix = `${textParts.slice(0, 2).join(' ')} `;
+              } else if (text.startsWith("/") && !text.startsWith("//")) {
+                fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
+                return true;
+              }
+  
+              inputChat.value = `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`;
+            }
+            ChatRoomSendChat();
+            return true;
+          }
+          if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+            ChatRoomScrollHistory(event.key === "ArrowUp");
+            return true;
+          }
+        }
+        return next([event]);
+      }
+    );
+  }
 
   SDK.hookFunction(
     "ChatRoomMessageDisplay",
