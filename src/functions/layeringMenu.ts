@@ -123,16 +123,16 @@ export default async function layeringMenu(): Promise<void> {
 
   function serverAppearance(appearance: AppearanceBundle): AppearanceBundle {
     const WCEOverrides: WCEOverrideSetting = { Hide: {} };
-    const app = deepCopy(appearance);
-    for (const a of app) {
+    for (const a of appearance) {
       if (Array.isArray(a.Property?.wceOverrideHide)) {
-        WCEOverrides.Hide[a.Group] = a.Property.wceOverrideHide;
-        delete a.Property.wceOverrideHide;
+        const { wceOverrideHide, ...property } = a.Property;
+        WCEOverrides.Hide[a.Group] = wceOverrideHide;
+        a.Property = property;
       }
     }
     Player.ExtensionSettings.WCEOverrides = LZString.compressToUTF16(JSON.stringify(WCEOverrides));
     ServerPlayerExtensionSettingsSync("WCEOverrides");
-    return app;
+    return appearance;
   }
 
   globalThis.wceServerAppearance = serverAppearance
