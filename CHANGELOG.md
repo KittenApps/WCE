@@ -4,7 +4,7 @@
 * [HOTFIX] fix crash in 'take photo' character action menu
 * [HOTFIX] antiGarble: fix preserve Baby Talk not working
 * [HOTFIX] fix anti Garble settings resetting to default after reload (improved WCE's settings `sideEffects` handling)
-* improved Anti Garble system ([read the updated docs](https://github.com/KittenApps/WCE/wiki/Anti-Garble-system))
+* improved Anti Garble system ([read the updated docs](https://wce-docs.vercel.app/docs/category/anti-garbling-system))
   * improved controll over `stutter` and `baby talk`
     * in addition to always remove and always preserve you can now set it to the new option:
     * `ignore`: do not show an ungarbled message (in brackets) if no other garbling effects are applied, but otherwise removes it from the ungarbled message
@@ -42,7 +42,7 @@
     * friends online notifications
     * buttplug.io toy sync
     * and other smaller features
-* Anti Garble system: complete rewrite from scratch ([read the docs](https://github.com/KittenApps/WCE/wiki/Anti-Garble-system))
+* Anti Garble system: complete rewrite from scratch ([read the docs](https://wce-docs.vercel.app/docs/category/anti-garbling-system))
     * BC changed from a recipient based garbling to sender based garbling in r103+
     * set garble level separately for your outgoing whisper and normal chat messages (everyone can see the less garbled message in brackets, without requiring any addons on their side)
     * added options to preserve baby talk or stutter too

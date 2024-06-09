@@ -7,7 +7,7 @@ export const fbcChangelog = `WCE v6.2.1
 * local Wardrobe
 * store Saved Logins encrypted
 * upgraded Buttplug.io support
-* for a full changelog visit: https://github.com/KittenApps/WCE/releases
+* for a full changelog visit: https://wce-docs.vercel.app/blog
 
 WCE v6.2
 * WCE 6.2 is a fork of the old FBC 5.8 and tries to bring all it's amazing features back
@@ -16,7 +16,7 @@ WCE v6.2
 `;
 
 export const DISCORD_INVITE_URL = "https://discord.gg/SHJMjEh9VH";
-export const WEBSITE_URL = "https://github.com/KittenApps/WCE";
+export const WEBSITE_URL = "https://wce-docs.vercel.app";
 
 export const BCE_COLOR_ADJUSTMENTS_CLASS_NAME = "bce-colors";
 export const BCE_LICENSE = "https://github.com/KittenApps/WCE/blob/main/LICENSE";

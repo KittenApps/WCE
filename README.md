@@ -10,13 +10,15 @@
     * the super wholesome Animation Engine
     * Chat links and embeds (and 3d party content prompts)
     * friends online notifications, buttplug.io toy sync and more ...
-* a completely rewritten anti garble feature for the latest BC versions ([read the docs](https://github.com/KittenApps/WCE/wiki/Anti-Garble-system))
+* a completely rewritten anti garble feature for the latest BC versions ([read the docs](https://wce-docs.vercel.app/docs/category/anti-garbling-system))
 * adopted to new features in latest BC versions:
     * updated layering menus and copy color button
     * added clear cache button to chat menu
-* check out the [Changelog](CHANGELOG.md) for a complete list of changes since FBC 5.8
+* check out the [Changelog](https://wce-docs.vercel.app/blog/wce-v6-2) for a complete list of changes since FBC 5.8
 
 ## Installation
+
+see also: https://wce-docs.vercel.app/docs/installation
 
 ### User Script loader (recommended)
 
