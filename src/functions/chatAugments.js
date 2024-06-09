@@ -99,19 +99,10 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
   let originalText = "";
   for (const node of chatMessageElement.childNodes) {
     if (node.nodeType !== Node.TEXT_NODE) {
-      /** @type {HTMLElement} */
-      // @ts-ignore
-      const el = node;
-      if (el.classList.contains("ChatMessageName") || el.classList.contains("bce-message-Message")) {
-        newChildren.push(document.createTextNode(" "));
-        newChildren.push(node);
-        newChildren.push(document.createTextNode(" "));
-      } else {
-        newChildren.push(node);
-      }
+      newChildren.push(node);
       continue;
     }
-    const contents = node.textContent?.trim() ?? "",
+    const contents = node.textContent ?? "",
       words = [contents];
 
     originalText += node.textContent;
