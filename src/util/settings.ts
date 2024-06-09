@@ -476,13 +476,26 @@ export const defaultSettings = {
         fbcSettings.antiGarbleChatOptions = false;
         return;
       }
+      // ToDo: remove once R105 is out
       if (newValue) {
+        // @ts-ignore
+        // eslint-disable-next-line deprecation/deprecation
         ChatRoomChatLogRect = [1005, 66, 988, 805];
+        // @ts-ignore
+        // eslint-disable-next-line deprecation/deprecation
         ChatRoomChatInputRect = [1405, 938, 800, 120];
+        // @ts-ignore
+        // eslint-disable-next-line deprecation/deprecation
         ChatRoomChatLengthLabelRect = [1644, 970, 120, 82];
       } else {
+        // @ts-ignore
+        // eslint-disable-next-line deprecation/deprecation
         ChatRoomChatLogRect = [1005, 66, 988, 835];
+        // @ts-ignore
+        // eslint-disable-next-line deprecation/deprecation
         ChatRoomChatInputRect = [1453, 953, 895, 90];
+        // @ts-ignore
+        // eslint-disable-next-line deprecation/deprecation
         ChatRoomChatLengthLabelRect = [1764, 970, 120, 82];
       }
     },

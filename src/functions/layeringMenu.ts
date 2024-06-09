@@ -41,7 +41,6 @@ export default async function layeringMenu(): Promise<void> {
       HOOK_PRIORITIES.AddBehaviour,
       (args, next) => {
         if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(Layering.Item, "Lock") || DialogCanUnlock2(Layering.Character, Layering.Item,))) {
-          // @ts-ignore - ToDo remove once r105 types are out
           Layering.Readonly = false;
         }
         if (!fbcSettings.layeringHide || CurrentScreen === "Crafting" || !Layering.Character.BCECapabilities.includes("layeringHide")) return next(args);
@@ -49,16 +48,12 @@ export default async function layeringMenu(): Promise<void> {
         const defaultItemHide = Layering.Asset.Hide || [];
         if (defaultItemHide.length === 0) return ret;
         const overrideItemHide = Layering.Item.Property.wceOverrideHide || defaultItemHide;
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         ElementCreate({
           tag: "h1",
           attributes: { id: "layering-hide-header" },
           parent: document.getElementById("layering"),
           children: [displayText("[WCE] Configure layer hiding")]
         });
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         ElementCreate({
           tag: "form",
           attributes: { id: "layering-hide-div" },
@@ -70,12 +65,11 @@ export default async function layeringMenu(): Promise<void> {
             children: [
               {
                 tag: "input",
-                // @ts-ignore
                 // eslint-disable-next-line no-undefined
                 attributes: { type: "checkbox", name: "checkbox-hide", value: h, disabled: Layering.Readonly ? true : undefined, checked: overrideItemHide.includes(h) ? true : undefined },
                 classList: [],
                 eventListeners: {
-                  input: () => {
+                  click: () => {
                     const hideForm: HTMLFormElement = document.getElementById('layering-hide-div') as HTMLFormElement;
                     Layering.Item.Property.wceOverrideHide = new FormData(hideForm).getAll("checkbox-hide") as AssetGroupName[];
                     if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
