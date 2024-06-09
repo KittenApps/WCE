@@ -473,7 +473,6 @@ export const defaultSettings = {
     sideEffects: (newValue) => {
       debug("antiGarbleChatoptions", newValue);
       if (GameVersion.startsWith('R105')) {
-        fbcSettings.antiGarbleChatOptions = false;
         return;
       }
       // ToDo: remove once R105 is out
