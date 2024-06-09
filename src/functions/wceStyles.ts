@@ -320,6 +320,21 @@ export default function wceStyles(): void {
   #layering-hide-div {
     grid-area: layer-hide-grid;
   }
+
+  #wce-chat-baby-talk:before {
+    background-image: url("${`${PUBLIC_URL}/baby.png`}");
+    mask-image: url("${`${PUBLIC_URL}/baby.png`}");
+  }
+
+  #wce-chat-stutters:before {
+    background-image: url("${`${PUBLIC_URL}/stutter.png`}");
+    mask-image: url("${`${PUBLIC_URL}/stutter.png`}");
+  }
+
+  #wce-chat-garble:before {
+    background-image: url("../Icons/Activity.png");
+    mask-image: url("../Icons/Activity.png");
+  }
   `;
   const head = document.head || document.getElementsByTagName("head")[0];
   const style = document.createElement("style");
