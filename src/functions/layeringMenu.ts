@@ -121,19 +121,10 @@ export default async function layeringMenu(): Promise<void> {
     "Override C.Appeareance.Asset.Hide won't work"
   );
 
-  patchFunction( // Maybe not needed
-    "CharacterAppearanceMustHide",
-    {
-      "if ((C.Appearance[A].Asset.Hide != null) && (C.Appearance[A].Asset.Hide.indexOf(GroupName) >= 0)) return true;": `
-        const hide = C.Appearance[A].Property?.wceOverrideHide != null ? C.Appearance[A].Property.wceOverrideHide : C.Appearance[A].Asset.Hide;
-        if ((hide != null) && (hide.indexOf(GroupName) >= 0)) return true;`
-    },
-    "Override C.Appeareance.Asset.Hide won't work"
-  );
-
   function serverAppearance(appearance: AppearanceBundle): AppearanceBundle {
     const WCEOverrides: WCEOverrideSetting = { Hide: {} };
-    for (const a of appearance) {
+    const app = deepCopy(appearance);
+    for (const a of app) {
       if (Array.isArray(a.Property?.wceOverrideHide)) {
         WCEOverrides.Hide[a.Group] = a.Property.wceOverrideHide;
         delete a.Property.wceOverrideHide;
@@ -141,7 +132,7 @@ export default async function layeringMenu(): Promise<void> {
     }
     Player.ExtensionSettings.WCEOverrides = LZString.compressToUTF16(JSON.stringify(WCEOverrides));
     ServerPlayerExtensionSettingsSync("WCEOverrides");
-    return appearance;
+    return app;
   }
 
   globalThis.wceServerAppearance = serverAppearance
@@ -164,7 +155,7 @@ export default async function layeringMenu(): Promise<void> {
       if (C.IsPlayer() && Array.isArray(C.Appearance)) {
         let updated = false;
         const WCEOverrides: WCEOverrideSetting = parseJSON(LZString.decompressFromUTF16(Player.ExtensionSettings.WCEOverrides));
-        for (const [Group, Hide] of Object.entries(WCEOverrides.Hide)) {
+        for (const [Group, Hide] of Object.entries(WCEOverrides?.Hide || {})) {
           const item = InventoryGet(C, Group as AssetGroupName);
           if (item && !Array.isArray(item.Property?.wceOverrideHide)) {
             item.Property ??= {};
@@ -174,6 +165,16 @@ export default async function layeringMenu(): Promise<void> {
         }
         if (updated) ChatRoomCharacterUpdate(C);
       }
+      return ret;
+    }
+  );
+
+  SDK.hookFunction(
+    "ChatRoomSyncMemberJoin",
+    HOOK_PRIORITIES.AddBehaviour,
+    (args, next) => {
+      const ret = next(args);
+      if (Player.Appearance.some(a => Array.isArray(a.Property?.wceOverrideHide))) ChatRoomCharacterUpdate(Player);
       return ret;
     }
   );
