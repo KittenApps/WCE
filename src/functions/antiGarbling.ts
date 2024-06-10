@@ -167,45 +167,28 @@ export default function antiGarbling(): void {
       },
       "better ChatInput won't have smaller fontsize"
     );
-  } else {
-    // R105
-
+  } else { // R105
     /** Click listener for managing the baby talk button. */
     function babyTalkOnClick(this: HTMLButtonElement) {
-      if (this.disabled || this.getAttribute("aria-disabled") === "true") {
-        return;
-      }
-
-      const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement; // ToDo: maybe just use parent here
-      const isWhisper = div.classList.contains("wce-whisper");
-      const key = isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk";
+      if (this.disabled || this.getAttribute("aria-disabled") === "true") return;
+      const key = this.parentElement.classList.contains("wce-whisper") ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk";
       const idx = effectOptions.indexOf(fbcSettings[key]);
-      const state = effectOptions[(idx + 1) % effectOptions.length];
-      fbcSettings[key] = state;
+      fbcSettings[key] = effectOptions[(idx + 1) % effectOptions.length];
       resetChatButtonStates(this.id);
     }
 
     /** Click listener for managing the stutter button. */
     function stutterOnClick(this: HTMLButtonElement) {
-      if (this.disabled || this.getAttribute("aria-disabled") === "true") {
-        return;
-      }
-
-      const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement;
-      const isWhisper = div.classList.contains("wce-whisper");
-      const key = isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter";
+      if (this.disabled || this.getAttribute("aria-disabled") === "true") return;
+      const key = this.parentElement.classList.contains("wce-whisper") ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter";
       const idx = effectOptions.indexOf(fbcSettings[key]);
-      const state = effectOptions[(idx + 1) % effectOptions.length];
-      fbcSettings[key] = state;
+      fbcSettings[key] = effectOptions[(idx + 1) % effectOptions.length];
       resetChatButtonStates(this.id);
     }
 
     /** Change listener for managing the garble level select. */
     function garbleOnChange(this: HTMLSelectElement) {
-      // Update the garble settings
-      const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement;
-      const isWhisper = div.classList.contains("wce-whisper");
-      const key = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
+      const key = this.parentElement.parentElement.classList.contains("wce-whisper") ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
       fbcSettings[key] = this.value;
       resetChatButtonStates();
     }
@@ -220,17 +203,23 @@ export default function antiGarbling(): void {
         "wce-chat-baby-talk": { state: "antiGarbleChatBabyTalk", whisperState: "antiGarbleWhisperBabyTalk" },
         "wce-chat-stutters": { state: "antiGarbleChatStutter", whisperState: "antiGarbleWhisperStutter" },
       };
-
-      const select = document.getElementById("wce-chat-garble") as null | HTMLSelectElement;
       const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement;
       const isWhisper = div.classList.contains("wce-whisper");
-      const gKey = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
-      if (select) select.value = fbcSettings[gKey];
-      const gIdx = defaultSettings[gKey].options.indexOf(fbcSettings[gKey]);
-      const gTooltip = document.getElementById(select?.getAttribute("aria-describedby")) as null | HTMLDivElement;
-      gTooltip.innerText = defaultSettings[gKey].tooltips[gIdx];
-      const garbleIsFull = ["full", "off"].includes(select.value);
+      const select = document.getElementById("wce-chat-garble") as null | HTMLSelectElement;
 
+      if (!id) {
+        const tooltip = document.getElementById(select?.getAttribute("aria-describedby")) as null | HTMLDivElement;
+        if (select && tooltip) {
+          const key = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
+          select.value = fbcSettings[key];
+          select.dataset.state = fbcSettings.antiGarbleChatLevel;
+          select.dataset.whisperState = fbcSettings.antiGarbleWhisperLevel;
+          const idx = defaultSettings[key].options.indexOf(fbcSettings[key]);
+          tooltip.innerText = defaultSettings[key].tooltips[idx];
+        }
+      }
+
+      const garbleIsFull = ["full", "off"].includes(select?.value);
       const entries = id ? [[id, buttons[id]] as const] : Object.entries(buttons);
       for (const [buttonId, { state, whisperState }] of entries) {
         const button = document.getElementById(buttonId) as null | HTMLButtonElement;
