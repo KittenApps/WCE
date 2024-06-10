@@ -337,20 +337,13 @@ export default function wceStyles(): void {
   .wce-whisper .wce-chat-room-select option[value="off"] {
     display: block;
   }
-
   #wce-chat-baby-talk:before {
-    background-image: url("${`${PUBLIC_URL}/baby.png`}");
-    mask-image: url("${`${PUBLIC_URL}/baby.png`}");
+    background-image: url("${PUBLIC_URL}/baby.png");
+    mask-image: url("${PUBLIC_URL}/baby.png");
   }
-
   #wce-chat-stutters:before {
-    background-image: url("${`${PUBLIC_URL}/stutter.png`}");
-    mask-image: url("${`${PUBLIC_URL}/stutter.png`}");
-  }
-
-  #wce-chat-garble:before {
-    background-image: url("../Icons/Activity.png");
-    mask-image: url("../Icons/Activity.png");
+    background-image: url("${PUBLIC_URL}/stutter.png");
+    mask-image: url("${PUBLIC_URL}/stutter.png");
   }
   `;
   const head = document.head || document.getElementsByTagName("head")[0];
