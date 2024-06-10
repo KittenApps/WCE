@@ -198,19 +198,14 @@ export default function antiGarbling(): void {
       resetChatButtonStates(this.id);
     }
 
-    /** Click listener for managing the garble level button. */
-    function garbleOnClick(this: HTMLButtonElement) {
-      if (this.disabled || this.getAttribute("aria-disabled") === "true") {
-        return;
-      }
-
+    /** Change listener for managing the garble level select. */
+    function garbleOnChange(this: HTMLSelectElement) {
       // Update the garble settings
       const isWhisper = this.classList.contains("wce-whisper");
-      const options = isWhisper ? whisperOptions : chatOptions;
       const key = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
-      const idx = options.indexOf(fbcSettings[key]);
-      const state = options[(idx + 1) % options.length];
-      fbcSettings[key] = state;
+      // ToDo: off is not a valid option in chat mode, so hide it there
+      if (key === 'antiGarbleChatLevel' && this.value === "off") return;
+      fbcSettings[key] = this.value;
       resetChatButtonStates();
     }
 
@@ -228,6 +223,7 @@ export default function antiGarbling(): void {
      * @param id - The ID of the to-be updated button; update all buttons if ommited
      */
     function resetChatButtonStates(id?: string) {
+      // ToDo: fix wce-chat-garble being a select now
       const buttons: Record<string, { state: AntiGarbleKeys, whisperState: AntiGarbleKeys }> = {
         "wce-chat-garble": { state: "antiGarbleChatLevel", whisperState: "antiGarbleWhisperLevel" },
         "wce-chat-baby-talk": { state: "antiGarbleChatBabyTalk", whisperState: "antiGarbleWhisperBabyTalk" },
@@ -251,7 +247,7 @@ export default function antiGarbling(): void {
           if (buttonId === "wce-chat-garble") {
             garbleIsFull = fbcSettings[state] === "full" || fbcSettings[state] === "off";
           } else if (garbleIsFull !== null) {
-            // Ensure that all non-`#wce-chat-garble` buttons are disabled when garbling is set to `full`
+            // Ensure that all non-`#wce-chat-garble` buttons are disabled when garbling is set to `full` or `off`
             button.setAttribute("aria-disabled", garbleIsFull);
           }
         }
@@ -297,10 +293,22 @@ export default function antiGarbling(): void {
         // Only add the WCE chat room buttons if they do not yet exist
         const buttonGrid: null | HTMLDivElement = div.querySelector("#chat-room-buttons");
         if (buttonGrid && !buttonGrid.querySelector(".wce-chat-room-button")) {
-          ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
+          ElementMenu.PrependItem(buttonGrid, ElementCreate({
+            tag: "select",
+            attributes: { id: "wce-chat-garble" },
+            classList: ["wce-chat-room-select"],
+            style: { display: "none" },
+            eventListeners: { change: garbleOnChange },
+            children: whisperOptions.map(option => ({
+                tag: "option",
+                attributes: { value: option },
+                children: [option],
+              })),
+          }));
+          /* ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
             "wce-chat-garble", garbleOnClick, {},
             { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } },
-          ));
+          )); */
           ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
             "wce-chat-baby-talk", babyTalkOnClick, {},
             { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } },
