@@ -348,19 +348,31 @@ export default function wceStyles(): void {
     grid-column: 1 / 4;
     direction: ltr;
     position: relative;
+    display: grid;
+    grid-template-columns: 28% 72%;
+    justify-items: stretch;
+    align-items: baseline;
   }
   @media (hover: hover) {
     .wce-chat-room-select-div:hover > .button-tooltip {
       visibility: visible;
     }
   }
-  #wce-chat-baby-talk:before {
+  #wce-chat-baby-talk::before {
     background-image: url("${PUBLIC_URL}/baby.png");
     mask-image: url("${PUBLIC_URL}/baby.png");
   }
-  #wce-chat-stutters:before {
+  #wce-chat-stutters::before {
     background-image: url("${PUBLIC_URL}/stutter.png");
     mask-image: url("${PUBLIC_URL}/stutter.png");
+  }
+  #wce-chat-baby-talk[data-state="ignore"]::before,
+  #wce-chat-stutters[data-state="ignore"]::before {
+    background-color: #bbb;
+  }
+  #wce-chat-baby-talk[data-state="preserve"]::before,
+  #wce-chat-stutters[data-state="preserve"]::before {
+    background-color: #666;
   }
   `;
   const head = document.head || document.getElementsByTagName("head")[0];

@@ -212,8 +212,7 @@ export default function antiGarbling(): void {
         if (select && tooltip) {
           const key = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
           select.value = fbcSettings[key];
-          select.dataset.state = fbcSettings.antiGarbleChatLevel;
-          select.dataset.whisperState = fbcSettings.antiGarbleWhisperLevel;
+          select.dataset.state = fbcSettings[key];
           const idx = defaultSettings[key].options.indexOf(fbcSettings[key]);
           tooltip.innerText = defaultSettings[key].tooltips[idx];
         }
@@ -225,13 +224,10 @@ export default function antiGarbling(): void {
         const button = document.getElementById(buttonId) as null | HTMLButtonElement;
         const tooltip = document.getElementById(button?.getAttribute("aria-describedby")) as null | HTMLDivElement;
         if (button && tooltip) {
-          button.dataset.state = fbcSettings[state];
-          button.dataset.whisperState = fbcSettings[whisperState];
-
           const key = isWhisper ? whisperState : state;
+          button.dataset.state = fbcSettings[key];
           const idx = defaultSettings[key].options.indexOf(fbcSettings[key]);
           tooltip.innerText = defaultSettings[key].tooltips[idx];
-
           button.setAttribute("aria-disabled", garbleIsFull);
         }
       }
