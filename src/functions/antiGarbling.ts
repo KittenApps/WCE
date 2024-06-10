@@ -249,7 +249,7 @@ export default function antiGarbling(): void {
           tooltip.innerText = defaultSettings[key].tooltips[idx].split("(")[0].trim();
 
           if (buttonId === "wce-chat-garble") {
-            garbleIsFull = fbcSettings[state] === "full";
+            garbleIsFull = fbcSettings[state] === "full" || fbcSettings[state] === "off";
           } else if (garbleIsFull !== null) {
             // Ensure that all non-`#wce-chat-garble` buttons are disabled when garbling is set to `full`
             button.setAttribute("aria-disabled", garbleIsFull);
