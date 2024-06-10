@@ -225,9 +225,10 @@ export default function antiGarbling(): void {
       const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement;
       const isWhisper = div.classList.contains("wce-whisper");
       const gKey = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
-      select.value = fbcSettings[gKey];
-      // const gIdx = defaultSettings[gKey].options.indexOf(fbcSettings[gKey]);
-      // select.tooltip = defaultSettings[gKey].tooltips[gIdx];
+      if (select) select.value = fbcSettings[gKey];
+      const gIdx = defaultSettings[gKey].options.indexOf(fbcSettings[gKey]);
+      const gTooltip = document.getElementById(select?.getAttribute("aria-describedby")) as null | HTMLDivElement;
+      gTooltip.innerText = defaultSettings[gKey].tooltips[gIdx];
       const garbleIsFull = ["full", "off"].includes(select.value);
 
       const entries = id ? [[id, buttons[id]] as const] : Object.entries(buttons);
@@ -284,16 +285,32 @@ export default function antiGarbling(): void {
         const buttonGrid: null | HTMLDivElement = div.querySelector("#chat-room-buttons");
         if (buttonGrid && !buttonGrid.querySelector(".wce-chat-room-button")) {
           ElementMenu.PrependItem(buttonGrid, ElementCreate({
-            tag: "select",
-            attributes: { id: "wce-chat-garble" },
-            classList: ["wce-chat-room-select"],
+            tag: "div",
             style: { display: "none" },
-            eventListeners: { change: garbleOnChange },
-            children: whisperOptions.map(option => ({
-                tag: "option",
-                attributes: { value: option },
-                children: [option],
-              })),
+            classList: ["wce-chat-room-select-div", "wce-chat-room-button"],
+            children: [
+              {
+                tag: "label",
+                attributes: { id: "wce-chat-garble-label", for: "wce-chat-garble" },
+              },
+              {
+                tag: "select",
+                attributes: { id: "wce-chat-garble", "aria-describedby": "wce-chat-garble-tooltip" },
+                classList: ["wce-chat-room-select"],
+                eventListeners: { change: garbleOnChange },
+                children: whisperOptions.map(option => ({
+                    tag: "option",
+                    attributes: { value: option },
+                    children: [option],
+                  })),
+              },
+              {
+                tag: "div",
+                attributes: { id: "wce-chat-garble-tooltip", role: "tooltip" },
+                classList: ["button-tooltip", "button-tooltip-left"],
+                children: [],
+              }
+            ],
           }));
           ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
             "wce-chat-baby-talk", babyTalkOnClick, {},

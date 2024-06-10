@@ -321,9 +321,10 @@ export default function wceStyles(): void {
     grid-area: layer-hide-grid;
   }
 
-  .wce-chat-room-select {
-    grid-column: 1 / 4;
-    font-size: inherit;
+  .wce-chat-room-select,
+  #wce-chat-garble-label,
+  .wce-chat-room-button .button-tooltip {
+    font-size: 80%;
   }
   #TextAreaChatLog[data-colortheme="dark"] + #chat-room-bot .wce-chat-room-select,
   #TextAreaChatLog[data-colortheme="dark2"] + #chat-room-bot .wce-chat-room-select {
@@ -336,6 +337,22 @@ export default function wceStyles(): void {
   }
   .wce-whisper .wce-chat-room-select option[value="off"] {
     display: block;
+  }
+  #wce-chat-garble-label:after {
+    content: "chat: ";
+  }
+  .wce-whisper #wce-chat-garble-label:after {
+    content: "whis: ";
+  }
+  .wce-chat-room-select-div {
+    grid-column: 1 / 4;
+    direction: ltr;
+    position: relative;
+  }
+  @media (hover: hover) {
+    .wce-chat-room-select-div:hover > .button-tooltip {
+      visibility: visible;
+    }
   }
   #wce-chat-baby-talk:before {
     background-image: url("${PUBLIC_URL}/baby.png");
