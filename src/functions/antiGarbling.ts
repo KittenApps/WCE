@@ -210,18 +210,12 @@ export default function antiGarbling(): void {
       resetChatButtonStates();
     }
 
-    type AntiGarbleKeys = (
-      "antiGarbleChatBabyTalk"
-      | "antiGarbleWhisperBabyTalk"
-      | "antiGarbleChatStutter"
-      | "antiGarbleWhisperStutter"
-    );
-
     /**
      * Reset the WCE chat button state (and tooltips) to match the players `fbcSettings`
      * @param id - The ID of the to-be updated button; update all buttons if ommited
      */
     function resetChatButtonStates(id?: string) {
+      type AntiGarbleKeys = "antiGarbleChatBabyTalk" | "antiGarbleWhisperBabyTalk" | "antiGarbleChatStutter" | "antiGarbleWhisperStutter";
       const buttons: Record<string, { state: AntiGarbleKeys, whisperState: AntiGarbleKeys }> = {
         "wce-chat-baby-talk": { state: "antiGarbleChatBabyTalk", whisperState: "antiGarbleWhisperBabyTalk" },
         "wce-chat-stutters": { state: "antiGarbleChatStutter", whisperState: "antiGarbleWhisperStutter" },
