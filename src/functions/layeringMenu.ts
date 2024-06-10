@@ -43,7 +43,7 @@ export default async function layeringMenu(): Promise<void> {
         if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(Layering.Item, "Lock") || DialogCanUnlock2(Layering.Character, Layering.Item,))) {
           Layering.Readonly = false;
         }
-        if (!fbcSettings.layeringHide || CurrentScreen === "Crafting" || !Layering.Character.BCECapabilities.includes("layeringHide")) return next(args);
+        if (!fbcSettings.layeringHide || CurrentScreen === "Crafting" || !Layering.Character.BCECapabilities?.includes("layeringHide")) return next(args);
         const ret = next(args);
         const defaultItemHide = Layering.Asset.Hide || [];
         if (defaultItemHide.length === 0) return ret;
