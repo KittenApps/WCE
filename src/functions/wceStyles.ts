@@ -321,6 +321,17 @@ export default function wceStyles(): void {
     grid-area: layer-hide-grid;
   }
 
+  .wce-chat-room-select {
+    grid-column: 1 / 4;
+    font-size: inherit;
+  }
+  #TextAreaChatLog[data-colortheme="dark"] + #chat-room-bot .wce-chat-room-select,
+  #TextAreaChatLog[data-colortheme="dark2"] + #chat-room-bot .wce-chat-room-select {
+    color: #fff;
+    background-color: #111;
+    border-color: #555;
+  }
+
   #wce-chat-baby-talk:before {
     background-image: url("${`${PUBLIC_URL}/baby.png`}");
     mask-image: url("${`${PUBLIC_URL}/baby.png`}");
