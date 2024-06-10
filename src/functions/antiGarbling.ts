@@ -261,18 +261,16 @@ export default function antiGarbling(): void {
     /** Set or remove the .wce-whisper css class on all WCE chat room buttoms and update their tooltip */
     function whisperUpdate(isWhisper: boolean) {
       let needsUpdate = false;
-      const buttons = document.querySelectorAll("#chat-room-buttons > button.wce-chat-room-button");
-      buttons.forEach(b => {
-        needsUpdate ||= (isWhisper && !b.classList.contains("wce-whisper")) || (!isWhisper && b.classList.contains("wce-whisper"));
-        if (isWhisper) {
+      document.querySelectorAll("#chat-room-buttons > button.wce-chat-room-button").forEach(b => {
+        if (isWhisper && !b.classList.contains("wce-whisper")) {
           b.classList.add("wce-whisper");
-        } else {
+          needsUpdate ||= true;
+        } else if (!isWhisper && b.classList.contains("wce-whisper")){
           b.classList.remove("wce-whisper");
+          needsUpdate ||= true;
         }
       });
-      if (needsUpdate) {
-        resetChatButtonStates();
-      }
+      if (needsUpdate) resetChatButtonStates();
     }
 
     let registeredChatInputListener = false
