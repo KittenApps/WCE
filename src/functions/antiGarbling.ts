@@ -176,7 +176,8 @@ export default function antiGarbling(): void {
         return;
       }
 
-      const isWhisper = this.classList.contains("wce-whisper");
+      const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement; // ToDo: maybe just use parent here
+      const isWhisper = div.classList.contains("wce-whisper");
       const key = isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk";
       const idx = effectOptions.indexOf(fbcSettings[key]);
       const state = effectOptions[(idx + 1) % effectOptions.length];
@@ -190,7 +191,8 @@ export default function antiGarbling(): void {
         return;
       }
 
-      const isWhisper = this.classList.contains("wce-whisper");
+      const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement;
+      const isWhisper = div.classList.contains("wce-whisper");
       const key = isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter";
       const idx = effectOptions.indexOf(fbcSettings[key]);
       const state = effectOptions[(idx + 1) % effectOptions.length];
@@ -201,10 +203,9 @@ export default function antiGarbling(): void {
     /** Change listener for managing the garble level select. */
     function garbleOnChange(this: HTMLSelectElement) {
       // Update the garble settings
-      const isWhisper = this.classList.contains("wce-whisper");
+      const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement;
+      const isWhisper = div.classList.contains("wce-whisper");
       const key = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
-      // ToDo: off is not a valid option in chat mode, so hide it there
-      if (key === 'antiGarbleChatLevel' && this.value === "off") return;
       fbcSettings[key] = this.value;
       resetChatButtonStates();
     }
@@ -214,8 +215,6 @@ export default function antiGarbling(): void {
       | "antiGarbleWhisperBabyTalk"
       | "antiGarbleChatStutter"
       | "antiGarbleWhisperStutter"
-      | "antiGarbleChatLevel"
-      | "antiGarbleWhisperLevel"
     );
 
     /**
@@ -223,14 +222,20 @@ export default function antiGarbling(): void {
      * @param id - The ID of the to-be updated button; update all buttons if ommited
      */
     function resetChatButtonStates(id?: string) {
-      // ToDo: fix wce-chat-garble being a select now
       const buttons: Record<string, { state: AntiGarbleKeys, whisperState: AntiGarbleKeys }> = {
-        "wce-chat-garble": { state: "antiGarbleChatLevel", whisperState: "antiGarbleWhisperLevel" },
         "wce-chat-baby-talk": { state: "antiGarbleChatBabyTalk", whisperState: "antiGarbleWhisperBabyTalk" },
         "wce-chat-stutters": { state: "antiGarbleChatStutter", whisperState: "antiGarbleWhisperStutter" },
       };
 
-      let garbleIsFull: null | boolean = null;
+      const select = document.getElementById("wce-chat-garble") as null | HTMLSelectElement;
+      const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement;
+      const isWhisper = div.classList.contains("wce-whisper");
+      const gKey = isWhisper ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
+      select.value = fbcSettings[gKey];
+      // const gIdx = defaultSettings[gKey].options.indexOf(fbcSettings[gKey]);
+      // select.tooltip = defaultSettings[gKey].tooltips[gIdx];
+      const garbleIsFull = ["full", "off"].includes(select.value);
+
       const entries = id ? [[id, buttons[id]] as const] : Object.entries(buttons);
       for (const [buttonId, { state, whisperState }] of entries) {
         const button = document.getElementById(buttonId) as null | HTMLButtonElement;
@@ -239,34 +244,25 @@ export default function antiGarbling(): void {
           button.dataset.state = fbcSettings[state];
           button.dataset.whisperState = fbcSettings[whisperState];
 
-          const isWhisper = button.classList.contains("wce-whisper");
           const key = isWhisper ? whisperState : state;
           const idx = defaultSettings[key].options.indexOf(fbcSettings[key]);
-          tooltip.innerText = defaultSettings[key].tooltips[idx].split("(")[0].trim();
+          tooltip.innerText = defaultSettings[key].tooltips[idx];
 
-          if (buttonId === "wce-chat-garble") {
-            garbleIsFull = fbcSettings[state] === "full" || fbcSettings[state] === "off";
-          } else if (garbleIsFull !== null) {
-            // Ensure that all non-`#wce-chat-garble` buttons are disabled when garbling is set to `full` or `off`
-            button.setAttribute("aria-disabled", garbleIsFull);
-          }
+          button.setAttribute("aria-disabled", garbleIsFull);
         }
       }
     }
 
     /** Set or remove the .wce-whisper css class on all WCE chat room buttoms and update their tooltip */
     function whisperUpdate(isWhisper: boolean) {
-      let needsUpdate = false;
-      document.querySelectorAll("#chat-room-buttons > button.wce-chat-room-button").forEach(b => {
-        if (isWhisper && !b.classList.contains("wce-whisper")) {
-          b.classList.add("wce-whisper");
-          needsUpdate ||= true;
-        } else if (!isWhisper && b.classList.contains("wce-whisper")){
-          b.classList.remove("wce-whisper");
-          needsUpdate ||= true;
-        }
-      });
-      if (needsUpdate) resetChatButtonStates();
+      const div = document.getElementById('chat-room-buttons') as null | HTMLDivElement;
+      if (isWhisper && !div.classList.contains("wce-whisper")) {
+        div.classList.add("wce-whisper");
+        resetChatButtonStates();
+      } else if (!isWhisper && div.classList.contains("wce-whisper")){
+        div.classList.remove("wce-whisper");
+        resetChatButtonStates();
+      }
     }
 
     let registeredChatInputListener = false
@@ -305,10 +301,6 @@ export default function antiGarbling(): void {
                 children: [option],
               })),
           }));
-          /* ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
-            "wce-chat-garble", garbleOnClick, {},
-            { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } },
-          )); */
           ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
             "wce-chat-baby-talk", babyTalkOnClick, {},
             { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } },
