@@ -275,28 +275,27 @@ export default function antiGarbling(): void {
       }
     }
 
+    let registeredChatInputListener = false
     // Attach extra DOM buttons to the chat button grid for managing stuttering, garbling and babytalk
     SDK.hookFunction(
       "ChatRoomCreateElement",
       HOOK_PRIORITIES.ModifyBehaviourHigh,
       (args, next) => {
+        if (!fbcSettings.antiGarbleChatOptions) return next(args);
         // Event listener for attaching the .wce-whisper css class to the chat buttons while whispering
         // Make sure this is only done the very first time the input chat is created
-        if (!document.getElementById("chat-room-div")) {
-          const chatInput = document.getElementById("#InputChat") as null | HTMLInputElement;
+        if (!registeredChatInputListener) {
+          const chatInput = document.getElementById("InputChat") as null | HTMLInputElement;
           if (chatInput) {
             chatInput.addEventListener("input", function wceInputChatListener() {
               const isWhisper = this.value.startsWith("/w ") || this.value.startsWith("/whisper ");
               whisperUpdate(isWhisper);
             });
+            registeredChatInputListener = true;
           }
         }
 
         const div = next(args);
-        if (!fbcSettings.antiGarbleChatOptions) {
-          return div;
-        }
-
         // Only add the WCE chat room buttons if they do not yet exist
         const buttonGrid: null | HTMLDivElement = div.querySelector("#chat-room-buttons");
         if (buttonGrid && !buttonGrid.querySelector(".wce-chat-room-button")) {
@@ -327,19 +326,6 @@ export default function antiGarbling(): void {
         const isWhisper = Number.isInteger(memberNumer) && memberNumer !== -1;
         whisperUpdate(isWhisper);
         return next([memberNumer, ...args]);
-      },
-    );
-
-    // Better ChatInput won't have smaller fontsize
-    SDK.hookFunction(
-      "ChatRoomResize",
-      HOOK_PRIORITIES.ModifyBehaviourHigh,
-      (args, next) => {
-        next(args);
-        const elem = document.getElementById("InputChat");
-        if (fbcSettings.antiGarbleChatOptions && elem) {
-          elem.style.fontSize = `${MainCanvas.canvas.clientWidth <= MainCanvas.canvas.clientHeight * 2 ? MainCanvas.canvas.clientWidth / 60 : MainCanvas.canvas.clientHeight / 30}px`;
-        }
       },
     );
   }

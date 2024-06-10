@@ -469,12 +469,10 @@ export const defaultSettings = {
     label: "Anti Garble chat options",
     type: "checkbox",
     value: false,
-    disabled: () => !fbcSettings.antiGarble || GameVersion.startsWith('R105'),
+    disabled: () => !fbcSettings.antiGarble,
     sideEffects: (newValue) => {
       debug("antiGarbleChatoptions", newValue);
-      if (GameVersion.startsWith('R105')) {
-        return;
-      }
+      if (GameVersion.startsWith('R105')) return;
       // ToDo: remove once R105 is out
       if (newValue) {
         // @ts-ignore
