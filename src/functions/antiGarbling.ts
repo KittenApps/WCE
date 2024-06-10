@@ -169,7 +169,7 @@ export default function antiGarbling(): void {
     );
   } else { // R105
     /** Click listener for managing the baby talk button. */
-    function babyTalkOnClick(this: HTMLButtonElement) {
+    function BabyTalkOnClick(this: HTMLButtonElement) {
       if (this.disabled || this.getAttribute("aria-disabled") === "true") return;
       const key = this.parentElement.classList.contains("wce-whisper") ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk";
       const idx = effectOptions.indexOf(fbcSettings[key]);
@@ -178,7 +178,7 @@ export default function antiGarbling(): void {
     }
 
     /** Click listener for managing the stutter button. */
-    function stutterOnClick(this: HTMLButtonElement) {
+    function StutterOnClick(this: HTMLButtonElement) {
       if (this.disabled || this.getAttribute("aria-disabled") === "true") return;
       const key = this.parentElement.classList.contains("wce-whisper") ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter";
       const idx = effectOptions.indexOf(fbcSettings[key]);
@@ -187,7 +187,7 @@ export default function antiGarbling(): void {
     }
 
     /** Change listener for managing the garble level select. */
-    function garbleOnChange(this: HTMLSelectElement) {
+    function GarbleOnChange(this: HTMLSelectElement) {
       const key = this.parentElement.parentElement.classList.contains("wce-whisper") ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
       fbcSettings[key] = this.value;
       resetChatButtonStates();
@@ -257,7 +257,7 @@ export default function antiGarbling(): void {
         if (!registeredChatInputListener) {
           const chatInput = document.getElementById("InputChat") as null | HTMLInputElement;
           if (chatInput) {
-            chatInput.addEventListener("input", function wceInputChatListener() {
+            chatInput.addEventListener("input", function WceInputChatListener() {
               const isWhisper = this.value.startsWith("/w ") || this.value.startsWith("/whisper ");
               whisperUpdate(isWhisper);
             });
@@ -282,7 +282,7 @@ export default function antiGarbling(): void {
                 tag: "select",
                 attributes: { id: "wce-chat-garble", "aria-describedby": "wce-chat-garble-tooltip" },
                 classList: ["wce-chat-room-select"],
-                eventListeners: { change: garbleOnChange },
+                eventListeners: { change: GarbleOnChange },
                 children: whisperOptions.map(option => ({
                     tag: "option",
                     attributes: { value: option },
@@ -298,11 +298,11 @@ export default function antiGarbling(): void {
             ],
           }));
           ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
-            "wce-chat-baby-talk", babyTalkOnClick, {},
+            "wce-chat-baby-talk", BabyTalkOnClick, {},
             { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } },
           ));
           ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
-            "wce-chat-stutters", stutterOnClick, {},
+            "wce-chat-stutters", StutterOnClick, {},
             { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } },
           ));
           resetChatButtonStates();
