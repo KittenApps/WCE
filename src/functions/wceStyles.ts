@@ -331,6 +331,12 @@ export default function wceStyles(): void {
     background-color: #111;
     border-color: #555;
   }
+  .wce-chat-room-select option[value="off"] {
+    display: none;
+  }
+  .wce-whisper .wce-chat-room-select option[value="off"] {
+    display: block;
+  }
 
   #wce-chat-baby-talk:before {
     background-image: url("${`${PUBLIC_URL}/baby.png`}");
