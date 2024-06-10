@@ -91,7 +91,7 @@ export default function antiGarbling(): void {
             35,
             "",
             idx > 3 ? "#555555" : `#${(15 - stidx * 3).toString(16).repeat(6)}`,
-            `${PUBLIC_URL}/stutter.png`,
+            `${PUBLIC_URL}/stutter_old.png`,
             `${isWhisper ? "Whisper" : "Chat"} stutters: ${fbcSettings[isWhisper ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter"]}`,
             idx > 3,
             // @ts-ignore
@@ -104,7 +104,7 @@ export default function antiGarbling(): void {
             35,
             "",
             idx > 3 ? "#555555" : `#${(15 - btidx * 3).toString(16).repeat(6)}`,
-            `${PUBLIC_URL}/baby.png`,
+            `${PUBLIC_URL}/baby_old.png`,
             `${isWhisper ? "Whisper" : "Chat"} baby talk: ${fbcSettings[isWhisper ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk"]}`,
             idx > 3,
             // @ts-ignore
