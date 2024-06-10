@@ -2,6 +2,8 @@ import eslint from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import * as deprecation from "eslint-plugin-deprecation";
+import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -16,7 +18,7 @@ export default tseslint.config(
       sourceType: "module",
       globals: { ...globals.browser, ...globals.es2021 },
       parser: tseslint.parser,
-      parserOptions: { project: true },
+      parserOptions: { project: join(fileURLToPath(import.meta.url), "../tsconfig.json") },
     },
     rules: {
       "accessor-pairs": "error",
