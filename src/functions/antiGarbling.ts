@@ -325,17 +325,19 @@ export default function antiGarbling(): void {
       },
     );
 
-    // ToDo: remove once r105 is out, with that hopefully fixed
-    patchFunction(
-      "ChatRoomMessageDisplay",
-      {
-        // eslint-disable-next-line no-template-curly-in-string
-        'divChildren.push(ElementCreate({ tag: "br", children: [`[${metadata.OriginalMsg}]`] }));':
+    // ToDo: remove once r105 is out
+    if (GameVersion === "R105Beta1") {
+      patchFunction(
+        "ChatRoomMessageDisplay",
+        {
           // eslint-disable-next-line no-template-curly-in-string
-          'divChildren.push(ElementCreate({ tag: "br"}), `[${metadata.OriginalMsg}]`);'
-      },
-      "ungarbling won't be shown in shat, hidden in a invalid <br> children"
-    )
+          'divChildren.push(ElementCreate({ tag: "br", children: [`[${metadata.OriginalMsg}]`] }));':
+            // eslint-disable-next-line no-template-curly-in-string
+            'divChildren.push(ElementCreate({ tag: "br"}), `[${metadata.OriginalMsg}]`);'
+        },
+        "ungarbling won't be shown in shat, hidden in a invalid <br> children"
+      );
+    }
   }
 
   ChatRoomRegisterMessageHandler({
