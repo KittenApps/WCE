@@ -39,7 +39,7 @@ export default tseslint.config(
       "dot-notation": ["error", { allowKeywords: true }],
       eqeqeq: ["warn", "smart"],
       "func-name-matching": "error",
-      "func-names": "warn",
+      "func-names": ["warn", "as-needed"],
       "func-style": "off",
       "grouped-accessor-pairs": "error",
       "guard-for-in": "error",

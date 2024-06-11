@@ -322,8 +322,7 @@ export default function wceStyles(): void {
   }
 
   .wce-chat-room-select,
-  #wce-chat-garble-label,
-  .wce-chat-room-button .button-tooltip {
+  #wce-chat-garble-label {
     font-size: 80%;
   }
   #TextAreaChatLog[data-colortheme="dark"] + #chat-room-bot .wce-chat-room-select,

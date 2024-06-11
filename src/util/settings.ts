@@ -25,6 +25,7 @@ import {
 } from "./constants";
 import { displayText } from "./localization";
 import { augmentedChatNotify } from "../functions/chatAugments";
+import { createChatOptions } from "../functions/antiGarbling";
 
 declare global {
   interface PlayerOnlineSettings {
@@ -442,7 +443,7 @@ export const defaultSettings = {
     sideEffects: (newValue, init) => {
       if (!newValue) {
         fbcSettings.antiGarbleChatOptions = false;
-        defaultSettings.antiGarbleChatOptions.sideEffects(false);
+        defaultSettings.antiGarbleChatOptions.sideEffects(false, init);
         fbcSettings.antiGarbleChatLevel = "full";
         fbcSettings.antiGarbleChatBabyTalk = "preserve";
         fbcSettings.antiGarbleChatStutter = "preserve";
@@ -451,7 +452,7 @@ export const defaultSettings = {
         fbcSettings.antiGarbleWhisperStutter = "preserve";
       } else if (!init) {
         fbcSettings.antiGarbleChatOptions = true;
-        defaultSettings.antiGarbleChatOptions.sideEffects(true);
+        defaultSettings.antiGarbleChatOptions.sideEffects(true, init);
         fbcSettings.antiGarbleChatLevel = "none";
         fbcSettings.antiGarbleChatBabyTalk = "remove";
         fbcSettings.antiGarbleChatStutter = "ignore";
@@ -470,9 +471,16 @@ export const defaultSettings = {
     type: "checkbox",
     value: false,
     disabled: () => !fbcSettings.antiGarble,
-    sideEffects: (newValue) => {
+    sideEffects: (newValue, init) => {
       debug("antiGarbleChatoptions", newValue);
-      if (GameVersion.startsWith('R105')) return;
+      if (GameVersion.startsWith('R105')) {
+        if (!init && newValue) {
+          createChatOptions(document.getElementById("chat-room-div") as HTMLDivElement);
+        } else if (!init) {
+          document.querySelectorAll('.wce-chat-room-button').forEach(e => e.remove());
+        }
+        return;
+      }
       // ToDo: remove once R105 is out
       if (newValue) {
         // @ts-ignore
