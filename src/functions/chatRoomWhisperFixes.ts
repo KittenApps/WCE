@@ -2,7 +2,7 @@ import { SDK, HOOK_PRIORITIES, patchFunction } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 
 export default function chatRoomWhisperFixes(): void {
-  const leaveResetTargetTimers: {[key: number]: number} = {};
+  const leaveResetTargetTimers: Record<number, number> = {};
 
   SDK.hookFunction(
     "ChatRoomMessageDisplay",

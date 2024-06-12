@@ -248,7 +248,7 @@ export default async function pastProfiles() {
   }
 
   function showNoteInput() {
-    if (!InformationSheetSelection || !InformationSheetSelection.MemberNumber) {
+    if (!InformationSheetSelection?.MemberNumber) {
       throw new Error("invalid InformationSheetSelection in notes");
     }
 
@@ -265,7 +265,7 @@ export default async function pastProfiles() {
           throw new Error("invalid note");
         }
       })
-      .catch((reason) => {
+      .catch((/** @type {unknown} */reason) => {
         noteInput.value = "";
         logError("getting note", reason);
       });
@@ -338,7 +338,7 @@ export default async function pastProfiles() {
       if (inNotes) {
         if (MouseIn(1720, 60, 90, 90)) {
           quotaSafetyCheck().then(() => {
-            if (!InformationSheetSelection || !InformationSheetSelection.MemberNumber) {
+            if (!InformationSheetSelection?.MemberNumber) {
               throw new Error("invalid InformationSheetSelection in notes");
             }
             return notes.put({

@@ -39,8 +39,9 @@ export function stutterWord(word, forceStutter) {
   }
 
   /** @type {(wrd: string) => string} */
-  const addStutter = (wrd) =>
-    /^\p{L}/u.test(wrd) ? `${wrd.substring(0, /\uD800-\uDFFF/u.test(wrd[0]) ? 2 : 1)}-${wrd}` : wrd;
+  function addStutter(wrd){
+    return /^\p{L}/u.test(wrd) ? `${wrd.substring(0, /[\uD800-\uDFFF]/u.test(wrd[0]) ? 2 : 1)}-${wrd}` : wrd;
+  }
 
   const maxIntensity = Math.max(
     0,
@@ -220,7 +221,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
 /**
  * @type {(node: HTMLElement | HTMLElement[] | string) => void}
  */
-export const augmentedChatNotify = (node) => {
+export function augmentedChatNotify(node) {
   const div = document.createElement("div");
   div.setAttribute("class", "ChatMessage bce-notification");
   div.setAttribute("data-time", ChatRoomCurrentTime());
@@ -233,11 +234,10 @@ export const augmentedChatNotify = (node) => {
     div.appendChild(node);
   }
   ChatRoomAppendChat(div);
-  const scrollToEnd = () => {
+  processChatAugmentsForLine(div, () => {
     if (ElementIsScrolledToEnd("TextAreaChatLog")) ElementScrollToEnd("TextAreaChatLog");
-  };
-  processChatAugmentsForLine(div, scrollToEnd);
-};
+  });
+}
 
 export default function chatAugments() {
   // CTRL+Enter OOC implementation
@@ -417,12 +417,11 @@ export default function chatAugments() {
         !chatMessageElement.classList.contains("bce-pending")
       ) {
         const scrolledToEnd = ElementIsScrolledToEnd(chatLogContainerId);
-        const scrollToEnd = () => {
+        processChatAugmentsForLine(chatMessageElement, () => {
           if (scrolledToEnd) {
             ElementScrollToEnd(chatLogContainerId);
           }
-        };
-        processChatAugmentsForLine(chatMessageElement, scrollToEnd);
+        });
         if (scrolledToEnd) {
           ElementScrollToEnd(chatLogContainerId);
         }

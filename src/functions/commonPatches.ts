@@ -41,7 +41,7 @@ export default function commonPatches(): void {
     "InformationSheetRun",
     HOOK_PRIORITIES.AddBehaviour,
     (args, next) => {
-      if (!InformationSheetSelection || !InformationSheetSelection.MemberNumber) {
+      if (!InformationSheetSelection?.MemberNumber) {
         return next(args);
       }
 

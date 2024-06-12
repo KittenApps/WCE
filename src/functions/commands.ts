@@ -11,7 +11,7 @@ import { bceGotoRoom } from "./forcedClubSlave";
 import { augmentedChatNotify } from "./chatAugments";
 
 export async function fbcDebug(copy: boolean): Promise<string> {
-  const info: Map<string, string> = new Map();
+  const info = new Map<string, string>();
   info.set("Browser", navigator.userAgent);
   info.set("Game Version", `${GameVersion}${SUPPORTED_GAME_VERSIONS.includes(GameVersion) ? "" : " (unsupported)"}`);
   info.set("WebGL Version", GLVersion);
@@ -53,7 +53,7 @@ export async function fbcDebug(copy: boolean): Promise<string> {
   return print;
 }
 
-function findDrawnCharacters(target?: string, limitVisible: boolean = false): Character[] {
+function findDrawnCharacters(target?: string, limitVisible = false): Character[] {
   let baseList = limitVisible ? ChatRoomCharacterDrawlist : ChatRoomCharacter;
 
   if (ChatRoomMapViewIsActive()) {
@@ -386,8 +386,7 @@ export default async function commands(): Promise<void> {
           return `${CharacterNickname(character)} (${character.MemberNumber ?? ""}) club ${character.OnlineSharedSettings?.GameVersion ?? "R0"}${
             window.bcx?.getCharacterVersion(character.MemberNumber) ? ` BCX ${window.bcx.getCharacterVersion(character.MemberNumber) ?? "?"}` : ""
           }${character.FBC ? `\nWCE v${character.FBC} Alt Arousal: ${character.BCEArousal?.toString()}` : ""}${
-            character.FBCOtherAddons &&
-            character.FBCOtherAddons.some(mod => !["BCX", "FBC", "WCE"].includes(mod.name))
+            character.FBCOtherAddons?.some(mod => !["BCX", "FBC", "WCE"].includes(mod.name))
               ? `\nOther Addons:\n- ${character.FBCOtherAddons.filter(mod => !["BCX", "FBC", "WCE"].includes(mod.name))
                 .map((mod) => `${mod.name} v${mod.version} ${mod.repository ?? ""}`)
                 .join("\n- ")}`

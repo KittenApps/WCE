@@ -22,8 +22,8 @@ globalThis.fbcChatNotify = fbcChatNotify;
 globalThis.fbcSendAction = fbcSendAction;
 globalThis.fbcSettingValue = fbcSettingValue;
 // Expressions init method for custom expressions (here to not break customizer script)
-// eslint-disable-next-line camelcase, no-empty-function
-globalThis.bce_initializeDefaultExpression = () => {};
+// eslint-disable-next-line camelcase
+globalThis.bce_initializeDefaultExpression = () => null;
 globalThis.fbcDebug = fbcDebug;
 
 FUSAM.registerDebugMethod("WCE", () => fbcDebug(false));

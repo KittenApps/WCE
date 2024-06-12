@@ -18,15 +18,15 @@ declare global {
     BCESeen: number;
   }
 }
-type FBCDictionaryEntry = {
+interface FBCDictionaryEntry {
   Tag?: string;
   message?: BCEMessage;
   MemberNumber?: number;
   Text?: string;
   TargetCharacter?: number;
   SourceCharacter?: number;
-};
-type BCEMessage = {
+}
+interface BCEMessage {
   type: string;
   version: string;
   capabilities?: readonly BCECapabilities[];
@@ -36,9 +36,9 @@ type BCEMessage = {
   enjoyment?: number;
   activity?: "ClubSlavery";
   otherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
-};
+}
 
-export function sendHello(target: number | null = null, requestReply: boolean = false): void {
+export function sendHello(target: number | null = null, requestReply = false): void {
   if (!settingsLoaded()) return; // Don't send hello until settings are loaded
   if (!ServerIsConnected || !ServerPlayerIsInChatRoom()) return; // Don't send hello if not in chat room
 
@@ -88,7 +88,7 @@ export default async function hiddenMessageHandler(): Promise<void> {
     return message;
   }
 
-  function processBCEMessage(sender: Character, message: Partial<BCEMessage>, deferred: boolean = false): void {
+  function processBCEMessage(sender: Character, message: Partial<BCEMessage>, deferred = false): void {
     debug("Processing BCE message", sender, message, deferred ? "(deferred)" : "");
     /**
      * FBC's socket listener may in some cases run before the game's socket listener initializes the character

@@ -15,6 +15,7 @@
 		"noEmit": true,
 		"target": "es2022",
 		"checkJs": true,
-		"skipLibCheck": false
+		"skipLibCheck": false,
+		"strictNullChecks": false
 	}
 }

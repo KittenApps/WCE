@@ -48,7 +48,7 @@ export default {
     esbuild({
       sourceMap: true,
       minify: true,
-      target: 'esnext',
+      target: 'es2022',
       define: {
         PUBLIC_URL: URL ? `"${URL}"` : '"http://localhost:4000"',
       },

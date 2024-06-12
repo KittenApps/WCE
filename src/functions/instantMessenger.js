@@ -55,7 +55,9 @@ export default function instantMessenger() {
   rightContainer.appendChild(messageInput);
   document.body.appendChild(container);
 
-  const storageKey = () => `bce-instant-messenger-state-${Player.AccountName.toLowerCase()}`;
+  function storageKey() {
+    return `bce-instant-messenger-state-${Player.AccountName.toLowerCase()}`;
+  }
 
   /** @type {number} */
   let activeChat = -1;
@@ -67,14 +69,14 @@ export default function instantMessenger() {
   /** @type {Map<number, IMFriendHistory>} */
   const friendMessages = new Map();
 
-  const scrollToBottom = () => {
+  function scrollToBottom() {
     const friend = friendMessages.get(activeChat);
     if (friend) {
       friend.history.scrollTop = friend.history.scrollHeight;
     }
-  };
+  }
 
-  const saveHistory = () => {
+  function saveHistory() {
     /** @type {Record<number, { historyRaw: RawHistory[] }>} */
     const history = {};
     friendMessages.forEach((friend, id) => {
@@ -87,10 +89,10 @@ export default function instantMessenger() {
       };
     });
     localStorage.setItem(storageKey(), JSON.stringify(history));
-  };
+  }
 
   /** @type {(friendId: number) => void} */
-  const changeActiveChat = (friendId) => {
+  function changeActiveChat(friendId) {
     const friend = friendMessages.get(friendId);
     messageInput.disabled = !friend?.online;
     messageContainer.innerHTML = "";
@@ -116,11 +118,11 @@ export default function instantMessenger() {
 
     activeChat = friendId;
     scrollToBottom();
-  };
+  }
 
   /** @type {(friendId: number, sent: boolean, beep: Partial<ServerAccountBeepResponse>, skipHistory: boolean, createdAt: Date) => void} */
   // eslint-disable-next-line complexity
-  const addMessage = (friendId, sent, beep, skipHistory, createdAt) => {
+  function addMessage(friendId, sent, beep, skipHistory, createdAt) {
     const friend = friendMessages.get(friendId);
     if (!friend || beep.BeepType) {
       return;
@@ -223,11 +225,7 @@ export default function instantMessenger() {
         unreadSinceOpened++;
       }
     }
-    /**
-     * @returns {null}
-     */
-    const noop = () => null;
-    processChatAugmentsForLine(message, scrolledToEnd ? scrollToBottom : noop);
+    processChatAugmentsForLine(message, scrolledToEnd ? scrollToBottom : () => null);
 
     friend.history.appendChild(message);
     if (scrolledToEnd) {
@@ -235,10 +233,10 @@ export default function instantMessenger() {
     }
 
     saveHistory();
-  };
+  }
 
   /** @type {(friendId: number) => IMFriendHistory} */
-  const handleUnseenFriend = (friendId) => {
+  function handleUnseenFriend(friendId) {
     let msgs = friendMessages.get(friendId);
     if (!msgs) {
       /** @type {IMFriendHistory} */
@@ -276,11 +274,9 @@ export default function instantMessenger() {
       msgs = friendData;
     }
     return msgs;
-  };
+  }
 
-  const history = /** @type {Record<string, {historyRaw: RawHistory[]}>} */ (
-    parseJSON(localStorage.getItem(storageKey()) || "{}")
-  );
+  const history = /** @type {Record<string, {historyRaw: RawHistory[]}>} */(parseJSON(localStorage.getItem(storageKey()) || "{}"));
   for (const [friendIdStr, friendHistory] of objEntries(history)) {
     const friendId = parseInt(friendIdStr);
     const friend = handleUnseenFriend(friendId);
@@ -336,7 +332,7 @@ export default function instantMessenger() {
           messageText = ` ${messageText}`;
         }
         messageType = "Emote";
-      } else if (/^\*\*/u.test(messageText)) {
+      } else if (messageText.startsWith("**")) {
         messageText = messageText.substring(2);
         messageType = "Action";
       }

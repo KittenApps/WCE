@@ -5,15 +5,15 @@ import { displayText } from "../util/localization";
 import { fbcChatNotify } from "../util/utils";
 import type { ButtplugClientDevice } from "buttplug";
 
-export type FBCToySetting = {
+export interface FBCToySetting {
   Name: string;
   SlotName: string;
   LastIntensity?: number;
-};
-type FBCToySyncState = {
+}
+interface FBCToySyncState {
   client?: import("buttplug").ButtplugClient;
   deviceSettings: Map<string, FBCToySetting>;
-};
+}
 
 export const toySyncState: FBCToySyncState = { deviceSettings: new Map() };
 

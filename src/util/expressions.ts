@@ -34,7 +34,7 @@ export const ArousalExpressionStages: ArousalExpressionStages = {
   Pussy: [{ Expression: "Hard", Limit: 50 }, { Expression: null, Limit: 0 }],
 };
 
-export const EventExpressions: { [key: string]: Expression } = {
+export const EventExpressions: Record<string, Expression> = {
   PostOrgasm: {
     Type: "PostOrgasm",
     Duration: 20000,

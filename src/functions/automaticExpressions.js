@@ -51,7 +51,9 @@ export default async function automaticExpressions() {
   );
 
   /** @type {() => boolean} */
-  const animationEngineEnabled = () => !!fbcSettings.animationEngine;
+  function animationEngineEnabled() {
+    return !!fbcSettings.animationEngine;
+  }
   globalThis.bceAnimationEngineEnabled = animationEngineEnabled;
 
   SDK.hookFunction(
@@ -208,15 +210,14 @@ export default async function automaticExpressions() {
     if (!n) {
       n = null;
     }
-    for (let i = 0; i < Player.Appearance.length; i++) {
-      const appearance = Player.Appearance[i];
+    for (const appearance of Player.Appearance) {
       if (appearance.Asset.Group.Name === t) {
         if (!appearance.Property) {
           appearance.Property = {};
         }
         appearance.Property.Expression = n;
         if (color) {
-          Player.Appearance[i].Color = color;
+          appearance.Color = color;
         }
         break;
       }
@@ -602,11 +603,11 @@ export default async function automaticExpressions() {
       PreviousArousal.Progress = 0;
       PreviousDirection = ArousalMeterDirection.Up;
       if (!wasDefault) {
-        for (let i = 0; i < bceExpressionsQueue.length; i++) {
-          if (bceExpressionsQueue[i].Type === AUTOMATED_AROUSAL_EVENT_TYPE) {
+        for (const queuedExpression of bceExpressionsQueue) {
+          if (queuedExpression.Type === AUTOMATED_AROUSAL_EVENT_TYPE) {
             continue;
           }
-          bceExpressionsQueue[i].Expression = {};
+          queuedExpression.Expression = {};
         }
       }
       wasDefault = true;
@@ -624,7 +625,7 @@ export default async function automaticExpressions() {
     }
     PreviousDirection = direction;
 
-    const lastOrgasmAdjustment = () => {
+    function lastOrgasmAdjustment() {
       // Only boost up to the expression at arousal 90
       const lastOrgasmMaxArousal = 90,
         lastOrgasmMaxBoost = 30,
@@ -638,7 +639,7 @@ export default async function automaticExpressions() {
         Math.max(0, lastOrgasmMaxArousal - arousal),
         (lastOrgasmMaxBoost * (lastOrgasmBoostDuration - secondsSinceOrgasm)) / lastOrgasmBoostDuration
       );
-    };
+    }
 
     // Handle events
     const OrgasmRecoveryStage = 2;
@@ -662,7 +663,7 @@ export default async function automaticExpressions() {
     const nextExpression = {};
 
     /** @type {(expression: ExpressionName, stage: ExpressionStage, next: ExpressionEvent, faceComponent: string) => void} */
-    const trySetNextExpression = (e, exp, next, t) => {
+    function trySetNextExpression(e, exp, next, t) {
       const priority = exp.Priority || next.Priority || 0;
       if (!nextExpression[t] || (nextExpression[t].Priority ?? 0) <= priority) {
         nextExpression[t] = {

@@ -1,13 +1,13 @@
 import { logWarn, logError } from "./logger";
 
-type ServerBeep = {
+interface ServerBeep {
   Timer: number;
   MemberNumber?: number;
   Message: string;
   ChatRoomName?: string;
   IsMail?: boolean;
   ClickAction?: "FriendList";
-};
+}
 
 export function sleep(ms: number): Promise<number> {
   // eslint-disable-next-line no-promise-executor-return
@@ -132,7 +132,7 @@ export function fbcChatNotify(node: HTMLElement | HTMLElement[] | string): void 
   ChatRoomAppendChat(div);
 };
 
-export async function fbcNotify(text: string, duration: number = 5000, properties: Partial<ServerBeep> = {}) {
+export async function fbcNotify(text: string, duration = 5000, properties: Partial<ServerBeep> = {}) {
   await waitFor(() => !!Player && new Date(ServerBeep?.Timer || 0) < new Date());
 
   ServerBeep = {

@@ -2,13 +2,11 @@ import eslint from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import * as deprecation from "eslint-plugin-deprecation";
-import { fileURLToPath } from "node:url";
-import { join } from "node:path";
 
 export default tseslint.config(
   eslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  // ...tseslint.configs.stylisticTypeChecked,
+  ...tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   {
     files: ["src/**/*.{j,t}s"],
     ignores: ["node_modules/**/*.*", "types/**/*.d.ts"],
@@ -16,16 +14,21 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
-      globals: { ...globals.browser, ...globals.es2021 },
+      globals: { ...globals.browser, ...globals.es2022 },
       parser: tseslint.parser,
-      parserOptions: { project: join(fileURLToPath(import.meta.url), "../tsconfig.json") },
+      parserOptions: { project: true, tsconfigRootDir: import.meta.dirname },
     },
     rules: {
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/prefer-nullish-coalescing": "off", // ToDo: enable with tsconfig's strictNullChecks
+      "@typescript-eslint/no-confusing-void-expression": "off", // enable that too
+      "@typescript-eslint/restrict-template-expressions": ["error", { allowAny: true }],
+      "@typescript-eslint/no-unnecessary-condition": "off",
+      "@typescript-eslint/no-dynamic-delete": "off",
       "accessor-pairs": "error",
       "array-callback-return": "error",
       "arrow-body-style": "warn",
-      "@typescript-eslint/ban-ts-comment": "off",
-      "@typescript-eslint/no-floating-promises": "off",
       "block-scoped-var": "error",
       camelcase: "warn",
       "capitalized-comments": "warn",
@@ -40,7 +43,7 @@ export default tseslint.config(
       eqeqeq: ["warn", "smart"],
       "func-name-matching": "error",
       "func-names": ["warn", "as-needed"],
-      "func-style": "off",
+      "func-style": ["error", "declaration"],
       "grouped-accessor-pairs": "error",
       "guard-for-in": "error",
       "id-denylist": "error",

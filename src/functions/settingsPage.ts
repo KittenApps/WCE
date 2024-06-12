@@ -286,12 +286,12 @@ export default async function settingsPage(): Promise<void> {
             const segWidth = SelectButtonWidth / 2;
             const idx = defSetting.options.indexOf(fbcSettings[settingName] as string);
             const len = defSetting.options.length;
-            if (MouseIn(SelectButtonOffset + segWidth, y, segWidth, 64) && (!defSetting.disabled || !defSetting.disabled())) {
+            if (MouseIn(SelectButtonOffset + segWidth, y, segWidth, 64) && (!defSetting.disabled?.())) {
               fbcSettings[settingName] = defSetting.options[(idx + 1 + len) % len];
-            } else if (MouseIn(SelectButtonOffset, y, segWidth, 64) && (!defSetting.disabled || !defSetting.disabled())) {
+            } else if (MouseIn(SelectButtonOffset, y, segWidth, 64) && (!defSetting.disabled?.())) {
               fbcSettings[settingName] = defSetting.options[(idx - 1 + len) % len];
             }
-          } else if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled || !defaultSetting.disabled())) {
+          } else if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled?.())) {
             fbcSettings[settingName] = !fbcSettings[settingName];
             defaultSetting.sideEffects(fbcSettings[settingName], false);
           }
@@ -368,8 +368,7 @@ export default async function settingsPage(): Promise<void> {
     exit: PreferenceSubscreenBCESettingsExit,
     load: PreferenceSubscreenBCESettingsLoad,
     // ToDo: remove once r105 is out
-    // eslint-disable-next-line no-empty-function
-    unload: () => {},
+    unload: () => null,
   });
 
   function keyHandler(e: KeyboardEvent): void {
