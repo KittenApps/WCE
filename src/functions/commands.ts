@@ -364,6 +364,8 @@ export default async function commands(): Promise<void> {
             "Multiple whisper targets found: $Targets. You can still whisper the player by clicking their name or by using their member number.",
             { $Targets: targetMembers.map((c) => `${CharacterNickname(c)} (${c.MemberNumber ?? ""})`).join(", ") }
           ));
+        } else if (targetMembers[0].IsPlayer()) {
+          fbcChatNotify("You can't whisper yourself!");
         } else if (!msg) {
           fbcChatNotify(displayText(`No message provided`));
         } else {

@@ -174,17 +174,17 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         CharacterSetActivePose: "566A14D7",
         ChatAdminRoomCustomizationClick: "9D859B28",
         ChatAdminRoomCustomizationProcess: "AF01C65A",
-        ChatRoomAppendChat: "318D7FC6", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomAppendChat: "12890378", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomCharacterUpdate: "DE2DC592",
         ChatRoomCharacterViewDraw: "CA108410", // Screens/Online/ChatRoom/ChatRoomCharacterView.js (19.4.2024 )
         ChatRoomCharacterViewIsActive: "CD8066FA",
-        ChatRoomClearAllElements: "629DEB2F", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomClearAllElements: "B79EB01C", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomCurrentTime: "A462DD3A",
         ChatRoomDrawCharacterStatusIcons: "B5209E11", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomGenerateChatRoomChatMessage: "6BFAC520", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomHideElements: "D58ECB5C", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomHTMLEntities: "0A7ADB1D",
-        ChatRoomKeyDown: "BAF38D83", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomKeyDown: "E59D9605", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomListManipulation: "75D28A8B",
         ChatRoomMapViewCharacterIsVisible: "286C447D",
         ChatRoomMapViewCharacterOnWhisperRange: "B0D08E96",
@@ -194,7 +194,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomMessage: "EA9F35DE", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomRegisterMessageHandler: "C432923A",
-        ChatRoomSendChat: "21606D2F", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomSendChat: "0FF94F14", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomStart: "9B822A9A",
         ChatRoomSyncMemberJoin: "92AB3558", // Screens/Online/ChatRoom/ChatRoom.js
         CommandExecute: "C5477FA1", // Screens/Online/ChatRoom/Commands.js
