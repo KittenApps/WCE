@@ -15,7 +15,7 @@ if (typeof ChatRoomCharacter === "undefined") {
   throw new Error("Bondage Club not detected. Skipping WCE initialization.");
 }
 
-GameVersion = new URLSearchParams(location.hash.slice(1)).get('version') ?? GameVersion;
+GameVersion = new URLSearchParams(location.hash.slice(1)).get("version") ?? GameVersion;
 globalThis.FBC_VERSION = FBC_VERSION;
 globalThis.fbcDisplayText = displayText;
 globalThis.fbcChatNotify = fbcChatNotify;

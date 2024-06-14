@@ -9,7 +9,7 @@ export default function chatRoomWhisperFixes(): void {
     HOOK_PRIORITIES.AddBehaviour,
     (args, next) => {
       if (fbcSettings.whisperTargetFixes && args[0].Type === "Action" && args[0].Sender === ChatRoomTargetMemberNumber) {
-        if (["ServerLeave", "ServerBan", "ServerKick", "ServerDisconnect"].some((m) => args[0].Content.startsWith(m))) {
+        if (["ServerLeave", "ServerBan", "ServerKick", "ServerDisconnect"].some(m => args[0].Content.startsWith(m))) {
           leaveResetTargetTimers[args[0].Sender] = window.setTimeout(() => {
             ChatRoomSetTarget(-1);
             ChatRoomSendLocal('<span style="color: red">[WCE] Your whisper target was cleared, because they left the room for more than a minute!</span>');

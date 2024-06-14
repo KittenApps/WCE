@@ -8,7 +8,7 @@ export default function confirmLeave() {
     (e) => {
       if (toySyncState.client?.connected) {
         // Stop vibrating toys
-        for (const device of toySyncState.client.devices.filter((d) => d.vibrateAttributes.length > 0)) {
+        for (const device of toySyncState.client.devices.filter(d => d.vibrateAttributes.length > 0)) {
           device.vibrate(0);
         }
       }

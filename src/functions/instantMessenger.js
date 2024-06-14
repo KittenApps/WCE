@@ -131,7 +131,7 @@ export default function instantMessenger() {
     /** @type {{ messageType: "Message" | "Emote" | "Action"; messageColor?: string; }?} */
     const details = parseJSON(
       beep.Message?.split("\n")
-        .find((line) => line.startsWith("\uf124"))
+        .find(line => line.startsWith("\uf124"))
         ?.substring(1) ?? "{}"
     ) ?? { messageType: "Message" };
 
@@ -140,14 +140,9 @@ export default function instantMessenger() {
     }
 
     /** @type {"Message" | "Emote" | "Action"} */
-    const messageType = ["Message", "Emote", "Action"].includes(details.messageType)
-      ? details.messageType
-      : "Message";
+    const messageType = ["Message", "Emote", "Action"].includes(details.messageType) ? details.messageType : "Message";
     const messageColor = details?.messageColor ?? "#ffffff";
-    const messageText = beep.Message?.split("\n")
-      .filter((line) => !line.startsWith("\uf124"))
-      .join("\n")
-      .trimEnd();
+    const messageText = beep.Message?.split("\n").filter(line => !line.startsWith("\uf124")).join("\n").trimEnd();
 
     if (!messageText) {
       debug("skipped empty beep", friendId, beep, sent, skipHistory);
@@ -390,9 +385,7 @@ export default function instantMessenger() {
         f.listElement.classList.remove(offlineClass);
         f.listElement.classList.add(onlineClass);
       }
-      for (const friendId of Array.from(friendMessages.keys()).filter(
-        (f) => !data.Result.some((f2) => f2.MemberNumber === f)
-      )) {
+      for (const friendId of Array.from(friendMessages.keys()).filter(f => !data.Result.some(f2 => f2.MemberNumber === f))) {
         const f = friendMessages.get(friendId);
         if (!f) {
           throw new Error("this should never happen, f is null in map loop");
@@ -402,7 +395,7 @@ export default function instantMessenger() {
         f.listElement.classList.remove(onlineClass);
         f.listElement.classList.add(offlineClass);
       }
-      if (!data.Result.some((f) => f.MemberNumber === activeChat)) {
+      if (!data.Result.some(f => f.MemberNumber === activeChat)) {
         // Disable input, current user is offline
         messageInput.disabled = true;
       } else {
@@ -482,8 +475,7 @@ export default function instantMessenger() {
       if (fbcSettings.instantMessenger) {
         if (
           !fbcSettings.allowIMBypassBCX &&
-          (BCX?.getRuleState("speech_restrict_beep_receive")?.isEnforced ||
-            (BCX?.getRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
+          (BCX?.getRuleState("speech_restrict_beep_receive")?.isEnforced || (BCX?.getRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
         ) {
           if (!container.classList.contains("bce-hidden")) {
             hideIM();

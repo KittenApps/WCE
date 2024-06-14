@@ -16,7 +16,7 @@ export default async function layeringMenu(): Promise<void> {
   await waitFor(() => !!Player?.AppearanceLayers);
 
   // ToDo: remove once r105 is out
-  if (GameVersion === 'R104') {
+  if (GameVersion === "R104") {
     patchFunction(
       "DialogMenuButtonBuild",
       {
@@ -40,7 +40,7 @@ export default async function layeringMenu(): Promise<void> {
       "Layering.Load",
       HOOK_PRIORITIES.AddBehaviour,
       (args, next) => {
-        if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(Layering.Item, "Lock") || DialogCanUnlock2(Layering.Character, Layering.Item,))) {
+        if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(Layering.Item, "Lock") || DialogCanUnlock2(Layering.Character, Layering.Item))) {
           Layering.Readonly = false;
         }
         if (!fbcSettings.layeringHide || CurrentScreen === "Crafting" || !Layering.Character.BCECapabilities?.includes("layeringHide")) return next(args);
@@ -52,7 +52,7 @@ export default async function layeringMenu(): Promise<void> {
           tag: "h1",
           attributes: { id: "layering-hide-header" },
           parent: document.getElementById("layering"),
-          children: [displayText("[WCE] Configure layer hiding")]
+          children: [displayText("[WCE] Configure layer hiding")],
         });
         ElementCreate({
           tag: "form",
@@ -70,7 +70,7 @@ export default async function layeringMenu(): Promise<void> {
                 classList: [],
                 eventListeners: {
                   click: () => {
-                    const hideForm: HTMLFormElement = document.getElementById('layering-hide-div') as HTMLFormElement;
+                    const hideForm: HTMLFormElement = document.getElementById("layering-hide-div") as HTMLFormElement;
                     Layering.Item.Property.wceOverrideHide = new FormData(hideForm).getAll("checkbox-hide") as AssetGroupName[];
                     if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
                     // eslint-disable-next-line no-underscore-dangle
@@ -85,7 +85,7 @@ export default async function layeringMenu(): Promise<void> {
               },
             ],
 
-          }))
+          })),
         });
         return ret;
       }
@@ -95,9 +95,11 @@ export default async function layeringMenu(): Promise<void> {
       "Layering._ResetClickListener",
       HOOK_PRIORITIES.AddBehaviour,
       (args, next) => {
-        if (!fbcSettings.layeringHide || CurrentScreen === 'Crafting') return next(args);
+        if (!fbcSettings.layeringHide || CurrentScreen === "Crafting") return next(args);
         delete Layering.Item.Property.wceOverrideHide;
-        document.querySelectorAll('input[name=checkbox-hide]').forEach((e: HTMLInputElement) => {e.checked = true;})
+        document.querySelectorAll("input[name=checkbox-hide]").forEach((e: HTMLInputElement) => {
+          e.checked = true;
+        });
         return next(args);
       }
     );
@@ -108,7 +110,7 @@ export default async function layeringMenu(): Promise<void> {
     {
       "if ((item.Asset.Hide != null) && (item.Asset.Hide.indexOf(GroupName) >= 0) && !Excluded) HidingItem = true;": `
         const hide = item.Property?.wceOverrideHide != null ? item.Property.wceOverrideHide : item.Asset.Hide;
-        if ((hide != null) && (hide.indexOf(GroupName) >= 0) && !Excluded) HidingItem = true;`
+        if ((hide != null) && (hide.indexOf(GroupName) >= 0) && !Excluded) HidingItem = true;`,
     },
     "Override C.Appeareance.Asset.Hide won't work"
   );
@@ -127,13 +129,13 @@ export default async function layeringMenu(): Promise<void> {
     return appearance;
   }
 
-  globalThis.wceServerAppearance = serverAppearance
-  
+  globalThis.wceServerAppearance = serverAppearance;
+
   patchFunction(
     "ServerPlayerAppearanceSync",
     {
       "D.Appearance = ServerAppearanceBundle(Player.Appearance);":
-        "D.Appearance = wceServerAppearance(ServerAppearanceBundle(Player.Appearance));"
+        "D.Appearance = wceServerAppearance(ServerAppearanceBundle(Player.Appearance));",
     },
     "wceOverrideHide would be stored in the BC database"
   );
@@ -180,7 +182,7 @@ export default async function layeringMenu(): Promise<void> {
     "VibratorRemote",
   ];
   const colorCopyableAssets = Asset.filter(ass =>
-    AssetGroup.filter(a => a.Name.startsWith("Item") && !/\d$/u.test(a.Name) && a.Asset.find((b) => b.Name === ass.Name)).length > 1
+    AssetGroup.filter(a => a.Name.startsWith("Item") && !/\d$/u.test(a.Name) && a.Asset.find(b => b.Name === ass.Name)).length > 1
   ).filter((v, i, a) => a.findIndex(as => as.Name === v.Name) === i).map(a => a.Name).filter(a => !ignoredColorCopyableAssets.includes(a));
 
   function assetWorn(C: Character, item?: Item): boolean {

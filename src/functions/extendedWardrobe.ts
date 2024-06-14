@@ -6,7 +6,7 @@ import { fbcSettings } from "../util/settings";
 import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE } from "../util/constants";
 import type { Table, IndexableType } from "dexie";
 
-let localWardrobeTable: Table<{id: number, appearance: ServerItemBundle[]}, IndexableType, unknown>;
+let localWardrobeTable: Table<{ id: number; appearance: ServerItemBundle[] }, IndexableType, unknown>;
 
 export async function loadLocalWardrobe(wardrobe: ItemBundle[][]): Promise<void> {
   const { Dexie } = await import("dexie");
@@ -15,9 +15,9 @@ export async function loadLocalWardrobe(wardrobe: ItemBundle[][]): Promise<void>
     wardrobe: "id, appearance",
   });
   localWardrobeTable = db.table("wardrobe");
-  const localWardrobe: {id: number, appearance: ServerItemBundle[]}[] = (await localWardrobeTable.toArray()) || [];
+  const localWardrobe: { id: number; appearance: ServerItemBundle[] }[] = (await localWardrobeTable.toArray()) || [];
   await waitFor(() => wardrobe.length === EXPANDED_WARDROBE_SIZE);
-  wardrobe.push(...localWardrobe.map((w) => sanitizeBundles(w.appearance)));
+  wardrobe.push(...localWardrobe.map(w => sanitizeBundles(w.appearance)));
 }
 
 async function saveLocalWardrobe(wardrobe: ServerItemBundle[][]): Promise<void> {
@@ -27,7 +27,7 @@ async function saveLocalWardrobe(wardrobe: ServerItemBundle[][]): Promise<void> 
 /** Convert old {@link ItemProperties.Type} remnants into {@link ItemProperties.TypeRecord} in the passed item bundles. */
 function sanitizeBundles(bundleList: ItemBundle[]): ItemBundle[] {
   if (!Array.isArray(bundleList)) return bundleList;
-  return bundleList.map(bundle => {
+  return bundleList.map((bundle) => {
     // eslint-disable-next-line deprecation/deprecation
     if (typeof bundle.Property?.Type === "string" && !CommonIsObject(bundle.Property?.TypeRecord)) {
       const asset = AssetGet("Female3DCG", bundle.Group, bundle.Name);

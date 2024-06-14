@@ -15,7 +15,7 @@ export default function discreetMode() {
         }
         return next(args);
       }
-    )
+    );
   }
 
   SDK.hookFunction(

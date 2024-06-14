@@ -77,7 +77,7 @@ declare global {
 }
 
 // @ts-ignore -- this is fully initialized in loadSettings
-export let fbcSettings: {[Property in keyof (typeof defaultSettings)]: (typeof defaultSettings)[Property]["value"]} & { version: number } = {};
+export let fbcSettings: { [Property in keyof (typeof defaultSettings)]: (typeof defaultSettings)[Property]["value"] } & { version: number } = {};
 let postSettingsHasRun = false;
 
 export const defaultSettings = {
@@ -162,11 +162,11 @@ export const defaultSettings = {
     label: "[Beta] Allow configuring layer hiding in layering menu",
     type: "checkbox",
     value: false,
-    disabled: () => GameVersion === 'R104',
+    disabled: () => GameVersion === "R104",
     sideEffects: (newValue, init) => {
       debug("layeringHide", newValue);
       // ToDo: remove this once R105 is out
-      if (init && GameVersion === 'R104') fbcSettings.layeringHide = false;
+      if (init && GameVersion === "R104") fbcSettings.layeringHide = false;
       // ToDo: add cleanup code here
     },
     category: "appearance",
@@ -405,10 +405,10 @@ export const defaultSettings = {
     label: "Show whisper button on chat messages",
     type: "checkbox",
     value: true,
-    disabled: () => GameVersion !== 'R104',
+    disabled: () => GameVersion !== "R104",
     sideEffects: (newValue, init) => {
       debug("whisperButton", newValue);
-      if (init && GameVersion !== 'R104') fbcSettings.whisperButton = false;
+      if (init && GameVersion !== "R104") fbcSettings.whisperButton = false;
     },
     category: "chat",
     description: "Adds a whisper button to chat messages, allowing you to whisper to the sender more conveniently.",
@@ -473,11 +473,11 @@ export const defaultSettings = {
     disabled: () => !fbcSettings.antiGarble,
     sideEffects: (newValue, init) => {
       debug("antiGarbleChatoptions", newValue);
-      if (GameVersion.startsWith('R105')) {
+      if (GameVersion.startsWith("R105")) {
         if (!init && newValue) {
           createChatOptions(document.getElementById("chat-room-div") as HTMLDivElement);
         } else if (!init) {
-          document.querySelectorAll('.wce-chat-room-button').forEach(e => e.remove());
+          document.querySelectorAll(".wce-chat-room-button").forEach(e => e.remove());
         }
         return;
       }
@@ -535,7 +535,7 @@ export const defaultSettings = {
     tooltips: [
       "Chat stutters: remove (always remove chat stutters, even if it is the only effect)",
       "Chat stutters: ignore (remove chat stutters if ungarbling gag speech, but ignore it if it's the only effect)",
-      "Chat stutters: preserve (always preserve chat stutters in the ungarbled text in brackets)"
+      "Chat stutters: preserve (always preserve chat stutters in the ungarbled text in brackets)",
     ],
     disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
     sideEffects: (newValue) => {
@@ -555,7 +555,7 @@ export const defaultSettings = {
     tooltips: [
       "Chat baby talk: remove (always remove chat baby talk, even if it is the only effect)",
       "Chat baby talk: ignore (remove chat baby talk if ungarbling gag speech, but ignore it if it's the only effect)",
-      "Chat baby talk: preserve (always preserve chat baby talk in the ungarbled text in brackets)"
+      "Chat baby talk: preserve (always preserve chat baby talk in the ungarbled text in brackets)",
     ],
     disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
     sideEffects: (newValue) => {
@@ -578,7 +578,7 @@ export const defaultSettings = {
       "Whisper garble level: medium (send a partly ungarbled whisper, which is only garbled up to the medium garbel level 3)",
       "Whisper garble level: high (send a partly ungarbled whisper, which is only garbled up to the high garbel level 5)",
       "Whisper garble level: full (always only sends the full garbled whisper, no ungarbled message in brackets)",
-      "Whisper garble level: off (don't garble whisper messages at all, normal message is ungarbled, no message in brackets)"
+      "Whisper garble level: off (don't garble whisper messages at all, normal message is ungarbled, no message in brackets)",
     ],
     disabled: () => !fbcSettings.antiGarble,
     sideEffects: (newValue) => {
@@ -596,7 +596,7 @@ export const defaultSettings = {
     tooltips: [
       "Whispers stutters: remove (always remove whispers stutters, even if it is the only effect)",
       "Whispers stutters: ignore (remove whispers stutters if ungarbling gag speech, but ignore it if it's the only effect)",
-      "Whispers stutters: preserve (always preserve whispers stutters in the ungarbled text in brackets)"
+      "Whispers stutters: preserve (always preserve whispers stutters in the ungarbled text in brackets)",
     ],
     disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
     sideEffects: (newValue) => {
@@ -616,7 +616,7 @@ export const defaultSettings = {
     tooltips: [
       "Whispers baby talk: remove (always remove whispers baby talk, even if it is the only effect)",
       "Whispers baby talk: ignore (remove whispers baby talk if ungarbling gag speech, but ignore it if it's the only effect)",
-      "Whispers baby talk: preserve (always preserve whispers baby talk in the ungarbled text in brackets)"
+      "Whispers baby talk: preserve (always preserve whispers baby talk in the ungarbled text in brackets)",
     ],
     disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
     sideEffects: (newValue) => {
@@ -1006,7 +1006,7 @@ async function beepChangelog(): Promise<void> {
   await sleep(5000);
   fbcBeepNotify(
     displayText("WCE Changelog"),
-    displayText(`WCE has received significant updates since you last used it. See /wcechangelog in a chatroom.`)
+    displayText("WCE has received significant updates since you last used it. See /wcechangelog in a chatroom.")
   );
   await waitFor(() => !!document.getElementById("TextAreaChatLog"));
   augmentedChatNotify(`Wholesome Club Extensions (WCE) changelog:\n${fbcChangelog}`);

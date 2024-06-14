@@ -11,7 +11,7 @@ interface ServerBeep {
 
 export function sleep(ms: number): Promise<number> {
   // eslint-disable-next-line no-promise-executor-return
-  return new Promise((resolve) => window.setTimeout(resolve, ms));
+  return new Promise(resolve => window.setTimeout(resolve, ms));
 }
 
 export async function waitFor(func: () => boolean, cancelFunc: () => boolean = () => false): Promise<boolean> {
@@ -50,7 +50,7 @@ export function isStringOrStringArray(c: unknown): c is (string | string[]) {
 }
 
 export function isWardrobe(o: unknown): o is ItemBundle[][] {
-  return Array.isArray(o) && o.every((b) => isItemBundleArray(b) || b === null);
+  return Array.isArray(o) && o.every(b => isItemBundleArray(b) || b === null);
 }
 
 function isItemBundle(o: unknown): o is ItemBundle {
@@ -163,7 +163,7 @@ export function fbcSendAction(text: string): void {
 
 export function addCustomEffect(effect: EffectName): boolean {
   let updated = false;
-  const pronouns = Player.Appearance.find((a) => a.Asset.Group.Name === "Pronouns");
+  const pronouns = Player.Appearance.find(a => a.Asset.Group.Name === "Pronouns");
   if (!pronouns) {
     logWarn("Could not find pronouns asset.");
     return updated;
@@ -185,10 +185,10 @@ export function addCustomEffect(effect: EffectName): boolean {
 }
 
 export function removeCustomEffect(effect: EffectName): boolean {
-  const pronouns = Player.Appearance.find((a) => a.Asset.Group.Name === "Pronouns");
+  const pronouns = Player.Appearance.find(a => a.Asset.Group.Name === "Pronouns");
   let updated = false;
   if (pronouns?.Property?.Effect?.includes(effect)) {
-    pronouns.Property.Effect = pronouns.Property.Effect.filter((e) => e !== effect);
+    pronouns.Property.Effect = pronouns.Property.Effect.filter(e => e !== effect);
     updated = true;
   }
   if (updated && ServerPlayerIsInChatRoom()) {

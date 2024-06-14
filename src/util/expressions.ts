@@ -418,7 +418,7 @@ export const ActivityTriggers: ActivityTrigger[] = [
   { Event: "Blush", Type: "Emote", Matchers: [{ Tester: /^blushes/u }] },
   { Event: "Chuckle", Type: "Emote", Matchers: [{ Tester: /^chuckles/u }] },
   { Event: "Laugh", Type: "Emote", Matchers: [{ Tester: /^laughs/u }] },
-  { Event: "Giggle", Type: "Emote", Matchers: [{ Tester: /^giggles/u}] },
+  { Event: "Giggle", Type: "Emote", Matchers: [{ Tester: /^giggles/u }] },
   { Event: "Smirk", Type: "Emote", Matchers: [{ Tester: /^(smirk(s|ing)|.*with a smirk)/u }] },
   { Event: "Wink", Type: "Emote", Matchers: [{ Tester: /^winks/u }] },
   { Event: "Pout", Type: "Emote", Matchers: [{ Tester: /^pouts/u }] },
@@ -460,7 +460,7 @@ export const ActivityTriggers: ActivityTrigger[] = [
       Criteria: { TargetIsPlayer: true },
     }],
   },
-  { Event: "Hit", Type: "Action", Matchers: [{ Tester: /^ActionActivitySpankItem$/u, Criteria: { TargetIsPlayer: true } }]},
+  { Event: "Hit", Type: "Action", Matchers: [{ Tester: /^ActionActivitySpankItem$/u, Criteria: { TargetIsPlayer: true } }] },
   {
     Event: "Spank",
     Type: "Activity",

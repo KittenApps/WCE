@@ -23,7 +23,7 @@ export default function pendingMessages() {
       if (fbcSettings.pendingMessages && args?.length && isChatMessage(args[0]) && Array.isArray(args[0].Dictionary)) {
         const [message] = args;
         // @ts-ignore - custom dictionary Tag
-        const tag = message.Dictionary?.find?.((d) => d.Tag === "fbc_nonce");
+        const tag = message.Dictionary?.find?.(d => d.Tag === "fbc_nonce");
         if (tag) {
           // @ts-ignore - custom dictionary Tag
           const el = document.querySelector(`[data-nonce='${tag.Text}']`);

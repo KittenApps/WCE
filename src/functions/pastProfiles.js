@@ -56,7 +56,7 @@ export default async function pastProfiles() {
     list.sort((a, b) => a.seen - b.seen);
     list = list.slice(0, num);
     debug("deleting", list);
-    await profiles.bulkDelete(list.map((p) => p.memberNumber));
+    await profiles.bulkDelete(list.map(p => p.memberNumber));
   }
 
   async function quotaSafetyCheck() {
@@ -189,15 +189,14 @@ export default async function pastProfiles() {
     Tag: "profiles",
     Description: displayText("<filter> - List seen profiles, optionally searching by member number or name"),
     Action: (argums) => {
-      (async (args) => {
+      (async(args) => {
         /** @type {FBCSavedProfile[]} */
         let list = await profiles.toArray();
-        list = list.filter(
-          (p) =>
-            !args ||
-            p.name.toLowerCase().includes(args) ||
-            p.memberNumber.toString().includes(args) ||
-            p.lastNick?.toLowerCase().includes(args)
+        list = list.filter(p =>
+          !args ||
+          p.name.toLowerCase().includes(args) ||
+          p.memberNumber.toString().includes(args) ||
+          p.lastNick?.toLowerCase().includes(args)
         );
         list.sort((a, b) => b.seen - a.seen);
         const matches = list.length;
@@ -205,14 +204,14 @@ export default async function pastProfiles() {
         list.sort((a, b) => -(b.lastNick ?? b.name).localeCompare(a.lastNick ?? a.name));
         const lines = list.map((p) => {
           const div = document.createElement("div");
-          div.textContent = displayText(`$nickAndName ($memberNumber) - Seen: $seen`, {
+          div.textContent = displayText("$nickAndName ($memberNumber) - Seen: $seen", {
             $nickAndName: p.lastNick ? `${p.lastNick} / ${p.name}` : p.name,
             $memberNumber: p.memberNumber.toString(),
             $seen: new Date(p.seen).toLocaleDateString(),
           });
           const link = document.createElement("a");
           link.textContent = displayText("Open");
-          link.href = `#`;
+          link.href = "#";
           link.classList.add("bce-profile-open");
           link.addEventListener("click", (e) => {
             e.preventDefault();

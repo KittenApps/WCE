@@ -1,6 +1,6 @@
 type LogLevel = "error" | "warn" | "info" | "debug";
 
-export const pastLogs: { level: LogLevel, message: string }[] = Array.from({length: 100});
+export const pastLogs: { level: LogLevel; message: string }[] = Array.from({ length: 100 });
 
 function pushLog(level: LogLevel, ...args: unknown[]): void {
   pastLogs.shift();

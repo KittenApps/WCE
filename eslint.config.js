@@ -1,10 +1,17 @@
 import eslint from "@eslint/js";
-import globals from "globals";
+import stylistic from '@stylistic/eslint-plugin'
 import tseslint from "typescript-eslint";
 import * as deprecation from "eslint-plugin-deprecation";
+import globals from "globals";
 
 export default tseslint.config(
   eslint.configs.recommended,
+  stylistic.configs.customize({
+    quotes: 'double',
+    semi: true,
+    jsx: false,
+    braceStyle: '1tbs',
+  }),
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   {
@@ -19,6 +26,11 @@ export default tseslint.config(
       parserOptions: { project: true, tsconfigRootDir: import.meta.dirname },
     },
     rules: {
+      "@stylistic/quote-props": ["error", "as-needed"],
+      "@stylistic/comma-dangle": ["error", { arrays: "always-multiline", objects: "always-multiline", imports: "always-multiline" }],
+      "@stylistic/quotes": ["error", "double", { "avoidEscape": true }],
+      "@stylistic/operator-linebreak": ["error", "after"],
+      "@stylistic/space-before-function-paren": ["error", "never"],
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-floating-promises": "off",
       "@typescript-eslint/prefer-nullish-coalescing": "off", // ToDo: enable with tsconfig's strictNullChecks

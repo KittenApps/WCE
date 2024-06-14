@@ -14,7 +14,7 @@ declare global {
 export async function bceStartClubSlave(): Promise<void> {
   if (BCX?.getRuleState("block_club_slave_work")?.isEnforced) {
     fbcSendAction(
-      displayText(`BCX rules forbid $PlayerName from becoming a Club Slave.`, {
+      displayText("BCX rules forbid $PlayerName from becoming a Club Slave.", {
         $PlayerName: CharacterNickname(Player),
       })
     );
@@ -22,7 +22,7 @@ export async function bceStartClubSlave(): Promise<void> {
   }
 
   fbcSendAction(
-    displayText(`$PlayerName gets grabbed by two maids and escorted to management to serve as a Club Slave.`, {
+    displayText("$PlayerName gets grabbed by two maids and escorted to management to serve as a Club Slave.", {
       $PlayerName: CharacterNickname(Player),
     })
   );
@@ -96,7 +96,7 @@ export default async function forcedClubSlave(): Promise<void> {
       ],
     ];
 
-    const idx = CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"].findIndex((v) => v[0] === "160") + 1;
+    const idx = CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"].findIndex(v => v[0] === "160") + 1;
     CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"].splice(idx, 0, ...clubSlaveDialog);
 
     function appendDialog(C: Character): void {
@@ -106,7 +106,7 @@ export default async function forcedClubSlave(): Promise<void> {
       C.Dialog.splice(
         idx,
         0,
-        ...clubSlaveDialog.map((v) => ({
+        ...clubSlaveDialog.map(v => ({
           Stage: v[0],
           NextStage: v[1],
           Option: v[2],
@@ -120,7 +120,7 @@ export default async function forcedClubSlave(): Promise<void> {
       );
     };
 
-    for (const c of ChatRoomCharacter.filter((cc) => !cc.IsPlayer() && cc.IsOnline())) {
+    for (const c of ChatRoomCharacter.filter(cc => !cc.IsPlayer() && cc.IsOnline())) {
       appendDialog(c);
     }
 
@@ -165,7 +165,7 @@ export default async function forcedClubSlave(): Promise<void> {
     if (!C) {
       return false;
     }
-    return C.BCECapabilities?.includes("clubslave") && !C.Appearance.some((a) => a.Asset.Name === "ClubSlaveCollar");
+    return C.BCECapabilities?.includes("clubslave") && !C.Appearance.some(a => a.Asset.Name === "ClubSlaveCollar");
   }
 
   globalThis.bceGotoRoom = bceGotoRoom;

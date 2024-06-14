@@ -164,11 +164,11 @@ export default async function automaticExpressions() {
 
   /** @type {(dict?: ChatMessageDictionary) => boolean} */
   function dictHasPlayerTarget(dict) {
-    return dict?.some((t) => t && "TargetCharacter" in t && t.TargetCharacter === Player.MemberNumber) || false;
+    return dict?.some(t => t && "TargetCharacter" in t && t.TargetCharacter === Player.MemberNumber) || false;
   }
 
   registerSocketListener("ChatRoomMessage", (/** @type {ServerChatRoomMessage} */ data) => {
-    activityTriggers: for (const trigger of globalThis.bce_ActivityTriggers.filter((t) => t.Type === data.Type)) {
+    activityTriggers: for (const trigger of globalThis.bce_ActivityTriggers.filter(t => t.Type === data.Type)) {
       for (const matcher of trigger.Matchers) {
         if (matcher.Tester.test(data.Content)) {
           if (matcher.Criteria) {
@@ -178,10 +178,10 @@ export default async function automaticExpressions() {
               continue;
             } else if (
               matcher.Criteria.DictionaryMatchers &&
-              !matcher.Criteria.DictionaryMatchers.some((m) =>
-                data.Dictionary?.find((t) =>
+              !matcher.Criteria.DictionaryMatchers.some(m =>
+                data.Dictionary?.find(t =>
                   // @ts-ignore - intentional dynamic indexing on statically defined types
-                  Object.keys(m).every((k) => m[k] === t[k])
+                  Object.keys(m).every(k => m[k] === t[k])
                 )
               )
             ) {
@@ -255,8 +255,8 @@ export default async function automaticExpressions() {
         const [expr] = expression(t);
         return [t, expr];
       })
-      .filter((v) => v[1] !== null)
-      .map((v) => [v[0], [{ Expression: v[1] }]])
+      .filter(v => v[1] !== null)
+      .map(v => [v[0], [{ Expression: v[1] }]])
       .reduce((a, v) => ({ ...a, [/** @type {string} */ (v[0])]: v[1] }), {}),
   });
 
@@ -313,7 +313,7 @@ export default async function automaticExpressions() {
         fbcChatNotify(displayText("Reset all expressions"));
       } else {
         const component = `${args[0].toUpperCase()}${args.substring(1).toLowerCase()}`;
-        for (const e of bceExpressionsQueue.map((a) => a.Expression).filter(Boolean)) {
+        for (const e of bceExpressionsQueue.map(a => a.Expression).filter(Boolean)) {
           if (component === "Eyes" && "Eyes2" in e) {
             delete e.Eyes2;
           }
@@ -322,7 +322,7 @@ export default async function automaticExpressions() {
           }
         }
         fbcChatNotify(
-          displayText(`Reset expression on $component`, {
+          displayText("Reset expression on $component", {
             $component: component,
           })
         );
@@ -340,14 +340,12 @@ export default async function automaticExpressions() {
       }
       if (args[0] === "list") {
         fbcChatNotify(
-          displayText(`Available animations: $anims`, {
+          displayText("Available animations: $anims", {
             $anims: Object.keys(globalThis.bce_EventExpressions).join(", "),
           })
         );
       }
-      const animation = Object.keys(globalThis.bce_EventExpressions).find(
-        (a) => a.toLowerCase() === args[0]?.toLowerCase()
-      );
+      const animation = Object.keys(globalThis.bce_EventExpressions).find(a => a.toLowerCase() === args[0]?.toLowerCase());
       if (animation) {
         pushEvent(globalThis.bce_EventExpressions[animation]);
       }
@@ -358,14 +356,14 @@ export default async function automaticExpressions() {
    * @param {AssetPoseName} pose
    */
   function getPoseCategory(pose) {
-    return PoseFemale3DCG.find((a) => a.Name === pose)?.Category;
+    return PoseFemale3DCG.find(a => a.Name === pose)?.Category;
   }
 
   /**
    * @param {readonly string[]} poses
    */
   function setPoses(poses) {
-    poses = poses.filter((p) => p).map((p) => p.toLowerCase());
+    poses = poses.filter(p => p).map(p => p.toLowerCase());
     bceExpressionsQueue.forEach((e) => {
       if (e.Type === MANUAL_OVERRIDE_EVENT_TYPE) {
         e.Poses = [];
@@ -378,11 +376,11 @@ export default async function automaticExpressions() {
             return;
           }
           const poseList = p.Pose;
-          p.Pose = poseList.filter((pp) => !!getPoseCategory(pp));
+          p.Pose = poseList.filter(pp => !!getPoseCategory(pp));
         });
       }
     });
-    const poseNames = PoseFemale3DCG.filter((p) => poses.includes(p.Name.toLowerCase())).map((p) => p.Name);
+    const poseNames = PoseFemale3DCG.filter(p => poses.includes(p.Name.toLowerCase())).map(p => p.Name);
     for (const poseName of poseNames) {
       PoseSetActive(Player, poseName, false);
     }
@@ -393,9 +391,9 @@ export default async function automaticExpressions() {
     Description: displayText("['list' or list of poses]: set your pose"),
     Action: (_1, _2, poses) => {
       if (poses[0] === "list") {
-        const categories = [...new Set(PoseFemale3DCG.map((a) => a.Category))];
+        const categories = [...new Set(PoseFemale3DCG.map(a => a.Category))];
         for (const category of categories) {
-          const list = PoseFemale3DCG.filter((a) => a.Category === category)?.map((a) => a.Name);
+          const list = PoseFemale3DCG.filter(a => a.Category === category)?.map(a => a.Name);
           list.sort();
           fbcChatNotify(`=> ${category}:\n${list.join("\n")}\n\n`);
         }
@@ -515,7 +513,7 @@ export default async function automaticExpressions() {
         }
 
         const p = {};
-        if (!Pose || (Array.isArray(Pose) && Pose.every((pp) => !pp))) {
+        if (!Pose || (Array.isArray(Pose) && Pose.every(pp => !pp))) {
           p.Pose = /** @type {AssetPoseName[]} */ (["BaseUpper", "BaseLower"]);
         } else {
           p.Pose = [Pose];
@@ -570,7 +568,7 @@ export default async function automaticExpressions() {
     }
 
     // Ensure none of the expressions have remove timers on them; we handle timers here
-    Player.Appearance.filter((a) => faceComponents.includes(a.Asset.Group.Name) && a.Property?.RemoveTimer).forEach(
+    Player.Appearance.filter(a => faceComponents.includes(a.Asset.Group.Name) && a.Property?.RemoveTimer).forEach(
       (a) => {
         // @ts-ignore - a.Property cannot be undefined due to filter above
         delete a.Property.RemoveTimer;
@@ -646,7 +644,7 @@ export default async function automaticExpressions() {
     if (
       PreviousArousal.OrgasmStage !== OrgasmRecoveryStage &&
       Player.ArousalSettings.OrgasmStage === OrgasmRecoveryStage &&
-      bceExpressionsQueue.filter((a) => a.Type === POST_ORGASM_EVENT_TYPE).length === 0
+      bceExpressionsQueue.filter(a => a.Type === POST_ORGASM_EVENT_TYPE).length === 0
     ) {
       pushEvent(globalThis.bce_EventExpressions.PostOrgasm);
       lastOrgasm = Date.now();
@@ -811,8 +809,7 @@ export default async function automaticExpressions() {
                 !!category &&
                 desiredPose[category]?.Duration < 0 &&
                 desiredPose[category]?.Id > mustNum(pose.Id) &&
-                (desiredPose[category]?.Type === MANUAL_OVERRIDE_EVENT_TYPE ||
-                  bceExpressionsQueue[j].Type !== MANUAL_OVERRIDE_EVENT_TYPE)
+                (desiredPose[category]?.Type === MANUAL_OVERRIDE_EVENT_TYPE || bceExpressionsQueue[j].Type !== MANUAL_OVERRIDE_EVENT_TYPE)
               );
             }
           );
@@ -838,8 +835,8 @@ export default async function automaticExpressions() {
     if (Player.ActivePose) {
       for (let i = 0; i < Player.ActivePose.length; i++) {
         const pose = Player.ActivePose[i];
-        const p = PoseFemale3DCG.find((pp) => pp.Name === pose);
-        if (!p?.Category && Object.values(desiredPose).every((v) => v.Pose !== pose)) {
+        const p = PoseFemale3DCG.find(pp => pp.Name === pose);
+        if (!p?.Category && Object.values(desiredPose).every(v => v.Pose !== pose)) {
           poseUpdate = [...Player.ActivePose];
           poseUpdate.splice(i, 1);
           i--;
@@ -910,15 +907,15 @@ export default async function automaticExpressions() {
 
     // Figure out desiredPose conflicts
     function resolvePoseConflicts() {
-      const maxPriority = Math.max(...Object.values(desiredPose).map((p) => p.Priority));
+      const maxPriority = Math.max(...Object.values(desiredPose).map(p => p.Priority));
 
-      const maxPriorityPoses = objEntries(desiredPose).filter((p) => p[1].Priority === maxPriority);
+      const maxPriorityPoses = objEntries(desiredPose).filter(p => p[1].Priority === maxPriority);
 
       let maxPriorityPose = "";
 
       if (maxPriorityPoses.length > 1) {
-        const maxId = Math.max(...maxPriorityPoses.map((p) => p[1].Id)),
-          maxIdPoses = maxPriorityPoses.filter((p) => p[1].Id === maxId);
+        const maxId = Math.max(...maxPriorityPoses.map(p => p[1].Id)),
+          maxIdPoses = maxPriorityPoses.filter(p => p[1].Id === maxId);
         [[maxPriorityPose]] = maxIdPoses;
       } else if (maxPriorityPoses.length === 0) {
         return 0;
@@ -928,7 +925,7 @@ export default async function automaticExpressions() {
       let deleted = 0;
       if (hasConflicts(maxPriorityPose)) {
         const conflicts = poseCategories[maxPriorityPose].Conflicts || [];
-        for (const conflict of Array.from(conflicts).filter((c) => c in desiredPose)) {
+        for (const conflict of Array.from(conflicts).filter(c => c in desiredPose)) {
           delete desiredPose[conflict];
           deleted++;
         }
@@ -959,8 +956,8 @@ export default async function automaticExpressions() {
     }
     const basePoseMatcher = /^Base(Lower|Upper)$/u;
     const newPose = Object.values(desiredPose)
-      .map((p) => p.Pose)
-      .filter((p) => !basePoseMatcher.test(p));
+      .map(p => p.Pose)
+      .filter(p => !basePoseMatcher.test(p));
     if (JSON.stringify(Player.ActivePose) !== JSON.stringify(newPose)) {
       poseUpdate = newPose;
       needsRefresh = true;

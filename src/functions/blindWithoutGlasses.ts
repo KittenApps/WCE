@@ -26,7 +26,7 @@ export default async function blindWithoutGlasses(): Promise<void> {
         "FuturisticMask",
         "Goggles",
       ],
-      hasGlasses = !!Player.Appearance.find((a) => glasses.includes(a.Asset.Name));
+      hasGlasses = !!Player.Appearance.find(a => glasses.includes(a.Asset.Name));
 
     if (hasGlasses) {
       if (removeCustomEffect("BlurLight")) {

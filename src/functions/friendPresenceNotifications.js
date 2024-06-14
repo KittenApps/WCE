@@ -36,13 +36,13 @@ export default async function friendPresenceNotifications() {
     if (data.Query !== "OnlineFriends") {
       return;
     }
-    const friendMemberNumbers = data.Result.map((f) => f.MemberNumber),
-      offlineFriends = lastFriends.map((f) => f.MemberNumber).filter((f) => !friendMemberNumbers.includes(f)),
-      onlineFriends = friendMemberNumbers.filter((f) => !lastFriends.some((ff) => ff.MemberNumber === f));
+    const friendMemberNumbers = data.Result.map(f => f.MemberNumber),
+      offlineFriends = lastFriends.map(f => f.MemberNumber).filter(f => !friendMemberNumbers.includes(f)),
+      onlineFriends = friendMemberNumbers.filter(f => !lastFriends.some(ff => ff.MemberNumber === f));
     if (onlineFriends.length) {
       const list = onlineFriends
         .map((f) => {
-          const { MemberNumber, MemberName } = data.Result.find((d) => d.MemberNumber === f) ?? {
+          const { MemberNumber, MemberName } = data.Result.find(d => d.MemberNumber === f) ?? {
             MemberName: "",
             MemberNumber: -1,
           };
@@ -50,9 +50,9 @@ export default async function friendPresenceNotifications() {
         })
         .join(", ");
       if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
-        fbcChatNotify(displayText(`Now online: $list`, { $list: list }));
+        fbcChatNotify(displayText("Now online: $list", { $list: list }));
       } else {
-        fbcNotify(displayText(`Now online: $list`, { $list: list }), 5000, {
+        fbcNotify(displayText("Now online: $list", { $list: list }), 5000, {
           ClickAction: BEEP_CLICK_ACTIONS.FriendList,
         });
       }
@@ -60,7 +60,7 @@ export default async function friendPresenceNotifications() {
     if (fbcSettings.friendOfflineNotifications && offlineFriends.length) {
       const list = offlineFriends
         .map((f) => {
-          const { MemberNumber, MemberName } = lastFriends.find((d) => d.MemberNumber === f) ?? {
+          const { MemberNumber, MemberName } = lastFriends.find(d => d.MemberNumber === f) ?? {
             MemberName: "",
             MemberNumber: -1,
           };
@@ -68,9 +68,9 @@ export default async function friendPresenceNotifications() {
         })
         .join(", ");
       if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
-        fbcChatNotify(displayText(`Now offline: $list`, { $list: list }));
+        fbcChatNotify(displayText("Now offline: $list", { $list: list }));
       } else {
-        fbcNotify(displayText(`Now offline: $list`, { $list: list }), 5000, {
+        fbcNotify(displayText("Now offline: $list", { $list: list }), 5000, {
           ClickAction: BEEP_CLICK_ACTIONS.FriendList,
         });
       }

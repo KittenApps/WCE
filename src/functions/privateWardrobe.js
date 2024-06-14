@@ -30,7 +30,7 @@ export default async function privateWardrobe() {
   patchFunction(
     "DrawCharacter",
     {
-      '|| CurrentScreen === "Crafting"': '|| CurrentScreen === "Crafting" || CurrentScreen === "Wardrobe"'
+      '|| CurrentScreen === "Crafting"': '|| CurrentScreen === "Crafting" || CurrentScreen === "Wardrobe"',
     },
     "Full wardrobe may display blur and blindness effects of the outfits"
   );
@@ -146,7 +146,7 @@ export default async function privateWardrobe() {
     HOOK_PRIORITIES.OverrideBehaviour,
     (args, next) => {
       let [C] = args;
-      const base = C.Appearance.filter((a) => a.Asset.Group.IsDefault && !a.Asset.Group.Clothing);
+      const base = C.Appearance.filter(a => a.Asset.Group.IsDefault && !a.Asset.Group.Clothing);
       if (inCustomWardrobe && isCharacter(C) && C.IsPlayer()) {
         if (!targetCharacter) {
           throw new Error("targetCharacter is not defined in WardrobeFastLoad");
@@ -157,7 +157,7 @@ export default async function privateWardrobe() {
       }
       const ret = next(args);
       if (excludeBodyparts) {
-        C.Appearance = [...base, ...C.Appearance.filter((a) => !a.Asset.Group.IsDefault || a.Asset.Group.Clothing)];
+        C.Appearance = [...base, ...C.Appearance.filter(a => !a.Asset.Group.IsDefault || a.Asset.Group.Clothing)];
         CharacterLoadCanvas(C);
       }
       return ret;
@@ -175,7 +175,7 @@ export default async function privateWardrobe() {
         }
         args[0] = targetCharacter;
       }
-      if (fbcSettings.confirmWardrobeSave && Player.Wardrobe?.length > args[1] && Player.Wardrobe[args[1]]?.some((a) => a.Group === "Pronouns")) {
+      if (fbcSettings.confirmWardrobeSave && Player.Wardrobe?.length > args[1] && Player.Wardrobe[args[1]]?.some(a => a.Group === "Pronouns")) {
         // eslint-disable-next-line no-alert
         if (!window.confirm("Do you really want to override this wardrobe outfit?")) {
           return null;

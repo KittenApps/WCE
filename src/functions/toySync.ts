@@ -32,7 +32,7 @@ export default async function toySync(): Promise<void> {
     "deviceadded",
     (device: ButtplugClientDevice) => {
       debug("Device connected", device);
-      fbcChatNotify(displayText(`Vibrator connected: $DeviceName`, { $DeviceName: device.name }));
+      fbcChatNotify(displayText("Vibrator connected: $DeviceName", { $DeviceName: device.name }));
       const deviceSettings = toySyncState.deviceSettings.get(device.name);
       if (deviceSettings) delete deviceSettings.LastIntensity;
     }
@@ -41,7 +41,7 @@ export default async function toySync(): Promise<void> {
     "deviceremoved",
     (device: ButtplugClientDevice) => {
       debug("Device disconnected", device);
-      fbcChatNotify(displayText(`Vibrator disconnected: $DeviceName`, { $DeviceName: device.name }));
+      fbcChatNotify(displayText("Vibrator disconnected: $DeviceName", { $DeviceName: device.name }));
     }
   );
   client.addListener("scanningfinished", (data) => {
@@ -69,15 +69,15 @@ export default async function toySync(): Promise<void> {
   // Sync vibrations from slots
   const removeTimer = createTimer(() => {
     if (!client.connected) {
-       removeTimer();
-       return;
+      removeTimer();
+      return;
     }
-    for (const d of client.devices.filter((dev) => dev.vibrateAttributes.length > 0)) {
+    for (const d of client.devices.filter(dev => dev.vibrateAttributes.length > 0)) {
       const deviceSettings = toySyncState.deviceSettings?.get(d.name);
       if (!deviceSettings) continue;
 
       const slot = deviceSettings.SlotName;
-      const intensity = Player.Appearance.find((a) => a.Asset.Group.Name === slot)?.Property?.Intensity;
+      const intensity = Player.Appearance.find(a => a.Asset.Group.Name === slot)?.Property?.Intensity;
 
       if (deviceSettings.LastIntensity === intensity) continue;
       deviceSettings.LastIntensity = intensity;
@@ -119,13 +119,13 @@ export default async function toySync(): Promise<void> {
         return;
       }
 
-      const batteryDevices: ButtplugClientDevice[] = client.devices.filter((dev) => dev.hasBattery);
+      const batteryDevices: ButtplugClientDevice[] = client.devices.filter(dev => dev.hasBattery);
       if (batteryDevices.length === 0) {
         fbcChatNotify("No battery devices connected");
         return;
       }
 
-      Promise.all(batteryDevices.map((dev) => dev.battery())).then((batteryStatus: number[]) => {
+      Promise.all(batteryDevices.map(dev => dev.battery())).then((batteryStatus: number[]) => {
         for (let i = 0; i < batteryDevices.length; i++) {
           const battery = batteryStatus[i] * 100;
           fbcChatNotify(`${batteryDevices[i].name}: ${battery}%`);

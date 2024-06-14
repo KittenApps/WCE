@@ -80,7 +80,7 @@ export default async function hiddenMessageHandler(): Promise<void> {
     let message: Partial<BCEMessage> = {};
     if (Array.isArray(data.Dictionary)) {
       const dicts: FBCDictionaryEntry[] = data.Dictionary as FBCDictionaryEntry[];
-      message = dicts?.find((t) => t.message)?.message || message;
+      message = dicts?.find(t => t.message)?.message || message;
     } else {
       const dict: FBCDictionaryEntry = data.Dictionary;
       message = dict?.message || message;
@@ -112,7 +112,7 @@ export default async function hiddenMessageHandler(): Promise<void> {
         break;
       case MESSAGE_TYPES.Activity:
         // Sender is owner and player is not already wearing a club slave collar
-        if (sender.MemberNumber === Player.Ownership?.MemberNumber && !Player.Appearance.some((a) => a.Asset.Name === "ClubSlaveCollar")) {
+        if (sender.MemberNumber === Player.Ownership?.MemberNumber && !Player.Appearance.some(a => a.Asset.Name === "ClubSlaveCollar")) {
           bceStartClubSlave();
         }
         break;

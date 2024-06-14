@@ -24,12 +24,12 @@ export async function fbcDebug(copy: boolean): Promise<string> {
   if (toySyncState.client?.connected) {
     info.set(
       "Buttplug.io Devices",
-      toySyncState.client.devices.map((d) => `${d.name} (${d.vibrateAttributes.join(",")})`).join(", ")
+      toySyncState.client.devices.map(d => `${d.name} (${d.vibrateAttributes.join(",")})`).join(", ")
     );
   }
   info.set(
     "SDK Mods",
-    `\n- ${bcModSdk.getModsInfo().map((m) => `${m.name} @ ${m.version}`).join("\n- ")}`
+    `\n- ${bcModSdk.getModsInfo().map(m => `${m.name} @ ${m.version}`).join("\n- ")}`
   );
   info.set("Incomplete Functions", incompleteFunctions.join(", "));
   info.set("Modified Functions (non-SDK)", deviatingHashes.join(", "));
@@ -66,12 +66,11 @@ function findDrawnCharacters(target?: string, limitVisible = false): Character[]
 
   let targetMembers: Character[] = [];
   if (/^\d+$/u.test(target)) {
-    targetMembers = [baseList.find((c) => c.MemberNumber === parseInt(target))];
+    targetMembers = [baseList.find(c => c.MemberNumber === parseInt(target))];
   } else {
-    targetMembers = baseList.filter(
-      (c) =>
-        CharacterNickname(c).split(" ")[0]?.toLowerCase() === target?.toLowerCase() ||
-        c.Name.split(" ")[0].toLowerCase() === target?.toLowerCase()
+    targetMembers = baseList.filter(c =>
+      CharacterNickname(c).split(" ")[0]?.toLowerCase() === target?.toLowerCase() ||
+      c.Name.split(" ")[0].toLowerCase() === target?.toLowerCase()
     );
   }
   return targetMembers.filter(Boolean);
@@ -82,7 +81,7 @@ export default async function commands(): Promise<void> {
   debug("registering additional commands");
 
   // ToDo: remove fbcSettings.whisperButton when R105 is out
-  if (GameVersion === 'R104') {
+  if (GameVersion === "R104") {
     SDK.hookFunction(
       "ChatRoomAppendChat",
       HOOK_PRIORITIES.AddBehaviour,
@@ -102,7 +101,7 @@ export default async function commands(): Promise<void> {
         ) {
           const repl = document.createElement("a");
           repl.href = "#";
-          repl.onclick = e => {
+          repl.onclick = (e) => {
             e.preventDefault();
             ElementValue("InputChat", `/w ${sender} ${ElementValue("InputChat").replace(/^\/(beep|w(hisper)?) \S+ ?/u, "")}`);
             window.InputChat?.focus();
@@ -167,7 +166,7 @@ export default async function commands(): Promise<void> {
         if (!target) {
           targetCharacter = Player;
         } else {
-          targetCharacter = Character.find((c) => c.MemberNumber === parseInt(target)) ?? null;
+          targetCharacter = Character.find(c => c.MemberNumber === parseInt(target)) ?? null;
         }
         if (!targetCharacter) {
           logInfo("Could not find member", target);
@@ -185,7 +184,7 @@ export default async function commands(): Promise<void> {
             return FUSAM.modals.openAsync({
               prompt: displayText("Include locks?"),
               buttons: { cancel: "No", submit: "Yes" },
-            }).then(([lockSubmit]) => {includeLocks = lockSubmit === "submit";});
+            }).then(([lockSubmit]) => { includeLocks = lockSubmit === "submit"; });
           }
           return null;
         }).then(() => FUSAM.modals.openAsync({
@@ -231,7 +230,7 @@ export default async function commands(): Promise<void> {
           });
 
           return navigator.clipboard.writeText(exportString).then(() => {
-            fbcChatNotify(displayText(`Exported looks for $TargetName copied to clipboard`, { $TargetName: targetName }));
+            fbcChatNotify(displayText("Exported looks for $TargetName copied to clipboard", { $TargetName: targetName }));
           });
         });
       },
@@ -268,7 +267,7 @@ export default async function commands(): Promise<void> {
                     Difficulty: item.Difficulty,
                     Property: item.Property,
                   };
-                  const idx = bundle.findIndex((v) => v.Group === item.Asset.Group.Name);
+                  const idx = bundle.findIndex(v => v.Group === item.Asset.Group.Name);
                   if (idx < 0) {
                     bundle.push(itemBundle);
                   } else {
@@ -298,13 +297,13 @@ export default async function commands(): Promise<void> {
         const [, , ...message] = command.split(" ");
         const msg = message?.join(" ");
         if (!target || !msg || !/^\d+$/u.test(target)) {
-          fbcChatNotify(displayText(`beep target or message not provided`));
+          fbcChatNotify(displayText("beep target or message not provided"));
           return;
         }
 
         const targetMemberNumber = parseInt(target);
         if (!Player.FriendList?.includes(targetMemberNumber)) {
-          fbcChatNotify(displayText(`$Target is not in your friend list`, { $Target: target }));
+          fbcChatNotify(displayText("$Target is not in your friend list", { $Target: target }));
           return;
         }
 
@@ -349,7 +348,7 @@ export default async function commands(): Promise<void> {
       ),
       Action: (_, command, args) => {
         if (args.length < 2) {
-          fbcChatNotify(displayText(`Whisper target or message not provided`));
+          fbcChatNotify(displayText("Whisper target or message not provided"));
           return;
         }
 
@@ -362,12 +361,12 @@ export default async function commands(): Promise<void> {
         } else if (targetMembers.length > 1) {
           fbcChatNotify(displayText(
             "Multiple whisper targets found: $Targets. You can still whisper the player by clicking their name or by using their member number.",
-            { $Targets: targetMembers.map((c) => `${CharacterNickname(c)} (${c.MemberNumber ?? ""})`).join(", ") }
+            { $Targets: targetMembers.map(c => `${CharacterNickname(c)} (${c.MemberNumber ?? ""})`).join(", ") }
           ));
         } else if (targetMembers[0].IsPlayer()) {
           fbcChatNotify("You can't whisper yourself!");
         } else if (!msg) {
-          fbcChatNotify(displayText(`No message provided`));
+          fbcChatNotify(displayText("No message provided"));
         } else {
           const targetMemberNumber = targetMembers[0].MemberNumber;
           const originalTarget = ChatRoomTargetMemberNumber;
@@ -388,11 +387,11 @@ export default async function commands(): Promise<void> {
           return `${CharacterNickname(character)} (${character.MemberNumber ?? ""}) club ${character.OnlineSharedSettings?.GameVersion ?? "R0"}${
             window.bcx?.getCharacterVersion(character.MemberNumber) ? ` BCX ${window.bcx.getCharacterVersion(character.MemberNumber) ?? "?"}` : ""
           }${character.FBC ? `\nWCE v${character.FBC} Alt Arousal: ${character.BCEArousal?.toString()}` : ""}${
-            character.FBCOtherAddons?.some(mod => !["BCX", "FBC", "WCE"].includes(mod.name))
-              ? `\nOther Addons:\n- ${character.FBCOtherAddons.filter(mod => !["BCX", "FBC", "WCE"].includes(mod.name))
-                .map((mod) => `${mod.name} v${mod.version} ${mod.repository ?? ""}`)
-                .join("\n- ")}`
-              : ""
+            character.FBCOtherAddons?.some(mod => !["BCX", "FBC", "WCE"].includes(mod.name)) ?
+              `\nOther Addons:\n- ${character.FBCOtherAddons.filter(mod => !["BCX", "FBC", "WCE"].includes(mod.name))
+                .map(mod => `${mod.name} v${mod.version} ${mod.repository ?? ""}`)
+                .join("\n- ")}` :
+                ""
           }`;
         }
 

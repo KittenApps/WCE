@@ -58,11 +58,7 @@ export default function customContentDomainCheck() {
           showCustomContentDomainCheckWarning(musicOrigin, "music");
         }
 
-        if (
-          (!ImageURL ||
-            sessionCustomOrigins.get(imageOrigin) === "allowed") &&
-          (!MusicURL || sessionCustomOrigins.get(musicOrigin) === "allowed")
-        ) {
+        if ((!ImageURL || sessionCustomOrigins.get(imageOrigin) === "allowed") && (!MusicURL || sessionCustomOrigins.get(musicOrigin) === "allowed")) {
           return next(args);
         }
       } catch {

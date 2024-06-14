@@ -1,11 +1,11 @@
 import { SDK, HOOK_PRIORITIES } from "./modding";
 
-const timers: { lastTime: number; cb: () => void; intval: number; }[] = [];
+const timers: { lastTime: number; cb: () => void; intval: number }[] = [];
 
 export function createTimer(cb: () => void, intval: number): () => void {
   timers.push({ cb, intval, lastTime: performance.now() });
   return () => {
-    timers.splice(timers.findIndex((t) => t.cb === cb), 1);
+    timers.splice(timers.findIndex(t => t.cb === cb), 1);
   };
 }
 

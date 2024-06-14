@@ -11,7 +11,7 @@ type ReservedOrUserEventNames<ReservedEventsMap, UserEvents> = EventNames<Reserv
 const listeners: [ReservedOrUserEventNames<SocketReservedEvents, ServerToClientEvents>, (...args: unknown[]) => unknown][] = [];
 
 export function registerSocketListener(event: ReservedOrUserEventNames<SocketReservedEvents, ServerToClientEvents>, cb: (...args: unknown[]) => unknown) {
-  if (!listeners.some((l) => l[1] === cb)) {
+  if (!listeners.some(l => l[1] === cb)) {
     listeners.push([event, cb]);
     return ServerSocket.on(event, cb);
   }

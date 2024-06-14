@@ -19,11 +19,11 @@ export default async function settingsPage(): Promise<void> {
     settingsYStart = 225;
 
   function settingsPageCount(category: SettingsCategory): number {
-    return Math.ceil(Object.values(defaultSettings).filter((v) => v.category === category).length / settingsPerPage);
-  }    
+    return Math.ceil(Object.values(defaultSettings).filter(v => v.category === category).length / settingsPerPage);
+  }
 
   const discordInvitePosition = [1500, 60, 250, 50] as const;
-  const licensePosition = [1500, /* 120*/ 60, 250, 50] as const;
+  const licensePosition = [1500, /* 120 */ 60, 250, 50] as const;
   const websitePosition = [1240, 60, 250, 50] as const;
   let currentPageNumber = 0;
 
@@ -57,7 +57,7 @@ export default async function settingsPage(): Promise<void> {
 
   const vibratingSlots = [
     "None",
-    ...new Set(Asset.filter((a) => a.AllowEffect?.includes("Vibrating") || a.AllowEffect?.includes("Egged")).map((a) => a.Group.Name)),
+    ...new Set(Asset.filter(a => a.AllowEffect?.includes("Vibrating") || a.AllowEffect?.includes("Egged")).map(a => a.Group.Name)),
   ];
 
   const scanButtonPosition = [1650, 225, 150, 50] as const;
@@ -99,7 +99,7 @@ export default async function settingsPage(): Promise<void> {
       discordInvitePosition[1] + discordInvitePosition[3] / 2,
       "Black",
       ""
-    );*/
+    ); */
     DrawButton(...licensePosition, "", "White", "");
     DrawText(displayText("License"), licensePosition[0] + 20, licensePosition[1] + licensePosition[3] / 2, "Black", "");
     DrawButton(...websitePosition, "", "White", "");
@@ -184,7 +184,7 @@ export default async function settingsPage(): Promise<void> {
             DrawText(displayText("Device Name"), 300, 420, "Black", "Gray");
             DrawText(displayText("Synchronized Slot"), 800, 420, "Black", "Gray");
             y = 500;
-            for (const d of toySyncState.client.devices.filter((dev) => dev.vibrateAttributes.length > 0)) {
+            for (const d of toySyncState.client.devices.filter(dev => dev.vibrateAttributes.length > 0)) {
               let deviceSettings = toySyncState.deviceSettings.get(d.name);
               if (!deviceSettings) {
                 deviceSettings = {
@@ -310,7 +310,7 @@ export default async function settingsPage(): Promise<void> {
           return;
         }
         y = 500;
-        for (const d of toySyncState.client.devices.filter((dev) => dev.vibrateAttributes.length > 0)) {
+        for (const d of toySyncState.client.devices.filter(dev => dev.vibrateAttributes.length > 0)) {
           if (!MouseIn(800, y - 32, 450, 64)) {
             y += settingsYIncrement;
             continue;

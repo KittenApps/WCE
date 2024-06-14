@@ -26,7 +26,7 @@ export const SDK: ModSDKModAPI = bcModSdk.registerMod(
   }
 );
 
-export function patchFunction(functionName: string, patches: Record<string,string>, affectedFunctionality: string): void {
+export function patchFunction(functionName: string, patches: Record<string, string>, affectedFunctionality: string): void {
   // Guard against patching a function that has been modified by another addon not using the shared SDK on supported versions.
   if (deviatingHashes.includes(functionName) && SUPPORTED_GAME_VERSIONS.includes(GameVersion)) {
     logWarn(

@@ -60,13 +60,13 @@ export default function itemAntiCheat() {
     // eslint-disable-next-line complexity
     function validateMistressLocks() {
       const sourceCanBeMistress =
-        (sourceCharacter?.Reputation?.find((a) => a.Type === "Dominant")?.Value ?? 0) >= 50 ||
+        (sourceCharacter?.Reputation?.find(a => a.Type === "Dominant")?.Value ?? 0) >= 50 ||
         sourceCharacter.Title === "Mistress";
 
       if (
         sourceCanBeMistress ||
         sourceCharacter.MemberNumber === Player.Ownership?.MemberNumber ||
-        Player.Lovership?.some((a) => a.MemberNumber === sourceCharacter.MemberNumber)
+        Player.Lovership?.some(a => a.MemberNumber === sourceCharacter.MemberNumber)
       ) {
         return;
       }
@@ -74,8 +74,7 @@ export default function itemAntiCheat() {
       // Removal
       if (
         (oldItem?.Property?.LockedBy === "MistressPadlock" && newItem?.Property?.LockedBy !== "MistressPadlock") ||
-        (oldItem?.Property?.LockedBy === "MistressTimerPadlock" &&
-          newItem?.Property?.LockedBy !== "MistressTimerPadlock")
+        (oldItem?.Property?.LockedBy === "MistressTimerPadlock" && newItem?.Property?.LockedBy !== "MistressTimerPadlock")
       ) {
         debug("Not a mistress attempting to remove mistress lock", sourceName);
         changes.prohibited = true;
@@ -84,8 +83,7 @@ export default function itemAntiCheat() {
       // Addition
       if (
         (oldItem?.Property?.LockedBy !== "MistressPadlock" && newItem?.Property?.LockedBy === "MistressPadlock") ||
-        (oldItem?.Property?.LockedBy !== "MistressTimerPadlock" &&
-          newItem?.Property?.LockedBy === "MistressTimerPadlock")
+        (oldItem?.Property?.LockedBy !== "MistressTimerPadlock" && newItem?.Property?.LockedBy === "MistressTimerPadlock")
       ) {
         debug("Not a mistress attempting to add mistress lock", sourceName);
         changes.prohibited = true;
@@ -94,10 +92,7 @@ export default function itemAntiCheat() {
       // Timer change
       if (
         oldItem?.Property?.LockedBy === "MistressTimerPadlock" &&
-        Math.abs(
-          mustNum(oldItem.Property?.RemoveTimer, Number.MAX_SAFE_INTEGER) - mustNum(newItem?.Property?.RemoveTimer)
-        ) >
-          31 * 60 * 1000
+        Math.abs(mustNum(oldItem.Property?.RemoveTimer, Number.MAX_SAFE_INTEGER) - mustNum(newItem?.Property?.RemoveTimer)) > 31 * 60 * 1000
       ) {
         changes.prohibited = true;
         debug("Not a mistress attempting to change mistress lock timer more than allowed by public entry", sourceName);
@@ -175,16 +170,16 @@ export default function itemAntiCheat() {
         return next(args);
       }
       const sourceCharacter =
-        ChatRoomCharacter.find((a) => a.MemberNumber === data.Source) ||
+        ChatRoomCharacter.find(a => a.MemberNumber === data.Source) ||
         (data.Source === Player.MemberNumber ? Player : null);
 
       if (!sourceCharacter) {
         throw new Error("change from invalid source character not in the current room");
       }
 
-      const ignoreLocks = Player.Appearance.some((a) => a.Asset.Name === "FuturisticCollar");
-      const ignoreColors = Player.Appearance.some((a) => a.Asset.Name === "FuturisticHarness") || ignoreLocks;
-      const oldItem = Player.Appearance.find((i) => i.Asset.Group.Name === item.Group);
+      const ignoreLocks = Player.Appearance.some(a => a.Asset.Name === "FuturisticCollar");
+      const ignoreColors = Player.Appearance.some(a => a.Asset.Name === "FuturisticHarness") || ignoreLocks;
+      const oldItem = Player.Appearance.find(i => i.Asset.Group.Name === item.Group);
       const oldItemBundle = oldItem ? ServerAppearanceBundle([oldItem])[0] : null;
       const result = validateSingleItemChange(sourceCharacter, oldItemBundle, item, ignoreLocks, ignoreColors);
       if (result.prohibited) {
@@ -214,7 +209,7 @@ export default function itemAntiCheat() {
       }
 
       const sourceCharacter =
-        ChatRoomCharacter.find((a) => a.MemberNumber === data.SourceMemberNumber) ||
+        ChatRoomCharacter.find(a => a.MemberNumber === data.SourceMemberNumber) ||
         (data.SourceMemberNumber === Player.MemberNumber ? Player : null);
 
       if (!sourceCharacter) {
@@ -241,7 +236,7 @@ export default function itemAntiCheat() {
 
       // Number of items changed in appearance
       const oldItems = processItemBundleToMap(
-        ServerAppearanceBundle(Player.Appearance.filter((a) => a.Asset.Group.Category === "Item"))
+        ServerAppearanceBundle(Player.Appearance.filter(a => a.Asset.Group.Category === "Item"))
       );
 
       if (!data.Character.Appearance) {
@@ -249,18 +244,16 @@ export default function itemAntiCheat() {
       }
 
       const newItems = processItemBundleToMap(
-        data.Character.Appearance.filter(
-          (a) => ServerBundledItemToAppearanceItem("Female3DCG", a)?.Asset.Group.Category === "Item"
-        )
+        data.Character.Appearance.filter(a => ServerBundledItemToAppearanceItem("Female3DCG", a)?.Asset.Group.Category === "Item")
       );
 
       // Locks can be modified enmass with futuristic collar
       const ignoreLocks =
-        Array.from(oldItems.values()).some((i) => i.Name === "FuturisticCollar") &&
-        Array.from(newItems.values()).some((i) => i.Name === "FuturisticCollar");
+        Array.from(oldItems.values()).some(i => i.Name === "FuturisticCollar") &&
+        Array.from(newItems.values()).some(i => i.Name === "FuturisticCollar");
       const ignoreColors =
-        (Array.from(oldItems.values()).some((i) => i.Name === "FuturisticHarness") &&
-          Array.from(newItems.values()).some((i) => i.Name === "FuturisticHarness")) ||
+        (Array.from(oldItems.values()).some(i => i.Name === "FuturisticHarness") &&
+        Array.from(newItems.values()).some(i => i.Name === "FuturisticHarness")) ||
         ignoreLocks;
 
       debug("Anti-Cheat validating bulk change from", sourceCharacter.MemberNumber);

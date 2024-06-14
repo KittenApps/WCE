@@ -18,7 +18,7 @@ export default async function alternateArousal() {
       return;
     }
 
-    const target = ChatRoomCharacter.find((c) => c.MemberNumber === data.MemberNumber);
+    const target = ChatRoomCharacter.find(c => c.MemberNumber === data.MemberNumber);
 
     if (!target) {
       return;

@@ -74,11 +74,9 @@ export default function cacheClearer(): void {
     GLDrawResetCanvas();
 
     debug("Clearing old characters from cache");
-    const oldOnlineCharacters = Character.filter(
-      (c) => c.IsOnline?.() && !ChatRoomCharacter.some((cc) => cc.MemberNumber === c.MemberNumber)
-    );
-    oldOnlineCharacters.forEach((c) => CharacterDelete(c));
-    Character.filter((c) => c.IsOnline?.()).forEach((c) => CharacterRefresh(c, false, false));
+    const oldOnlineCharacters = Character.filter(c => c.IsOnline?.() && !ChatRoomCharacter.some(cc => cc.MemberNumber === c.MemberNumber));
+    oldOnlineCharacters.forEach(c => CharacterDelete(c));
+    Character.filter(c => c.IsOnline?.()).forEach(c => CharacterRefresh(c, false, false));
   }
 
   createTimer(() => {

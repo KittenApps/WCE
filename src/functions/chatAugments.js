@@ -39,13 +39,13 @@ export function stutterWord(word, forceStutter) {
   }
 
   /** @type {(wrd: string) => string} */
-  function addStutter(wrd){
+  function addStutter(wrd) {
     return /^\p{L}/u.test(wrd) ? `${wrd.substring(0, /[\uD800-\uDFFF]/u.test(wrd[0]) ? 2 : 1)}-${wrd}` : wrd;
   }
 
   const maxIntensity = Math.max(
     0,
-    ...Player.Appearance.filter((a) => (a.Property?.Intensity ?? -1) > -1).map((a) => a.Property?.Intensity ?? 0)
+    ...Player.Appearance.filter(a => (a.Property?.Intensity ?? -1) > -1).map(a => a.Property?.Intensity ?? 0)
   );
 
   const playerArousal = Player.ArousalSettings?.Progress ?? 0;
@@ -242,7 +242,7 @@ export function augmentedChatNotify(node) {
 export default function chatAugments() {
   // CTRL+Enter OOC implementation
   // ToDo: remove once r105 is out
-  if (GameVersion === 'R104') {
+  if (GameVersion === "R104") {
     SDK.hookFunction(
       "ChatRoomKeyDown",
       HOOK_PRIORITIES.ModifyBehaviourMedium,
@@ -258,14 +258,13 @@ export default function chatAugments() {
               }
               // Whisper command
               if (text.startsWith("/w ")) {
-                const textParts = text.split(' ');
-                text = textParts.slice(2).join(' ');
-                prefix = `${textParts.slice(0, 2).join(' ')} `;
+                const textParts = text.split(" ");
+                text = textParts.slice(2).join(" ");
+                prefix = `${textParts.slice(0, 2).join(" ")} `;
               } else if (text.startsWith("/") && !text.startsWith("//")) {
                 fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
                 return true;
               }
-  
               ElementValue("InputChat", `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`);
             }
             ChatRoomSendChat();
@@ -278,7 +277,7 @@ export default function chatAugments() {
         }
         return next([event]);
       }
-    );  
+    );
   } else {
     SDK.hookFunction(
       "ChatRoomKeyDown",
@@ -288,7 +287,7 @@ export default function chatAugments() {
         if (inputChat && document.activeElement === inputChat) {
           if (event.key === "Enter" && !event.shiftKey) {
             if (fbcSettings.ctrlEnterOoc && event.ctrlKey && inputChat.value.trim().length !== 0) {
-              let text =  inputChat.value;
+              let text = inputChat.value;
               let prefix = "";
               if (!text) {
                 fbcChatNotify("Nothing to send!");
@@ -296,14 +295,13 @@ export default function chatAugments() {
               }
               // Whisper command
               if (text.startsWith("/w ")) {
-                const textParts = text.split(' ');
-                text = textParts.slice(2).join(' ');
-                prefix = `${textParts.slice(0, 2).join(' ')} `;
+                const textParts = text.split(" ");
+                text = textParts.slice(2).join(" ");
+                prefix = `${textParts.slice(0, 2).join(" ")} `;
               } else if (text.startsWith("/") && !text.startsWith("//")) {
                 fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
                 return true;
               }
-  
               inputChat.value = `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`;
             }
             ChatRoomSendChat();
@@ -332,7 +330,7 @@ export default function chatAugments() {
     HOOK_PRIORITIES.ModifyBehaviourMedium,
     ([C, m, effects, ignoreOOC], next) => {
       const { msg, hasStuttered } = bceMessageReplacements(m || "");
-      const result = next([C, msg, effects.filter((f) => f !== "stutter" || !fbcSettings.stutters), ignoreOOC]);
+      const result = next([C, msg, effects.filter(f => f !== "stutter" || !fbcSettings.stutters), ignoreOOC]);
       if (hasStuttered) result.effects.push("stutter");
       return result;
     }
@@ -412,8 +410,7 @@ export default function chatAugments() {
     for (const chatMessageElement of unhandledChat) {
       chatMessageElement.setAttribute(handledAttributeName, "true");
       if (
-        (chatMessageElement.classList.contains("ChatMessageChat") ||
-          chatMessageElement.classList.contains("ChatMessageWhisper")) &&
+        (chatMessageElement.classList.contains("ChatMessageChat") || chatMessageElement.classList.contains("ChatMessageWhisper")) &&
         !chatMessageElement.classList.contains("bce-pending")
       ) {
         const scrolledToEnd = ElementIsScrolledToEnd(chatLogContainerId);

@@ -11,14 +11,14 @@ export default async function automaticReconnect() {
   const db = new Dexie("wce-saved-accounts");
   db.version(2).stores({
     key: "id, key",
-    accounts: "id, data, iv, auth"
+    accounts: "id, data, iv, auth",
   });
   const keyTable = db.table("key");
   const accTable = db.table("accounts");
 
   let /** @type {CryptoKey} */ encKey, /** @type {{key: CryptoKey;}} */ key;
   try {
-     key = await keyTable.get({ id: 1 });
+    key = await keyTable.get({ id: 1 });
   } catch (e) {
     logWarn(e);
     localStorage.removeItem("bce.passwords.authTag");
@@ -28,7 +28,7 @@ export default async function automaticReconnect() {
     window.location.reload();
   }
   if (!key) {
-    encKey = await window.crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+    encKey = await window.crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
     await keyTable.put({ id: 1, key: encKey });
   } else {
     encKey = key.key;
@@ -92,10 +92,10 @@ export default async function automaticReconnect() {
       const encoder = new TextEncoder();
       accounts = accs;
       window.crypto.subtle.encrypt(
-        { name: 'AES-GCM', iv, additionalData: auth, tagLength: 128 },
+        { name: "AES-GCM", iv, additionalData: auth, tagLength: 128 },
         encKey,
         encoder.encode(JSON.stringify(accs))
-      ).then((s) => accTable.put({ id: 1, iv, auth, data: new Uint8Array(s) }, [1]));
+      ).then(s => accTable.put({ id: 1, iv, auth, data: new Uint8Array(s) }, [1]));
     } else {
       localStorage.removeItem("bce.passwords");
     }

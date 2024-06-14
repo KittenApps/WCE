@@ -61,7 +61,7 @@ async function registerFunction(func: () => (Promise<void> | void), label: strin
   }
 };
 
-export async function registerAllFunctions(): Promise<void>  {
+export async function registerAllFunctions(): Promise<void> {
   // Delay game processes until registration is complete
   let funcsRegistered: "init" | "enable" | "disable" = "init";
 
