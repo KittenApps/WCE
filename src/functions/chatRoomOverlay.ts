@@ -19,16 +19,16 @@ export default function chatRoomOverlay(): void {
         DrawTextFit(
           text,
           CharX + 290 * Zoom,
-          CharY + 12 * Zoom,
-          50 * Zoom,
+          CharY + 14 * Zoom,
+          60 * Zoom,
           C.FBCNoteExists ? "Cyan" : "White",
           "Black"
         );
         DrawTextFit(
           /^\d+\.\d+(\.\d+)?b?$/u.test(C.FBC) ? C.FBC.replace("b", "") : "",
           CharX + 290 * Zoom,
-          CharY + 32 * Zoom,
-          50 * Zoom,
+          CharY + 36 * Zoom,
+          C.FBC.split(".").length === 3 ? 60 * Zoom : 40 * Zoom,
           C.FBC.endsWith("b") ? "Lightpink" : "White",
           "Black"
         );

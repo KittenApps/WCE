@@ -1,5 +1,28 @@
 # Changelog of Wholesome Club Extensions (WCE)
 
+## Wholesome Club Extensions (WCE) v6.3
+* added a new feature to Layering menus: [WCE] configure layer hiding
+  * this lets you override which other layers a items hides (cloths over a shiny petsuit anyone?)
+  * only useable by WCE users on other WCE users (or yourself)
+  * only visible to other WCE users (and yourself)
+  * no stored in your appearance on BC servers, but instead in WCE settings
+  * not available for crafting yet (for above reason)
+  * requires BC R105
+* added an option to prevent other (WCE) users from making layering changes to your character
+* you won't be able to access the layering menu for locked items, which you can't unlock, even with the `allow layering menus while bound` option
+* added BC R105 support
+  * complete rewrite of the Anti Garble Chat Options using the new DOM based APIs (click the arrow next to the send chat button to access them)
+  * removed the `show whisper button on chat messages` options, as it's replaced with something better in BC (clicking on highlighted names)
+  * many more fixes related to the new BC version
+* created a new documentation website: https://wce-docs.vercel.app/
+  * it has a [Garble Simulator](https://wce-docs.vercel.app/docs/anti-garbling/simulator) too, which let you easily try out all anti garble options with different gag intensities
+  * (for the devs) there is also a [BC API typedoc website](https://bc-typedoc.vercel.app/), here an [typedoc for `Layering`](https://bc-typedoc.vercel.app/api/namespace/Layering)
+* migrate over half of the project to TypeScript for better maintainability (to be continued in the next releases)
+* changed app icon (to fit more into BC icon theme)
+* chat embeds for images are now working with uppercase file extensions too (which are technically incorrect, but browsers are less strict about them too)
+* fixed an error with the `/w` command, when trying to whisper yourself
+* improved linting, release building, CI/CD
+
 ## Wholesome Club Extensions (WCE) v6.2
 * [HOTFIX] fix crash in 'take photo' character action menu
 * [HOTFIX] antiGarble: fix preserve Baby Talk not working

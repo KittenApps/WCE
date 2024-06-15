@@ -1,13 +1,15 @@
-export const FBC_VERSION = "6.2.2b";
-export const settingsVersion = 62.1;
+export const FBC_VERSION = "6.3";
+export const settingsVersion = 63;
 export const SUPPORTED_GAME_VERSIONS = ["R104", "R105"];
 
-export const fbcChangelog = `WCE v6.2.1
-* improved Anti Garble system
-* local Wardrobe
-* store Saved Logins encrypted
-* upgraded Buttplug.io support
-* for a full changelog visit: https://wce-docs.vercel.app/blog
+export const fbcChangelog = `WCE v6.3
+* configure layer hiding in layering menus (like cloths over shiny petsuit)
+* BC R105 support (new Anti Garble Chat Options)
+* TypeScript, new icon, fixes for image embeds, /w and more
+* for a full changelog visit our new website: https://wce-docs.vercel.app/blog
+
+WCE v6.2.1
+* improved Anti Garble system, local Wardrobe, encrypted saved login, upgraded buttplug.io
 
 WCE v6.2
 * WCE 6.2 is a fork of the old FBC 5.8 and tries to bring all it's amazing features back
