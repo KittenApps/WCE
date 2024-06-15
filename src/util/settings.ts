@@ -780,6 +780,18 @@ export const defaultSettings = {
     category: "immersion",
     description: "Prevents certain other addon cheats from impacting your character.",
   },
+  preventLayeringByOthers: {
+    label: "Prevents other players from using layering on you",
+    type: "checkbox",
+    value: false,
+    disabled: () => false,
+    sideEffects: (newValue, init) => {
+      debug("preventLayeringByOthers", newValue);
+      if (!init) sendHello();
+    },
+    category: "immersion",
+    description: "Prevents other WCE players to make Layering based changes to your character.",
+  },
   relogin: {
     label: "Automatic Relogin on Disconnect",
     type: "checkbox",

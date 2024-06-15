@@ -250,6 +250,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         OnlineProfileLoad: "BE8B009B",
         OnlineProfileRun: "7F57EF9A",
         PoseSetActive: "22C02050",
+        PreferenceExit: "AE5E8084",
         PreferenceInitPlayer: "F6DF1324", // Screens/Character/Preference/Preference.js (6.5.2024)
         PreferenceSubscreenArousalClick: "D8DCBBB5", // Screens/Character/Preference/Preference.js (6.5.2024)
         PreferenceSubscreenArousalRun: "96A6157B", // Screens/Character/Preference/Preference.js (6.5.2024)

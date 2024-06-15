@@ -43,6 +43,9 @@ export default async function layeringMenu(): Promise<void> {
         if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(Layering.Item, "Lock") || DialogCanUnlock2(Layering.Character, Layering.Item))) {
           Layering.Readonly = false;
         }
+        if (!Layering.Character.IsPlayer() && Layering.Character.BCECapabilities?.includes("preventLayeringByOthers")) {
+          Layering.Readonly = true;
+        }
         if (!fbcSettings.layeringHide || CurrentScreen === "Crafting" || !Layering.Character.BCECapabilities?.includes("layeringHide")) return next(args);
         const ret = next(args);
         const defaultItemHide = Layering.Asset.Hide || [];
@@ -169,6 +172,17 @@ export default async function layeringMenu(): Promise<void> {
     (args, next) => {
       const ret = next(args);
       if (Player.Appearance.some(a => Array.isArray(a.Property?.wceOverrideHide))) ChatRoomCharacterUpdate(Player);
+      return ret;
+    }
+  );
+
+  SDK.hookFunction(
+    "PreferenceExit",
+    HOOK_PRIORITIES.AddBehaviour,
+    (args, next) => {
+      const test = PreferenceSubscreen === "";
+      const ret = next(args);
+      if (test && Player.Appearance.some(a => Array.isArray(a.Property?.wceOverrideHide))) ChatRoomCharacterUpdate(Player);
       return ret;
     }
   );

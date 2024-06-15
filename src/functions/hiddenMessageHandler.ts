@@ -5,7 +5,7 @@ import { fbcSettings, settingsLoaded } from "../util/settings";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 import { bceStartClubSlave } from "./forcedClubSlave";
 
-type BCECapabilities = "clubslave" | "layeringHide";
+type BCECapabilities = "clubslave" | "layeringHide" | "preventLayeringByOthers";
 declare global {
   interface Character {
     FBC: string;
@@ -42,6 +42,8 @@ export function sendHello(target: number | null = null, requestReply = false): v
   if (!settingsLoaded()) return; // Don't send hello until settings are loaded
   if (!ServerIsConnected || !ServerPlayerIsInChatRoom()) return; // Don't send hello if not in chat room
 
+  const capabilities: BCECapabilities[] = ["clubslave", "layeringHide"];
+  if (fbcSettings.preventLayeringByOthers) capabilities.push("preventLayeringByOthers");
   const message: ServerChatRoomMessage = {
     Type: HIDDEN,
     Content: BCE_MSG,
@@ -54,7 +56,7 @@ export function sendHello(target: number | null = null, requestReply = false): v
       version: FBC_VERSION,
       alternateArousal: !!fbcSettings.alternateArousal,
       replyRequested: requestReply,
-      capabilities: ["clubslave", "layeringHide"],
+      capabilities,
     },
   };
   if (target) {
