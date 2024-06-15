@@ -6,12 +6,7 @@ import globals from "globals";
 
 export default tseslint.config(
   eslint.configs.recommended,
-  stylistic.configs.customize({
-    quotes: 'double',
-    semi: true,
-    jsx: false,
-    braceStyle: '1tbs',
-  }),
+  stylistic.configs.customize({ quotes: "double", semi: true, jsx: false, braceStyle: "1tbs" }),
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   {
