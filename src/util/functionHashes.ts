@@ -300,4 +300,4 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         WardrobeRun: "633B3570",
       } as const;
   }
-};
+}

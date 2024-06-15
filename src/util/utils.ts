@@ -130,7 +130,7 @@ export function fbcChatNotify(node: HTMLElement | HTMLElement[] | string): void 
   }
 
   ChatRoomAppendChat(div);
-};
+}
 
 export async function fbcNotify(text: string, duration = 5000, properties: Partial<ServerBeep> = {}) {
   await waitFor(() => !!Player && new Date(ServerBeep?.Timer || 0) < new Date());
@@ -140,7 +140,7 @@ export async function fbcNotify(text: string, duration = 5000, properties: Parti
     Message: text,
     ...properties,
   };
-};
+}
 
 export function fbcSendAction(text: string): void {
   ServerSend("ChatRoomChat", {
@@ -159,7 +159,7 @@ export function fbcSendAction(text: string): void {
       { Tag: "msg", Text: text },
     ],
   });
-};
+}
 
 export function addCustomEffect(effect: EffectName): boolean {
   let updated = false;

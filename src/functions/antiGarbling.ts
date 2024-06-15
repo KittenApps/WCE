@@ -278,11 +278,15 @@ export default function antiGarbling(): void {
           ],
         }));
         ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
-          "wce-chat-baby-talk", BabyTalkOnClick, {},
+          "wce-chat-baby-talk",
+          BabyTalkOnClick,
+          {},
           { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } }
         ));
         ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
-          "wce-chat-stutters", StutterOnClick, {},
+          "wce-chat-stutters",
+          StutterOnClick,
+          {},
           { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } }
         ));
         resetChatButtonStates();

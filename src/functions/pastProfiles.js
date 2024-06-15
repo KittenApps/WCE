@@ -309,9 +309,7 @@ export default async function pastProfiles() {
         DrawText(displayText("Personal notes (only you can read these):"), 910, 105, "Black", "Gray");
         if (noteUpdatedAt) {
           drawTextFitLeft(
-            displayText("Last saved: $date", {
-              $date: new Date(noteUpdatedAt).toLocaleString(),
-            }),
+            displayText("Last saved: $date", { $date: new Date(noteUpdatedAt).toLocaleString() }),
             60,
             105,
             400,

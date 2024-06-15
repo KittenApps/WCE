@@ -772,9 +772,7 @@ export const defaultSettings = {
       debug("uwall", newValue);
       if (Player?.OnlineSharedSettings && typeof newValue === "boolean") {
         Player.OnlineSharedSettings.Uwall = newValue;
-        ServerAccountUpdate.QueueData({
-          OnlineSharedSettings: Player.OnlineSharedSettings,
-        });
+        ServerAccountUpdate.QueueData({ OnlineSharedSettings: Player.OnlineSharedSettings });
       } else {
         logWarn("Player.OnlineSharedSettings not found, skipping uwall");
       }
@@ -966,7 +964,7 @@ export async function bceLoadSettings(): Promise<void> {
     settings.version = settingsVersion;
     fbcSettings = settings;
   }
-};
+}
 
 export function bceSaveSettings(): void {
   debug("saving settings");
@@ -977,7 +975,7 @@ export function bceSaveSettings(): void {
   Player.ExtensionSettings.FBC = LZString.compressToBase64(JSON.stringify(fbcSettings));
   ServerPlayerExtensionSettingsSync("FBC");
   debug("saved settings", fbcSettings);
-};
+}
 
 export function isDefaultSettingKey(key: string): key is keyof typeof defaultSettings {
   return key in defaultSettings;
@@ -1017,4 +1015,4 @@ export function fbcSettingValue(key: string): boolean | string {
     return fbcSettings[key];
   }
   return false;
-};
+}

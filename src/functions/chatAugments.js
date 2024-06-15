@@ -152,9 +152,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
                 // eslint-disable-next-line prefer-destructuring
                 const target = /** @type {HTMLAnchorElement} */ (e.target);
                 FUSAM.modals.open({
-                  prompt: displayText("Do you want to add $origin to trusted origins?", {
-                    $origin: url.origin,
-                  }),
+                  prompt: displayText("Do you want to add $origin to trusted origins?", { $origin: url.origin }),
                   callback: (act) => {
                     if (act === "submit") {
                       sessionCustomOrigins.set(url.origin, "allowed");
@@ -181,9 +179,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
                       debug("updated trusted origins", sessionCustomOrigins);
                     }
                   },
-                  buttons: {
-                    submit: displayText("Trust this session"),
-                  },
+                  buttons: { submit: displayText("Trust this session") },
                 });
               };
               promptTrust.href = "#";
@@ -397,7 +393,7 @@ export default function chatAugments() {
       }
     }
     return { msg: newWords.join(""), hasStuttered };
-  };
+  }
 
   function bceChatAugments() {
     if (CurrentScreen !== "ChatRoom" || !fbcSettings.augmentChat) {

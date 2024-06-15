@@ -84,9 +84,7 @@ export default function instantMessenger() {
         return;
       }
       const historyLength = Math.min(friend.historyRaw.length, 100);
-      history[id] = {
-        historyRaw: friend.historyRaw.slice(-historyLength),
-      };
+      history[id] = { historyRaw: friend.historyRaw.slice(-historyLength) };
     });
     localStorage.setItem(storageKey(), JSON.stringify(history));
   }

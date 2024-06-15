@@ -52,9 +52,7 @@ export default async function friendPresenceNotifications() {
       if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
         fbcChatNotify(displayText("Now online: $list", { $list: list }));
       } else {
-        fbcNotify(displayText("Now online: $list", { $list: list }), 5000, {
-          ClickAction: BEEP_CLICK_ACTIONS.FriendList,
-        });
+        fbcNotify(displayText("Now online: $list", { $list: list }), 5000, { ClickAction: BEEP_CLICK_ACTIONS.FriendList });
       }
     }
     if (fbcSettings.friendOfflineNotifications && offlineFriends.length) {
@@ -70,9 +68,7 @@ export default async function friendPresenceNotifications() {
       if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
         fbcChatNotify(displayText("Now offline: $list", { $list: list }));
       } else {
-        fbcNotify(displayText("Now offline: $list", { $list: list }), 5000, {
-          ClickAction: BEEP_CLICK_ACTIONS.FriendList,
-        });
+        fbcNotify(displayText("Now offline: $list", { $list: list }), 5000, { ClickAction: BEEP_CLICK_ACTIONS.FriendList });
       }
     }
     lastFriends = data.Result;

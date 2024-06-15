@@ -44,9 +44,7 @@ export default async function automaticExpressions() {
 
   patchFunction(
     "StruggleMinigameHandleExpression",
-    {
-      '");': '", 3);',
-    },
+    { '");': '", 3);' },
     "Resetting blush, eyes, and eyebrows after struggling"
   );
 
@@ -75,9 +73,7 @@ export default async function automaticExpressions() {
   }
 
   /** @type {{[key: string]: ExpressionName[]}} */
-  const bceExpressionModifierMap = Object.freeze({
-    Blush: [null, "Low", "Medium", "High", "VeryHigh", "Extreme"],
-  });
+  const bceExpressionModifierMap = Object.freeze({ Blush: [null, "Low", "Medium", "High", "VeryHigh", "Extreme"] });
 
   const AUTOMATED_AROUSAL_EVENT_TYPE = "AutomatedByArousal",
     DEFAULT_EVENT_TYPE = "DEFAULT",
@@ -178,12 +174,7 @@ export default async function automaticExpressions() {
               continue;
             } else if (
               matcher.Criteria.DictionaryMatchers &&
-              !matcher.Criteria.DictionaryMatchers.some(m =>
-                data.Dictionary?.find(t =>
-                  // @ts-ignore - intentional dynamic indexing on statically defined types
-                  Object.keys(m).every(k => m[k] === t[k])
-                )
-              )
+              !matcher.Criteria.DictionaryMatchers.some(m => data.Dictionary?.find(t => Object.keys(m).every(k => m[k] === t[k])))
             ) {
               continue;
             }
@@ -225,15 +216,9 @@ export default async function automaticExpressions() {
   }
 
   const poseCategories = /** @type {const} */ ({
-    BodyFull: {
-      Conflicts: ["BodyUpper", "BodyLower"],
-    },
-    BodyUpper: {
-      Conflicts: ["BodyFull"],
-    },
-    BodyLower: {
-      Conflicts: ["BodyFull"],
-    },
+    BodyFull: { Conflicts: ["BodyUpper", "BodyLower"] },
+    BodyUpper: { Conflicts: ["BodyFull"] },
+    BodyLower: { Conflicts: ["BodyFull"] },
   });
 
   /**
@@ -321,11 +306,7 @@ export default async function automaticExpressions() {
             delete e[component];
           }
         }
-        fbcChatNotify(
-          displayText("Reset expression on $component", {
-            $component: component,
-          })
-        );
+        fbcChatNotify(displayText("Reset expression on $component", { $component: component }));
       }
     },
   });
@@ -339,11 +320,7 @@ export default async function automaticExpressions() {
         return;
       }
       if (args[0] === "list") {
-        fbcChatNotify(
-          displayText("Available animations: $anims", {
-            $anims: Object.keys(globalThis.bce_EventExpressions).join(", "),
-          })
-        );
+        fbcChatNotify(displayText("Available animations: $anims", { $anims: Object.keys(globalThis.bce_EventExpressions).join(", ") }));
       }
       const animation = Object.keys(globalThis.bce_EventExpressions).find(a => a.toLowerCase() === args[0]?.toLowerCase());
       if (animation) {
@@ -672,7 +649,7 @@ export default async function automaticExpressions() {
           Color: exp.Color,
         };
       }
-    };
+    }
 
     // Calculate next expression
     for (let j = 0; j < bceExpressionsQueue.length; j++) {
@@ -965,9 +942,7 @@ export default async function automaticExpressions() {
 
     if (poseUpdate) {
       Player.ActivePose = poseUpdate;
-      ServerSend("ChatRoomCharacterPoseUpdate", {
-        Pose: poseUpdate,
-      });
+      ServerSend("ChatRoomCharacterPoseUpdate", { Pose: poseUpdate });
     }
 
     if (needsRefresh) {

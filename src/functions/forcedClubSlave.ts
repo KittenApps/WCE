@@ -13,18 +13,12 @@ declare global {
 
 export async function bceStartClubSlave(): Promise<void> {
   if (BCX?.getRuleState("block_club_slave_work")?.isEnforced) {
-    fbcSendAction(
-      displayText("BCX rules forbid $PlayerName from becoming a Club Slave.", {
-        $PlayerName: CharacterNickname(Player),
-      })
-    );
+    fbcSendAction(displayText("BCX rules forbid $PlayerName from becoming a Club Slave.", { $PlayerName: CharacterNickname(Player) }));
     return;
   }
 
   fbcSendAction(
-    displayText("$PlayerName gets grabbed by two maids and escorted to management to serve as a Club Slave.", {
-      $PlayerName: CharacterNickname(Player),
-    })
+    displayText("$PlayerName gets grabbed by two maids and escorted to management to serve as a Club Slave.", { $PlayerName: CharacterNickname(Player) })
   );
 
   if (!ChatRoomData) {
@@ -54,7 +48,7 @@ export async function bceStartClubSlave(): Promise<void> {
   await waitFor(() => CurrentScreen !== "Management" || !CurrentCharacter);
 
   bceGotoRoom(room);
-};
+}
 
 export function bceGotoRoom(roomName: string): void {
   ChatRoomJoinLeash = roomName;
@@ -118,7 +112,7 @@ export default async function forcedClubSlave(): Promise<void> {
           FBC: true,
         }))
       );
-    };
+    }
 
     for (const c of ChatRoomCharacter.filter(cc => !cc.IsPlayer() && cc.IsOnline())) {
       appendDialog(c);

@@ -11,9 +11,7 @@ let localWardrobeTable: Table<{ id: number; appearance: ServerItemBundle[] }, In
 export async function loadLocalWardrobe(wardrobe: ItemBundle[][]): Promise<void> {
   const { Dexie } = await import("dexie");
   const db = new Dexie("wce-local-wardrobe");
-  db.version(1).stores({
-    wardrobe: "id, appearance",
-  });
+  db.version(1).stores({ wardrobe: "id, appearance" });
   localWardrobeTable = db.table("wardrobe");
   const localWardrobe: { id: number; appearance: ServerItemBundle[] }[] = (await localWardrobeTable.toArray()) || [];
   await waitFor(() => wardrobe.length === EXPANDED_WARDROBE_SIZE);

@@ -31,9 +31,7 @@ export default function commonPatches(): void {
   // CommandExecute patch to fix /whitelistadd and /whitelistremove
   patchFunction(
     "CommandExecute",
-    {
-      "key.indexOf(CommandsKey + cmd.Tag) == 0)": "key.substring(1) === cmd.Tag)",
-    },
+    { "key.indexOf(CommandsKey + cmd.Tag) == 0)": "key.substring(1) === cmd.Tag)" },
     "Whitelist commands will not work."
   );
 

@@ -21,9 +21,7 @@ export const SDK: ModSDKModAPI = bcModSdk.registerMod(
     fullName: "Wholesome Club Extensions",
     repository: "https://github.com/KittenApps/WCE.git",
   },
-  {
-    allowReplace: false,
-  }
+  { allowReplace: false }
 );
 
 export function patchFunction(functionName: string, patches: Record<string, string>, affectedFunctionality: string): void {
@@ -35,4 +33,4 @@ export function patchFunction(functionName: string, patches: Record<string, stri
     skippedFunctionality.push(affectedFunctionality);
   }
   SDK.patchFunction(functionName, patches);
-};
+}

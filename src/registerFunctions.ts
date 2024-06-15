@@ -59,7 +59,7 @@ async function registerFunction(func: () => (Promise<void> | void), label: strin
     const e = err as Error;
     logError(`Error in ${label}: ${e?.toString()}\n${e?.stack ?? ""}`);
   }
-};
+}
 
 export async function registerAllFunctions(): Promise<void> {
   // Delay game processes until registration is complete

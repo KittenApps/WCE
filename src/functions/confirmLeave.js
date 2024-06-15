@@ -24,8 +24,6 @@ export default function confirmLeave() {
       }
       return null;
     },
-    {
-      capture: true,
-    }
+    { capture: true }
   );
 }
