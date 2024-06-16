@@ -21,8 +21,6 @@ export default async function automaticReconnect() {
     key = await keyTable.get({ id: 1 });
   } catch (e) {
     logWarn(e);
-    localStorage.removeItem("bce.passwords.authTag");
-    localStorage.removeItem("bce.passwords.iv");
     localStorage.removeItem("bce.passwords");
     await db.delete();
     window.location.reload();
@@ -37,11 +35,9 @@ export default async function automaticReconnect() {
   /** @type {() => Promise<Passwords>} */
   async function loadAccounts() {
     const d = localStorage.getItem("bce.passwords");
-    const i = localStorage.getItem("bce.passwords.iv");
-    const a = localStorage.getItem("bce.passwords.authTag");
-    if (d && (!a || !i)) {
+    if (d) {
       /** @type {Passwords} */
-      const accs = parseJSON(localStorage.getItem("bce.passwords")) || {};
+      const accs = parseJSON(d) || {};
       if (window.crypto?.subtle) {
         setTimeout(() => {
           localStorage.removeItem("bce.passwords");
@@ -49,14 +45,6 @@ export default async function automaticReconnect() {
         }, 1);
       }
       return accs;
-    }
-    // ToDo: remove this migrations code once 6.2.1 is out for a while
-    if (d && a && i) {
-      localStorage.removeItem("bce.passwords.authTag");
-      localStorage.removeItem("bce.passwords.iv");
-      localStorage.removeItem("bce.passwords");
-      keyTable.clear();
-      return {};
     }
     /** @type {{auth: Uint8Array; iv: Uint8Array; data: Uint8Array;}} */
     const res = await accTable.get({ id: 1 });
@@ -68,8 +56,6 @@ export default async function automaticReconnect() {
       return parseJSON(decoder.decode(new Uint8Array(s))) || {};
     } catch (e) {
       logWarn(e);
-      localStorage.removeItem("bce.passwords.authTag");
-      localStorage.removeItem("bce.passwords.iv");
       localStorage.removeItem("bce.passwords");
       keyTable.clear();
       accTable.clear();

@@ -1,4 +1,4 @@
-import { SDK, HOOK_PRIORITIES, skippedFunctionality, deviatingHashes } from "../util/modding";
+import { skippedFunctionality, deviatingHashes } from "../util/modding";
 import { BCX } from "./hookBCXAPI";
 import { waitFor, parseJSON, fbcChatNotify, objEntries } from "../util/utils";
 import { debug, logInfo, pastLogs } from "../util/logger";
@@ -79,46 +79,6 @@ function findDrawnCharacters(target?: string, limitVisible = false): Character[]
 export default async function commands(): Promise<void> {
   await waitFor(() => !!Commands);
   debug("registering additional commands");
-
-  // ToDo: remove fbcSettings.whisperButton when R105 is out
-  if (GameVersion === "R104") {
-    SDK.hookFunction(
-      "ChatRoomAppendChat",
-      HOOK_PRIORITIES.AddBehaviour,
-      ([div], next) => {
-        if (!fbcSettings.whisperButton) return next([div]);
-
-        const replyButton = div.querySelector(".ReplyButton");
-        replyButton?.remove();
-
-        const sender = div.getAttribute("data-sender");
-        const matchingCharacters = sender ? findDrawnCharacters(sender) : [];
-        if (
-          sender &&
-          sender !== Player.MemberNumber?.toString() &&
-          matchingCharacters.length > 0 &&
-          (ChatRoomCharacterViewIsActive() || matchingCharacters.some(ChatRoomMapViewCharacterOnWhisperRange))
-        ) {
-          const repl = document.createElement("a");
-          repl.href = "#";
-          repl.onclick = (e) => {
-            e.preventDefault();
-            ElementValue("InputChat", `/w ${sender} ${ElementValue("InputChat").replace(/^\/(beep|w(hisper)?) \S+ ?/u, "")}`);
-            window.InputChat?.focus();
-          };
-          repl.title = "Whisper";
-          repl.classList.add("bce-line-icon-wrapper");
-          const img = document.createElement("img");
-          img.src = `${PUBLIC_URL}/whisper.png`;
-          img.alt = "Whisper";
-          img.classList.add("bce-line-icon");
-          repl.appendChild(img);
-          div.prepend(repl);
-        }
-        return next([div]);
-      }
-    );
-  }
 
   CommandCombine([
     {

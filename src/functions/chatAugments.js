@@ -237,81 +237,42 @@ export function augmentedChatNotify(node) {
 
 export default function chatAugments() {
   // CTRL+Enter OOC implementation
-  // ToDo: remove once r105 is out
-  if (GameVersion === "R104") {
-    SDK.hookFunction(
-      "ChatRoomKeyDown",
-      HOOK_PRIORITIES.ModifyBehaviourMedium,
-      ([event], next) => {
-        if (document.activeElement.id === "InputChat") {
-          if (event.key === "Enter" && !event.shiftKey) {
-            if (fbcSettings.ctrlEnterOoc && event.ctrlKey && ElementValue("InputChat")?.trim()) {
-              let text = ElementValue("InputChat");
-              let prefix = "";
-              if (!text) {
-                fbcChatNotify("Nothing to send!");
-                return true;
-              }
-              // Whisper command
-              if (text.startsWith("/w ")) {
-                const textParts = text.split(" ");
-                text = textParts.slice(2).join(" ");
-                prefix = `${textParts.slice(0, 2).join(" ")} `;
-              } else if (text.startsWith("/") && !text.startsWith("//")) {
-                fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
-                return true;
-              }
-              ElementValue("InputChat", `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`);
+  SDK.hookFunction(
+    "ChatRoomKeyDown",
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    ([event], next) => {
+      const inputChat = /** @type {HTMLInputElement} */(document.getElementById("InputChat"));
+      if (inputChat && document.activeElement === inputChat) {
+        if (event.key === "Enter" && !event.shiftKey) {
+          if (fbcSettings.ctrlEnterOoc && event.ctrlKey && inputChat.value.trim().length !== 0) {
+            let text = inputChat.value;
+            let prefix = "";
+            if (!text) {
+              fbcChatNotify("Nothing to send!");
+              return true;
             }
-            ChatRoomSendChat();
-            return true;
-          }
-          if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
-            ChatRoomScrollHistory(event.key === "ArrowUp");
-            return true;
-          }
-        }
-        return next([event]);
-      }
-    );
-  } else {
-    SDK.hookFunction(
-      "ChatRoomKeyDown",
-      HOOK_PRIORITIES.ModifyBehaviourMedium,
-      ([event], next) => {
-        const inputChat = /** @type {HTMLInputElement} */(document.getElementById("InputChat"));
-        if (inputChat && document.activeElement === inputChat) {
-          if (event.key === "Enter" && !event.shiftKey) {
-            if (fbcSettings.ctrlEnterOoc && event.ctrlKey && inputChat.value.trim().length !== 0) {
-              let text = inputChat.value;
-              let prefix = "";
-              if (!text) {
-                fbcChatNotify("Nothing to send!");
-                return true;
-              }
-              // Whisper command
-              if (text.startsWith("/w ")) {
-                const textParts = text.split(" ");
-                text = textParts.slice(2).join(" ");
-                prefix = `${textParts.slice(0, 2).join(" ")} `;
-              } else if (text.startsWith("/") && !text.startsWith("//")) {
-                fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
-                return true;
-              }
-              inputChat.value = `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`;
+            // Whisper command
+            if (text.startsWith("/w ")) {
+              const textParts = text.split(" ");
+              text = textParts.slice(2).join(" ");
+              prefix = `${textParts.slice(0, 2).join(" ")} `;
+            } else if (text.startsWith("/") && !text.startsWith("//")) {
+              fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
+              return true;
             }
-            ChatRoomSendChat();
-            return true;
+            inputChat.value = `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`;
           }
-          if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
-            ChatRoomScrollHistory(event.key === "ArrowUp");
-            return true;
-          }
+          ChatRoomSendChat();
+          return true;
         }
-        return next([event]);
+        if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+          ChatRoomScrollHistory(event.key === "ArrowUp");
+          return true;
+        }
       }
-    );
-  }
+      return next([event]);
+    }
+  );
 
   SDK.hookFunction(
     "ChatRoomMessageDisplay",

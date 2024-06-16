@@ -163,12 +163,9 @@ export const defaultSettings = {
     label: "[Beta] Allow configuring layer hiding in layering menu",
     type: "checkbox",
     value: false,
-    disabled: () => GameVersion === "R104",
-    sideEffects: (newValue, init) => {
+    disabled: () => false,
+    sideEffects: (newValue) => {
       debug("layeringHide", newValue);
-      // ToDo: remove this once R105 is out
-      if (init && GameVersion === "R104") fbcSettings.layeringHide = false;
-      // ToDo: add cleanup code here
     },
     category: "appearance",
     description: "Allows you to configure which lower layers an item should hide or not (changes only visible to other WCE players).",
@@ -402,18 +399,6 @@ export const defaultSettings = {
     description:
       "Shows messages you've sent while waiting for the server to respond, confirming you have sent the message and the server is just being slow.",
   },
-  whisperButton: {
-    label: "Show whisper button on chat messages",
-    type: "checkbox",
-    value: true,
-    disabled: () => GameVersion !== "R104",
-    sideEffects: (newValue, init) => {
-      debug("whisperButton", newValue);
-      if (init && GameVersion !== "R104") fbcSettings.whisperButton = false;
-    },
-    category: "chat",
-    description: "Adds a whisper button to chat messages, allowing you to whisper to the sender more conveniently.",
-  },
   richOnlineProfile: {
     label: "Rich online profile",
     type: "checkbox",
@@ -474,35 +459,10 @@ export const defaultSettings = {
     disabled: () => !fbcSettings.antiGarble,
     sideEffects: (newValue, init) => {
       debug("antiGarbleChatoptions", newValue);
-      if (GameVersion.startsWith("R105")) {
-        if (!init && newValue) {
-          createChatOptions(document.getElementById("chat-room-div") as HTMLDivElement);
-        } else if (!init) {
-          document.querySelectorAll(".wce-chat-room-button").forEach(e => e.remove());
-        }
-        return;
-      }
-      // ToDo: remove once R105 is out
-      if (newValue) {
-        // @ts-ignore
-        // eslint-disable-next-line deprecation/deprecation
-        ChatRoomChatLogRect = [1005, 66, 988, 805];
-        // @ts-ignore
-        // eslint-disable-next-line deprecation/deprecation
-        ChatRoomChatInputRect = [1405, 938, 800, 120];
-        // @ts-ignore
-        // eslint-disable-next-line deprecation/deprecation
-        ChatRoomChatLengthLabelRect = [1644, 970, 120, 82];
-      } else {
-        // @ts-ignore
-        // eslint-disable-next-line deprecation/deprecation
-        ChatRoomChatLogRect = [1005, 66, 988, 835];
-        // @ts-ignore
-        // eslint-disable-next-line deprecation/deprecation
-        ChatRoomChatInputRect = [1453, 953, 895, 90];
-        // @ts-ignore
-        // eslint-disable-next-line deprecation/deprecation
-        ChatRoomChatLengthLabelRect = [1764, 970, 120, 82];
+      if (!init && newValue) {
+        createChatOptions(document.getElementById("chat-room-div") as HTMLDivElement);
+      } else if (!init) {
+        document.querySelectorAll(".wce-chat-room-button").forEach(e => e.remove());
       }
     },
     category: "antigarble",
@@ -540,9 +500,6 @@ export const defaultSettings = {
     ],
     disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
     sideEffects: (newValue) => {
-      if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
-        fbcSettings.antiGarbleChatStutter = newValue ? "preserve" : "ignore";
-      }
       debug("antiGarbleChatoptions", newValue);
     },
     category: "antigarble",
@@ -560,9 +517,6 @@ export const defaultSettings = {
     ],
     disabled: () => !fbcSettings.antiGarble || fbcSettings.antiGarbleChatLevel === "full",
     sideEffects: (newValue) => {
-      if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
-        fbcSettings.antiGarbleChatBabyTalk = newValue ? "preserve" : "remove";
-      }
       debug("antiGarbleChatBabyTalk", newValue);
     },
     category: "antigarble",
@@ -601,9 +555,6 @@ export const defaultSettings = {
     ],
     disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
     sideEffects: (newValue) => {
-      if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
-        fbcSettings.antiGarbleWhisperStutter = newValue ? "preserve" : "ignore";
-      }
       debug("antiGarbleWhisperStutter", newValue);
     },
     category: "antigarble",
@@ -621,9 +572,6 @@ export const defaultSettings = {
     ],
     disabled: () => !fbcSettings.antiGarble || ["off", "full"].includes(fbcSettings.antiGarbleWhisperLevel),
     sideEffects: (newValue) => {
-      if (typeof newValue === "boolean") { // ToDo: remove migration code for r105
-        fbcSettings.antiGarbleWhisperBabyTalk = newValue ? "preserve" : "remove";
-      }
       debug("antiGarbleWhisperBabyTalk", newValue);
     },
     category: "antigarble",
