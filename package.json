@@ -1,38 +1,48 @@
 {
-	"name": "wce",
-	"type": "module",
-	"license": "GPL-3.0-or-later",
-	"scripts": {
-		"postinstall": "patch-package",
-		"start": "esbuild src/index.ts --bundle --outfile=public/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=public --define:PUBLIC_URL=\\'http://localhost:4000\\'",
-		"build": "rollup -c",
-		"test": "npm run typecheck ; npm run lint",
-		"typecheck": "tsc",
-		"lint": "eslint ./src",
-		"serve": "npm run build && npx http-server ./dist -p 4000 -c-1 --cors"
-	},
-	"dependencies": {
-		"buttplug": "^3.2.2",
-		"dexie": "^4.0.7",
-		"patch-package": "^8.0.0"
-	},
-	"devDependencies": {
-		"@eslint/js": "^9.5.0",
-		"@rollup/plugin-alias": "^5.1.0",
-		"@rollup/plugin-node-resolve": "^15.2.3",
-		"@stylistic/eslint-plugin": "^2.1.0",
-		"@total-typescript/ts-reset": "^0.5.1",
-		"@types/events": "^3.0.3",
-		"bc-stubs": "^105.0.0-Beta.1",
-		"bondage-club-mod-sdk": "^1.2.0",
-		"esbuild": "^0.21.5",
-		"eslint": "^9.5.0",
-		"eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^3.1.0",
-		"globals": "^15.4.0",
-		"rollup": "^4.18.0",
-		"rollup-plugin-copy": "^3.5.0",
-		"rollup-plugin-esbuild": "^6.1.1",
-		"typescript": "^5.4.5",
-		"typescript-eslint": "^8.0.0-alpha.30"
-	}
+  "name": "wce",
+  "type": "module",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "postinstall": "patch-package",
+    "start": "esbuild src/index.ts --bundle --outfile=public/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=public --define:PUBLIC_URL=\\'http://localhost:4000\\'",
+    "build": "rollup -c",
+    "test": "npm run typecheck ; npm run lint",
+    "typecheck": "tsc",
+    "lint": "eslint ./src",
+    "serve": "npm run build && npx http-server ./dist -p 4000 -c-1 --cors"
+  },
+  "dependencies": {
+    "buttplug": "^3.2.2",
+    "dexie": "^4.0.7",
+    "patch-package": "^8.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.5.0",
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@stylistic/eslint-plugin": "^2.2.0",
+    "@total-typescript/ts-reset": "^0.5.1",
+    "@types/events": "^3.0.3",
+    "bc-stubs": "^105.0.0-Beta.1",
+    "bondage-club-mod-sdk": "^1.2.0",
+    "esbuild": "^0.21.5",
+    "eslint": "^9.5.0",
+    "eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^3.1.0",
+    "globals": "^15.5.0",
+    "rollup": "^4.18.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.0.0-alpha.30"
+  },
+  "overrides": {
+    "@stylistic/eslint-plugin": {
+      "@stylistic/eslint-plugin-ts": {
+        "@typescript-eslint/utils": "$typescript-eslint"
+      },
+      "@stylistic/eslint-plugin-plus": {
+        "@typescript-eslint/utils": "$typescript-eslint"
+      }
+    }
+  }
 }
