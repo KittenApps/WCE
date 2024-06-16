@@ -307,7 +307,7 @@ export default async function commands(): Promise<void> {
           return;
         }
 
-        const targetName = Player.FriendNames?.get(targetMemberNumber) ?? `unknown (${targetMemberNumber})`;
+        const targetName = Player.FriendNames?.get(targetMemberNumber);
         ServerSend("AccountBeep", {
           BeepType: "",
           MemberNumber: targetMemberNumber,
@@ -316,7 +316,7 @@ export default async function commands(): Promise<void> {
         });
         FriendListBeepLog.push({
           MemberNumber: targetMemberNumber,
-          MemberName: targetName,
+          MemberName: targetName ?? `unknown (${targetMemberNumber})`,
           Sent: true,
           Private: false,
           Time: new Date(),
@@ -333,7 +333,7 @@ export default async function commands(): Promise<void> {
           FriendListShowBeep(beepId);
         };
         link.textContent = displayText("(Beep to $Name ($Number): $Message)", {
-          $Name: targetName,
+          $Name: targetName ?? "unknown",
           $Number: targetMemberNumber.toString(),
           $Message: msg.length > 150 ? `${msg.substring(0, 150)}...` : msg,
         });
