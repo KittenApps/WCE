@@ -34,6 +34,7 @@ declare global {
   }
   interface CharacterOnlineSharedSettings {
     Uwall: boolean;
+    Ulist: number[];
   }
 }
 

@@ -197,6 +197,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         ChatRoomSendChat: "0FF94F14", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomStart: "9B822A9A",
         ChatRoomSyncMemberJoin: "92AB3558", // Screens/Online/ChatRoom/ChatRoom.js
+        CommandCombine: "80F9D4AF", // Screens/Online/ChatRoom/Commands.js
         CommandExecute: "C5477FA1", // Screens/Online/ChatRoom/Commands.js
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",

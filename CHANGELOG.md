@@ -14,6 +14,7 @@
   * complete rewrite of the Anti Garble Chat Options using the new DOM based APIs (click the arrow next to the send chat button to access them)
   * removed the `show whisper button on chat messages` options, as it's replaced with something better in BC (clicking on highlighted names)
   * many more fixes related to the new BC version
+* added `/ulistadd`, `/ulistremove` and `/ulistshow` commands to manage a whitelist of users, who could bypass Uwall
 * created a new documentation website: https://wce-docs.vercel.app/
   * it has a [Garble Simulator](https://wce-docs.vercel.app/docs/anti-garbling/simulator) too, which let you easily try out all anti garble options with different gag intensities
   * (for the devs) there is also a [BC API typedoc website](https://bc-typedoc.vercel.app/), here an [typedoc for `Layering`](https://bc-typedoc.vercel.app/api/namespace/Layering)

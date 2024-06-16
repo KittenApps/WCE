@@ -120,7 +120,7 @@ export default async function commands(): Promise<void> {
     );
   }
 
-  const cmds: ICommand[] = [
+  CommandCombine([
     {
       Tag: "fbcdebug",
       Description: displayText("Get debug information to share with developers."),
@@ -401,13 +401,47 @@ export default async function commands(): Promise<void> {
         debug(versionOutput);
       },
     },
-  ];
-
-  for (const c of cmds) {
-    if (Commands.some(a => a.Tag === c.Tag)) {
-      debug("command already registered", c);
-      continue;
-    }
-    Commands.push(c);
-  }
+    {
+      Tag: "ulistadd",
+      Description: displayText("[membernumber]: adds a player to the list allowing to bypass Uwall."),
+      Action: (_, _command, args) => {
+        if (args.length < 1) {
+          fbcChatNotify("The ulistadd command must be followed by the member number of the player that you allow to bypass Uwall.");
+        } else {
+          const member = parseInt(args[0]);
+          const Ulist = Player.OnlineSharedSettings.Ulist ?? [];
+          if (!isNaN(member) && member > 0 && member !== Player.MemberNumber && !Ulist.includes(member)) {
+            Player.OnlineSharedSettings.Ulist = [...Ulist, member];
+            ServerAccountUpdate.QueueData({ OnlineSharedSettings: Player.OnlineSharedSettings });
+          }
+          if (!fbcSettings.uwall) fbcChatNotify("Warning: Uwall is not activated in WCE's settings.");
+        }
+      },
+    },
+    {
+      Tag: "ulistremove",
+      Description: displayText("[membernumber]: removes a player from the list allowing to bypass Uwall."),
+      Action: (_, _command, args) => {
+        if (args.length < 1) {
+          fbcChatNotify("The ulistremove command must be followed by the member number of the player who is no more allowed to bypass Uwall.");
+        } else {
+          const member = parseInt(args[0]);
+          const { Ulist } = Player.OnlineSharedSettings;
+          if (Array.isArray(Ulist) && !isNaN(member) && member > 0 && member !== Player.MemberNumber) {
+            Player.OnlineSharedSettings.Ulist = Ulist.filter(m => m !== member);
+            ServerAccountUpdate.QueueData({ OnlineSharedSettings: Player.OnlineSharedSettings });
+          }
+          if (!fbcSettings.uwall) fbcChatNotify("Warning: Uwall is not activated in WCE's settings.");
+        }
+      },
+    },
+    {
+      Tag: "ulistshow",
+      Description: displayText("displays the list of players allowed to bypass Uwall."),
+      Action: () => {
+        fbcChatNotify(`Ulist: ${JSON.stringify(Player.OnlineSharedSettings.Ulist ?? [])}`);
+        if (!fbcSettings.uwall) fbcChatNotify("Warning: Uwall is not activated in WCE's settings.");
+      },
+    },
+  ]);
 }

@@ -185,7 +185,7 @@ export default async function pastProfiles() {
     }
   }
 
-  Commands.push({
+  CommandCombine({
     Tag: "profiles",
     Description: displayText("<filter> - List seen profiles, optionally searching by member number or name"),
     Action: (argums) => {

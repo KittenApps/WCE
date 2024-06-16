@@ -110,49 +110,46 @@ export default async function toySync(): Promise<void> {
     }
   }, 3000);
 
-  Commands.push({
-    Tag: "toybatteries",
-    Description: displayText("Shows the battery status of all connected buttplug.io toys"),
-    Action: () => {
-      if (!client.connected) {
-        fbcChatNotify("buttplug.io is not connected");
-        return;
-      }
-
-      const batteryDevices: ButtplugClientDevice[] = client.devices.filter(dev => dev.hasBattery);
-      if (batteryDevices.length === 0) {
-        fbcChatNotify("No battery devices connected");
-        return;
-      }
-
-      Promise.all(batteryDevices.map(dev => dev.battery())).then((batteryStatus: number[]) => {
-        for (let i = 0; i < batteryDevices.length; i++) {
-          const battery = batteryStatus[i] * 100;
-          fbcChatNotify(`${batteryDevices[i].name}: ${battery}%`);
+  CommandCombine([
+    {
+      Tag: "toybatteries",
+      Description: displayText("Shows the battery status of all connected buttplug.io toys"),
+      Action: () => {
+        if (!client.connected) {
+          fbcChatNotify("buttplug.io is not connected");
+          return;
         }
-      });
+        const batteryDevices: ButtplugClientDevice[] = client.devices.filter(dev => dev.hasBattery);
+        if (batteryDevices.length === 0) {
+          fbcChatNotify("No battery devices connected");
+          return;
+        }
+        Promise.all(batteryDevices.map(dev => dev.battery())).then((batteryStatus: number[]) => {
+          for (let i = 0; i < batteryDevices.length; i++) {
+            const battery = batteryStatus[i] * 100;
+            fbcChatNotify(`${batteryDevices[i].name}: ${battery}%`);
+          }
+        });
+      },
     },
-  });
-
-  Commands.push({
-    Tag: "toyscan",
-    Description: displayText("Scans for connected buttplug.io toys"),
-    Action: () => {
-      if (!client.connected) {
-        fbcChatNotify(displayText("buttplug.io is not connected"));
-        return;
-      }
-
-      if (client.isScanning) {
-        client.stopScanning();
-        fbcChatNotify(displayText("Scanning stopped"));
-        return;
-      }
-
-      client.startScanning();
-      fbcChatNotify(displayText("Scanning for toys"));
+    {
+      Tag: "toyscan",
+      Description: displayText("Scans for connected buttplug.io toys"),
+      Action: () => {
+        if (!client.connected) {
+          fbcChatNotify(displayText("buttplug.io is not connected"));
+          return;
+        }
+        if (client.isScanning) {
+          client.stopScanning();
+          fbcChatNotify(displayText("Scanning stopped"));
+          return;
+        }
+        client.startScanning();
+        fbcChatNotify(displayText("Scanning for toys"));
+      },
     },
-  });
+  ]);
 
   await client.startScanning();
 }

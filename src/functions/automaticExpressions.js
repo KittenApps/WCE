@@ -289,45 +289,46 @@ export default async function automaticExpressions() {
     }
   }
 
-  Commands.push({
-    Tag: "r",
-    Description: displayText("[part of face or 'all']: resets expression overrides on part of or all of face"),
-    Action: (args) => {
-      if (args.length === 0 || args === "all") {
-        resetExpressionQueue([MANUAL_OVERRIDE_EVENT_TYPE]);
-        fbcChatNotify(displayText("Reset all expressions"));
-      } else {
-        const component = `${args[0].toUpperCase()}${args.substring(1).toLowerCase()}`;
-        for (const e of bceExpressionsQueue.map(a => a.Expression).filter(Boolean)) {
-          if (component === "Eyes" && "Eyes2" in e) {
-            delete e.Eyes2;
+  CommandCombine([
+    {
+      Tag: "r",
+      Description: displayText("[part of face or 'all']: resets expression overrides on part of or all of face"),
+      Action: (args) => {
+        if (args.length === 0 || args === "all") {
+          resetExpressionQueue([MANUAL_OVERRIDE_EVENT_TYPE]);
+          fbcChatNotify(displayText("Reset all expressions"));
+        } else {
+          const component = `${args[0].toUpperCase()}${args.substring(1).toLowerCase()}`;
+          for (const e of bceExpressionsQueue.map(a => a.Expression).filter(Boolean)) {
+            if (component === "Eyes" && "Eyes2" in e) {
+              delete e.Eyes2;
+            }
+            if (component in e) {
+              delete e[component];
+            }
           }
-          if (component in e) {
-            delete e[component];
-          }
+          fbcChatNotify(displayText("Reset expression on $component", { $component: component }));
         }
-        fbcChatNotify(displayText("Reset expression on $component", { $component: component }));
-      }
+      },
     },
-  });
-
-  Commands.push({
-    Tag: "anim",
-    Description: displayText("['list' or name of emote]: run an animation"),
-    Action: (_1, _2, args) => {
-      if (!fbcSettings.activityExpressions) {
-        fbcChatNotify(displayText("Activity expressions are not enabled in WCE settings. Unable to run animations."));
-        return;
-      }
-      if (args[0] === "list") {
-        fbcChatNotify(displayText("Available animations: $anims", { $anims: Object.keys(globalThis.bce_EventExpressions).join(", ") }));
-      }
-      const animation = Object.keys(globalThis.bce_EventExpressions).find(a => a.toLowerCase() === args[0]?.toLowerCase());
-      if (animation) {
-        pushEvent(globalThis.bce_EventExpressions[animation]);
-      }
+    {
+      Tag: "anim",
+      Description: displayText("['list' or name of emote]: run an animation"),
+      Action: (_1, _2, args) => {
+        if (!fbcSettings.activityExpressions) {
+          fbcChatNotify(displayText("Activity expressions are not enabled in WCE settings. Unable to run animations."));
+          return;
+        }
+        if (args[0] === "list") {
+          fbcChatNotify(displayText("Available animations: $anims", { $anims: Object.keys(globalThis.bce_EventExpressions).join(", ") }));
+        }
+        const animation = Object.keys(globalThis.bce_EventExpressions).find(a => a.toLowerCase() === args[0]?.toLowerCase());
+        if (animation) {
+          pushEvent(globalThis.bce_EventExpressions[animation]);
+        }
+      },
     },
-  });
+  ]);
 
   /**
    * @param {AssetPoseName} pose
@@ -363,7 +364,7 @@ export default async function automaticExpressions() {
     }
   }
 
-  Commands.push({
+  CommandCombine({
     Tag: "pose",
     Description: displayText("['list' or list of poses]: set your pose"),
     Action: (_1, _2, poses) => {
