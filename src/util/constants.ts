@@ -1,6 +1,6 @@
 export const FBC_VERSION = "6.3";
 export const settingsVersion = 63;
-export const SUPPORTED_GAME_VERSIONS = ["R104", "R105"];
+export const SUPPORTED_GAME_VERSIONS = ["R105"];
 
 export const fbcChangelog = `WCE v6.3
 * configure layer hiding in layering menus (like cloths over shiny petsuit)

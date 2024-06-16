@@ -367,8 +367,6 @@ export default async function settingsPage(): Promise<void> {
     run: PreferenceSubscreenBCESettingsRun,
     exit: PreferenceSubscreenBCESettingsExit,
     load: PreferenceSubscreenBCESettingsLoad,
-    // ToDo: remove once r105 is out
-    unload: () => null,
   });
 
   function keyHandler(e: KeyboardEvent): void {
