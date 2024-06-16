@@ -84,10 +84,10 @@ export default async function extendedWardrobe(): Promise<void> {
         const additionalWardrobe = wardrobe.slice(DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE);
         if (additionalWardrobe.length > 0) {
           Player.ExtensionSettings.FBCWardrobe = LZString.compressToUTF16(JSON.stringify(additionalWardrobe));
-          wardrobe = wardrobe.slice(0, DEFAULT_WARDROBE_SIZE);
-          ServerPlayerExtensionSettingsSync("FBCWardrobe");
           const additionalLocalWardrobe = wardrobe.slice(EXPANDED_WARDROBE_SIZE);
           if (additionalLocalWardrobe.length > 0) saveLocalWardrobe(additionalLocalWardrobe);
+          wardrobe = wardrobe.slice(0, DEFAULT_WARDROBE_SIZE);
+          ServerPlayerExtensionSettingsSync("FBCWardrobe");
         }
       }
       return next([wardrobe]);
