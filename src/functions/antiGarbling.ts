@@ -12,7 +12,7 @@ export default function antiGarbling(): void {
       if (!fbcSettings.antiGarble) return next(args);
       const [type, msg] = args;
       let process: { effects: SpeechTransformName[]; text: string } = { effects: [], text: msg };
-      let originalMsg: string;
+      let originalMsg: string | undefined;
 
       if (type !== "Whisper" || fbcSettings.antiGarbleWhisperLevel !== "off") {
         process = SpeechTransformProcess(Player, msg, SpeechTransformSenderEffects);
@@ -23,7 +23,7 @@ export default function antiGarbling(): void {
           (fbcSettings[`antiGarble${type}BabyTalk`] === "remove" && shouldBabyTalk) ||
           (fbcSettings[`antiGarble${type}Stutter`] === "remove" && stutterIntensity > 0)
         ) {
-          if (Player.RestrictionSettings.NoSpeechGarble) {
+          if (Player.RestrictionSettings?.NoSpeechGarble) {
             originalMsg = msg;
           } else if (fbcSettings[`antiGarble${type}Level`] !== "full") {
             originalMsg = msg;

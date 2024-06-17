@@ -330,7 +330,7 @@ export default async function commands(): Promise<void> {
         } else {
           const targetMemberNumber = targetMembers[0].MemberNumber;
           const originalTarget = ChatRoomTargetMemberNumber;
-          ChatRoomTargetMemberNumber = targetMemberNumber ?? null;
+          ChatRoomTargetMemberNumber = targetMemberNumber ?? -1;
           ElementValue("InputChat", `${msg.length > 0 && [".", "/"].includes(msg[0]) ? "\u200b" : ""}${msg}`);
           ChatRoomSendChat();
           // Erase duplicate from history to prevent things like automatic shock collars listening to the history from triggering
