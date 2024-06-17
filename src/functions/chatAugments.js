@@ -106,7 +106,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
     const contents = node.textContent ?? "",
       words = [contents];
 
-    originalText += node.textContent;
+    originalText += contents;
 
     for (let i = 0; i < words.length; i++) {
       // Handle other whitespace
