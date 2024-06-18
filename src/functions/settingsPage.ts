@@ -374,6 +374,7 @@ export default async function settingsPage(): Promise<void> {
   function keyHandler(e: KeyboardEvent): void {
     if (e.key === "Escape" && currentCategory !== null) {
       currentCategory = null;
+      ElementPosition("WceIntifaceAddress", -999, -999, 550);
       e.stopPropagation();
       e.preventDefault();
     }
