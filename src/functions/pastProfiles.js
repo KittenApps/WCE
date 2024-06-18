@@ -4,17 +4,6 @@ import { deepCopy, parseJSON, isCharacter, isNonNullObject, drawTextFitLeft, fbc
 import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { displayText } from "../util/localization";
 
-function hideChatRoomElements() {
-  const chatRoomElements = ["InputChat", "TextAreaChatLog"];
-  for (const id of chatRoomElements) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.style.display = "none";
-    }
-  }
-  ChatRoomChatHidden = true;
-}
-
 export default async function pastProfiles() {
   if (!fbcSettings.pastProfiles) {
     return;
@@ -173,7 +162,7 @@ export default async function pastProfiles() {
       );
       C.BCESeen = profile.seen;
       if (CurrentScreen === "ChatRoom") {
-        hideChatRoomElements();
+        ChatRoomHideElements();
         if (ChatRoomData) {
           ChatRoomBackground = ChatRoomData.Background;
         }
