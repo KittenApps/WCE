@@ -300,6 +300,8 @@ export default function chatAugments() {
               }
               inputChat.value = `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`;
             }
+            inputChat.style.height = "100%";
+            inputChat.style.height = `${inputChat.scrollHeight}px`;
             ChatRoomSendChat();
             return true;
           }
