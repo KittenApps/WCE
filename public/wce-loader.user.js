@@ -10,7 +10,7 @@
 // @match https://bondage-europe.com/*
 // @match https://www.bondage-europe.com/*
 // @match http://localhost:*/*
-// @icon https://wce.netlify.app/icon.png
+// @icon https://wce-docs.vercel.app/img/logo.png
 // @grant none
 // @run-at document-end
 // ==/UserScript==

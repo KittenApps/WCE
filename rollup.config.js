@@ -62,7 +62,10 @@ export default {
           transform: (contents) => {
             if (process.env.NETLIFY) {
               const NAME = `@name WCE${process.env.BRANCH === 'main' ? '' : ' ' + process.env.BRANCH} loader`;
-              return contents.toString().replace('http://localhost:4000', URL).replace('@name WCE loader local', NAME);
+              return contents.toString()
+                .replaceAll('http://localhost:4000', URL)
+                .replace('@name WCE loader local', NAME)
+                .replace('??= "stable";', `??= "${process.env.BRANCH === 'main' ? 'stable' : 'dev'}";`);
             }
             return contents
           }
