@@ -185,10 +185,28 @@ export default function antiGarbling(): void {
       // Make sure this is only done the very first time the input chat is created
       if (!registeredChatInputListener) {
         const chatInput = document.getElementById("InputChat") as null | HTMLInputElement;
-        if (chatInput) {
+        const chatButtonArrow = document.getElementById("chat-room-buttons-collapse") as null | HTMLButtonElement;
+        if (chatInput && chatButtonArrow) {
           chatInput.addEventListener("input", function WceInputChatListener() {
             const isWhisper = this.value.startsWith("/w ") || this.value.startsWith("/whisper ");
             whisperUpdate(isWhisper);
+          });
+          chatButtonArrow.addEventListener("click", function WCEChatButtonArrowClicked() {
+            const chatLog = document.getElementById("TextAreaChatLog");
+            const parent = document.getElementById("chat-room-div");
+            const buttons = document.getElementById("chat-room-buttons");
+            const input = document.getElementById("InputChat");
+            if (!input || !chatLog || !parent || !buttons) return;
+            input.style.height = "100%";
+            input.style.height = `${this.scrollHeight}px`;
+            const chatLogHeight = chatLog.getBoundingClientRect().height;
+            const parentHeight = parent.getBoundingClientRect().height;
+            const inputHeight = Math.max(input.getBoundingClientRect().height, buttons.getBoundingClientRect().height);
+            const ratio = (inputHeight + chatLogHeight) / parentHeight;
+            if (ratio > 1.005 || ratio < 0.995) {
+              const percentage = 100 * (inputHeight / parentHeight);
+              if (percentage >= 10 && percentage <= 35) parent.style.gridTemplateRows = `${100 - 0.4 - percentage}% ${percentage}%`;
+            }
           });
           registeredChatInputListener = true;
         }
