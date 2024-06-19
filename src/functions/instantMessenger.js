@@ -454,16 +454,8 @@ export default function instantMessenger() {
     }
   );
 
-  /**
-   * Get the position of the IM button dynamically based on current screen properties
-   * @type {() => [number, number, number, number]}
-   */
-  function buttonPosition() {
-    if (CurrentScreen === "ChatRoom" && document.getElementById("TextAreaChatLog")?.offsetParent !== null) {
-      return [5, 865, 60, 60];
-    }
-    return [70, 905, 60, 60];
-  }
+  /** @type {[number, number, number, number]} */
+  const buttonPosition = [70, 905, 60, 60];
 
   SDK.hookFunction(
     "DrawProcess",
@@ -475,11 +467,9 @@ export default function instantMessenger() {
           !fbcSettings.allowIMBypassBCX &&
           (BCX?.getRuleState("speech_restrict_beep_receive")?.isEnforced || (BCX?.getRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
         ) {
-          if (!container.classList.contains("bce-hidden")) {
-            hideIM();
-          }
+          if (!container.classList.contains("bce-hidden")) hideIM();
           DrawButton(
-            ...buttonPosition(),
+            ...buttonPosition,
             "",
             "Gray",
             "Icons/Small/Chat.png",
@@ -488,7 +478,7 @@ export default function instantMessenger() {
           );
         } else {
           DrawButton(
-            ...buttonPosition(),
+            ...buttonPosition,
             "",
             unreadSinceOpened ? "Red" : "White",
             "Icons/Small/Chat.png",
@@ -504,7 +494,7 @@ export default function instantMessenger() {
     "CommonClick",
     HOOK_PRIORITIES.OverrideBehaviour,
     (args, next) => {
-      if (fbcSettings.instantMessenger && MouseIn(...buttonPosition())) {
+      if (fbcSettings.instantMessenger && MouseIn(...buttonPosition)) {
         if (!container.classList.contains("bce-hidden")) {
           hideIM();
           return;

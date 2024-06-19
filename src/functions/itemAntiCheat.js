@@ -248,11 +248,9 @@ export default function itemAntiCheat() {
       );
 
       // Locks can be modified enmass with futuristic collar
-      const ignoreLocks =
-        Array.from(oldItems.values()).some(i => i.Name === "FuturisticCollar") &&
+      const ignoreLocks = Array.from(oldItems.values()).some(i => i.Name === "FuturisticCollar") &&
         Array.from(newItems.values()).some(i => i.Name === "FuturisticCollar");
-      const ignoreColors =
-        (Array.from(oldItems.values()).some(i => i.Name === "FuturisticHarness") &&
+      const ignoreColors = (Array.from(oldItems.values()).some(i => i.Name === "FuturisticHarness") &&
         Array.from(newItems.values()).some(i => i.Name === "FuturisticHarness")) ||
         ignoreLocks;
 
