@@ -37,7 +37,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         ChatRoomGenerateChatRoomChatMessage: "6BFAC520", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomHideElements: "D58ECB5C", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomHTMLEntities: "0A7ADB1D",
-        ChatRoomKeyDown: "E59D9605", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomKeyDown: "9F45A713", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomListManipulation: "75D28A8B",
         ChatRoomMapViewCharacterIsVisible: "286C447D",
         ChatRoomMapViewCharacterOnWhisperRange: "B0D08E96",
@@ -47,7 +47,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         ChatRoomMenuDraw: "83275135", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomMessage: "EA9F35DE", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomRegisterMessageHandler: "C432923A",
-        ChatRoomSendChat: "0FF94F14", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomSendChat: "ACB10CE5", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomStart: "9B822A9A",
         ChatRoomSyncMemberJoin: "92AB3558", // Screens/Online/ChatRoom/ChatRoom.js
         CommandCombine: "80F9D4AF", // Screens/Online/ChatRoom/Commands.js
