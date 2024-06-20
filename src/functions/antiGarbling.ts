@@ -205,7 +205,7 @@ export default function antiGarbling(): void {
             const ratio = (inputHeight + chatLogHeight) / parentHeight;
             if (ratio > 1.005 || ratio < 0.995) {
               const percentage = 100 * (inputHeight / parentHeight);
-              if (percentage >= 10 && percentage <= 35) parent.style.gridTemplateRows = `${100 - 0.4 - percentage}% ${percentage}%`;
+              if (percentage >= 9 && percentage <= 35) parent.style.gridTemplateRows = `${100 - 0.4 - percentage}% ${percentage}%`;
             }
           });
           registeredChatInputListener = true;
