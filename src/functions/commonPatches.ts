@@ -109,4 +109,14 @@ export default function commonPatches(): void {
       return next(args);
     }
   );
+
+  // ToDo: remove once r105 is out
+  if (GameVersion === "R105") {
+    // Fix moving Characters between different ChatRoom pages (with >10 Players)
+    SDK.hookFunction(
+      "ChatRoomCharacterViewClickCharacter",
+      HOOK_PRIORITIES.AddBehaviour,
+      ([C, CharX, CharY, Zoom, ClickX, ClickY, Pos], next) => next([C, CharX, CharY, Zoom, ClickX, ClickY, Pos + ChatRoomCharacterViewOffset])
+    );
+  }
 }
