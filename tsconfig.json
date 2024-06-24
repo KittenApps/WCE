@@ -11,9 +11,9 @@
 	"compilerOptions": {
 		"module": "ES2022",
 		"allowJs": true,
-		"moduleResolution": "bundler",
+		"moduleResolution": "Bundler",
 		"noEmit": true,
-		"target": "es2022",
+		"target": "ES2022",
 		"checkJs": true,
 		"skipLibCheck": false,
 		"strictNullChecks": false
