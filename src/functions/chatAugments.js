@@ -88,7 +88,7 @@ function bceAllowedToEmbed(url) {
       "fs.kinkop.eu",
     ].includes(url.host) || sessionCustomOrigins.get(url.origin) === "allowed";
 
-  if (/\/[^/]+\.(png|jpe?g|gif)$/ui.test(url.pathname)) {
+  if (/\/[^/]+\.(png|jpe?g|webp|gif)$/ui.test(url.pathname)) {
     return isTrustedOrigin ? EMBED_TYPE.Image : EMBED_TYPE.Untrusted;
   }
   return EMBED_TYPE.None;
