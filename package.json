@@ -33,7 +33,7 @@
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-esbuild": "^6.1.1",
     "typescript": "^5.5.2",
-    "typescript-eslint": "^8.0.0-alpha.30"
+    "typescript-eslint": "^8.0.0-alpha.33"
   },
   "overrides": {
     "@stylistic/eslint-plugin": {
