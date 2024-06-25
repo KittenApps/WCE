@@ -33,7 +33,14 @@ export default tseslint.config(
       "@stylistic/linebreak-style": ["error", "unix"],
       "@stylistic/no-extra-semi": "error",
       "@stylistic/nonblock-statement-body-position": ["error", "beside"],
-      "@stylistic/object-curly-newline": ["error", { "multiline": true }],
+      "@stylistic/object-curly-newline": ["error", {
+        "ObjectExpression": { "multiline": true },
+        "ObjectPattern": { "multiline": true },
+        "ImportDeclaration": { "multiline": true },
+        "ExportDeclaration": { "multiline": true },
+        "TSTypeLiteral": { "multiline": true },
+        "TSInterfaceBody": { "consistent": true }
+      }],
       "@stylistic/one-var-declaration-per-line": ["error", "initializations"],
       "@stylistic/semi-style": ["error", "last"],
       "@stylistic/switch-colon-spacing": "error",
