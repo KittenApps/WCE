@@ -43,6 +43,13 @@
       "@stylistic/eslint-plugin-plus": {
         "@typescript-eslint/utils": "$typescript-eslint"
       }
+    },
+    "bc-stubs": {
+      "socket.io-client": {
+        "engine.io-client": {
+          "ws": "8.17.1"
+        }
+      }
     }
   }
 }
