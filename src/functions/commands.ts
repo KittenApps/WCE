@@ -16,7 +16,7 @@ export async function fbcDebug(copy: boolean): Promise<string> {
   info.set("Game Version", `${GameVersion}${SUPPORTED_GAME_VERSIONS.includes(GameVersion) ? "" : " (unsupported)"}`);
   info.set("WebGL Version", GLVersion);
   info.set("WCE Version", FBC_VERSION);
-  info.set("Loaded via FUSAM", typeof FUSAM === "object" && FUSAM?.addons?.FBC ? "Yes" : "No");
+  info.set("Loaded via FUSAM", typeof FUSAM === "object" && FUSAM?.addons?.WCE ? "Yes" : "No");
   info.set(
     "WCE Enabled Settings",
     `\n- ${objEntries(fbcSettings).filter(([k, v]) => v || k === "version").map(([k, v]) => `${k}: ${v.toString()}`).join("\n- ")}`

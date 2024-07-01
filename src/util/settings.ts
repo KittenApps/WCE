@@ -224,7 +224,7 @@ export const defaultSettings = {
         } else {
           logWarn("Player.Wardrobe not found, skipping wardrobe extension");
         }
-      } else {
+      } else if (fbcSettings.extendedWardrobe) {
         // Restore original size
         WardrobeSize = EXPANDED_WARDROBE_SIZE;
         WardrobeFixLength();
