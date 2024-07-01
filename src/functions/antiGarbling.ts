@@ -191,22 +191,8 @@ export default function antiGarbling(): void {
             const isWhisper = this.value.startsWith("/w ") || this.value.startsWith("/whisper ");
             whisperUpdate(isWhisper);
           });
-          chatButtonArrow.addEventListener("click", function WCEChatButtonArrowClicked() {
-            const chatLog = document.getElementById("TextAreaChatLog");
-            const parent = document.getElementById("chat-room-div");
-            const buttons = document.getElementById("chat-room-buttons");
-            const input = document.getElementById("InputChat");
-            if (!input || !chatLog || !parent || !buttons) return;
-            input.style.height = "100%";
-            input.style.height = `${this.scrollHeight}px`;
-            const chatLogHeight = chatLog.getBoundingClientRect().height;
-            const parentHeight = parent.getBoundingClientRect().height;
-            const inputHeight = Math.max(input.getBoundingClientRect().height, buttons.getBoundingClientRect().height);
-            const ratio = (inputHeight + chatLogHeight) / parentHeight;
-            if (ratio > 1.005 || ratio < 0.995) {
-              const percentage = 100 * (inputHeight / parentHeight);
-              if (percentage >= 9 && percentage <= 35) parent.style.gridTemplateRows = `${100 - 0.4 - percentage}% ${percentage}%`;
-            }
+          chatButtonArrow.addEventListener("click", (e) => {
+            ChatRoomChatInputChangeHandler.call(chatInput, e);
           });
           registeredChatInputListener = true;
         }
