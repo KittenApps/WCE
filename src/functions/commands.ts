@@ -344,15 +344,16 @@ export default async function commands(): Promise<void> {
       Description: displayText("show versions of the club, WCE, BCX and other mods in use by players"),
       Action: (_, _command, args) => {
         function getCharacterModInfo(character: Character): string {
-          return `${CharacterNickname(character)} (${character.MemberNumber ?? ""}) club ${character.OnlineSharedSettings?.GameVersion ?? "R0"}${
-            window.bcx?.getCharacterVersion(character.MemberNumber) ? ` BCX ${window.bcx.getCharacterVersion(character.MemberNumber) ?? "?"}` : ""
-          }${character.FBC ? `\nWCE v${character.FBC} Alt Arousal: ${character.BCEArousal?.toString()}` : ""}${
-            character.FBCOtherAddons?.some(mod => !["BCX", "FBC", "WCE"].includes(mod.name)) ?
-              `\nOther Addons:\n- ${character.FBCOtherAddons.filter(mod => !["BCX", "FBC", "WCE"].includes(mod.name))
-                .map(mod => `${mod.name} v${mod.version} ${mod.repository ?? ""}`)
-                .join("\n- ")}` :
-                ""
-          }`;
+          const bcVersion = character.OnlineSharedSettings?.GameVersion ?? "R0";
+          const BCXi = window.bcx?.getCharacterVersion(character.MemberNumber) ?
+            ` BCX ${window.bcx.getCharacterVersion(character.MemberNumber) ?? "?"}` :
+            "";
+          const FBCi = character.FBC ? `\nWCE v${character.FBC} Alt Arousal: ${character.BCEArousal?.toString()}` : "";
+          const others = character.FBCOtherAddons?.some(mod => !["BCX", "FBC", "WCE"].includes(mod.name)) ?
+            `\nOther Addons:\n- ${character.FBCOtherAddons.filter(mod => !["BCX", "FBC", "WCE"].includes(mod.name))
+              .map(mod => `${mod.name} v${mod.version} ${mod.repository ?? ""}`).join("\n- ")}` :
+            "";
+          return `${CharacterNickname(character)} (${character.MemberNumber ?? ""}) club ${bcVersion}${BCXi}${FBCi}${others}`;
         }
 
         const printList = findDrawnCharacters(args.length > 0 ? args[0] : null, true);
