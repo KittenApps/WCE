@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name WCE local loader
+// @name WCE local loader with FUSAM
 // @namespace https://www.bondageprojects.com/
-// @version 1.1
+// @version 1.4
 // @description Wholesome Club Extensions (WCE) - enhancements for the bondage club - fork of FBC 5.8
 // @author Sidious, Stella
 // @supportURL https://github.com/KittenApps/WCE
@@ -12,6 +12,8 @@
 // ==/UserScript==
 
 var URL = 'http://localhost:4000';
+
+import(`https://sidiousious.gitlab.io/bc-addon-loader/fusam.js?v=${(Date.now()/10000).toFixed(0)}`).then(() => import(`${URL}/wce.js`));
 
 var preloadLink = document.createElement("link");
 preloadLink.href = `${URL}/wce.js`;
@@ -28,18 +30,3 @@ fusam.enabledDistributions ??= {};
 delete fusam.enabledDistributions.WCE;
 delete fusam.enabledDistributions.FBC;
 localStorage.setItem("fusam.settings", JSON.stringify(fusam));
-
-if (typeof FUSAM === "object" && FUSAM?.present) {
-  import(`${URL}/wce.js`);
-} else {
-  let storeFUSAM;
-  Object.defineProperty(window, "FUSAM", {
-    set(n) {
-      storeFUSAM = n;
-      import(`${URL}/wce.js`);
-    },
-    get() {
-      return storeFUSAM;
-    },
-  });
-}

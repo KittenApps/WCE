@@ -24,7 +24,11 @@ const LICENSE = `/**
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-`
+`;
+const MATCH = `// @match https://bondageprojects.elementfx.com/*
+// @match https://www.bondageprojects.elementfx.com/*
+// @match https://bondage-europe.com/*
+// @match https://www.bondage-europe.com/*`;
 const URL = process.env.CONTEXT === 'production' ? process.env.URL : process.env.DEPLOY_PRIME_URL;
 
 export default {
@@ -56,16 +60,37 @@ export default {
     copy({
       targets: [
         { src: 'public/*.png', dest: 'dist' },
+        ...(process.env.NETLIFY && (process.env.BRANCH === 'main' || process.env.BRANCH === 'beta') ? [{ 
+            src: 'public/wce-fusam-loader.user.js',
+            dest: 'dist',
+            transform: (contents) => contents.toString()
+              .replace('@name WCE loader', `@name WCE${process.env.BRANCH === 'main' ? '' : ' ' + process.env.BRANCH} loader`)
+              .replace('??= "stable";', `??= "${process.env.BRANCH === 'main' ? 'stable' : 'dev'}";`)
+          }] : [{ 
+            src: 'public/wce-local-loader.user.js',
+            dest: 'dist',
+            rename: 'wce-fusam-loader.user.js',
+            transform: (contents) => {
+              if (process.env.NETLIFY) {
+                return contents.toString()
+                  .replace('http://localhost:4000', URL)
+                  .replace('@name WCE local loader', `@name WCE PR #${process.env.REVIEW_ID} loader`)
+                  .replace('// @match http://localhost:*/*', MATCH);
+              }
+              return contents
+            }
+          }]
+        ),
         { 
-          src: 'public/*.user.js',
+          src: 'public/wce-loader.user.js',
           dest: 'dist',
           transform: (contents) => {
             if (process.env.NETLIFY) {
-              const NAME = `@name WCE${process.env.BRANCH === 'main' ? '' : ' ' + process.env.BRANCH} loader`;
+              const BRANCH = process.env.BRANCH === 'main' ? '' : (process.env.BRANCH === 'beta' ? ' beta': ` PR #${process.env.REVIEW_ID}`);
               return contents.toString()
-                .replaceAll('http://localhost:4000', URL)
-                .replace('@name WCE loader local', NAME)
-                .replace('??= "stable";', `??= "${process.env.BRANCH === 'main' ? 'stable' : 'dev'}";`);
+                .replace('http://localhost:4000', URL)
+                .replace('@name WCE local loader', `@name WCE${BRANCH} loader`)
+                .replace('// @match http://localhost:*/*', MATCH);
             }
             return contents
           }
