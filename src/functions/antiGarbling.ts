@@ -218,7 +218,7 @@ export default function antiGarbling(): void {
     Description: "show OriginalMsg while deafened",
     Priority: 90,
     Callback: (data, _, msg, metadata) => {
-      if (data.Type === "Chat" && fbcSettings.antiDeaf && Player.GetDeafLevel() > 0) {
+      if (data.Type === "Chat" && fbcSettings.antiDeaf && Player.GetDeafLevel() > 0 && !metadata.OriginalMsg) {
         metadata.OriginalMsg = msg;
       }
       return false;
