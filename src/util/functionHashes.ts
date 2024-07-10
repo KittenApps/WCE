@@ -21,7 +21,6 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         CharacterLoadOnline: "407FEDDE", // Scripts/Character.js
         CharacterNickname: "A794EFF5",
         CharacterRefresh: "301DA9CF",
-        CharacterReleaseTotal: "BB9C6989",
         CharacterSetCurrent: "F46573D8",
         CharacterSetFacialExpression: "EC032BEE", // Scripts/Character.js (6.5.2024)
         CharacterSetActivePose: "566A14D7",
@@ -55,7 +54,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
         CommonSetScreen: "E10E2148",
-        CraftingClick: "9169F897", // Screens/Room/Crafting/Crafting.js
+        CraftingClick: "33579054", // Screens/Room/Crafting/Crafting.js
         CraftingConvertSelectedToItem: "48270B42",
         CraftingRun: "51577F65", // Screens/Room/Crafting/Crafting.js
         DialogCanUnlock: "A86B2558",
@@ -75,7 +74,8 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         DrawProcess: "9776CBC2",
         DrawText: "C1BF0F50",
         DrawTextFit: "F9A1B11E",
-        ElementCreate: "C2D64500",
+        ElementCreate: "A3E07B07",
+        ElementCreateInput: "0755ED07",
         ElementCreateTextArea: "4E040819", // Scripts/Element.js
         ElementIsScrolledToEnd: "1CC4FE11",
         ElementPosition: "3D9F7B72", // Scripts/Element.js

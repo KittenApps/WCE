@@ -110,12 +110,14 @@ export default function commonPatches(): void {
     }
   );
 
-  // ToDo: remove once r105 is out
+  // ToDo: remove once r106 is out
   if (GameVersion === "R105") {
     // Fix moving Characters between different ChatRoom pages (with >10 Players)
     SDK.hookFunction(
       "ChatRoomCharacterViewClickCharacter",
       HOOK_PRIORITIES.AddBehaviour,
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       ([C, CharX, CharY, Zoom, ClickX, ClickY, Pos], next) => next([C, CharX, CharY, Zoom, ClickX, ClickY, Pos + ChatRoomCharacterViewOffset])
     );
   }
