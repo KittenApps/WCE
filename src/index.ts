@@ -4,6 +4,7 @@ import { displayText } from "./util/localization";
 import { registerAllFunctions } from "./registerFunctions";
 import { FBC_VERSION } from "./util/constants";
 import { fbcDebug } from "./functions/commands";
+import { pushLog } from "./util/logger";
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
@@ -34,3 +35,7 @@ await registerAllFunctions();
 await fbcNotify(`Wholesome Club Extensions v${globalThis.FBC_VERSION} loaded!`);
 
 Player.FBC = FBC_VERSION;
+
+window.addEventListener("error", (e) => {
+  pushLog("error", e.message, `${e.filename} (${e.lineno}:${e.colno})`, e.error);
+});
