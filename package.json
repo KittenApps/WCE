@@ -15,7 +15,7 @@
     "dexie": "^4.0.8"
   },
   "devDependencies": {
-    "@eslint/js": "^9.7.0",
+    "@eslint/js": "^9.8.0",
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@stylistic/eslint-plugin": "^2.3.0",
@@ -24,14 +24,14 @@
     "bc-stubs": "^106.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
     "esbuild": "^0.23.0",
-    "eslint": "^9.7.0",
+    "eslint": "^9.8.0",
     "eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^3.1.0",
     "globals": "^15.8.0",
-    "rollup": "^4.19.0",
+    "rollup": "^4.19.1",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-esbuild": "^6.1.1",
-    "typescript": "^5.5.3",
-    "typescript-eslint": "^8.0.0-alpha.47"
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.0.0-alpha.54"
   },
   "overrides": {
     "@stylistic/eslint-plugin": {
