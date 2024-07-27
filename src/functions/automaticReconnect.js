@@ -53,6 +53,7 @@ export default async function automaticReconnect() {
     const decoder = new TextDecoder("utf8");
     try {
       const s = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, data);
+      // eslint-disable-next-line @typescript-eslint/return-await
       return parseJSON(decoder.decode(new Uint8Array(s))) || {};
     } catch (e) {
       logWarn(e);
