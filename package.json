@@ -18,7 +18,7 @@
     "@eslint/js": "^9.8.0",
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@stylistic/eslint-plugin": "^2.6.0-beta.1",
+    "@stylistic/eslint-plugin": "^2.6.1",
     "@total-typescript/ts-reset": "^0.5.1",
     "@types/events": "^3.0.3",
     "bc-stubs": "^106.0.0",
@@ -26,20 +26,16 @@
     "esbuild": "^0.23.0",
     "eslint": "^9.8.0",
     "eslint-plugin-deprecation": "npm:@silizia/eslint-plugin-deprecation@^3.1.0",
-    "globals": "^15.8.0",
-    "rollup": "^4.19.1",
+    "globals": "^15.9.0",
+    "rollup": "^4.19.2",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-esbuild": "^6.1.1",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.0.0"
   },
   "overrides": {
-    "bc-stubs": {
-      "socket.io-client": {
-        "engine.io-client": {
-          "ws": "8.17.1"
-        }
-      }
+    "rollup-plugin-copy": {
+      "globby": "11.0.4"
     }
   }
 }
