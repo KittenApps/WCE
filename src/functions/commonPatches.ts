@@ -87,11 +87,12 @@ export default function commonPatches(): void {
   );
 
   // Prevent friendlist results from attempting to load into the HTML outside of the appropriate view
+  // ToDo: remove once R107 is out
   SDK.hookFunction(
     "FriendListLoadFriendList",
     HOOK_PRIORITIES.OverrideBehaviour,
     (args, next) => {
-      if (!document.getElementById("FriendList")) {
+      if (!document.getElementById("FriendList") && !document.getElementById("friend-list")) {
         return null;
       }
       return next(args);
