@@ -367,11 +367,11 @@ export default function wceStyles(): void {
   }
   #wce-chat-baby-talk[data-state="ignore"]::before,
   #wce-chat-stutters[data-state="ignore"]::before {
-    --button-color: #bbb;
+    ${GameVersion === "R106" ? "background-color" : "--button-color"}: #bbb;
   }
   #wce-chat-baby-talk[data-state="preserve"]::before,
   #wce-chat-stutters[data-state="preserve"]::before {
-    --button-color: #666;
+    ${GameVersion === "R106" ? "background-color" : "--button-color"}: #666;
   }
   `;
   const head = document.head || document.getElementsByTagName("head")[0];
