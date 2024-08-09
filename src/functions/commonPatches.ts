@@ -87,11 +87,12 @@ export default function commonPatches(): void {
   );
 
   // Prevent friendlist results from attempting to load into the HTML outside of the appropriate view
+  // ToDo: remove once R107 is out
   SDK.hookFunction(
     "FriendListLoadFriendList",
     HOOK_PRIORITIES.OverrideBehaviour,
     (args, next) => {
-      if (!document.getElementById("FriendList")) {
+      if (!document.getElementById("FriendList") && !document.getElementById("friend-list")) {
         return null;
       }
       return next(args);
@@ -109,16 +110,4 @@ export default function commonPatches(): void {
       return next(args);
     }
   );
-
-  // ToDo: remove once r106 is out
-  if (GameVersion === "R105") {
-    // Fix moving Characters between different ChatRoom pages (with >10 Players)
-    SDK.hookFunction(
-      "ChatRoomCharacterViewClickCharacter",
-      HOOK_PRIORITIES.AddBehaviour,
-      // @ts-ignore
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      ([C, CharX, CharY, Zoom, ClickX, ClickY, Pos], next) => next([C, CharX, CharY, Zoom, ClickX, ClickY, Pos + ChatRoomCharacterViewOffset])
-    );
-  }
 }

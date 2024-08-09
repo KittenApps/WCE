@@ -14,36 +14,8 @@
 * adopted to new features in latest BC versions:
     * updated layering menus and copy color button
     * added clear cache button to chat menu
-* check out the [Changelog](https://wce-docs.vercel.app/blog/wce-v6-2) for a complete list of changes since FBC 5.8
+* check out the [Changelog](https://wce-docs.vercel.app/blog) for a complete list of changes since FBC 5.8
 
 ## Installation
 
-see also: https://wce-docs.vercel.app/docs/installation
-
-### User Script loader (recommended)
-
-1. **Install a users script manager:**
-    * install [Violentmonkey](https://violentmonkey.github.io/#installation) (recommended, open source) for your browser following the linked instructions 
-    * or [Tampermonkey](https://www.tampermonkey.net/) (closed source, includes questionable tracking)
-    * for (mobile) Safarie you could use [Userscripts](https://apps.apple.com/de/app/userscripts/id1463298887)
-2. **Install one of these addon loaders:**
-    * just open the link in your browser and confirming the installation with your choosen user script manager:
-    1. [WCE with FUSAM loader](https://wce.netlify.app/wce-fusam-loader.user.js) (recommended)
-        * make sure to also remove the old FUSAM loader
-    2. [WCE loader](https://wce.netlify.app/wce-loader.user.js) (without FUSAM):
-        * make sure you still load [FUSAM following their introductions](https://sidiousious.gitlab.io/bc-addon-loader/)
-3. Make sure that the old FBC version isn't loaded through FUSAM anymore
-    * and that you removed the old user script for previous version of this fork (if applicable)
-
-### Bookmarklet
-
-* create new Bookmark and add the following code as the URL of the new bookmark:
-```js
-javascript:(() => {if(!window.FUSAM) return alert('error: load FUSAM first!'); let s = document.body.appendChild(document.createElement('script')); s.type= 'module'; s.src='https://wce.netlify.app/wce.js';})();
-```
-* make sure to load this Bookmarklet after FUSAM has loaded (and the `Addon Manager` button is visible)
-
-### Beta releases
-
-* install the beta loaders: [WCE with FUSAM loader](https://beta--wce.netlify.app/wce-fusam-loader.user.js) or [WCE loader](https://beta--wce.netlify.app/wce-loader.user.js)
-* or the bookmarklet with the `https://beta--wce.netlify.app/wce.js` URL
+see: https://wce-docs.vercel.app/docs/installation

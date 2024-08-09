@@ -80,6 +80,7 @@ export function objEntries<T>(obj: T): [keyof T, T[keyof T]][] {
   return Object.entries(obj) as [keyof T, T[keyof T]][];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function parseJSON<T>(jsonString: string | null): T {
   if (jsonString === null) {
     return null;

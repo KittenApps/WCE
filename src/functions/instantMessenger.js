@@ -269,30 +269,37 @@ export default function instantMessenger() {
     return msgs;
   }
 
-  const history = /** @type {Record<string, {historyRaw: RawHistory[]}>} */(parseJSON(localStorage.getItem(storageKey()) || "{}"));
-  for (const [friendIdStr, friendHistory] of objEntries(history)) {
-    const friendId = parseInt(friendIdStr);
-    const friend = handleUnseenFriend(friendId);
-    friend.historyRaw = friendHistory.historyRaw;
-    for (const hist of friendHistory.historyRaw) {
-      addMessage(
-        friendId,
-        hist.authorId === Player.MemberNumber,
-        {
-          Message: `${hist.message}\n\n\uf124${JSON.stringify({
-            messageType: hist.type,
-            messageColor: hist.color,
-          })}`,
-          MemberNumber: hist.authorId,
-          MemberName: hist.author,
-        },
-        true,
-        hist.createdAt ? new Date(hist.createdAt) : new Date(0)
-      );
-      if (hist.createdAt) {
-        friend.listElement.setAttribute("data-last-updated", hist.createdAt.toString());
+  let IMloaded = false;
+
+  // ToDo: migrate to IndexedDB
+  function loadIM() {
+    if (IMloaded) return;
+    const history = /** @type {Record<string, {historyRaw: RawHistory[]}>} */(parseJSON(localStorage.getItem(storageKey()) || "{}"));
+    for (const [friendIdStr, friendHistory] of objEntries(history)) {
+      const friendId = parseInt(friendIdStr);
+      const friend = handleUnseenFriend(friendId);
+      friend.historyRaw = friendHistory.historyRaw;
+      for (const hist of friendHistory.historyRaw) {
+        addMessage(
+          friendId,
+          hist.authorId === Player.MemberNumber,
+          {
+            Message: `${hist.message}\n\n\uf124${JSON.stringify({
+              messageType: hist.type,
+              messageColor: hist.color,
+            })}`,
+            MemberNumber: hist.authorId,
+            MemberName: hist.author,
+          },
+          true,
+          hist.createdAt ? new Date(hist.createdAt) : new Date(0)
+        );
+        if (hist.createdAt) {
+          friend.listElement.setAttribute("data-last-updated", hist.createdAt.toString());
+        }
       }
     }
+    IMloaded = true;
   }
 
   messageInput.addEventListener("keydown", (e) => {
@@ -499,6 +506,7 @@ export default function instantMessenger() {
           hideIM();
           return;
         }
+        loadIM();
         sortIM();
         container.classList.toggle("bce-hidden");
         ServerSend("AccountQuery", { Query: "OnlineFriends" });
