@@ -1,9 +1,9 @@
-export const FBC_VERSION = "6.3.1";
-export const settingsVersion = 63.1;
-export const SUPPORTED_GAME_VERSIONS = ["R106"];
+export const FBC_VERSION = "6.3.2";
+export const settingsVersion = 63.2;
+export const SUPPORTED_GAME_VERSIONS = ["R106", "R107"];
 
-export const fbcChangelog = `WCE v6.3.1
-* BC R106 compatibility and other fixes
+export const fbcChangelog = `WCE v6.3.2
+* BC R107 compatibility and other fixes
 * for a full changelog visit our new website: https://wce-docs.vercel.app/blog
 
 WCE v6.3

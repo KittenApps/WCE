@@ -74,25 +74,28 @@ export default async function friendPresenceNotifications() {
     lastFriends = data.Result;
   });
 
-  SDK.hookFunction(
-    "ServerClickBeep",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      if (
-        ServerBeep.Timer > Date.now() &&
-        MouseIn(CurrentScreen === "ChatRoom" ? 0 : 500, 0, 1000, 50) &&
-        CurrentScreen !== "FriendList"
-      ) {
-        // @ts-ignore - ClickAction is not in the original game, but we specify it above for ServerBeeps
-        switch (ServerBeep.ClickAction) {
-          case BEEP_CLICK_ACTIONS.FriendList:
-            ServerOpenFriendList();
-            return null;
-          default:
-            break;
+  // ToDo: remove with r107
+  if (GameVersion === "R106") {
+    SDK.hookFunction(
+      "ServerClickBeep",
+      HOOK_PRIORITIES.OverrideBehaviour,
+      (args, next) => {
+        if (
+          ServerBeep.Timer > Date.now() &&
+          MouseIn(CurrentScreen === "ChatRoom" ? 0 : 500, 0, 1000, 50) &&
+          CurrentScreen !== "FriendList"
+        ) {
+          // @ts-ignore - ClickAction is not in the original game, but we specify it above for ServerBeeps
+          switch (ServerBeep.ClickAction) {
+            case BEEP_CLICK_ACTIONS.FriendList:
+              ServerOpenFriendList();
+              return null;
+            default:
+              break;
+          }
         }
+        return next(args);
       }
-      return next(args);
-    }
-  );
+    );
+  }
 }
