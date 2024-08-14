@@ -29,7 +29,7 @@ export function fbcBeepNotify(title: string, text: string) {
     {
       MemberNumber: Player.MemberNumber || -1,
       BeepType: "",
-      MemberName: "FBC",
+      MemberName: "WCE",
       ChatRoomName: title,
       Private: true,
       Message: text,
