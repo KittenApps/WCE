@@ -64,6 +64,8 @@ export default function instantMessenger() {
 
   let unreadSinceOpened = 0;
 
+  let IMloaded = false;
+
   /** @typedef {{ author: string, authorId: number, type: "Emote" | "Action" | "Message", message: string, color: string, createdAt: number }} RawHistory */
   /** @typedef {{ unread: number, statusText: HTMLElement, listElement: HTMLElement, historyRaw: RawHistory[], history: HTMLElement, online: boolean }} IMFriendHistory */
   /** @type {Map<number, IMFriendHistory>} */
@@ -225,7 +227,7 @@ export default function instantMessenger() {
       scrollToBottom();
     }
 
-    loadIM();
+    if (!IMloaded) loadIM();
     saveHistory();
   }
 
@@ -270,11 +272,9 @@ export default function instantMessenger() {
     return msgs;
   }
 
-  let IMloaded = false;
-
   // ToDo: migrate to IndexedDB
   function loadIM() {
-    if (IMloaded) return;
+    IMloaded = true;
     const history = /** @type {Record<string, {historyRaw: RawHistory[]}>} */(parseJSON(localStorage.getItem(storageKey()) || "{}"));
     for (const [friendIdStr, friendHistory] of objEntries(history)) {
       const friendId = parseInt(friendIdStr);
@@ -300,7 +300,6 @@ export default function instantMessenger() {
         }
       }
     }
-    IMloaded = true;
   }
 
   messageInput.addEventListener("keydown", (e) => {
@@ -507,7 +506,7 @@ export default function instantMessenger() {
           hideIM();
           return;
         }
-        loadIM();
+        if (!IMloaded) loadIM();
         sortIM();
         container.classList.toggle("bce-hidden");
         ServerSend("AccountQuery", { Query: "OnlineFriends" });
