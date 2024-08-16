@@ -225,6 +225,7 @@ export default function instantMessenger() {
       scrollToBottom();
     }
 
+    loadIM();
     saveHistory();
   }
 
