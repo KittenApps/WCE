@@ -7,6 +7,7 @@ import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE } from "../util/constants
 import type { Table, IndexableType } from "dexie";
 
 let localWardrobeTable: Table<{ id: number; appearance: ServerItemBundle[] }, IndexableType, unknown>;
+let extendedWardrobeLoaded = false;
 
 export async function loadLocalWardrobe(wardrobe: ItemBundle[][]): Promise<void> {
   const { Dexie } = await import("dexie");
@@ -63,6 +64,7 @@ export function loadExtendedWardrobe(wardrobe: ItemBundle[][]): ItemBundle[][] {
           }
           wardrobe[i] = sanitizeBundles(additionalItemBundle[additionalIdx]);
         }
+        extendedWardrobeLoaded = true;
       }
     } catch (e) {
       logError("Failed to load extended wardrobe", e);
@@ -82,7 +84,7 @@ export default async function extendedWardrobe(): Promise<void> {
     ([wardrobe], next) => {
       if (isWardrobe(wardrobe)) {
         const additionalWardrobe = wardrobe.slice(DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE);
-        if (additionalWardrobe.length > 0) {
+        if (additionalWardrobe.length > 0 && extendedWardrobeLoaded) {
           Player.ExtensionSettings.FBCWardrobe = LZString.compressToUTF16(JSON.stringify(additionalWardrobe));
           const additionalLocalWardrobe = wardrobe.slice(EXPANDED_WARDROBE_SIZE);
           if (additionalLocalWardrobe.length > 0) saveLocalWardrobe(additionalLocalWardrobe);
