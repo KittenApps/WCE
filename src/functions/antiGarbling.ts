@@ -127,8 +127,7 @@ export default function antiGarbling(): void {
 
   createChatOptions = function(div: HTMLDivElement) {
     // Only add the WCE chat room buttons if they do not yet exist
-    const parent = div ?? document; // Fix for broken BCX
-    const buttonGrid: null | HTMLDivElement = parent.querySelector("#chat-room-buttons");
+    const buttonGrid: null | HTMLDivElement = div?.querySelector("#chat-room-buttons");
     if (buttonGrid && !buttonGrid.querySelector(".wce-chat-room-button")) {
       ElementMenu.PrependItem(buttonGrid, ElementCreate({
         tag: "div",
