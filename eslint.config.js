@@ -1,7 +1,6 @@
 import eslint from "@eslint/js";
 import stylistic from '@stylistic/eslint-plugin'
 import tseslint from "typescript-eslint";
-import * as deprecation from "eslint-plugin-deprecation";
 import globals from "globals";
 
 export default tseslint.config(
@@ -12,7 +11,6 @@ export default tseslint.config(
   {
     files: ["src/**/*.{j,t}s"],
     ignores: ["node_modules/**/*.*", "types/**/*.d.ts"],
-    plugins: { deprecation },
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
@@ -51,6 +49,7 @@ export default tseslint.config(
       "@typescript-eslint/restrict-template-expressions": ["error", { allowAny: true }],
       "@typescript-eslint/no-unnecessary-condition": "off",
       "@typescript-eslint/no-dynamic-delete": "off",
+      "@typescript-eslint/no-deprecated": "warn",
       "accessor-pairs": "error",
       "array-callback-return": "error",
       "arrow-body-style": "warn",
@@ -63,7 +62,6 @@ export default tseslint.config(
       "consistent-this": "error",
       "default-case-last": "error",
       "default-param-last": "error",
-      "deprecation/deprecation": "warn",
       "dot-notation": ["error", { allowKeywords: true }],
       eqeqeq: ["warn", "smart"],
       "func-name-matching": "error",

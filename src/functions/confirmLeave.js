@@ -19,7 +19,7 @@ export default function confirmLeave() {
         ServerSocket.io.disconnect();
         CommonSetScreen("Character", "Relog");
         ServerSocket.io.connect();
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return (e.returnValue = "Are you sure you want to leave the club?");
       }
       return null;

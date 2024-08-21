@@ -873,7 +873,7 @@ export async function bceLoadSettings(): Promise<void> {
   if (Object.keys(fbcSettings).length === 0) {
     let settings: typeof fbcSettings | null = parseJSON(localStorage.getItem(key));
     const onlineSettings: typeof fbcSettings | null = parseJSON(LZString.decompressFromBase64(
-      // eslint-disable-next-line deprecation/deprecation
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       Player.ExtensionSettings.FBC || (Player.OnlineSettings?.BCE ?? "")
     ) || null);
     if (!onlineSettings) {
@@ -881,13 +881,13 @@ export async function bceLoadSettings(): Promise<void> {
       debug("onlineSettings", Player.OnlineSettings);
       debug("extensionSettings", Player.ExtensionSettings);
     }
-    // eslint-disable-next-line deprecation/deprecation
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     if (Player.OnlineSettings?.BCE) {
-      // eslint-disable-next-line deprecation/deprecation
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       Player.ExtensionSettings.FBC = Player.OnlineSettings.BCE;
       ServerPlayerExtensionSettingsSync("FBC");
       logInfo("Migrated online settings to extension settings");
-      // eslint-disable-next-line deprecation/deprecation
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       delete Player.OnlineSettings.BCE;
     }
     const localVersion = settings?.version || 0;

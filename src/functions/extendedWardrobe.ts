@@ -27,10 +27,10 @@ async function saveLocalWardrobe(wardrobe: ServerItemBundle[][]): Promise<void> 
 function sanitizeBundles(bundleList: ItemBundle[]): ItemBundle[] {
   if (!Array.isArray(bundleList)) return bundleList;
   return bundleList.map((bundle) => {
-    // eslint-disable-next-line deprecation/deprecation
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     if (typeof bundle.Property?.Type === "string" && !CommonIsObject(bundle.Property?.TypeRecord)) {
       const asset = AssetGet("Female3DCG", bundle.Group, bundle.Name);
-      // eslint-disable-next-line deprecation/deprecation
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       if (asset) bundle.Property.TypeRecord = ExtendedItemTypeToRecord(asset, bundle.Property.Type);
     }
     return bundle;
@@ -43,15 +43,15 @@ export function loadExtendedWardrobe(wardrobe: ItemBundle[][]): ItemBundle[][] {
     WardrobeFixLength();
   }
 
-  // eslint-disable-next-line deprecation/deprecation
+  // eslint-disable-next-line @typescript-eslint/no-deprecated
   const wardrobeData: string = Player.ExtensionSettings.FBCWardrobe || Player.OnlineSettings?.BCEWardrobe;
   if (wardrobeData) {
-    // eslint-disable-next-line deprecation/deprecation
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     if (Player.OnlineSettings?.BCEWardrobe) {
       Player.ExtensionSettings.FBCWardrobe = wardrobeData;
       ServerPlayerExtensionSettingsSync("FBCWardrobe");
       logInfo("Migrated wardrobe from OnlineSettings to ExtensionSettings");
-      // eslint-disable-next-line deprecation/deprecation
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       delete Player.OnlineSettings.BCEWardrobe;
     }
     try {
