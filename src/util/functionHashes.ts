@@ -54,7 +54,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
         CommonSetScreen: "B674BE4D", // Scripts/Common.js
-        CraftingClick: "33579054", // Screens/Room/Crafting/Crafting.js
+        CraftingClick: "101A0438", // Screens/Room/Crafting/Crafting.js
         CraftingConvertSelectedToItem: "48270B42",
         CraftingRun: "51577F65", // Screens/Room/Crafting/Crafting.js
         DialogCanUnlock: "A86B2558",

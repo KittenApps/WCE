@@ -30,7 +30,7 @@
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-esbuild": "^6.1.1",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.2.1-alpha.9"
+    "typescript-eslint": "^8.2.1-alpha.12"
   },
   "overrides": {
     "rollup-plugin-copy": {

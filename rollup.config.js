@@ -28,7 +28,9 @@ const LICENSE = `/**
 const MATCH = `// @match https://bondageprojects.elementfx.com/*
 // @match https://www.bondageprojects.elementfx.com/*
 // @match https://bondage-europe.com/*
-// @match https://www.bondage-europe.com/*`;
+// @match https://www.bondage-europe.com/*
+// @match https://bondageprojects.com/*
+// @match https://www.bondageprojects.com/*`;
 const URL = process.env.CONTEXT === 'production' ? process.env.URL : process.env.DEPLOY_PRIME_URL;
 
 export default {

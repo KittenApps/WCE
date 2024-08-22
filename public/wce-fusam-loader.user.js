@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name WCE loader with FUSAM
 // @namespace https://www.bondageprojects.com/
-// @version 1.4
+// @version 1.5
 // @description Wholesome Club Extensions (WCE) - enhancements for the bondage club - fork of FBC 5.8
 // @author Sidious, Stella
 // @supportURL https://github.com/KittenApps/WCE
@@ -9,6 +9,8 @@
 // @match https://www.bondageprojects.elementfx.com/*
 // @match https://bondage-europe.com/*
 // @match https://www.bondage-europe.com/*
+// @match https://bondageprojects.com/*
+// @match https://www.bondageprojects.com/*
 // @icon https://wce-docs.vercel.app/img/logo.png
 // @grant none
 // @run-at document-end
