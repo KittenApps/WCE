@@ -13,10 +13,8 @@ export default tseslint.config(
     ignores: ["node_modules/**/*.*", "types/**/*.d.ts"],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: "module",
-      globals: { ...globals.browser, ...globals.es2022 },
-      parser: tseslint.parser,
-      parserOptions: { project: true, tsconfigRootDir: import.meta.dirname },
+      globals: { ...globals.browser },
+      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
     },
     rules: {
       "@stylistic/quote-props": ["error", "as-needed"],
