@@ -15,7 +15,7 @@ interface FBCToySyncState {
   deviceSettings: Map<string, FBCToySetting>;
 }
 
-export const toySyncState: FBCToySyncState = { deviceSettings: new Map() };
+export const toySyncState: FBCToySyncState = { deviceSettings: new Map() as Map<string, FBCToySetting> };
 
 export default async function toySync(): Promise<void> {
   // Handles synchronizing in-game vibrators with real bluetooth devices via buttplut.io
