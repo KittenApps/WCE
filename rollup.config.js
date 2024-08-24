@@ -4,9 +4,6 @@ import alias from '@rollup/plugin-alias';
 import { promises as fs } from 'node:fs';
 import LoaderBuilder from './loaderBuilder.js';
 
-await fs.rm('dist', { recursive: true, force: true });
-await fs.mkdir('dist');
-
 const LICENSE = `/**
 * @license GPL-3.0-or-later
 *     BCE/FBC
@@ -54,11 +51,18 @@ export default {
         PUBLIC_URL: `"${loaderBuilder.URL}"`,
       },
     }),
+    {
+      name: 'loader-builder-plugin',
+      async buildStart() {
+        await fs.rm('dist', { recursive: true, force: true });
+      },
+      async generateBundle() {
+        this.emitFile({ type: 'asset', fileName: 'wce-fusam-loader.user.js', source: loaderBuilder.generateFusamLoader() });
+        this.emitFile({ type: 'asset', fileName: 'wce-loader.user.js', source: loaderBuilder.generateStandaloneLoader() });
+        await Promise.all(['baby.png', 'icon.png', 'stutter.png'].map(fileName =>
+          fs.readFile(`public/${fileName}`).then(source => this.emitFile({ type: 'asset', fileName, source }))
+        ));
+      }
+    }
   ],
 }
-
-for (const f of ['baby.png', 'icon.png', 'stutter.png']) {
-  fs.copyFile(`public/${f}`, `dist/${f}`);
-}
-fs.writeFile('dist/wce-fusam-loader.user.js', loaderBuilder.generateFusamLoader());
-fs.writeFile('dist/wce-loader.user.js', loaderBuilder.generateStandaloneLoader());
