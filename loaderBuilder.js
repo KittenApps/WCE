@@ -36,7 +36,7 @@ ${this.isLocal ? this.#localMatch : this.#onlineMatch}
     if (this.isBranch) {
       return `${this.getUserScriptMeta(true)}
 
-import(\`https://sidiousious.gitlab.io/bc-addon-loader/fusam.js?v=${(Date.now()/10000).toFixed(0)}\`);
+import(\`https://sidiousious.gitlab.io/bc-addon-loader/fusam.js?v=\${(Date.now()/10000).toFixed(0)}\`);
 
 var fusam = JSON.parse(localStorage.getItem("fusam.settings") || "{}");
 fusam.enabledDistributions ??= {};
@@ -44,12 +44,12 @@ fusam.enabledDistributions.WCE ??= "${process.env.BRANCH === 'main' ? 'stable' :
 const URL = fusam.enabledDistributions.WCE === "stable" ? "https://wce.netlify.app" : "https://beta--wce.netlify.app" ;
 
 var preloadLink = document.createElement("link");
-preloadLink.href = \`${URL}/wce.js\`;
+preloadLink.href = \`\${URL}/wce.js\`;
 preloadLink.rel = "modulepreload";
 document.head.appendChild(preloadLink);
 
 var dexiePreloadLink = document.createElement("link");
-dexiePreloadLink.href = \`${URL}/dexie.js\`;
+dexiePreloadLink.href = \`\${URL}/dexie.js\`;
 dexiePreloadLink.rel = "modulepreload";
 document.head.appendChild(dexiePreloadLink);
 
@@ -58,7 +58,7 @@ localStorage.setItem("fusam.settings", JSON.stringify(fusam));`;
     } else {
       return `${this.getUserScriptMeta(true)}
 
-import(\`https://sidiousious.gitlab.io/bc-addon-loader/fusam.js?v=${(Date.now()/10000).toFixed(0)}\`).then(() => import("${this.URL}/wce.js"));
+import(\`https://sidiousious.gitlab.io/bc-addon-loader/fusam.js?v=\${(Date.now()/10000).toFixed(0)}\`).then(() => import("${this.URL}/wce.js"));
 
 var preloadLink = document.createElement("link");
 preloadLink.href = "${this.URL}/wce.js";
