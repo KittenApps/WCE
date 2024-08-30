@@ -226,7 +226,6 @@ export default function instantMessenger() {
       scrollToBottom();
     }
 
-    if (!IMloaded) loadIM();
     saveHistory();
   }
 
@@ -438,6 +437,7 @@ export default function instantMessenger() {
     (args, next) => {
       const [beep] = args;
       if (beep && isNonNullObject(beep) && !beep.BeepType && fbcSettings.instantMessenger) {
+        if (!IMloaded) loadIM();
         addMessage(beep.MemberNumber, false, beep, false, new Date());
       }
       next(args);
@@ -454,6 +454,7 @@ export default function instantMessenger() {
       }
       const beep = /** @type {ServerAccountBeepRequest} */ (b);
       if (!beep?.BeepType && isString(beep?.Message) && !beep.Message.includes("\uf124")) {
+        if (!IMloaded) loadIM();
         addMessage(beep.MemberNumber, true, beep, false, new Date());
       }
       return next(args);
