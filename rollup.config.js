@@ -3,6 +3,7 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
 import { promises as fs } from 'node:fs';
 import LoaderBuilder from './loaderBuilder.js';
+import { defineConfig } from 'rollup'
 
 const LICENSE = `/**
 * @license GPL-3.0-or-later
@@ -25,7 +26,7 @@ const LICENSE = `/**
 `;
 const loaderBuilder = new LoaderBuilder();
 
-export default {
+export default defineConfig({
   input: 'src/index.ts',
   output: { 
     dir: 'dist',
@@ -65,4 +66,4 @@ export default {
       }
     }
   ],
-}
+});
