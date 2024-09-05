@@ -68,7 +68,8 @@ export default function instantMessenger() {
 
   /** @typedef {{ author: string, authorId: number, type: "Emote" | "Action" | "Message", message: string, color: string, createdAt: number }} RawHistory */
   /** @typedef {{ unread: number, statusText: HTMLElement, listElement: HTMLElement, historyRaw: RawHistory[], history: HTMLElement, online: boolean }} IMFriendHistory */
-  const friendMessages = /** @type {Map<number, IMFriendHistory>} */ (new Map());
+  /** @type {Map<number, IMFriendHistory>} */
+  const friendMessages = new Map();
 
   function scrollToBottom() {
     const friend = friendMessages.get(activeChat);

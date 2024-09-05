@@ -5,7 +5,8 @@ import { deepCopy, mustNum, fbcChatNotify, fbcSendAction } from "../util/utils";
 import { displayText } from "../util/localization";
 
 export default function itemAntiCheat() {
-  const noticesSent = /** @type {Map<number, number>} */ (new Map());
+  /** @type {Map<number, number>} */
+  const noticesSent = new Map();
 
   /** @type {(sourceCharacter: Character, newItem: ItemBundle) => boolean} */
   function validateNewLockMemberNumber(sourceCharacter, newItem) {
@@ -222,7 +223,8 @@ export default function itemAntiCheat() {
       // Gets the item bundles to be used for diff comparison, also making necessary changes for the purpose
       /** @type {(bundle: ItemBundle[]) => Map<string, ItemBundle>} */
       function processItemBundleToMap(bundle) {
-        const initial = /** @type {(Map<string, ItemBundle>)} */ (new Map());
+        /** @type {(Map<string, ItemBundle>)} */
+        const initial = new Map();
         return bundle.reduce((prev, cur) => {
           // Ignoring color changes
           cur = deepCopy(cur);
