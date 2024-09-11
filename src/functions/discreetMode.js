@@ -92,6 +92,8 @@ export default function discreetMode() {
             DrawStatus(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom);
             // eslint-disable-next-line no-eq-null
             if (ChatRoomCharacterDrawlist[charIdx].MemberNumber != null) {
+              // @ts-ignore
+              // ToDo: remove last arg charIdx once r108 is out
               ChatRoomCharacterViewDrawOverlay(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom, charIdx);
             }
           });

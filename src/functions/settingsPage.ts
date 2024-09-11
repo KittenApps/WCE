@@ -10,7 +10,7 @@ const SelectButtonWidth = 200;
 
 // Create settings page
 export default async function settingsPage(): Promise<void> {
-  await waitFor(() => !!PreferenceSubscreenList);
+  await waitFor(() => !!PreferenceRegisterExtensionSetting);
 
   debug("initializing");
 
