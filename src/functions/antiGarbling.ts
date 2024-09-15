@@ -8,9 +8,8 @@ export default function antiGarbling(): void {
   SDK.hookFunction(
     "ChatRoomGenerateChatRoomChatMessage",
     HOOK_PRIORITIES.Top,
-    (args, next) => {
-      if (!fbcSettings.antiGarble) return next(args);
-      let [type, msg] = args;
+    ([type, msg], next) => {
+      if (!fbcSettings.antiGarble) return next([type, msg]);
       const lastRange = SpeechGetOOCRanges(msg).pop();
       if (Player.ChatSettings.OOCAutoClose && lastRange !== undefined &&
         msg.charAt(lastRange.start + lastRange.length - 1) !== ")" &&
