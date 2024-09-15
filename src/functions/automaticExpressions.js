@@ -24,6 +24,7 @@ export default async function automaticExpressions() {
     throw new Error("Player.ArousalSettings is not defined");
   }
 
+  // ToDo: these 2 patches doesn't seem to work at all anymore in r108+
   patchFunction(
     "PreferenceSubscreenArousalRun",
     {

@@ -125,7 +125,7 @@ export default function richOnlineProfile() {
   );
 
   SDK.hookFunction(
-    "OnlineProfileExit",
+    "OnlineProfileUnload",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
     (args, next) => {
       if (!originalShown) {

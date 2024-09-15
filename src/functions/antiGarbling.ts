@@ -10,7 +10,15 @@ export default function antiGarbling(): void {
     HOOK_PRIORITIES.Top,
     (args, next) => {
       if (!fbcSettings.antiGarble) return next(args);
-      const [type, msg] = args;
+      let [type, msg] = args;
+      const lastRange = SpeechGetOOCRanges(msg).pop();
+      if (Player.ChatSettings.OOCAutoClose && lastRange !== undefined &&
+        msg.charAt(lastRange.start + lastRange.length - 1) !== ")" &&
+        lastRange.start + lastRange.length === msg.length &&
+        lastRange.length !== 1) {
+        msg += ")";
+      }
+
       let process: { effects: SpeechTransformName[]; text: string } = { effects: [], text: msg };
       let originalMsg: string | undefined;
 

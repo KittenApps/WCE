@@ -42,41 +42,44 @@ export default async function crafting(): Promise<void> {
     });
   }
 
-  SDK.hookFunction(
-    "CraftingClick",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      if (CraftingMode === "Name") {
-        if (MouseIn(...exportPosition)) {
-          const exportString = LZString.compressToBase64(JSON.stringify(CraftingConvertSelectedToItem()));
-          FUSAM.modals.open({
-            prompt: displayText("Copy the craft here"),
-            input: { initial: exportString, readonly: true, type: "textarea" },
-            callback: () => {
-              debug("exported craft");
-            },
-          });
-          navigator.clipboard.writeText(exportString);
-        } else if (MouseIn(...importPosition)) {
-          importCraft();
+  // ToDo: Fix this
+  if (GameVersion === "R107") {
+    SDK.hookFunction(
+      "CraftingClick",
+      HOOK_PRIORITIES.AddBehaviour,
+      (args, next) => {
+        if (CraftingMode === "Name") {
+          if (MouseIn(...exportPosition)) {
+            const exportString = LZString.compressToBase64(JSON.stringify(CraftingConvertSelectedToItem()));
+            FUSAM.modals.open({
+              prompt: displayText("Copy the craft here"),
+              input: { initial: exportString, readonly: true, type: "textarea" },
+              callback: () => {
+                debug("exported craft");
+              },
+            });
+            navigator.clipboard.writeText(exportString);
+          } else if (MouseIn(...importPosition)) {
+            importCraft();
+          }
         }
+        return next(args);
       }
-      return next(args);
-    }
-  );
+    );
 
-  SDK.hookFunction(
-    "CraftingRun",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      const ret = next(args);
-      if (CraftingMode === "Name") {
-        DrawButton(...importPosition, displayText("Import"), "white");
-        DrawButton(...exportPosition, displayText("Export"), "white");
+    SDK.hookFunction(
+      "CraftingRun",
+      HOOK_PRIORITIES.ModifyBehaviourMedium,
+      (args, next) => {
+        const ret = next(args);
+        if (CraftingMode === "Name") {
+          DrawButton(...importPosition, displayText("Import"), "white");
+          DrawButton(...exportPosition, displayText("Export"), "white");
+        }
+        return ret;
       }
-      return ret;
-    }
-  );
+    );
+  }
 
   SDK.hookFunction(
     "DrawItemPreview",
