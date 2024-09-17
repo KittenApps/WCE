@@ -3,7 +3,7 @@ import { waitFor, drawTooltip } from "../util/utils";
 import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey, type SelectSetting, type SettingsCategory } from "../util/settings";
 import { displayText } from "../util/localization";
-import { BCE_LICENSE, DISCORD_INVITE_URL, WEBSITE_URL } from "../util/constants";
+import { BCE_LICENSE, /* DISCORD_INVITE_URL, */ WEBSITE_URL } from "../util/constants";
 
 const SelectButtonOffset = 900;
 const SelectButtonWidth = 200;
@@ -22,7 +22,7 @@ export default async function settingsPage(): Promise<void> {
     return Math.ceil(Object.values(defaultSettings).filter(v => v.category === category).length / settingsPerPage);
   }
 
-  const discordInvitePosition = [1500, 60, 250, 50] as const;
+  // const discordInvitePosition = [1500, 60, 250, 50] as const;
   const licensePosition = [1500, /* 120 */ 60, 250, 50] as const;
   const websitePosition = [1240, 60, 250, 50] as const;
   let currentPageNumber = 0;
@@ -268,8 +268,8 @@ export default async function settingsPage(): Promise<void> {
       }
     } else if (MouseIn(...licensePosition)) {
       open(BCE_LICENSE, "_blank");
-    } else if (MouseIn(...discordInvitePosition)) {
-      open(DISCORD_INVITE_URL, "_blank");
+    /* } else if (MouseIn(...discordInvitePosition)) {
+      open(DISCORD_INVITE_URL, "_blank"); */
     } else if (MouseIn(...websitePosition)) {
       open(WEBSITE_URL, "_blank");
     } else if (currentCategory !== null) {

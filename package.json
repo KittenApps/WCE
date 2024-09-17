@@ -22,7 +22,7 @@
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
     "@types/node": "^22.5.5",
-    "bc-stubs": "^108.0.0-Beta.1",
+    "bc-stubs": "^108.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
     "esbuild": "^0.23.1",
     "eslint": "^9.10.0",
@@ -30,7 +30,7 @@
     "rollup": "^4.21.3",
     "rollup-plugin-esbuild": "^6.1.1",
     "typescript": "~5.5.4",
-    "typescript-eslint": "^8.5.0",
+    "typescript-eslint": "^8.6.0",
     "ws": "^8.18.0"
   },
   "overrides": {

@@ -1,9 +1,9 @@
-export const FBC_VERSION = "6.3.2";
+export const FBC_VERSION = "6.3.3";
 export const settingsVersion = 63.2;
-export const SUPPORTED_GAME_VERSIONS = ["R106", "R107"];
+export const SUPPORTED_GAME_VERSIONS = ["R107", "R108"];
 
-export const fbcChangelog = `WCE v6.3.2
-* BC R107 compatibility and other fixes
+export const fbcChangelog = `WCE v6.3.3
+* BC R108 compatibility and other fixes
 * for a full changelog visit our new website: https://wce-docs.vercel.app/blog
 
 WCE v6.3
@@ -15,7 +15,7 @@ WCE v6.2
 * please recheck your WCE settings, because many things have changed
 `;
 
-export const DISCORD_INVITE_URL = "https://discord.gg/SHJMjEh9VH";
+// export const DISCORD_INVITE_URL = "https://discord.gg/SHJMjEh9VH";
 export const WEBSITE_URL = "https://wce-docs.vercel.app";
 
 export const BCE_COLOR_ADJUSTMENTS_CLASS_NAME = "bce-colors";

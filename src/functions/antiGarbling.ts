@@ -11,10 +11,8 @@ export default function antiGarbling(): void {
     ([type, msg], next) => {
       if (!fbcSettings.antiGarble) return next([type, msg]);
       const lastRange = SpeechGetOOCRanges(msg).pop();
-      if (Player.ChatSettings.OOCAutoClose && lastRange !== undefined &&
-        msg.charAt(lastRange.start + lastRange.length - 1) !== ")" &&
-        lastRange.start + lastRange.length === msg.length &&
-        lastRange.length !== 1) {
+      if (Player.ChatSettings.OOCAutoClose && typeof lastRange === "object" && msg.charAt(lastRange.start + lastRange.length - 1) !== ")" &&
+        lastRange.start + lastRange.length === msg.length && lastRange.length !== 1) {
         msg += ")";
       }
 
