@@ -35,6 +35,18 @@ export default function commonPatches(): void {
     "Whitelist commands will not work."
   );
 
+  // fix other addons adding multiple legacy settings screens
+  SDK.hookFunction(
+    "PreferenceLoad",
+    HOOK_PRIORITIES.AddBehaviour,
+    (args, next) => {
+      const ret = next(args);
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      PreferenceSubscreenList = [];
+      return ret;
+    }
+  );
+
   SDK.hookFunction(
     "InformationSheetRun",
     HOOK_PRIORITIES.AddBehaviour,
