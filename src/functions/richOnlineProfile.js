@@ -125,8 +125,7 @@ export default function richOnlineProfile() {
   );
 
   SDK.hookFunction(
-    // ToDo: remove once r108 is out
-    GameVersion === "R107" ? "OnlineProfileExit" : "OnlineProfileUnload",
+    "OnlineProfileUnload",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
     (args, next) => {
       if (!originalShown) {

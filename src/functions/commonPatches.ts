@@ -1,6 +1,11 @@
 import { SDK, HOOK_PRIORITIES, patchFunction } from "../util/modding";
+import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 import { isNonNullObject } from "../util/utils";
+
+declare global {
+  let PreferenceDidAddOldStyleScreens: boolean;
+}
 
 const FBC_DEVS = [23476, 27006, 24890];
 const WCE_DEVS = [129178];
@@ -35,11 +40,57 @@ export default function commonPatches(): void {
     "Whitelist commands will not work."
   );
 
+  patchFunction(
+    "PreferenceSubscreenArousalRun",
+    {
+      'DrawCheckbox(1250, 276, 64, 64, TextGet("ArousalAffectExpression"), Player.ArousalSettings.AffectExpression);':
+        'DrawCheckbox(1250, 276, 64, 64, TextGet("ArousalAffectExpression"), Player.ArousalSettings.AffectExpression, fbcSettingValue("animationEngine"));',
+    },
+    "disabling conflicting Player.ArousalSettings.AffectExpression when Animation Engine is active"
+  );
+
+  SDK.hookFunction(
+    "PreferenceSubscreenArousalClick",
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    (args, next) => {
+      if (fbcSettings.animationEngine && PreferenceArousalIsActive() && MouseIn(1250, 276, 64, 64)) return null;
+      return next(args);
+    }
+  );
+
+  patchFunction(
+    "PreferenceSubscreenImmersionRun",
+    {
+      'TextGet("ShowUngarbledMessages"), Player.ImmersionSettings.ShowUngarbledMessages, disableButtons);':
+        'TextGet("ShowUngarbledMessages"), Player.ImmersionSettings.ShowUngarbledMessages, false);',
+    },
+    "Can't control show ungarbled messages while in Extreme mode."
+  );
+
+  SDK.hookFunction(
+    "PreferenceSubscreenImmersionClick",
+    HOOK_PRIORITIES.ModifyBehaviourMedium,
+    (args, next) => {
+      if (PreferencePageCurrent === 2 && MouseIn(500, 592, 64, 64) &&
+        (Player.GetDifficulty() > 2 || (Player.GameplaySettings.ImmersionLockSetting && Player.IsRestrained()))) {
+        Player.ImmersionSettings.ShowUngarbledMessages = !Player.ImmersionSettings.ShowUngarbledMessages;
+        return null;
+      }
+      return next(args);
+    }
+  );
+
+  PreferenceSubscreens.find(s => s.name === "Arousal").run = PreferenceSubscreenArousalRun;
+  PreferenceSubscreens.find(s => s.name === "Arousal").click = PreferenceSubscreenArousalClick;
+  PreferenceSubscreens.find(s => s.name === "Immersion").run = PreferenceSubscreenImmersionRun;
+  PreferenceSubscreens.find(s => s.name === "Immersion").click = PreferenceSubscreenImmersionClick;
+
   // fix other addons adding multiple legacy settings screens
   SDK.hookFunction(
     "PreferenceLoad",
     HOOK_PRIORITIES.AddBehaviour,
     (args, next) => {
+      PreferenceDidAddOldStyleScreens = false;
       const ret = next(args);
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       PreferenceSubscreenList = [];

@@ -168,9 +168,7 @@ export default async function layeringMenu(): Promise<void> {
     "PreferenceExit",
     HOOK_PRIORITIES.AddBehaviour,
     (args, next) => {
-      // @ts-ignore
-      // ToDo: remove once r108 is out
-      const test = GameVersion === "R107" ? PreferenceSubscreen === "" : PreferenceSubscreen.name === "Main";
+      const test = PreferenceSubscreen.name === "Main";
       const ret = next(args);
       if (test && Player.Appearance.some(a => Array.isArray(a.Property?.wceOverrideHide))) ChatRoomCharacterUpdate(Player);
       return ret;

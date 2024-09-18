@@ -53,7 +53,7 @@ export default tseslint.config(
       "arrow-body-style": "warn",
       "block-scoped-var": "error",
       camelcase: "warn",
-      "capitalized-comments": "warn",
+      "capitalized-comments": "off",
       "class-methods-use-this": "error",
       complexity: ["warn", 30],
       "consistent-return": "warn",

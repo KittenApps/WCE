@@ -24,25 +24,6 @@ export default async function automaticExpressions() {
     throw new Error("Player.ArousalSettings is not defined");
   }
 
-  // ToDo: these 2 patches doesn't seem to work at all anymore in r108+
-  patchFunction(
-    "PreferenceSubscreenArousalRun",
-    {
-      'DrawCheckbox(1250, 276, 64, 64, TextGet("ArousalAffectExpression"), Player.ArousalSettings.AffectExpression);':
-        'DrawCheckbox(1250, 276, 64, 64, TextGet("ArousalAffectExpression"), Player.ArousalSettings.AffectExpression, fbcSettingValue("animationEngine"));',
-    },
-    "disabling conflicting Player.ArousalSettings.AffectExpression when Animation Engine is active"
-  );
-
-  SDK.hookFunction(
-    "PreferenceSubscreenArousalClick",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      if (fbcSettings.animationEngine && PreferenceArousalIsActive() && MouseIn(1250, 276, 64, 64)) return null;
-      return next(args);
-    }
-  );
-
   patchFunction(
     "StruggleMinigameHandleExpression",
     { '");': '", 3);' },
