@@ -50,7 +50,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         ChatRoomStart: "9B822A9A",
         ChatRoomSyncMemberJoin: "2A9CB40B", // Screens/Online/ChatRoom/ChatRoom.js
         CommandCombine: "80F9D4AF", // Screens/Online/ChatRoom/Commands.js
-        CommandExecute: "C5477FA1", // Screens/Online/ChatRoom/Commands.js
+        CommandExecute: "D1DEB2AD", // Screens/Online/ChatRoom/Commands.js
         CommonClick: "1F6DF7CB",
         CommonColorIsValid: "390A2CE4",
         CommonSetScreen: "B674BE4D", // Scripts/Common.js
@@ -106,8 +106,9 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         PoseSetActive: "22C02050",
         PreferenceExit: "27E40748",
         PreferenceInitPlayer: "B12FA731", // Screens/Character/Preference/Preference.js (6.5.2024)
-        PreferenceSubscreenArousalClick: "D8DCBBB5", // Screens/Character/Preference/Preference.js (6.5.2024)
-        PreferenceSubscreenArousalRun: "96A6157B", // Screens/Character/Preference/Preference.js (6.5.2024)
+        PreferenceSubscreenArousalClick: "84F49886",
+        PreferenceSubscreenArousalRun: "96A6157B",
+        PreferenceSubscreenImmersionClick: "0EF82344",
         PreferenceSubscreenImmersionRun: "276FA30B",
         RelogRun: "10AF5A60",
         RelogExit: "2DFB2DAD",
