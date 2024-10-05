@@ -3,6 +3,9 @@ import { waitFor, isNonNullObject, parseJSON, objEntries, isString, drawTooltip 
 import { displayText } from "../util/localization";
 import { debug, logWarn, logError } from "../util/logger";
 
+// >= R109
+declare const CraftingDescription: undefined | { Decode: (description: string) => string };
+
 export default async function crafting(): Promise<void> {
   await waitFor(() => Array.isArray(Commands) && Commands.length > 0);
 
@@ -91,7 +94,9 @@ export default async function crafting(): Promise<void> {
         const { Craft } = item;
         if (MouseIn(x, y, DialogInventoryGrid.itemWidth, DialogInventoryGrid.itemHeight) && Craft) {
           drawTooltip(x, y, DialogInventoryGrid.itemWidth, displayText(Craft.Property), "center");
-          drawTooltip(1000, y - 70, 975, `${displayText("Description:")} ${Craft.Description || "<no description>"}`, "left");
+
+          const craftDescription = typeof CraftingDescription === "undefined" ? Craft.Description : CraftingDescription.Decode(Craft.Description); // R109
+          drawTooltip(1000, y - 70, 975, `${displayText("Description:")} ${craftDescription || "<no description>"}`, "left");
         }
       }
       return ret;
