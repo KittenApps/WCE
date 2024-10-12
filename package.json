@@ -3,12 +3,11 @@
   "type": "module",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "start": "esbuild src/index.ts --bundle --outfile=public/wce.js --format=esm --sourcemap --watch --serve=4000 --servedir=public --define:PUBLIC_URL=\\'http://localhost:4000\\'",
-    "build": "rollup -c",
+    "start": "node rolldown.config.js & npx http-server ./dist -p 4000 -c-1 --cors",
+    "build": "rolldown -c",
     "test": "npm run typecheck ; npm run lint",
     "typecheck": "tsc",
-    "lint": "eslint ./src",
-    "serve": "npm run build && npx http-server ./dist -p 4000 -c-1 --cors"
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "buttplug": "^3.2.2",
@@ -16,19 +15,15 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.12.0",
-    "@rollup/plugin-alias": "^5.1.1",
-    "@rollup/plugin-node-resolve": "^15.3.0",
     "@stylistic/eslint-plugin": "^2.9.0",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
     "@types/node": "^22.7.5",
     "bc-stubs": "^108.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
-    "esbuild": "^0.24.0",
     "eslint": "^9.12.0",
     "globals": "^15.11.0",
-    "rollup": "^4.24.0",
-    "rollup-plugin-esbuild": "^6.1.1",
+    "rolldown": "^0.13.2-snapshot-ad37162-20241012003358",
     "typescript": "~5.5.4",
     "typescript-eslint": "^8.8.1",
     "ws": "^8.18.0"

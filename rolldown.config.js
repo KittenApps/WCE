@@ -1,9 +1,7 @@
-import esbuild from 'rollup-plugin-esbuild'
-import nodeResolve from '@rollup/plugin-node-resolve';
-import alias from '@rollup/plugin-alias';
 import { promises as fs } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import LoaderBuilder from './loaderBuilder.js';
-import { defineConfig } from 'rollup'
+import { defineConfig, watch } from 'rolldown';
 
 const LICENSE = `/**
 * @license GPL-3.0-or-later
@@ -22,11 +20,10 @@ const LICENSE = `/**
 *
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-`;
+*/`
 const loaderBuilder = new LoaderBuilder();
 
-export default defineConfig({
+const config = defineConfig({
   input: 'src/index.ts',
   output: { 
     dir: 'dist',
@@ -34,24 +31,20 @@ export default defineConfig({
     chunkFileNames: '[name].js',
     generatedCode: 'es2015',
     sourcemap: true,
-    banner: (chunk) => chunk.name === 'index' ? LICENSE : undefined,
+    banner: c => c.isEntry ? LICENSE : undefined,
+    minify: true,
+  },
+  resolve: {
+    conditionNames: ['import'],
+    alias: { 
+      'dexie': 'dexie/dist/modern/dexie.mjs',
+      'buttplug': 'buttplug/dist/web/buttplug.mjs',
+    },
+  },
+  define: {
+    PUBLIC_URL: `"${loaderBuilder.URL}"`,
   },
   plugins: [
-    alias({
-      entries: [
-        { find: 'buttplug', replacement: 'buttplug/dist/web/buttplug.mjs' },
-        { find: 'dexie', replacement: 'dexie/dist/modern/dexie.mjs' }
-      ],
-    }),
-    nodeResolve({ modulesOnly: true }),
-    esbuild({
-      sourceMap: true,
-      minify: true,
-      target: 'es2022',
-      define: {
-        PUBLIC_URL: `"${loaderBuilder.URL}"`,
-      },
-    }),
     {
       name: 'loader-builder-plugin',
       async buildStart() {
@@ -63,7 +56,15 @@ export default defineConfig({
         await Promise.all(['baby.png', 'icon.png', 'stutter.png'].map(fileName =>
           fs.readFile(`public/${fileName}`).then(source => this.emitFile({ type: 'asset', fileName, source }))
         ));
-      }
-    }
-  ],
+      },
+    },
+  ]
 });
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  config.plugins[0].buildStart = () => console.time("rebuild");
+  config.plugins[0].writeBundle = () => console.timeEnd("rebuild");
+  watch(config);
+}
+
+export default config;
