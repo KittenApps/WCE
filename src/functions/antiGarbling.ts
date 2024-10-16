@@ -121,6 +121,7 @@ export default function antiGarbling(): void {
   /** Set or remove the .wce-whisper css class on all WCE chat room buttoms and update their tooltip */
   function whisperUpdate(isWhisper: boolean) {
     const div = document.getElementById("chat-room-buttons") as null | HTMLDivElement;
+    if (!div) return;
     if (isWhisper && !div.classList.contains("wce-whisper")) {
       div.classList.add("wce-whisper");
       resetChatButtonStates();
