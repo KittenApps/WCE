@@ -3,10 +3,6 @@ import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
 import { isNonNullObject } from "../util/utils";
 
-declare global {
-  let PreferenceDidAddOldStyleScreens: boolean;
-}
-
 const FBC_DEVS = [23476, 27006, 24890];
 const WCE_DEVS = [129178];
 
