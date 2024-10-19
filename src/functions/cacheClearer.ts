@@ -49,19 +49,12 @@ export default function cacheClearer(): void {
 
   async function clearCaches(): Promise<void> {
     const start = Date.now();
-    if (
-      !(await waitFor(
-        // Only clear when in chat room and not inspecting a character
-        () => CurrentScreen === "ChatRoom" && !CurrentCharacter,
-        () => Date.now() - start > cacheClearInterval
-      ))
-    ) {
-      return;
-    }
-    if (!fbcSettings.automateCacheClear) {
-      return;
-    }
-    doClearCaches();
+    const canClear = await waitFor(
+      // Only clear when in chat room and not inspecting a character and BC window in focus
+      () => CurrentScreen === "ChatRoom" && !CurrentCharacter && document.hasFocus(),
+      () => Date.now() - start > cacheClearInterval
+    );
+    if (canClear && fbcSettings.automateCacheClear) doClearCaches();
   }
 
   globalThis.bceClearCaches = clearCaches;
