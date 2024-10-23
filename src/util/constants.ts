@@ -1,6 +1,6 @@
 export const FBC_VERSION = "6.3.4";
 export const settingsVersion = 63.2;
-export const SUPPORTED_GAME_VERSIONS = ["R108", "R109"];
+export const SUPPORTED_GAME_VERSIONS = ["R109"];
 
 export const fbcChangelog = `WCE v6.3.4
 * BC R109 compatibility and other fixes

@@ -91,9 +91,7 @@ export default async function crafting(): Promise<void> {
         const { Craft } = item;
         if (MouseIn(x, y, DialogInventoryGrid.itemWidth, DialogInventoryGrid.itemHeight) && Craft) {
           drawTooltip(x, y, DialogInventoryGrid.itemWidth, displayText(Craft.Property), "center");
-          // ToDo: remove this once r109 is out
-          const craftDescription = typeof CraftingDescription === "undefined" ? Craft.Description : CraftingDescription.Decode(Craft.Description);
-          drawTooltip(1000, y - 70, 975, `${displayText("Description:")} ${craftDescription || "<no description>"}`, "left");
+          drawTooltip(1000, y - 70, 975, `${displayText("Description:")} ${CraftingDescription.Decode(Craft.Description) || "<no description>"}`, "left");
         }
       }
       return ret;
