@@ -265,10 +265,6 @@ export default function chatAugments() {
           ChatRoomSendChat();
           return true;
         }
-        if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
-          ChatRoomScrollHistory(event.key === "ArrowUp");
-          return true;
-        }
       }
       return next([event]);
     }
