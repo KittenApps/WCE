@@ -27,8 +27,7 @@ export async function bceStartClubSlave(): Promise<void> {
   }
 
   const room = ChatRoomData.Name;
-  ChatRoomClearAllElements();
-  ServerSend("ChatRoomLeave", "");
+  ChatRoomLeave(false);
   ChatRoomLeashPlayer = null;
   CommonSetScreen("Room", "Management");
 
@@ -52,10 +51,8 @@ export async function bceStartClubSlave(): Promise<void> {
 
 export function bceGotoRoom(roomName: string): void {
   ChatRoomJoinLeash = roomName;
-  ChatRoomCharacter = [];
   DialogLeave();
-  ChatRoomClearAllElements();
-  if (CurrentScreen === "ChatRoom") ServerSend("ChatRoomLeave", "");
+  if (CurrentScreen === "ChatRoom") ChatRoomLeave(false);
   if (roomName) {
     ChatRoomStart("X", "", null, null, "Introduction", BackgroundsTagList);
   } else {
