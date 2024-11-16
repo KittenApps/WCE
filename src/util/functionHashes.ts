@@ -190,6 +190,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         ChatRoomHideElements: "D58ECB5C", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomHTMLEntities: "0A7ADB1D",
         ChatRoomKeyDown: "9F45A713", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomLeave: "DAFE49DC",
         ChatRoomListManipulation: "75D28A8B",
         ChatRoomMapViewCharacterIsVisible: "286C447D",
         ChatRoomMapViewCharacterOnWhisperRange: "B0D08E96",
