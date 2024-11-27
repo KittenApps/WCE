@@ -37,7 +37,7 @@ function sanitizeBundles(bundleList: ItemBundle[]): ItemBundle[] {
   });
 }
 
-export function loadExtendedWardrobe(wardrobe: ItemBundle[][]): ItemBundle[][] {
+export function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boolean): ItemBundle[][] {
   if (fbcSettings.extendedWardrobe) {
     WardrobeSize = EXPANDED_WARDROBE_SIZE;
     WardrobeFixLength();
@@ -45,7 +45,7 @@ export function loadExtendedWardrobe(wardrobe: ItemBundle[][]): ItemBundle[][] {
 
   // eslint-disable-next-line @typescript-eslint/no-deprecated
   const wardrobeData: string = Player.ExtensionSettings.FBCWardrobe || Player.OnlineSettings?.BCEWardrobe;
-  if (wardrobeData) {
+  if (wardrobeData || !init) {
     // eslint-disable-next-line @typescript-eslint/no-deprecated
     if (Player.OnlineSettings?.BCEWardrobe) {
       Player.ExtensionSettings.FBCWardrobe = wardrobeData;
@@ -55,7 +55,7 @@ export function loadExtendedWardrobe(wardrobe: ItemBundle[][]): ItemBundle[][] {
       delete Player.OnlineSettings.BCEWardrobe;
     }
     try {
-      const additionalItemBundle: ItemBundle[][] = parseJSON(LZString.decompressFromUTF16(wardrobeData));
+      const additionalItemBundle: ItemBundle[][] = wardrobeData ? parseJSON(LZString.decompressFromUTF16(wardrobeData)) : [];
       if (isWardrobe(additionalItemBundle)) {
         for (let i = DEFAULT_WARDROBE_SIZE; i < EXPANDED_WARDROBE_SIZE; i++) {
           const additionalIdx = i - DEFAULT_WARDROBE_SIZE;

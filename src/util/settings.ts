@@ -186,12 +186,12 @@ export const defaultSettings = {
     type: "checkbox",
     value: false,
     disabled: () => false,
-    sideEffects: (newValue) => {
+    sideEffects: (newValue, init: boolean) => {
       debug("extendedWardrobe", newValue);
       if (newValue) {
         if (Player.Wardrobe) {
           WardrobeSize = EXPANDED_WARDROBE_SIZE;
-          loadExtendedWardrobe(Player.Wardrobe);
+          loadExtendedWardrobe(Player.Wardrobe, init);
           // Call compress wardrobe to save existing outfits, if another addon has extended the wardrobe
           CharacterCompressWardrobe(Player.Wardrobe);
         } else {
@@ -426,7 +426,7 @@ export const defaultSettings = {
     type: "checkbox",
     value: false,
     disabled: () => false,
-    sideEffects: (newValue, init) => {
+    sideEffects: (newValue, init: boolean) => {
       if (!newValue) {
         fbcSettings.antiGarbleChatOptions = false;
         defaultSettings.antiGarbleChatOptions.sideEffects(false, init);
@@ -457,7 +457,7 @@ export const defaultSettings = {
     type: "checkbox",
     value: false,
     disabled: () => !fbcSettings.antiGarble,
-    sideEffects: (newValue, init) => {
+    sideEffects: (newValue, init: boolean) => {
       debug("antiGarbleChatoptions", newValue);
       if (!init && newValue) {
         createChatOptions(document.getElementById("chat-room-div") as HTMLDivElement);
@@ -734,7 +734,7 @@ export const defaultSettings = {
     type: "checkbox",
     value: false,
     disabled: () => false,
-    sideEffects: (newValue, init) => {
+    sideEffects: (newValue, init: boolean) => {
       debug("preventLayeringByOthers", newValue);
       if (!init) sendHello();
     },
