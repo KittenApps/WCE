@@ -782,12 +782,14 @@ export const defaultSettings = {
     type: "checkbox",
     value: false,
     disabled: () => false,
-    sideEffects: (newValue) => {
+    sideEffects: (newValue, init: boolean) => {
       debug("discreetMode", newValue);
       if (newValue) {
-        (document.getElementById("favicon") as HTMLLinkElement).href =
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9oFFAADATTAuQQAAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAAAEklEQVQ4y2NgGAWjYBSMAggAAAQQAAGFP6pyAAAAAElFTkSuQmCC";
+        (document.getElementById("favicon") as HTMLLinkElement).href = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
         document.title = "OnlineChat";
+      } else if (!init) {
+        NotificationTitleUpdate();
+        (document.getElementById("favicon") as HTMLLinkElement).href = "Icons/Logo.png";
       }
     },
     category: "misc",

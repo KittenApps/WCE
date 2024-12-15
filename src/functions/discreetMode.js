@@ -3,6 +3,8 @@ import { fbcSettings } from "../util/settings";
 import { isString } from "../util/utils";
 import { displayText } from "../util/localization";
 
+const ignoredImages = /(^Backgrounds\/(?!Sheet(White)?|grey|White\.|BrickWall\.)|\b(Kneel|Arousal|Activity|Asylum|Cage|Cell|ChangeLayersMouth|Diaper|Kidnap|Logo|Player|Remote|Restriction|SpitOutPacifier|Struggle|Therapy|Orgasm\d|Poses|HouseVincula|Seducer\w+)\b|^data:|^Assets\/(?!Female3DCG\/Emoticon\/(Afk|Sleep|Read|Gaming|Hearing|Thumbs(Up|Down))\/))/u;
+
 export default function discreetMode() {
   const discreetModeFuncs = /** @type {const} */ (["CharacterSetActivePose", "PoseSetActive"]);
   for (const discreetModeFunc of discreetModeFuncs) {
@@ -10,9 +12,7 @@ export default function discreetMode() {
       discreetModeFunc,
       HOOK_PRIORITIES.Top,
       (args, next) => {
-        if (fbcSettings.discreetMode) {
-          return null;
-        }
+        if (fbcSettings.discreetMode) return null;
         return next(args);
       }
     );
@@ -23,14 +23,9 @@ export default function discreetMode() {
     HOOK_PRIORITIES.Top,
     (args, next) => {
       if (fbcSettings.discreetMode) {
-        if (!args) {
-          return false;
-        }
-        const isBackground = isString(args[0]) && args[0].startsWith("Backgrounds/");
-        const ignoredImages =
-          /(^Backgrounds\/(?!Sheet(White)?|grey|White\.|BrickWall\.)|\b(Kneel|Arousal|Activity|Asylum|Cage|Cell|ChangeLayersMouth|Diaper|Kidnap|Logo|Player|Remote|Restriction|SpitOutPacifier|Struggle|Therapy|Orgasm\d|Poses|HouseVincula|Seducer\w+)\b|^data:|^Assets\/(?!Female3DCG\/Emoticon\/(Afk|Sleep|Read|Gaming|Hearing|Thumbs(Up|Down))\/))/u;
+        if (!args) return false;
         if (isString(args[0]) && ignoredImages.test(args[0])) {
-          if (isBackground) {
+          if (args[0].startsWith("Backgrounds/")) {
             args[0] = "Backgrounds/BrickWall.jpg";
             return next(args);
           }
@@ -38,9 +33,7 @@ export default function discreetMode() {
         }
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        if (args[0]?.src && ignoredImages.test(args[0].src)) {
-          return false;
-        }
+        if (args[0]?.src && ignoredImages.test(args[0].src)) return false;
       }
       return next(args);
     }
@@ -61,9 +54,6 @@ export default function discreetMode() {
         } else {
           backgroundURL = `Backgrounds/${ChatRoomData.Background}.jpg`;
         }
-
-        const ignoredImages =
-          /(^Backgrounds\/(?!Sheet(White)?|grey|White\.|BrickWall\.)|\b(Kneel|Arousal|Activity|Asylum|Cage|Cell|ChangeLayersMouth|Diaper|Kidnap|Logo|Player|Remote|Restriction|SpitOutPacifier|Struggle|Therapy|Orgasm\d|Poses|HouseVincula|Seducer\w+)\b|^data:|^Assets\/(?!Female3DCG\/Emoticon\/(Afk|Sleep|Read|Gaming|Hearing|Thumbs(Up|Down))\/))/u;
         if (ignoredImages.test(backgroundURL)) {
           const charCount = ChatRoomCharacterViewCharacterCount;
           const charsPerRow = ChatRoomCharacterViewCharactersPerRow;
@@ -106,7 +96,7 @@ export default function discreetMode() {
     HOOK_PRIORITIES.Top,
     (args, next) => {
       if (fbcSettings.discreetMode) {
-        const notificationCount = NotificationGetTotalCount(1);
+        const notificationCount = NotificationGetTotalCount(NotificationAlertType.TITLEPREFIX);
         document.title = `${notificationCount > 0 ? `(${notificationCount}) ` : ""}${displayText("OnlineChat")}`;
         return;
       }
