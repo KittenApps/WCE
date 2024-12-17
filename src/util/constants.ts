@@ -1,9 +1,10 @@
-export const FBC_VERSION = "6.3.5";
-export const settingsVersion = 63.2;
-export const SUPPORTED_GAME_VERSIONS = ["R110"];
+export const FBC_VERSION = "6.3.6";
+export const settingsVersion = 63.6;
+export const SUPPORTED_GAME_VERSIONS = ["R110", "R111"];
 
-export const fbcChangelog = `WCE v6.3.5
-* BC R110 compatibility and other fixes
+export const fbcChangelog = `WCE v6.3.6
+* BC R111 compatibility and other fixes
+* fixes extended wardrobe creation for new accounts (just reenable it again now)
 * for a full changelog visit our new website: https://wce-docs.vercel.app/blog
 
 WCE v6.3

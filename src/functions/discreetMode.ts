@@ -5,18 +5,24 @@ import { displayText } from "../util/localization";
 
 const ignoredImages = /(^Backgrounds\/(?!Sheet(White)?|grey|White\.|BrickWall\.)|\b(Kneel|Arousal|Activity|Asylum|Cage|Cell|ChangeLayersMouth|Diaper|Kidnap|Logo|Player|Remote|Restriction|SpitOutPacifier|Struggle|Therapy|Orgasm\d|Poses|HouseVincula|Seducer\w+)\b|^data:|^Assets\/(?!Female3DCG\/Emoticon\/(Afk|Sleep|Read|Gaming|Hearing|Thumbs(Up|Down))\/))/u;
 
-export default function discreetMode() {
-  const discreetModeFuncs = /** @type {const} */ (["CharacterSetActivePose", "PoseSetActive"]);
-  for (const discreetModeFunc of discreetModeFuncs) {
-    SDK.hookFunction(
-      discreetModeFunc,
-      HOOK_PRIORITIES.Top,
-      (args, next) => {
-        if (fbcSettings.discreetMode) return null;
-        return next(args);
-      }
-    );
-  }
+export default function discreetMode(): void {
+  SDK.hookFunction(
+    "CharacterSetActivePose",
+    HOOK_PRIORITIES.Top,
+    (args, next) => {
+      if (fbcSettings.discreetMode) return null;
+      return next(args);
+    }
+  );
+
+  SDK.hookFunction(
+    "PoseSetActive",
+    HOOK_PRIORITIES.Top,
+    (args, next) => {
+      if (fbcSettings.discreetMode) return null;
+      return next(args);
+    }
+  );
 
   SDK.hookFunction(
     "DrawImageEx",
@@ -31,9 +37,7 @@ export default function discreetMode() {
           }
           return false;
         }
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        if (args[0]?.src && ignoredImages.test(args[0].src)) return false;
+        if (!isString(args[0]) && ignoredImages.test((args[0] as HTMLImageElement)?.src)) return false;
       }
       return next(args);
     }
@@ -45,7 +49,7 @@ export default function discreetMode() {
     (args, next) => {
       if (fbcSettings.discreetMode) {
         // Check if we should use a custom background
-        let backgroundURL;
+        let backgroundURL: string;
         const itemBackground = DrawGetCustomBackground(Player);
         if (itemBackground) {
           backgroundURL = `Backgrounds/${itemBackground}.jpg`;
@@ -64,8 +68,7 @@ export default function discreetMode() {
             blur: Player.GetBlurLevel(),
             darken: DrawGetDarkFactor(),
             tints: Player.GetTints(),
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            sizeMode: ChatRoomCustomSizeMode,
+            sizeMode: ChatRoomData.Custom.SizeMode,
           };
 
           // Loop over the room's characters to draw each of them
@@ -80,8 +83,7 @@ export default function discreetMode() {
             // Draw the character, it's status bubble and it's overlay
             DrawCharacter(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom);
             DrawStatus(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom);
-            // eslint-disable-next-line no-eq-null
-            if (ChatRoomCharacterDrawlist[charIdx].MemberNumber != null) {
+            if (ChatRoomCharacterDrawlist[charIdx].MemberNumber) {
               ChatRoomCharacterViewDrawOverlay(ChatRoomCharacterDrawlist[charIdx], charX, charY, roomZoom);
             }
           });
@@ -98,9 +100,8 @@ export default function discreetMode() {
       if (fbcSettings.discreetMode) {
         const notificationCount = NotificationGetTotalCount(NotificationAlertType.TITLEPREFIX);
         document.title = `${notificationCount > 0 ? `(${notificationCount}) ` : ""}${displayText("OnlineChat")}`;
-        return;
+        return null;
       }
-      // eslint-disable-next-line consistent-return
       return next(args);
     }
   );

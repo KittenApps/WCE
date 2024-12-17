@@ -786,7 +786,7 @@ export const defaultSettings = {
       debug("discreetMode", newValue);
       if (newValue) {
         (document.getElementById("favicon") as HTMLLinkElement).href = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
-        document.title = "OnlineChat";
+        NotificationTitleUpdate();
       } else if (!init) {
         NotificationTitleUpdate();
         (document.getElementById("favicon") as HTMLLinkElement).href = "Icons/Logo.png";
