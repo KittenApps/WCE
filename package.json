@@ -27,7 +27,7 @@
     "bondage-club-mod-sdk": "^1.2.0",
     "esbuild": "^0.24.0",
     "eslint": "^9.17.0",
-    "globals": "^15.13.0",
+    "globals": "^15.14.0",
     "rollup": "^4.28.1",
     "rollup-plugin-esbuild": "^6.1.1",
     "typescript": "^5.7.2",
