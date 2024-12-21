@@ -37,7 +37,8 @@ export default function discreetMode(): void {
           }
           return false;
         }
-        if (!isString(args[0]) && ignoredImages.test((args[0] as HTMLImageElement)?.src)) return false;
+        if (args[0] instanceof HTMLCanvasElement) return false;
+        if (args[0] instanceof HTMLImageElement && ignoredImages.test(args[0].src)) return false;
       }
       return next(args);
     }
