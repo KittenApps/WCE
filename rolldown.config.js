@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import LoaderBuilder from './loaderBuilder.js';
-import { defineConfig } from 'rolldown';
+import { defineConfig, build } from 'rolldown';
+import { minify } from 'oxc-minify';
 
 const LICENSE = `/**
 * @license GPL-3.0-or-later
@@ -22,16 +23,17 @@ const LICENSE = `/**
 */`
 const loaderBuilder = new LoaderBuilder();
 
-export default defineConfig({
+const config = defineConfig({
   input: 'src/index.ts',
   output: { 
     dir: 'dist',
     entryFileNames: 'wce.js',
     chunkFileNames: '[name].js',
-    generatedCode: 'es2015',
+    // generatedCode: 'es2015',
     sourcemap: true,
     banner: c => c.isEntry ? LICENSE : undefined,
-    minify: true,
+    // minify: { compress: { target: 'es2022' }, mangle: { toplevel: true }, codegen: true, sourcemap: true },
+    comments: 'preserve-legal',
   },
   resolve: {
     conditionNames: ['import'],
@@ -44,6 +46,12 @@ export default defineConfig({
     PUBLIC_URL: `"${loaderBuilder.URL}"`,
   },
   plugins: [
+    {
+      name: 'oxc-minify',
+      renderChunk(source, { fileName }) {
+        return minify(fileName, source, { compress: { target: 'es2022' }, mangle: { toplevel: true }, codegen: true, sourcemap: true });
+      }
+    },
     {
       name: 'loader-builder-plugin',
       async buildStart() {
@@ -59,4 +67,12 @@ export default defineConfig({
     },
   ],
 });
+
+if (process.argv.includes('--watch')){
+  await build({ input: 'loaderBuilder.js', plugins: [{ generateBundle(_, b) { delete b['loaderBuilder.js']; } }, config.plugins[1]]});
+  config.plugins = [];
+  // config.output.minify = false;
+}
+
+export default config;
 
