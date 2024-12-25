@@ -170,9 +170,6 @@ export default async function automaticReconnect() {
           }
           const idx = parseInt(pos);
           if (MouseIn(10, idx, 350, 60)) {
-            // ToDo: remove ElementValue once R111 is released
-            ElementValue("InputName", loginData.posMaps[idx]);
-            ElementValue("InputPassword", loginData.passwords[loginData.posMaps[idx]]);
             LoginDoLogin(loginData.posMaps[idx], loginData.passwords[loginData.posMaps[idx]]);
           } else if (MouseIn(355, idx, 60, 60)) {
             clearPassword(loginData.posMaps[idx]);
@@ -211,19 +208,7 @@ export default async function automaticReconnect() {
       logWarn("No saved credentials for account", Player.AccountName);
       return;
     }
-
-    // ToDo: remove once R111 is released
-    if (GameVersion === "R110") {
-      // @ts-ignore
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      LoginSetSubmitted();
-      ServerSend("AccountLogin", {
-        AccountName: Player.AccountName,
-        Password: passwords[Player.AccountName],
-      });
-    } else {
-      LoginDoLogin(Player.AccountName, passwords[Player.AccountName]);
-    }
+    LoginDoLogin(Player.AccountName, passwords[Player.AccountName]);
 
     if (
       !(await waitFor(
