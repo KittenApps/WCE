@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import LoaderBuilder from './loaderBuilder.js';
-import { defineConfig } from 'rolldown';
+import { minify } from 'rollup-plugin-esbuild';
+import { defineConfig, build } from 'rolldown';
 
 const LICENSE = `/**
 * @license GPL-3.0-or-later
@@ -22,7 +23,7 @@ const LICENSE = `/**
 */`
 const loaderBuilder = new LoaderBuilder();
 
-export default defineConfig({
+const config = defineConfig({
   input: 'src/index.ts',
   output: { 
     dir: 'dist',
@@ -31,7 +32,7 @@ export default defineConfig({
     generatedCode: 'es2015',
     sourcemap: true,
     banner: c => c.isEntry ? LICENSE : undefined,
-    minify: true,
+    // minify: true,
   },
   resolve: {
     conditionNames: ['import'],
@@ -44,6 +45,7 @@ export default defineConfig({
     PUBLIC_URL: `"${loaderBuilder.URL}"`,
   },
   plugins: [
+    minify(),
     {
       name: 'loader-builder-plugin',
       async buildStart() {
@@ -59,4 +61,11 @@ export default defineConfig({
     },
   ],
 });
+
+if (process.argv.includes('--watch')){
+  await build(config);
+  config.plugins = [];
+}
+
+export default config;
 
