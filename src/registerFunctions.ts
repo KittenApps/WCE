@@ -34,7 +34,7 @@ import pastProfiles from "./functions/pastProfiles";
 import pendingMessages from "./functions/pendingMessages";
 import hideHiddenItemsIcon from "./functions/hideHiddenItemsIcon";
 import richOnlineProfile from "./functions/richOnlineProfile";
-import crafting from "./functions/crafting";
+// import crafting from "./functions/crafting";
 import numericArousalMeters from "./functions/numericArousalMeters";
 import appendSocketListenersToInit from "./functions/appendSocketListenersToInit";
 import nicknames from "./functions/nicknames";
@@ -143,7 +143,7 @@ export async function registerAllFunctions(): Promise<void> {
   registerFunction(pastProfiles, "pastProfiles");
   registerFunction(pendingMessages, "pendingMessages");
   registerFunction(hideHiddenItemsIcon, "hideHiddenItemsIcon");
-  registerFunction(crafting, "crafting");
+  // registerFunction(crafting, "crafting");
   registerFunction(itemAntiCheat, "itemAntiCheat");
   registerFunction(leashFix, "leashFix");
   registerFunction(hookBCXAPI, "hookBCXAPI");

@@ -1,5 +1,5 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { waitFor, isNonNullObject, parseJSON, objEntries, isString, drawTooltip } from "../util/utils";
+import { waitFor, isNonNullObject, parseJSON, objEntries, isString } from "../util/utils";
 import { displayText } from "../util/localization";
 import { debug, logWarn, logError } from "../util/logger";
 
@@ -80,21 +80,4 @@ export default async function crafting(): Promise<void> {
       }
     );
   }
-
-  SDK.hookFunction(
-    "DrawItemPreview",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const ret = next(args);
-      const [item, , x, y] = args;
-      if (item) {
-        const { Craft } = item;
-        if (MouseIn(x, y, DialogInventoryGrid.itemWidth, DialogInventoryGrid.itemHeight) && Craft) {
-          drawTooltip(x, y, DialogInventoryGrid.itemWidth, displayText(Craft.Property), "center");
-          drawTooltip(1000, y - 70, 975, `${displayText("Description:")} ${CraftingDescription.Decode(Craft.Description) || "<no description>"}`, "left");
-        }
-      }
-      return ret;
-    }
-  );
 }
