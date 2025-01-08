@@ -61,10 +61,12 @@ export default function cacheClearer(): void {
 
   function doClearCaches(): void {
     debug("Clearing caches");
-    if (GLDrawCanvas.GL?.textureCache) {
-      GLDrawCanvas.GL.textureCache.clear();
+    if (GLDrawCanvas) {
+      if (GLDrawCanvas.GL?.textureCache) {
+        GLDrawCanvas.GL.textureCache.clear();
+      }
+      GLDrawResetCanvas();
     }
-    GLDrawResetCanvas();
 
     debug("Clearing old characters from cache");
     const oldOnlineCharacters = Character.filter(c => c.IsOnline?.() && !ChatRoomCharacter.some(cc => cc.MemberNumber === c.MemberNumber));
