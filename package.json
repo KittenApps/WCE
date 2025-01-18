@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "buttplug": "^3.2.2",
-    "dexie": "^4.0.10"
+    "dexie": "^4.0.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
