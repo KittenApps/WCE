@@ -13,25 +13,25 @@
   },
   "dependencies": {
     "buttplug": "^3.2.2",
-    "dexie": "^4.0.10"
+    "dexie": "^4.0.11"
   },
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
+    "@eslint/js": "^9.18.0",
     "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-node-resolve": "^16.0.0",
-    "@stylistic/eslint-plugin": "^2.12.1",
+    "@stylistic/eslint-plugin": "^2.13.0",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.10.7",
     "bc-stubs": "^112.0.0-Beta.1",
     "bondage-club-mod-sdk": "^1.2.0",
     "esbuild": "^0.24.2",
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "globals": "^15.14.0",
-    "rollup": "^4.30.1",
+    "rollup": "^4.31.0",
     "rollup-plugin-esbuild": "^6.1.1",
-    "typescript": "^5.7.2",
-    "typescript-eslint": "^8.19.1",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.21.0",
     "ws": "^8.18.0"
   },
   "overrides": {
