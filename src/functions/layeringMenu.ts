@@ -40,17 +40,27 @@ export default async function layeringMenu(): Promise<void> {
       const defaultItemHide = Layering.Asset.Hide || [];
       if (defaultItemHide.length === 0) return ret;
       const overrideItemHide = Layering.Item.Property.wceOverrideHide || defaultItemHide;
+
+      // Move the scrollbar-related CSS settings from the layer-specific priority config to the root
+      const root = document.getElementById("layering");
+      if (!root) {
+        return ret;
+      } else {
+        root.classList.add("scroll-box");
+        root.querySelector("#layering-layer-div")?.classList.remove("scroll-box");
+      }
+
       ElementCreate({
         tag: "h1",
         attributes: { id: "layering-hide-header" },
-        parent: document.getElementById("layering"),
+        parent: root,
         children: [displayText("[WCE] Configure layer hiding")],
       });
       ElementCreate({
         tag: "form",
         attributes: { id: "layering-hide-div" },
         classList: ["layering-layer-inner-grid"],
-        parent: document.getElementById("layering"),
+        parent: root,
         children: defaultItemHide.map(h => ({
           tag: "div",
           classList: ["layering-pair"],
