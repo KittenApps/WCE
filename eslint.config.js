@@ -48,6 +48,7 @@ export default tseslint.config(
       "@typescript-eslint/no-unnecessary-condition": "off",
       "@typescript-eslint/no-dynamic-delete": "off",
       "@typescript-eslint/no-deprecated": "warn",
+      "@typescript-eslint/no-unnecessary-boolean-literal-compare": "off",
       "accessor-pairs": "error",
       "array-callback-return": "error",
       "arrow-body-style": "warn",
