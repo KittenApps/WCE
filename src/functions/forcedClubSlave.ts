@@ -127,6 +127,28 @@ export default async function forcedClubSlave(): Promise<void> {
         return ret;
       }
     );
+
+    if (GameVersion !== "R112") {
+      // Delay any reloads until all other hooks have finished running
+      SDK.hookFunction(
+        "CharacterBuildDialog",
+        HOOK_PRIORITIES.OverrideBehaviour,
+        (args, next) => {
+          // @ts-expect-error: New R113 parameter
+          // eslint-disable-next-line prefer-destructuring
+          const reload: boolean = args[3];
+          // @ts-expect-error: New R113 parameter
+          args[3] = false;
+          const ret = next(args);
+          if (reload && DialogMenuMode === "dialog") {
+            // @ts-expect-error: New R113 object
+            const dialogMenu = DialogMenuMapping.dialog as DialogMenu;
+            dialogMenu.Reload(null, null, { reset: true });
+          }
+          return ret;
+        }
+      );
+    }
   }
 
   const patch = patchDialog();
