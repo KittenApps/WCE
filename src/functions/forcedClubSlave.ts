@@ -115,35 +115,28 @@ export default async function forcedClubSlave(): Promise<void> {
       appendDialog(c);
     }
 
-    SDK.hookFunction(
-      "CharacterBuildDialog",
-      HOOK_PRIORITIES.AddBehaviour,
-      (args, next) => {
-        const ret = next(args);
-        const [C] = args;
-        if (isCharacter(C) && C.IsOnline()) {
-          appendDialog(C);
-        }
-        return ret;
-      }
-    );
-
+    // ToDo: remove once r113 is out
     if (GameVersion !== "R112") {
       // Delay any reloads until all other hooks have finished running
       SDK.hookFunction(
         "CharacterBuildDialog",
-        HOOK_PRIORITIES.OverrideBehaviour,
+        HOOK_PRIORITIES.AddBehaviour,
+        ([C, CSV, functionPrefix, reload], next) => {
+          const ret = next([C, CSV, functionPrefix, false]);
+          if (isCharacter(C) && C.IsOnline()) appendDialog(C);
+          if (reload && DialogMenuMode === "dialog") DialogMenuMapping.dialog.Reload(null, null, { reset: true });
+          return ret;
+        }
+      );
+    } else {
+      SDK.hookFunction(
+        "CharacterBuildDialog",
+        HOOK_PRIORITIES.AddBehaviour,
         (args, next) => {
-          // @ts-expect-error: New R113 parameter
-          // eslint-disable-next-line prefer-destructuring
-          const reload: boolean = args[3];
-          // @ts-expect-error: New R113 parameter
-          args[3] = false;
           const ret = next(args);
-          if (reload && DialogMenuMode === "dialog") {
-            // @ts-expect-error: New R113 object
-            const dialogMenu = DialogMenuMapping.dialog as DialogMenu;
-            dialogMenu.Reload(null, null, { reset: true });
+          const [C] = args;
+          if (isCharacter(C) && C.IsOnline()) {
+            appendDialog(C);
           }
           return ret;
         }
