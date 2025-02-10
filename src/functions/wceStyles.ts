@@ -293,7 +293,6 @@ export default function wceStyles(): void {
   }
 
   #layering {
-    overflow-y: auto;
     grid-template:
       "asset-header button-grid" min-content
       "asset-grid asset-grid" min-content
@@ -304,21 +303,21 @@ export default function wceStyles(): void {
       / auto min-content
     ;
   }
-  #layering-layer-div {
-    overflow-y: visible;
-  }
   #layering-button-grid {
     top: 0;
     position: sticky;
   }
-  .layering-button-container {
-    position: relative;
-  }
   #layering-hide-header {
     grid-area: layer-hide-header;
   }
-  #layering-hide-div {
+  #layering-wce-hide-div {
+    box-sizing: border-box;
     grid-area: layer-hide-grid;
+    width: 100%;
+    height: calc(100% - min(2vh, 1vw));
+    padding-left: min(2vh, 1vw);
+    padding-right: min(2vh, 1vw);
+    align-self: self-start;
   }
 
   .wce-chat-room-select,
