@@ -65,7 +65,7 @@ export default async function layeringMenu(): Promise<void> {
               classList: [],
               eventListeners: {
                 click: () => {
-                  const hideForm: HTMLFormElement = document.getElementById("layering-hide-div") as HTMLFormElement;
+                  const hideForm: HTMLFormElement = document.getElementById("layering-wce-hide-div") as HTMLFormElement;
                   Layering.Item.Property.wceOverrideHide = new FormData(hideForm).getAll("checkbox-hide") as AssetGroupName[];
                   if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
                   // eslint-disable-next-line no-underscore-dangle
