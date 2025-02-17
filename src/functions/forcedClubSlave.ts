@@ -115,33 +115,17 @@ export default async function forcedClubSlave(): Promise<void> {
       appendDialog(c);
     }
 
-    // ToDo: remove once r113 is out
-    if (GameVersion !== "R112") {
-      // Delay any reloads until all other hooks have finished running
-      SDK.hookFunction(
-        "CharacterBuildDialog",
-        HOOK_PRIORITIES.AddBehaviour,
-        ([C, CSV, functionPrefix, reload], next) => {
-          const ret = next([C, CSV, functionPrefix, false]);
-          if (isCharacter(C) && C.IsOnline()) appendDialog(C);
-          if (reload && DialogMenuMode === "dialog") DialogMenuMapping.dialog.Reload(null, null, { reset: true });
-          return ret;
-        }
-      );
-    } else {
-      SDK.hookFunction(
-        "CharacterBuildDialog",
-        HOOK_PRIORITIES.AddBehaviour,
-        (args, next) => {
-          const ret = next(args);
-          const [C] = args;
-          if (isCharacter(C) && C.IsOnline()) {
-            appendDialog(C);
-          }
-          return ret;
-        }
-      );
-    }
+    // Delay any reloads until all other hooks have finished running
+    SDK.hookFunction(
+      "CharacterBuildDialog",
+      HOOK_PRIORITIES.AddBehaviour,
+      ([C, CSV, functionPrefix, reload], next) => {
+        const ret = next([C, CSV, functionPrefix, false]);
+        if (isCharacter(C) && C.IsOnline()) appendDialog(C);
+        if (reload && DialogMenuMode === "dialog") DialogMenuMapping.dialog.Reload(null, null, { reset: true });
+        return ret;
+      }
+    );
   }
 
   const patch = patchDialog();
