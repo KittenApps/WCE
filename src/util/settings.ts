@@ -191,9 +191,8 @@ export const defaultSettings = {
       if (newValue) {
         if (Player.Wardrobe) {
           WardrobeSize = EXPANDED_WARDROBE_SIZE;
-          loadExtendedWardrobe(Player.Wardrobe, init);
           // Call compress wardrobe to save existing outfits, if another addon has extended the wardrobe
-          CharacterCompressWardrobe(Player.Wardrobe);
+          loadExtendedWardrobe(Player.Wardrobe, init).then(w => CharacterCompressWardrobe(w));
         } else {
           logWarn("Player.Wardrobe not found, skipping wardrobe extension");
         }
