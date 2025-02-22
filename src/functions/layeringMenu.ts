@@ -60,6 +60,7 @@ export default async function layeringMenu(): Promise<void> {
           children: [
             {
               tag: "input",
+              // ToDo: remove `? true : undefined` for disabled and checked once https://gitgud.io/BondageProjects/Bondage-College/-/merge_requests/5431 is merged and released
               // eslint-disable-next-line no-undefined
               attributes: { type: "checkbox", name: "checkbox-hide", value: h, disabled: Layering.Readonly ? true : undefined, checked: overrideItemHide.includes(h) ? true : undefined },
               classList: [],
