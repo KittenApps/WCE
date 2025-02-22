@@ -37,40 +37,64 @@ function sanitizeBundles(bundleList: ItemBundle[]): ItemBundle[] {
   });
 }
 
-export function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boolean): ItemBundle[][] {
-  if (fbcSettings.extendedWardrobe) {
-    WardrobeSize = EXPANDED_WARDROBE_SIZE;
-    WardrobeFixLength();
-  }
+export async function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boolean): Promise<ItemBundle[][]> {
+  if (!fbcSettings.extendedWardrobe) return wardrobe;
 
   // eslint-disable-next-line @typescript-eslint/no-deprecated
-  const wardrobeData: string = Player.ExtensionSettings.FBCWardrobe || Player.OnlineSettings?.BCEWardrobe;
-  if (wardrobeData || !init) {
-    // eslint-disable-next-line @typescript-eslint/no-deprecated
-    if (Player.OnlineSettings?.BCEWardrobe) {
-      Player.ExtensionSettings.FBCWardrobe = wardrobeData;
+  if (Player.OnlineSettings?.BCEWardrobe) {
+    let prompt = "Old OnlineSettings extended wardrobe data detected. Do you want to migrate them?";
+    const buttons = { submit: "Yes", ignore: "Ignore (keep old, ask later)", delete: "No (delete old)" };
+    if (Player.ExtensionSettings.FBCWardrobe) {
+      prompt += " WARNING: This will override your already existing wardrobe data (in the new format) and may lead to data loss!";
+      buttons.submit = "Yes (override)";
+    }
+    const [answ] = await FUSAM.modals.openAsync({ prompt, buttons });
+    if (answ === "submit") {
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      Player.ExtensionSettings.FBCWardrobe = Player.OnlineSettings.BCEWardrobe;
       ServerPlayerExtensionSettingsSync("FBCWardrobe");
       logInfo("Migrated wardrobe from OnlineSettings to ExtensionSettings");
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       delete Player.OnlineSettings.BCEWardrobe;
+    } else if (answ === "delete") {
+      logInfo("deleted old wardrobe in OnlineSettings");
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      delete Player.OnlineSettings.BCEWardrobe;
     }
-    try {
-      const additionalItemBundle: ItemBundle[][] = wardrobeData ? parseJSON(LZString.decompressFromUTF16(wardrobeData)) : [];
-      if (isWardrobe(additionalItemBundle)) {
-        for (let i = DEFAULT_WARDROBE_SIZE; i < EXPANDED_WARDROBE_SIZE; i++) {
-          const additionalIdx = i - DEFAULT_WARDROBE_SIZE;
-          if (additionalIdx >= additionalItemBundle.length) {
-            break;
-          }
-          wardrobe[i] = sanitizeBundles(additionalItemBundle[additionalIdx]);
+  }
+
+  const wData = Player.ExtensionSettings.FBCWardrobe;
+  WardrobeSize = EXPANDED_WARDROBE_SIZE;
+  WardrobeFixLength();
+
+  if (!wData) {
+    const warnNew = "Looks like you are enabling the extended wardrobe for the first time on this character. " +
+      "Proceeding will create a new empty extended wardrobe for the current character. " +
+      "If you expect an already existing extended wardrobe for this character to be imported from a different device: choose Cancel instead.";
+    const warnOld = "No extended wardrobe data found. Do you want to create a new empty extended wardrobe? WARNING: " +
+      "This will lead to permanent data loss of your extended wardrobe. In case of a temporary server issue you should choose Cancel here " +
+      "(extended wardrobe slots will not be persistent until after a reload extended wardrobe is available again or an empty one is created).";
+    const [answ] = await FUSAM.modals.openAsync({ prompt: init ? warnOld : warnNew, buttons: { cancel: "Cancel", submit: "OK" } });
+    if (answ === "submit") extendedWardrobeLoaded = true;
+    return wardrobe;
+  }
+
+  try {
+    const additionalItemBundle: ItemBundle[][] = parseJSON(LZString.decompressFromUTF16(wData));
+    if (isWardrobe(additionalItemBundle)) {
+      for (let i = DEFAULT_WARDROBE_SIZE; i < EXPANDED_WARDROBE_SIZE; i++) {
+        const additionalIdx = i - DEFAULT_WARDROBE_SIZE;
+        if (additionalIdx >= additionalItemBundle.length) {
+          break;
         }
-        extendedWardrobeLoaded = true;
+        wardrobe[i] = sanitizeBundles(additionalItemBundle[additionalIdx]);
       }
-    } catch (e) {
-      logError("Failed to load extended wardrobe", e);
-      fbcBeepNotify("Wardrobe error", `Failed to load extended wardrobe.\n\nBackup: ${wardrobeData}`);
-      logInfo("Backup wardrobe", wardrobeData);
+      extendedWardrobeLoaded = true;
     }
+  } catch (e) {
+    logError("Failed to load extended wardrobe", e);
+    fbcBeepNotify("Wardrobe error", `Failed to load extended wardrobe.\n\nBackup: ${wData}`);
+    logInfo("Backup wardrobe", wData);
   }
   return wardrobe;
 }
