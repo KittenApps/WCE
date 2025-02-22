@@ -44,18 +44,34 @@ export function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boolean): I
   }
 
   // eslint-disable-next-line @typescript-eslint/no-deprecated
-  const wardrobeData: string = Player.ExtensionSettings.FBCWardrobe || Player.OnlineSettings?.BCEWardrobe;
-  if (wardrobeData || !init) {
-    // eslint-disable-next-line @typescript-eslint/no-deprecated
-    if (Player.OnlineSettings?.BCEWardrobe) {
-      Player.ExtensionSettings.FBCWardrobe = wardrobeData;
+  if (Player.OnlineSettings?.BCEWardrobe) {
+    const w = Player.ExtensionSettings.FBCWardrobe ? " Warning: This will override your already existing wardrobe data (in the new format) and may lead to data loss!" : "";
+    // ToDo: make this function async and use FUSAM modals
+    // eslint-disable-next-line no-alert
+    if (window.confirm(`Old OnlineSettings extended wardrobe data detected. Do you want to migrate them?${w}`)) {
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      Player.ExtensionSettings.FBCWardrobe = Player.OnlineSettings.BCEWardrobe;
       ServerPlayerExtensionSettingsSync("FBCWardrobe");
       logInfo("Migrated wardrobe from OnlineSettings to ExtensionSettings");
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       delete Player.OnlineSettings.BCEWardrobe;
     }
+  }
+
+  let create = false;
+  if (!Player.ExtensionSettings.FBCWardrobe && !init) {
+    // ToDo: make this function async and use FUSAM modals
+    // eslint-disable-next-line no-alert
+    if (window.confirm("No extended wardrobe data found. Do you want to create a new empty extended wardrobe? Note: " +
+      "This will need to permanent data loss of your extended wardrobe. In case of a temporary server issue you should not proceed here. " +
+      "Proceed if you're a new WCE user.")) {
+      create = true;
+    }
+  }
+
+  if (Player.ExtensionSettings.FBCWardrobe || create) {
     try {
-      const additionalItemBundle: ItemBundle[][] = wardrobeData ? parseJSON(LZString.decompressFromUTF16(wardrobeData)) : [];
+      const additionalItemBundle: ItemBundle[][] = create ? [] : parseJSON(LZString.decompressFromUTF16(Player.ExtensionSettings.FBCWardrobe));
       if (isWardrobe(additionalItemBundle)) {
         for (let i = DEFAULT_WARDROBE_SIZE; i < EXPANDED_WARDROBE_SIZE; i++) {
           const additionalIdx = i - DEFAULT_WARDROBE_SIZE;
@@ -68,8 +84,8 @@ export function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boolean): I
       }
     } catch (e) {
       logError("Failed to load extended wardrobe", e);
-      fbcBeepNotify("Wardrobe error", `Failed to load extended wardrobe.\n\nBackup: ${wardrobeData}`);
-      logInfo("Backup wardrobe", wardrobeData);
+      fbcBeepNotify("Wardrobe error", `Failed to load extended wardrobe.\n\nBackup: ${Player.ExtensionSettings.FBCWardrobe}`);
+      logInfo("Backup wardrobe", Player.ExtensionSettings.FBCWardrobe);
     }
   }
   return wardrobe;
