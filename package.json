@@ -19,17 +19,17 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@stylistic/eslint-plugin": "^4.0.1",
+    "@stylistic/eslint-plugin": "^4.1.0",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.13.8",
     "bc-stubs": "^113.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
     "eslint": "^9.21.0",
     "globals": "^16.0.0",
     "rolldown": "1.0.0-beta.3-commit.124516c",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.24.1",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.25.0",
     "ws": "^8.18.1"
   },
   "overrides": {
