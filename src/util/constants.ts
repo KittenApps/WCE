@@ -1,4 +1,4 @@
-export const FBC_VERSION = "6.3.8";
+export const FBC_VERSION = "6.3.9";
 export const settingsVersion = 63.6;
 export const SUPPORTED_GAME_VERSIONS = ["R113"];
 

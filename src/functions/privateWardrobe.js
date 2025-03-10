@@ -184,6 +184,7 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "ServerPlayerIsInChatRoom",
     HOOK_PRIORITIES.AddBehaviour,
+    // @ts-ignore: ToDo: Fix this for R114
     (args, next) => (inCustomWardrobe && CharacterAppearanceReturnRoom === "ChatRoom") || next(args)
   );
 

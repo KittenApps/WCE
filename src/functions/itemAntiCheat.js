@@ -161,7 +161,6 @@ export default function itemAntiCheat() {
       if (!fbcSettings.itemAntiCheat) {
         return next(args);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const item = /** @type {{ Target: number; } & ItemBundle} */ (data?.Item);
       if (item?.Target !== Player.MemberNumber) {
         return next(args);
