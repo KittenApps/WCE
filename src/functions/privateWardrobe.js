@@ -184,8 +184,14 @@ export default async function privateWardrobe() {
   SDK.hookFunction(
     "ServerPlayerIsInChatRoom",
     HOOK_PRIORITIES.AddBehaviour,
-    // @ts-ignore: ToDo: Fix this for R114
-    (args, next) => (inCustomWardrobe && CharacterAppearanceReturnRoom === "ChatRoom") || next(args)
+    (args, next) => {
+      // ToDo: remove in R114
+      // @ts-ignore
+      if (inCustomWardrobe && typeof CharacterAppearanceReturnRoom === "string" && CharacterAppearanceReturnRoom === "ChatRoom") return null;
+      if (inCustomWardrobe && CharacterAppearanceReturnScreen?.[1] === "ChatRoom") return null;
+      return next(args);
+      // (inCustomWardrobe && CharacterAppearanceReturnScreen?.[1] === "ChatRoom") || next(args)
+    }
   );
 
   /** @type {(e: KeyboardEvent) => void} */
