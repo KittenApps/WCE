@@ -187,10 +187,12 @@ export default async function privateWardrobe() {
     (args, next) => {
       // ToDo: remove in R114
       // @ts-ignore
-      if (inCustomWardrobe && typeof CharacterAppearanceReturnRoom === "string" && CharacterAppearanceReturnRoom === "ChatRoom") return null;
-      if (inCustomWardrobe && CharacterAppearanceReturnScreen?.[1] === "ChatRoom") return null;
-      return next(args);
-      // (inCustomWardrobe && CharacterAppearanceReturnScreen?.[1] === "ChatRoom") || next(args)
+      if (typeof CharacterAppearanceReturnRoom === "string") {
+        // @ts-ignore
+        if (inCustomWardrobe && CharacterAppearanceReturnRoom === "ChatRoom") return null;
+        return next(args);
+      }
+      return (inCustomWardrobe && CharacterAppearanceReturnScreen?.[1] === "ChatRoom") || next(args);
     }
   );
 

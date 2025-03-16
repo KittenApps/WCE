@@ -3,14 +3,14 @@
   "type": "module",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "start": "rolldown --watch -c & npx http-server ./dist -p 4000 -c-1 --cors & npm run serve:bc",
+    "start": "rolldown --watch -c & npx -y http-server@latest ./dist -p 4000 -c-1 --cors & npm run serve:bc",
     "build": "rolldown -c",
     "test": "npm run typecheck ; npm run lint",
     "typecheck": "tsc",
     "lint": "eslint ./src",
     "serve": "npm run serve:wce & npm run serve:bc",
-    "serve:wce": "npm run build && npx http-server ./dist -p 4000 -c-1 --cors",
-    "serve:bc": "npx http-server ../Bondage-College/BondageClub -s -p 3000 -c-1 --cors",
+    "serve:wce": "npm run build && npx -y http-server@latest ./dist -p 4000 -c-1 --cors",
+    "serve:bc": "npx -y http-server@latest ../Bondage-College/BondageClub -s -p 3000 -c-1 --cors",
     "update:bc": "(cd ../Bondage-College/ && git pull origin master)"
   },
   "dependencies": {
