@@ -1,11 +1,11 @@
 export const FBC_VERSION = "6.3.9";
-export const settingsVersion = 63.6;
-export const SUPPORTED_GAME_VERSIONS = ["R113"];
+export const settingsVersion = 63.9;
+export const SUPPORTED_GAME_VERSIONS = ["R113", "R114"];
 
-export const fbcChangelog = `WCE v6.3.8
-* BC R113 compatibility and other fixes
-* fixes extended wardrobe creation for new accounts (just reenable it again now)
-* for a full changelog visit our new website: https://wce-docs.vercel.app/blog
+export const fbcChangelog = `WCE v6.3.9
+* BC R114 compatibility and other fixes
+* improved extended wardrobe safety (let's you choose when to overwrite data)
+* new imporved build system
 
 WCE v6.3
 * configure layer hiding in layering menus
