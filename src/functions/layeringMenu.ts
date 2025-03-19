@@ -60,10 +60,7 @@ export default async function layeringMenu(): Promise<void> {
           children: [
             {
               tag: "input",
-              // ToDo: once R114 is out:
-              // attributes: { type: "checkbox", name: "checkbox-hide", value: h, disabled: `${Layering.Readonly}`, checked: `${overrideItemHide.includes(h)}` },
-              // eslint-disable-next-line no-undefined
-              attributes: { type: "checkbox", name: "checkbox-hide", value: h, disabled: Layering.Readonly ? true : undefined, checked: overrideItemHide.includes(h) ? true : undefined },
+              attributes: { type: "checkbox", name: "checkbox-hide", value: h, disabled: Layering.Readonly, checked: overrideItemHide.includes(h) },
               classList: [],
               eventListeners: {
                 click: () => {
