@@ -86,6 +86,12 @@ function bceAllowedToEmbed(url) {
       "i.redd.it",
       "puu.sh",
       "fs.kinkop.eu",
+      "bondageprojects.elementfx.com",
+      "www.bondageprojects.elementfx.com",
+      "bondage-europe.com",
+      "www.bondage-europe.com",
+      "bondageprojects.com",
+      "www.bondageprojects.com",
     ].includes(url.host) || sessionCustomOrigins.get(url.origin) === "allowed";
 
   if (/\/[^/]+\.(png|jpe?g|webp|gif)$/ui.test(url.pathname)) {
