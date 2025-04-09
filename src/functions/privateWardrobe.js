@@ -100,6 +100,8 @@ export default async function privateWardrobe() {
       if (inCustomWardrobe) {
         // @ts-ignore - explicitly overriding with another Character temporarily
         Player = targetCharacter;
+        // @ts-ignore
+        Player.VisualSettings = { ForceFullHeight: false };
       }
       const ret = next(args);
       if (inCustomWardrobe) {
