@@ -8,8 +8,12 @@ export default function antiGarbling(): void {
   SDK.hookFunction(
     "ChatRoomGenerateChatRoomChatMessage",
     HOOK_PRIORITIES.Top,
-    ([type, msg], next) => {
-      if (!fbcSettings.antiGarble) return next([type, msg]);
+    ([type, msg, ...args], next) => {
+      const typeR115 = type as "Chat" | "Whisper" | "Emote";
+      if (!fbcSettings.antiGarble || typeR115 === "Emote") return next([type, msg, ...args]);
+
+      // @ts-expect-error: >= R115
+      const [replyId]: undefined | string = args;
       const lastRange = SpeechGetOOCRanges(msg).pop();
       if (Player.ChatSettings.OOCAutoClose && typeof lastRange === "object" && msg.charAt(lastRange.start + lastRange.length - 1) !== ")" &&
         lastRange.start + lastRange.length === msg.length && lastRange.length !== 1) {
@@ -49,6 +53,13 @@ export default function antiGarbling(): void {
       }
 
       const Dictionary: ChatMessageDictionary = [{ Effects: process.effects, Original: originalMsg }];
+      if (GameVersion !== "R114" && replyId) {
+        // @ts-expect-error: >= R115
+        Dictionary.push({ ReplyId: replyId, Tag: "ReplyId" });
+        // @ts-expect-error: >= R115
+        // eslint-disable-next-line
+        ChatRoomMessageReplyStop();
+      }
       return { Content: process.text, Type: type, Dictionary };
     }
   );
