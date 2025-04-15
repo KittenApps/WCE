@@ -127,7 +127,8 @@ export default function itemAntiCheat() {
     debug("Rejected changes from", sourceName);
     fbcChatNotify(
       displayText(
-        `[Anti-Cheat] ${sourceName} tried to make suspicious changes! Appearance changes rejected. Consider telling the user to stop, whitelisting the user (if trusted friend), or blacklisting the user (if the behaviour continues, chat command: "/blacklistadd ${sourceCharacter.MemberNumber}").`
+        '[Anti-Cheat] $sourceName tried to make suspicious changes! Appearance changes rejected. Consider telling the user to stop, whitelisting the user (if trusted friend), or blacklisting the user (if the behaviour continues, chat command: "/blacklistadd $sourceNumber").',
+        { $sourceName: sourceName, $sourceNumber: `${sourceCharacter.MemberNumber}` }
       )
     );
 
@@ -136,10 +137,8 @@ export default function itemAntiCheat() {
       noticesSent.set(sourceCharacter.MemberNumber, Date.now());
       fbcSendAction(
         displayText(
-          `A magical shield on ${CharacterNickname(
-            Player
-          )} repelled the suspiciously magical changes attempted by ${sourceName}! [WCE Anti-Cheat]`
-        )
+          "A magical shield on $playerName repelled the suspiciously magical changes attempted by $sourceName! [WCE Anti-Cheat]",
+          { $playerName: CharacterNickname(Player), $sourceName: sourceName })
       );
     }
     if (
@@ -148,7 +147,7 @@ export default function itemAntiCheat() {
       !Player.BlackList.includes(sourceCharacter.MemberNumber)
     ) {
       ChatRoomListManipulation(Player.BlackList, true, sourceCharacter.MemberNumber.toString());
-      fbcChatNotify(displayText(`[AntiCheat] ${sourceName} blacklisted.`));
+      fbcChatNotify(displayText("[AntiCheat] $sourceName blacklisted.", { $sourceName: sourceName }));
     }
     ChatRoomCharacterUpdate(Player);
   }
