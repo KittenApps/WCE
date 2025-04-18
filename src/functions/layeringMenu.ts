@@ -58,7 +58,7 @@ export default async function layeringMenu(): Promise<void> {
           tag: "div",
           classList: ["layering-pair"],
           children: [
-            // NOTE: Consider using `ElementCheckbox.Create()` for checkbox construction once R115 is live
+            // ToDo: Consider using `ElementCheckbox.Create()` for checkbox construction once R115 is live
             {
               tag: "input",
               attributes: { type: "checkbox", name: "checkbox-hide", value: h, disabled: Layering.Readonly, checked: overrideItemHide.includes(h) },
