@@ -862,18 +862,15 @@ export default async function automaticExpressions() {
           Appearance: ServerAppearanceBundle(Player.Appearance),
         });
 
+        // ToDo: remove GameVersion !== "R114" check once R115 is out
         if (GameVersion !== "R114" && desiredExpression[t].Duration < 0) {
           refreshExpressionScreen = true;
           Player.ActiveExpression.setWithoutReload(/** @type {ExpressionGroupName} */(t), desiredExpression[t].Expression);
         }
       }
 
-      if (
-        GameVersion !== "R114" &&
-        refreshExpressionScreen &&
-        /** @type {unknown} */(DialogSelfMenuSelected) === "Expression" &&
-        DialogSelfMenuMapping.Expression.C.IsPlayer()
-      ) {
+      // ToDo: remove GameVersion !== "R114" check once R115 is out
+      if (GameVersion !== "R114" && refreshExpressionScreen && DialogSelfMenuSelected === "Expression" && DialogSelfMenuMapping.Expression.C.IsPlayer()) {
         DialogSelfMenuMapping.Expression.Reload();
       }
       needsRefresh = true;
@@ -941,11 +938,8 @@ export default async function automaticExpressions() {
       Player.ActivePose = poseUpdate;
       ServerSend("ChatRoomCharacterPoseUpdate", { Pose: poseUpdate });
 
-      if (
-        GameVersion !== "R114" &&
-        /** @type {unknown} */(DialogSelfMenuSelected) === "Pose" &&
-        DialogSelfMenuMapping.Pose.C.IsPlayer()
-      ) {
+      // ToDo: remove GameVersion !== "R114" check once R115 is out
+      if (GameVersion !== "R114" && DialogSelfMenuSelected === "Pose" && DialogSelfMenuMapping.Pose.C.IsPlayer()) {
         DialogSelfMenuMapping.Pose.Reload();
       }
     }
