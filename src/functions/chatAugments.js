@@ -100,8 +100,8 @@ function bceAllowedToEmbed(url) {
   return EMBED_TYPE.None;
 }
 
-/** @type {(chatMessageElement: Element, scrollToEnd: () => void) => void} */
-export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
+/** @type {(chatMessageElement: Element, scrollToEnd: () => void, isChat?: boolean) => void} */
+export function processChatAugmentsForLine(chatMessageElement, scrollToEnd, isChat) {
   const newChildren = [];
   let originalText = "";
   for (const node of chatMessageElement.childNodes) {
@@ -176,12 +176,12 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
                         parent.appendChild(document.createTextNode(" "));
                       }
 
-                      const ogText = parent.parentElement.getAttribute("bce-original-text");
+                      const ogText = (isChat ? parent.parentElement : parent).getAttribute("bce-original-text");
                       if (!ogText) {
                         throw new Error("clicked promptTrust has no original text");
                       }
                       parent.appendChild(document.createTextNode(ogText));
-                      processChatAugmentsForLine(chatMessageElement, scrollToEnd);
+                      processChatAugmentsForLine(chatMessageElement, scrollToEnd, true);
                       debug("updated trusted origins", sessionCustomOrigins);
                     }
                   },
@@ -217,7 +217,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
   for (const child of newChildren) {
     chatMessageElement.appendChild(child);
   }
-  chatMessageElement.parentElement.setAttribute("bce-original-text", originalText);
+  (isChat ? chatMessageElement.parentElement : chatMessageElement).setAttribute("bce-original-text", originalText);
 }
 
 /**
@@ -382,7 +382,7 @@ export default function chatAugments() {
           if (scrolledToEnd) {
             ElementScrollToEnd(chatLogContainerId);
           }
-        });
+        }, true);
         if (scrolledToEnd) {
           ElementScrollToEnd(chatLogContainerId);
         }
