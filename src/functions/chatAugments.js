@@ -176,7 +176,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
                         parent.appendChild(document.createTextNode(" "));
                       }
 
-                      const ogText = parent.getAttribute("bce-original-text");
+                      const ogText = parent.parentElement.getAttribute("bce-original-text");
                       if (!ogText) {
                         throw new Error("clicked promptTrust has no original text");
                       }
@@ -217,7 +217,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd) {
   for (const child of newChildren) {
     chatMessageElement.appendChild(child);
   }
-  chatMessageElement.setAttribute("bce-original-text", originalText);
+  chatMessageElement.parentElement.setAttribute("bce-original-text", originalText);
 }
 
 /**
@@ -383,9 +383,6 @@ export default function chatAugments() {
             ElementScrollToEnd(chatLogContainerId);
           }
         });
-        // ToDo: rewrite this
-        chatMessageElement.setAttribute("bce-original-text", chatContent.getAttribute("bce-original-text"));
-        chatContent.removeAttribute("bce-original-text");
         if (scrolledToEnd) {
           ElementScrollToEnd(chatLogContainerId);
         }
