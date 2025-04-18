@@ -50,8 +50,7 @@ export default function antiGarbling(): void {
       }
 
       const Dictionary: ChatMessageDictionary = [{ Effects: process.effects, Original: originalMsg }];
-      // ToDo: remove GameVersion !== "R114" check once R115 is released
-      if (GameVersion !== "R114" && replyId) {
+      if (replyId) {
         Dictionary.push({ ReplyId: replyId, Tag: "ReplyId" });
         ChatRoomMessageReplyStop();
       }
