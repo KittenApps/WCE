@@ -372,16 +372,20 @@ export default function chatAugments() {
       unhandledChat = document.querySelectorAll(`.ChatMessage:not([${handledAttributeName}=true])`);
     for (const chatMessageElement of unhandledChat) {
       chatMessageElement.setAttribute(handledAttributeName, "true");
+      const chatContent = chatMessageElement.querySelector(".chat-room-message-content");
       if (
         (chatMessageElement.classList.contains("ChatMessageChat") || chatMessageElement.classList.contains("ChatMessageWhisper")) &&
-        !chatMessageElement.classList.contains("bce-pending")
+        !chatMessageElement.classList.contains("bce-pending") && chatContent
       ) {
         const scrolledToEnd = ElementIsScrolledToEnd(chatLogContainerId);
-        processChatAugmentsForLine(chatMessageElement, () => {
+        processChatAugmentsForLine(chatContent, () => {
           if (scrolledToEnd) {
             ElementScrollToEnd(chatLogContainerId);
           }
         });
+        // ToDo: rewrite this
+        chatMessageElement.setAttribute("bce-original-text", chatContent.getAttribute("bce-original-text"));
+        chatContent.removeAttribute("bce-original-text");
         if (scrolledToEnd) {
           ElementScrollToEnd(chatLogContainerId);
         }
