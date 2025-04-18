@@ -123,10 +123,11 @@ export default async function forcedClubSlave(): Promise<void> {
         const ret = next([C, CSV, functionPrefix, false]);
         if (isCharacter(C) && C.IsOnline()) appendDialog(C);
         if (reload && DialogMenuMode === "dialog") {
+          // ToDo: remove once R115 is out
           if (GameVersion === "R114") {
+            // @ts-expect-error
             DialogMenuMapping.dialog.Reload(null, null, { reset: true });
           } else {
-            // @ts-expect-error: Requires R115
             DialogMenuMapping.dialog.Reload(null, { reset: true });
           }
         }
