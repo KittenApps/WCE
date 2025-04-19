@@ -58,21 +58,18 @@ export default async function layeringMenu(): Promise<void> {
           tag: "div",
           classList: ["layering-pair"],
           children: [
-            // ToDo: Consider using `ElementCheckbox.Create()` for checkbox construction once R115 is live
-            {
-              tag: "input",
-              attributes: { type: "checkbox", name: "checkbox-hide", value: h, disabled: Layering.Readonly, checked: overrideItemHide.includes(h) },
-              classList: ["checkbox"],
-              eventListeners: {
-                click: () => {
-                  const hideForm: HTMLFormElement = document.getElementById("layering-wce-hide-div") as HTMLFormElement;
-                  Layering.Item.Property.wceOverrideHide = new FormData(hideForm).getAll("checkbox-hide") as AssetGroupName[];
-                  if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
-                  // eslint-disable-next-line no-underscore-dangle
-                  Layering._CharacterRefresh(Layering.Character, false, false);
-                },
+            ElementCheckbox.Create(
+              `layering-wce-hide-cb-${h}`,
+              () => {
+                const hideForm: HTMLFormElement = document.getElementById("layering-wce-hide-div") as HTMLFormElement;
+                Layering.Item.Property.wceOverrideHide = new FormData(hideForm).getAll("checkbox-hide") as AssetGroupName[];
+                if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
+                // eslint-disable-next-line no-underscore-dangle
+                Layering._CharacterRefresh(Layering.Character, false, false);
               },
-            },
+              { value: h, disabled: Layering.Readonly, checked: overrideItemHide.includes(h) },
+              { checkbox: { attributes: { name: "checkbox-hide" } } }
+            ),
             {
               tag: "span",
               classList: ["layering-pair-text"],
