@@ -9,7 +9,7 @@ export default function antiGarbling(): void {
     "ChatRoomGenerateChatRoomChatMessage",
     HOOK_PRIORITIES.Top,
     ([type, msg, replyId, ...args], next) => {
-      if (!fbcSettings.antiGarble || type === "Emote") return next([type, msg, ...args]);
+      if (!fbcSettings.antiGarble || type === "Emote") return next([type, msg, replyId, ...args]);
 
       const lastRange = SpeechGetOOCRanges(msg).pop();
       if (Player.ChatSettings.OOCAutoClose && typeof lastRange === "object" && msg.charAt(lastRange.start + lastRange.length - 1) !== ")" &&
