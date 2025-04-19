@@ -44,6 +44,7 @@ import confirmLeave from "./functions/confirmLeave";
 import toySync from "./functions/toySync";
 import chatRoomWhisperFixes from "./functions/chatRoomWhisperFixes";
 import allowCustomEffect from "./functions/allowCustomEffects";
+import { fetchLocale } from "./util/localization";
 
 export const incompleteFunctions: string[] = [];
 
@@ -107,7 +108,7 @@ export async function registerAllFunctions(): Promise<void> {
     }
   );
 
-  await registerFunction(functionIntegrityCheck, "functionIntegrityCheck");
+  await Promise.all([registerFunction(functionIntegrityCheck, "functionIntegrityCheck"), fetchLocale(TranslationLanguage)]);
   registerFunction(wceStyles, "wceStyles");
   registerFunction(commonPatches, "commonPatches");
   registerFunction(extendedWardrobe, "extendedWardrobe");

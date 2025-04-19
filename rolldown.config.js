@@ -54,7 +54,7 @@ const config = defineConfig({
       async generateBundle() {
         this.emitFile({ type: 'asset', fileName: 'wce-fusam-loader.user.js', source: loaderBuilder.generateFusamLoader() });
         this.emitFile({ type: 'asset', fileName: 'wce-loader.user.js', source: loaderBuilder.generateStandaloneLoader() });
-        await Promise.all(['baby.png', 'icon.png', 'stutter.png'].map(fileName =>
+        await Promise.all((await fs.readdir('public')).map(fileName =>
           fs.readFile(`public/${fileName}`).then(source => this.emitFile({ type: 'asset', fileName, source }))
         ));
       },
@@ -63,7 +63,7 @@ const config = defineConfig({
 });
 
 if (process.argv.includes('--watch')){
-  await build({ input: 'loaderBuilder.js', plugins: [{ generateBundle(_, b) { delete b['loaderBuilder.js']; } }, config.plugins[1]]});
+  await build({ input: 'loaderBuilder.js', plugins: [{ generateBundle(_, b) { delete b['loaderBuilder.js']; } }, config.plugins[0]]});
   config.plugins = [];
   config.output.minify = false;
   delete config.output.target;
