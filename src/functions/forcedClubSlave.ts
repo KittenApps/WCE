@@ -122,14 +122,7 @@ export default async function forcedClubSlave(): Promise<void> {
       ([C, CSV, functionPrefix, reload], next) => {
         const ret = next([C, CSV, functionPrefix, false]);
         if (isCharacter(C) && C.IsOnline()) appendDialog(C);
-        if (reload && DialogMenuMode === "dialog") {
-          if (GameVersion === "R114") {
-            DialogMenuMapping.dialog.Reload(null, null, { reset: true });
-          } else {
-            // @ts-expect-error: Requires R115
-            DialogMenuMapping.dialog.Reload(null, { reset: true });
-          }
-        }
+        if (reload && DialogMenuMode === "dialog") DialogMenuMapping.dialog.Reload(null, { reset: true });
         return ret;
       }
     );

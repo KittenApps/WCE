@@ -46,7 +46,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         ChatRoomMenuDraw: "6DBEC23B", // Screens/Online/ChatRoom/ChatRoom.js (6.5.2024)
         ChatRoomMessage: "E75ED29B", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomRegisterMessageHandler: "C432923A",
-        ChatRoomSendChat: "ACB10CE5", // Screens/Online/ChatRoom/ChatRoom.js
+        ChatRoomSendChat: "34F4B35A", // Screens/Online/ChatRoom/ChatRoom.js
         ChatRoomStart: "BB69E93E",
         ChatRoomSyncMemberJoin: "2A9CB40B", // Screens/Online/ChatRoom/ChatRoom.js
         CommandCombine: "80F9D4AF", // Screens/Online/ChatRoom/Commands.js
@@ -65,7 +65,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         DrawArousalThermometer: "7ED6D822",
         DrawBackNextButton: "7263249E", // Scripts/Drawing.js
         DrawButton: "B747DF6E",
-        DrawCharacter: "B175AF5E",
+        DrawCharacter: "C03C602B",
         DrawCheckbox: "00FD87EB",
         DrawImageEx: "E01BE7E7",
         DrawImageResize: "D205975A",

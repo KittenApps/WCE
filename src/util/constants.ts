@@ -1,9 +1,9 @@
-export const FBC_VERSION = "6.3.9";
+export const FBC_VERSION = "6.3.10";
 export const settingsVersion = 63.9;
-export const SUPPORTED_GAME_VERSIONS = ["R114"];
+export const SUPPORTED_GAME_VERSIONS = ["R115"];
 
-export const fbcChangelog = `WCE v6.3.9
-* BC R114 compatibility and other fixes
+export const fbcChangelog = `WCE v6.3.10
+* BC R115 compatibility and other fixes
 * improved extended wardrobe safety (let's you choose when to overwrite data)
 * new imporved build system
 

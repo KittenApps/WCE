@@ -4,6 +4,8 @@ import { fbcSettings } from "../util/settings";
 import { waitFor } from "../util/utils";
 import { debug } from "../util/logger";
 
+type ChatRoomMenuButtonsWCE = (ChatRoomMenuButton | "clearCache")[];
+
 export default function cacheClearer(): void {
   const cacheClearInterval = 1 * 60 * 60 * 1000;
 
@@ -12,7 +14,7 @@ export default function cacheClearer(): void {
     HOOK_PRIORITIES.AddBehaviour,
     (args, next) => {
       const ret = next(args);
-      if (fbcSettings.manualCacheClear) ChatRoomMenuButtons.splice(ChatRoomMenuButtons.indexOf("Cut"), 0, "clearCache");
+      if (fbcSettings.manualCacheClear) (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE).splice(ChatRoomMenuButtons.indexOf("Cut"), 0, "clearCache");
       return ret;
     }
   );
@@ -25,7 +27,7 @@ export default function cacheClearer(): void {
       if (fbcSettings.manualCacheClear) {
         const Space = 992 / ChatRoomMenuButtons.length;
         for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
-          if (MouseXIn(1005 + Space * B, Space - 2) && ChatRoomMenuButtons[B] === "clearCache") {
+          if (MouseXIn(1005 + Space * B, Space - 2) && (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE)[B] === "clearCache") {
             doClearCaches();
           }
         }

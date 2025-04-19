@@ -849,6 +849,7 @@ export default async function automaticExpressions() {
     }
 
     if (Object.keys(desiredExpression).length > 0) {
+      let refreshExpressionScreen = false;
       for (const t of Object.keys(desiredExpression)) {
         if (BCX?.getRuleState("block_changing_emoticon")?.isEnforced && t === "Emoticon") {
           continue;
@@ -860,8 +861,16 @@ export default async function automaticExpressions() {
           Group: t,
           Appearance: ServerAppearanceBundle(Player.Appearance),
         });
+
+        if (desiredExpression[t].Duration < 0) {
+          refreshExpressionScreen = true;
+          Player.ActiveExpression.setWithoutReload(/** @type {ExpressionGroupName} */(t), desiredExpression[t].Expression);
+        }
       }
 
+      if (refreshExpressionScreen && DialogSelfMenuSelected === "Expression" && DialogSelfMenuMapping.Expression.C.IsPlayer()) {
+        DialogSelfMenuMapping.Expression.Reload();
+      }
       needsRefresh = true;
     }
 
@@ -926,6 +935,10 @@ export default async function automaticExpressions() {
     if (poseUpdate) {
       Player.ActivePose = poseUpdate;
       ServerSend("ChatRoomCharacterPoseUpdate", { Pose: poseUpdate });
+
+      if (DialogSelfMenuSelected === "Pose" && DialogSelfMenuMapping.Pose.C.IsPlayer()) {
+        DialogSelfMenuMapping.Pose.Reload();
+      }
     }
 
     if (needsRefresh) {

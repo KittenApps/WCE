@@ -8,8 +8,9 @@ export default function antiGarbling(): void {
   SDK.hookFunction(
     "ChatRoomGenerateChatRoomChatMessage",
     HOOK_PRIORITIES.Top,
-    ([type, msg], next) => {
-      if (!fbcSettings.antiGarble) return next([type, msg]);
+    ([type, msg, replyId, ...args], next) => {
+      if (!fbcSettings.antiGarble || type === "Emote") return next([type, msg, ...args]);
+
       const lastRange = SpeechGetOOCRanges(msg).pop();
       if (Player.ChatSettings.OOCAutoClose && typeof lastRange === "object" && msg.charAt(lastRange.start + lastRange.length - 1) !== ")" &&
         lastRange.start + lastRange.length === msg.length && lastRange.length !== 1) {
@@ -49,6 +50,10 @@ export default function antiGarbling(): void {
       }
 
       const Dictionary: ChatMessageDictionary = [{ Effects: process.effects, Original: originalMsg }];
+      if (replyId) {
+        Dictionary.push({ ReplyId: replyId, Tag: "ReplyId" });
+        ChatRoomMessageReplyStop();
+      }
       return { Content: process.text, Type: type, Dictionary };
     }
   );
