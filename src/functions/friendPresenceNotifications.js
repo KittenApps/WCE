@@ -4,11 +4,6 @@ import { fbcSettings } from "../util/settings";
 import { waitFor, fbcChatNotify, fbcNotify } from "../util/utils";
 import { displayText } from "../util/localization";
 
-const BEEP_CLICK_ACTIONS = Object.freeze({
-  /** @type {"FriendList"} */
-  FriendList: "FriendList",
-});
-
 export default async function friendPresenceNotifications() {
   await waitFor(() => !!Player && ServerSocket && ServerIsConnected);
 
@@ -51,7 +46,7 @@ export default async function friendPresenceNotifications() {
       if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
         fbcChatNotify(displayText("Now online: $list", { $list: list }));
       } else {
-        fbcNotify(displayText("Now online: $list", { $list: list }), 5000, { ClickAction: BEEP_CLICK_ACTIONS.FriendList });
+        fbcNotify(displayText("Now online: $list", { $list: list }), 5000, true);
       }
     }
     if (fbcSettings.friendOfflineNotifications && offlineFriends.length) {
@@ -67,7 +62,7 @@ export default async function friendPresenceNotifications() {
       if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
         fbcChatNotify(displayText("Now offline: $list", { $list: list }));
       } else {
-        fbcNotify(displayText("Now offline: $list", { $list: list }), 5000, { ClickAction: BEEP_CLICK_ACTIONS.FriendList });
+        fbcNotify(displayText("Now offline: $list", { $list: list }), 5000, true);
       }
     }
     lastFriends = data.Result;

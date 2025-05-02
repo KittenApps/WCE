@@ -13,6 +13,7 @@ export default function beepImprovements() {
     return;
   }
   // ServerAccountBeep patch for beep notification improvements in chat
+  // ToDo: https://gitgud.io/BondageProjects/Bondage-College/-/merge_requests/5562
   patchFunction(
     "ServerAccountBeep",
     {
