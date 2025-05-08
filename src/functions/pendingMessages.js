@@ -95,14 +95,7 @@ export default function pendingMessages() {
           loader.appendChild(dot);
         }
         div.appendChild(loader);
-        const scroll = ElementIsScrolledToEnd("TextAreaChatLog");
-        const textarea = document.getElementById("TextAreaChatLog");
-        if (textarea) {
-          textarea.appendChild(div);
-          if (scroll) {
-            ElementScrollToEnd("TextAreaChatLog");
-          }
-        }
+        ChatRoomAppendChat(div);
       }
       return next(args);
     }
