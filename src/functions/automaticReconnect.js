@@ -188,6 +188,7 @@ export default async function automaticReconnect() {
 
   let breakCircuit = false;
   let breakCircuitFull = false;
+  let loginError = null;
 
   async function relog() {
     if (
@@ -236,8 +237,7 @@ export default async function automaticReconnect() {
     "RelogRun",
     HOOK_PRIORITIES.Top,
     (args, next) => {
-      const forbiddenReasons = ["ErrorDuplicatedLogin"];
-      if (!forbiddenReasons.includes(LoginErrorMessage)) {
+      if (loginError !== "ErrorDuplicatedLogin") {
         relog();
       } else if (!breakCircuit) {
         SDK.callOriginal("ServerAccountBeep", [
@@ -266,25 +266,26 @@ export default async function automaticReconnect() {
     (args, next) => {
       breakCircuit = false;
       breakCircuitFull = false;
+      loginError = null;
       return next(args);
     }
   );
 
   registerSocketListener("connect", () => {
     breakCircuit = false;
+    loginError = null;
   });
 
   SDK.hookFunction(
     "ServerDisconnect",
     HOOK_PRIORITIES.ModifyBehaviourHigh,
-    (args, next) => {
-      const [, force] = args;
-      args[1] = false;
-      const ret = next(args);
+    ([error, force], next) => {
+      const ret = next([error, false]);
       if (force) {
-        logWarn("Forcefully disconnected", args);
+        logWarn("Forcefully disconnected", error);
         ServerSocket.disconnect();
-        if (isString(args[0]) && ["ErrorRateLimited", "ErrorDuplicatedLogin"].includes(args[0])) {
+        if (isString(error) && ["ErrorRateLimited", "ErrorDuplicatedLogin"].includes(error)) {
+          loginError = error;
           // Reconnect after 3-6 seconds if rate limited
           logWarn("Reconnecting...");
           setTimeout(
