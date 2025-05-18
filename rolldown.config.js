@@ -28,12 +28,11 @@ const config = defineConfig({
     dir: 'dist',
     entryFileNames: 'wce.js',
     chunkFileNames: '[name].js',
-    // generatedCode: 'es2015',
     sourcemap: true,
     banner: c => c.isEntry ? LICENSE : undefined,
     minify: true,
     target: 'es2022',
-    comments: 'preserve-legal',
+    legalComments: 'inline',
   },
   resolve: {
     conditionNames: ['import'],

@@ -125,30 +125,16 @@ export function fbcChatNotify(node: HTMLElement | HTMLElement[] | string): void 
 }
 
 export async function fbcNotify(text: string, duration = 5000, openFriendlist = false, silent = false) {
-  await waitFor(() => !!Player && new Date(ServerBeep?.Timer || 0) < new Date());
-
-  // ToDo: remove in next version
-  // @ts-ignore
-  if (typeof ServerShowBeep === "function") {
-    const options = {
-      silent,
-      ...(openFriendlist && {
-        onClick: () => {
-          if (CurrentScreen !== "FriendList") ServerOpenFriendList();
-          FriendListModeIndex = 0;
-        },
-      }),
-    };
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    ServerShowBeep(text, duration, options);
-  } else {
-    ServerBeep = {
-      Timer: Date.now() + duration,
-      Message: text,
-      IsMail: openFriendlist,
-    };
-  }
+  await waitFor(() => !!Player);
+  ServerShowBeep(text, duration, {
+    silent,
+    ...(openFriendlist && {
+      onClick: () => {
+        if (CurrentScreen !== "FriendList") ServerOpenFriendList();
+        FriendListModeIndex = 0;
+      },
+    }),
+  });
 }
 
 export function fbcSendAction(text: string): void {

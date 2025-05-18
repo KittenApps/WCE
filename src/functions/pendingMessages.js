@@ -26,10 +26,7 @@ export default function pendingMessages() {
         const tag = message.Dictionary?.find?.(d => d.Tag === "fbc_nonce");
         if (tag) {
           // @ts-ignore - custom dictionary Tag
-          const el = document.querySelector(`[data-nonce='${tag.Text}']`);
-          if (el) {
-            el.remove();
-          }
+          document.querySelector(`[data-nonce='${tag.Text}']`)?.remove();
         }
       }
       return ret;
@@ -49,16 +46,9 @@ export default function pendingMessages() {
         !args[1].Target
       ) {
         nonce++;
-        if (nonce >= Number.MAX_SAFE_INTEGER) {
-          nonce = 0;
-        }
+        if (nonce >= Number.MAX_SAFE_INTEGER) nonce = 0;
         // @ts-ignore - custom dictionary Tag
-        args[1].Dictionary = addToDictionary(
-          // @ts-ignore - custom dictionary Tag
-          args[1].Dictionary,
-          "fbc_nonce",
-          nonce
-        );
+        args[1].Dictionary = addToDictionary(args[1].Dictionary, "fbc_nonce", nonce);
         const div = document.createElement("div");
         div.classList.add("ChatMessage", "bce-pending");
         div.setAttribute("data-time", ChatRoomCurrentTime());
@@ -72,6 +62,7 @@ export default function pendingMessages() {
               name.classList.add("ChatMessageName");
               name.style.color = Player.LabelColor || "";
               name.textContent = CharacterNickname(Player);
+              // ToDo: add ungarbled message here
               div.appendChild(name);
               div.appendChild(document.createTextNode(`: ${args[1].Content}`));
             }
@@ -95,14 +86,7 @@ export default function pendingMessages() {
           loader.appendChild(dot);
         }
         div.appendChild(loader);
-        const scroll = ElementIsScrolledToEnd("TextAreaChatLog");
-        const textarea = document.getElementById("TextAreaChatLog");
-        if (textarea) {
-          textarea.appendChild(div);
-          if (scroll) {
-            ElementScrollToEnd("TextAreaChatLog");
-          }
-        }
+        ChatRoomAppendChat(div);
       }
       return next(args);
     }

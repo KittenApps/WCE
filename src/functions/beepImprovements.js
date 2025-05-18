@@ -13,14 +13,13 @@ export default function beepImprovements() {
     return;
   }
   // ServerAccountBeep patch for beep notification improvements in chat
-  // ToDo: https://gitgud.io/BondageProjects/Bondage-College/-/merge_requests/5562
   patchFunction(
     "ServerAccountBeep",
     {
       // eslint-disable-next-line no-template-curly-in-string
-      'ChatRoomSendLocal(`<a onclick="ServerOpenFriendList()">(${ServerBeep.Message})</a>`);': `{
+      'ChatRoomSendLocal(`<a onclick="ServerOpenFriendList()">(${msg})</a>`);': `{
         const beepId = FriendListBeepLog.length - 1;
-        ChatRoomSendLocal(\`<a id="bce-beep-reply-\${beepId}">\u21a9\ufe0f</a><a class="bce-beep-link" id="bce-beep-\${beepId}">(\${ServerBeep.Message}\${ChatRoomHTMLEntities(data.Message ? \`: \${bceStripBeepMetadata(data.Message.length > 150 ? data.Message.substring(0, 150) + "..." : data.Message)}\` : "")})</a>\`);
+        ChatRoomSendLocal(\`<a id="bce-beep-reply-\${beepId}">\u21a9\ufe0f</a><a class="bce-beep-link" id="bce-beep-\${beepId}">(\${msg}\${ChatRoomHTMLEntities(data.Message ? \`: \${bceStripBeepMetadata(data.Message.length > 150 ? data.Message.substring(0, 150) + "..." : data.Message)}\` : "")})</a>\`);
         if (document.getElementById("bce-beep-reply-" + beepId)) {
           document.getElementById(\`bce-beep-reply-\${beepId}\`).onclick = (e) => {
             e.preventDefault();
