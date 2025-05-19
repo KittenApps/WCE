@@ -348,6 +348,10 @@ export const defaultSettings = {
     disabled: () => false,
     sideEffects: (newValue) => {
       debug("friendPresenceNotifications", newValue);
+      if (!newValue) {
+        fbcSettings.friendOfflineNotifications = false;
+        fbcSettings.friendNotificationsInChat = false;
+      }
     },
     category: "chat",
     description: "Enables friend presence tracking and shows a notification when a friend logs in.",
@@ -356,7 +360,7 @@ export const defaultSettings = {
     label: "Show friends going offline too",
     type: "checkbox",
     value: false,
-    disabled: () => false,
+    disabled: () => !fbcSettings.friendPresenceNotifications,
     sideEffects: (newValue) => {
       debug("friendOfflineNotifications", newValue);
     },
@@ -367,7 +371,7 @@ export const defaultSettings = {
     label: "Show friend presence notifications in chat, when possible",
     type: "checkbox",
     value: false,
-    disabled: () => false,
+    disabled: () => !fbcSettings.friendPresenceNotifications,
     sideEffects: (newValue) => {
       debug("friendNotificationsInChat", newValue);
     },
