@@ -46,7 +46,7 @@ export default async function friendPresenceNotifications() {
       if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
         fbcChatNotify(displayText("Now online: $list", { $list: list }));
       } else {
-        fbcNotify(displayText("Now online: $list", { $list: list }), 5000, true);
+        fbcNotify(displayText("Now online: $list", { $list: list }), 5000, true, true);
       }
     }
     if (fbcSettings.friendOfflineNotifications && offlineFriends.length) {
@@ -62,7 +62,7 @@ export default async function friendPresenceNotifications() {
       if (fbcSettings.friendNotificationsInChat && CurrentScreen === "ChatRoom") {
         fbcChatNotify(displayText("Now offline: $list", { $list: list }));
       } else {
-        fbcNotify(displayText("Now offline: $list", { $list: list }), 5000, true);
+        fbcNotify(displayText("Now offline: $list", { $list: list }), 5000, true, true);
       }
     }
     lastFriends = data.Result;
