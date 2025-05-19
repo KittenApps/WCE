@@ -126,9 +126,9 @@ export function fbcChatNotify(node: HTMLElement | HTMLElement[] | string): void 
 
 export async function fbcNotify(text: string, options?: { duration?: number; openFriendlist?: boolean; silent?: boolean }): Promise<void> {
   await waitFor(() => !!Player);
-  ServerShowBeep(text, options.duration ?? 5000, {
-    silent: options.silent ?? true,
-    ...(options.openFriendlist && {
+  ServerShowBeep(text, options?.duration ?? 5000, {
+    silent: options?.silent ?? true,
+    ...(options?.openFriendlist && {
       onClick: () => {
         if (CurrentScreen !== "FriendList") ServerOpenFriendList();
         FriendListModeIndex = 0;
