@@ -31,6 +31,15 @@ export default async function privateWardrobe() {
     "Full wardrobe may display blur and blindness effects of the outfits"
   );
 
+  patchFunction(
+    "WardrobeLoadCharacters",
+    {
+      "if (WardrobeCharacter.length <= P && ((W == null) || !Fast)) {": `if (WardrobeCharacter.length <= P && ((W == null) || !Fast)) {
+      if (fbcSettingValue("privateWardrobe") && P >= WardrobeOffset + 12) continue;`,
+    },
+    "private wardrobe load speed optimisation might be broken"
+  );
+
   SDK.hookFunction(
     "CharacterAppearanceWardrobeLoad",
     HOOK_PRIORITIES.OverrideBehaviour,
@@ -122,7 +131,11 @@ export default async function privateWardrobe() {
         excludeBodyparts = !excludeBodyparts;
         return null;
       }
-      return next(args);
+      const ret = next(args);
+      if (fbcSettings.privateWardrobe && WardrobeOffset >= WardrobeCharacter.length && (MouseIn(415, 25, 60, 60) || MouseIn(1000, 25, 60, 60))) {
+        WardrobeLoadCharacters(false);
+      }
+      return ret;
     }
   );
 
