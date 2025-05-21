@@ -110,7 +110,7 @@ export function expectedHashes(gameVersion: string): Readonly<Record<string, str
         PreferenceSubscreenImmersionRun: "276FA30B",
         RelogRun: "843E8F94",
         RelogExit: "2DFB2DAD",
-        ServerAccountBeep: "8782A099", // Scripts/Server.js
+        ServerAccountBeep: "BC0A52B7", // Scripts/Server.js
         ServerAppearanceBundle: "4D069622",
         ServerAppearanceLoadFromBundle: "946537FD",
         ServerConnect: "845E50A6",
