@@ -31,8 +31,10 @@ const config = defineConfig({
     sourcemap: true,
     banner: c => c.isEntry ? LICENSE : undefined,
     minify: true,
-    target: 'es2022',
     legalComments: 'inline',
+  },
+  transform: {
+    target: 'es2022',
   },
   resolve: {
     conditionNames: ['import'],
