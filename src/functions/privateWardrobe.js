@@ -6,13 +6,11 @@ import { displayText } from "../util/localization";
 export default async function privateWardrobe() {
   await waitFor(() => !!Player);
 
-  let inCustomWardrobe = false,
-    /** @type {Character | null} */
-    targetCharacter = null;
-
+  let inCustomWardrobe = false;
+  /** @type {Character | null} */
+  let targetCharacter = null;
   /** @type {string | null} */
   let appearanceBackup = null;
-
   let excludeBodyparts = false;
 
   function currentWardrobeTargetIsPlayer() {
@@ -202,7 +200,10 @@ export default async function privateWardrobe() {
     (args, next) => (inCustomWardrobe && CharacterAppearanceReturnScreen?.[1] === "ChatRoom") || next(args)
   );
 
-  /** @type {(e: KeyboardEvent) => void} */
+  /**
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
   function keyHandler(e) {
     if (!fbcSettings.privateWardrobe) {
       return;

@@ -30,7 +30,9 @@ export default async function automaticExpressions() {
     "Resetting blush, eyes, and eyebrows after struggling"
   );
 
-  /** @type {() => boolean} */
+  /**
+   * @returns {boolean}
+   */
   function animationEngineEnabled() {
     return !!fbcSettings.animationEngine;
   }
@@ -67,7 +69,9 @@ export default async function automaticExpressions() {
   const bceExpressionsQueue = [];
   let lastUniqueId = 0;
 
-  /** @type {() => number} */
+  /**
+   * @returns {number}
+   */
   function newUniqueId() {
     lastUniqueId = (lastUniqueId + 1) % (Number.MAX_SAFE_INTEGER - 1);
     return lastUniqueId;
@@ -76,7 +80,10 @@ export default async function automaticExpressions() {
   /** @type {Partial<Record<'Eyes' | 'Eyes2' | 'Eyebrows' | 'Mouth' | 'Fluids' | 'Emoticon' | 'Blush' | 'Pussy', string | null>>} */
   const manualComponents = {};
 
-  /** @type {(evt: ExpressionEvent) => void} */
+  /**
+   * @param {ExpressionEvent} evt
+   * @returns {void}
+   */
   function pushEvent(evt) {
     if (!evt) {
       return;
@@ -140,45 +147,63 @@ export default async function automaticExpressions() {
     globalThis.bce_ActivityTriggers = ActivityTriggers;
   }
 
-  /** @type {(dict?: ChatMessageDictionary) => boolean} */
+  /**
+   * @param {ChatMessageDictionary} [dict]
+   * @returns {boolean}
+   */
   function dictHasPlayerTarget(dict) {
     return dict?.some(t => t && "TargetCharacter" in t && t.TargetCharacter === Player.MemberNumber) || false;
   }
 
-  registerSocketListener("ChatRoomMessage", (/** @type {ServerChatRoomMessage} */ data) => {
-    activityTriggers: for (const trigger of globalThis.bce_ActivityTriggers.filter(t => t.Type === data.Type)) {
-      for (const matcher of trigger.Matchers) {
-        if (matcher.Tester.test(data.Content)) {
-          if (matcher.Criteria) {
-            if (matcher.Criteria.SenderIsPlayer && data.Sender !== Player.MemberNumber) {
-              continue;
-            } else if (matcher.Criteria.TargetIsPlayer && !dictHasPlayerTarget(data.Dictionary)) {
-              continue;
-            } else if (
-              matcher.Criteria.DictionaryMatchers &&
-              !matcher.Criteria.DictionaryMatchers.some(m => data.Dictionary?.find(t => Object.keys(m).every(k => m[k] === t[k])))
-            ) {
-              continue;
+  registerSocketListener(
+    "ChatRoomMessage",
+    /**
+     * @param {ServerChatRoomMessage} data
+     * @returns {void}
+     */
+    (data) => {
+      activityTriggers: for (const trigger of globalThis.bce_ActivityTriggers.filter(t => t.Type === data.Type)) {
+        for (const matcher of trigger.Matchers) {
+          if (matcher.Tester.test(data.Content)) {
+            if (matcher.Criteria) {
+              if (matcher.Criteria.SenderIsPlayer && data.Sender !== Player.MemberNumber) {
+                continue;
+              } else if (matcher.Criteria.TargetIsPlayer && !dictHasPlayerTarget(data.Dictionary)) {
+                continue;
+              } else if (
+                matcher.Criteria.DictionaryMatchers &&
+                !matcher.Criteria.DictionaryMatchers.some(m => data.Dictionary?.find(t => Object.keys(m).every(k => m[k] === t[k])))
+              ) {
+                continue;
+              }
+              // Criteria met
+              pushEvent(globalThis.bce_EventExpressions[trigger.Event]);
+            } else if (data.Sender === Player.MemberNumber || dictHasPlayerTarget(data.Dictionary)) {
+              // Lacking criteria, check for presence of player as source or target
+              pushEvent(globalThis.bce_EventExpressions[trigger.Event]);
+              break activityTriggers;
             }
-            // Criteria met
-            pushEvent(globalThis.bce_EventExpressions[trigger.Event]);
-          } else if (data.Sender === Player.MemberNumber || dictHasPlayerTarget(data.Dictionary)) {
-            // Lacking criteria, check for presence of player as source or target
-            pushEvent(globalThis.bce_EventExpressions[trigger.Event]);
-            break activityTriggers;
           }
         }
       }
     }
-  });
+  );
 
-  /** @type {(faceComponent: string) => [ExpressionName, boolean]} */
+  /**
+   * @param {string} t faceComponent
+   * @returns {[ExpressionName, boolean]}
+   */
   function expression(t) {
     const properties = Player.Appearance.find(a => a.Asset.Group.Name === t)?.Property ?? null;
     return [properties?.Expression || null, !properties?.RemoveTimer];
   }
 
-  /** @type {(faceComponent: string, newExpression: ExpressionName, color?: string | string[]) => void} */
+  /**
+   * @param {string} t faceComponent
+   * @param {ExpressionName} n newExpression
+   * @param {string | string[]} [color]
+   * @returns {void}
+   */
   function setExpression(t, n, color) {
     if (!n) {
       n = null;
@@ -420,9 +445,9 @@ export default async function automaticExpressions() {
         return next(args);
       }
 
-      const duration = typeof Timer === "number" && Timer > 0 ? Timer * 1000 : -1,
-        /** @type {Record<string, ExpressionStage[]>} */
-        e = {};
+      const duration = typeof Timer === "number" && Timer > 0 ? Timer * 1000 : -1;
+      /** @type {Record<string, ExpressionStage[]>} */
+      const e = {};
       /** @type {(keyof typeof manualComponents)[]} */
       let types = [];
 
@@ -472,17 +497,12 @@ export default async function automaticExpressions() {
           return next(args);
         }
 
-        const p = {};
-        if (!Pose || (Array.isArray(Pose) && Pose.every(pp => !pp))) {
-          p.Pose = /** @type {AssetPoseName[]} */ (["BaseUpper", "BaseLower"]);
-        } else {
-          p.Pose = [Pose];
-        }
-        p.Duration = -1;
+        /** @type {AssetPoseName[]} */
+        const p = (!Pose || (Array.isArray(Pose) && Pose.every(pp => !pp))) ? ["BaseUpper", "BaseLower"] : [Pose];
         const evt = {
           Type: MANUAL_OVERRIDE_EVENT_TYPE,
           Duration: -1,
-          Poses: [p],
+          Poses: [{ Pose: p, Duration: -1 }],
         };
         pushEvent(evt);
         return CustomArousalExpression();
@@ -490,33 +510,35 @@ export default async function automaticExpressions() {
     );
   }
 
-  registerSocketListener("ChatRoomSyncPose", (/** @type {ServerCharacterPoseResponse} */ data) => {
-    if (data === null || !isNonNullObject(data)) {
-      return;
+  registerSocketListener(
+    "ChatRoomSyncPose",
+    /**
+     * @param {ServerCharacterPoseResponse} data
+     * @returns {void}
+     */
+    (data) => {
+      if (data === null || !isNonNullObject(data)) return;
+      if (!Array.isArray(data.Pose)) {
+        logWarn(`data.Pose in ChatRoomSyncPose for ${data.MemberNumber?.toString()} is not an array`);
+        return;
+      }
+      if (!fbcSettings.animationEngine) return;
+      if (data.MemberNumber === Player.MemberNumber) setPoses(data.Pose);
     }
-    if (!Array.isArray(data.Pose)) {
-      logWarn(`data.Pose in ChatRoomSyncPose for ${data.MemberNumber?.toString()} is not an array`);
-      return;
-    }
-    if (!fbcSettings.animationEngine) {
-      return;
-    }
-    if (data.MemberNumber === Player.MemberNumber) {
-      setPoses(data.Pose);
-    }
-  });
+  );
 
-  registerSocketListener("ChatRoomSyncSingle", (/** @type {ServerChatRoomSyncCharacterResponse} */ data) => {
-    if (data === null || !isNonNullObject(data)) {
-      return;
+  registerSocketListener(
+    "ChatRoomSyncSingle",
+    /**
+     * @param {ServerChatRoomSyncCharacterResponse} data
+     * @returns {void}
+     */
+    (data) => {
+      if (data === null || !isNonNullObject(data)) return;
+      if (!fbcSettings.animationEngine) return;
+      if (data.Character?.MemberNumber === Player.MemberNumber) setPoses(data.Character.ActivePose ?? []);
     }
-    if (!fbcSettings.animationEngine) {
-      return;
-    }
-    if (data.Character?.MemberNumber === Player.MemberNumber) {
-      setPoses(data.Character.ActivePose ?? []);
-    }
-  });
+  );
 
   resetExpressionQueue([MANUAL_OVERRIDE_EVENT_TYPE, GAME_TIMED_EVENT_TYPE]);
 
@@ -620,7 +642,13 @@ export default async function automaticExpressions() {
     /** @type {{ [key: string]: ExpressionStage }} */
     const nextExpression = {};
 
-    /** @type {(expression: ExpressionName, stage: ExpressionStage, next: ExpressionEvent, faceComponent: string) => void} */
+    /**
+     * @param {ExpressionName} e expression
+     * @param {ExpressionStage} exp stage
+     * @param {ExpressionEvent} next
+     * @param {string} t faceComponent
+     * @returns {void}
+     */
     function trySetNextExpression(e, exp, next, t) {
       const priority = exp.Priority || next.Priority || 0;
       if (!nextExpression[t] || (nextExpression[t].Priority ?? 0) <= priority) {

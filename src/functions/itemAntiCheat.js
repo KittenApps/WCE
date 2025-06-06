@@ -20,7 +20,14 @@ export default function itemAntiCheat() {
     return true;
   }
 
-  /** @type {(sourceCharacter: Character, oldItem: ItemBundle | null, newItem: ItemBundle | null, ignoreLocks: boolean, ignoreColors: boolean) => { changed: number; prohibited: boolean }} */
+  /**
+   * @param {Character} sourceCharacter
+   * @param {ItemBundle | null} oldItem
+   * @param {ItemBundle | null} newItem
+   * @param {boolean} ignoreLocks
+   * @param {boolean} ignoreColors
+   * @returns {{ changed: number; prohibited: boolean }}
+   */
   function validateSingleItemChange(sourceCharacter, oldItem, newItem, ignoreLocks, ignoreColors) {
     const changes = {
       changed: 0,
@@ -33,7 +40,10 @@ export default function itemAntiCheat() {
 
     const sourceName = `${CharacterNickname(sourceCharacter)} (${sourceCharacter.MemberNumber ?? "-1"})`;
 
-    /** @type {(item: ItemBundle | null) => ItemBundle | null} */
+    /**
+     * @param {ItemBundle | null} item
+     * @returns {ItemBundle | null}
+     */
     function deleteUnneededMetaData(item) {
       if (!item) {
         return item;
@@ -117,7 +127,10 @@ export default function itemAntiCheat() {
     return changes;
   }
 
-  /** @type {(sourceCharacter: Character) => void} */
+  /**
+   * @param {Character} sourceCharacter
+   * @returns {void}
+   */
   function revertChanges(sourceCharacter) {
     if (typeof sourceCharacter.MemberNumber !== "number") {
       throw new Error("change from invalid source character with no member number");
@@ -218,8 +231,11 @@ export default function itemAntiCheat() {
         return next(args);
       }
 
-      // Gets the item bundles to be used for diff comparison, also making necessary changes for the purpose
-      /** @type {(bundle: ItemBundle[]) => Map<string, ItemBundle>} */
+      /**
+       * Gets the item bundles to be used for diff comparison, also making necessary changes for the purpose
+       * @param {ItemBundle[]} bundle
+       * @returns {Map<string, ItemBundle>}
+       */
       function processItemBundleToMap(bundle) {
         /** @type {(Map<string, ItemBundle>)} */
         const initial = new Map();

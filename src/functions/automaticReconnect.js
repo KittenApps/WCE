@@ -32,7 +32,9 @@ export default async function automaticReconnect() {
     encKey = key.key;
   }
 
-  /** @type {() => Promise<Passwords>} */
+  /**
+   * @returns {Promise<Passwords>}
+   */
   async function loadAccounts() {
     const d = localStorage.getItem("bce.passwords");
     if (d) {
@@ -66,12 +68,17 @@ export default async function automaticReconnect() {
 
   let accounts = await loadAccounts();
 
-  /** @type {() => Passwords} */
+  /**
+   * @returns {Passwords}
+   */
   function loadPasswords() {
     return accounts || {};
   }
 
-  /** @type {(accs: Passwords) => void} */
+  /**
+   * @param {Passwords} accs
+   * @returns {void}
+   */
   function storeAccounts(accs) {
     if (window.crypto?.subtle) {
       const iv = window.crypto.getRandomValues(new Uint8Array(16));
@@ -88,7 +95,9 @@ export default async function automaticReconnect() {
     }
   }
 
-  /** @type {() => void} */
+  /**
+   * @returns {void}
+   */
   function updatePasswordForReconnect() {
     let name = "";
     if (CurrentScreen === "Login") {
@@ -103,7 +112,10 @@ export default async function automaticReconnect() {
   }
   globalThis.bceUpdatePasswordForReconnect = updatePasswordForReconnect;
 
-  /** @type {(accountname: string) => void} */
+  /**
+   * @param {string} accountname
+   * @returns {void}
+   */
   function clearPassword(accountname) {
     const passwords = loadPasswords();
     if (!Object.hasOwn(passwords, accountname)) {
@@ -120,10 +132,7 @@ export default async function automaticReconnect() {
     await waitFor(() => CurrentScreen === "Login");
 
     /** @type {{ passwords: Passwords, posMaps: Record<string, string> }} */
-    const loginData = {
-      passwords: loadPasswords(),
-      posMaps: {},
-    };
+    const loginData = { passwords: loadPasswords(), posMaps: {} };
 
     SDK.hookFunction(
       "LoginRun",

@@ -9,7 +9,10 @@ import { fbcSettings } from "../util/settings";
 
 // BcUtil-compatible instant messaging with friends
 export default function instantMessenger() {
-  /** @type {(text: string) => string} */
+  /**
+   * @param {string} msg
+   * @returns {string}
+   */
   function stripBeepMetadata(msg) {
     return msg.split("\uf124")[0].trimEnd();
   }
@@ -91,7 +94,10 @@ export default function instantMessenger() {
     localStorage.setItem(storageKey(), JSON.stringify(history));
   }
 
-  /** @type {(friendId: number) => void} */
+  /**
+   * @param {number} friendId
+   * @returns {void}
+   */
   function changeActiveChat(friendId) {
     const friend = friendMessages.get(friendId);
     messageInput.disabled = !friend?.online;
@@ -120,7 +126,14 @@ export default function instantMessenger() {
     scrollToBottom();
   }
 
-  /** @type {(friendId: number, sent: boolean, beep: Partial<ServerAccountBeepResponse>, skipHistory: boolean, createdAt: Date) => void} */
+  /**
+   * @param {number} friendId
+   * @param {boolean} sent
+   * @param {Partial<ServerAccountBeepResponse>} beep
+   * @param {boolean} skipHistory
+   * @param {Date} createdAt
+   * @returns {void}
+   */
   // eslint-disable-next-line complexity
   function addMessage(friendId, sent, beep, skipHistory, createdAt) {
     const friend = friendMessages.get(friendId);
@@ -230,7 +243,10 @@ export default function instantMessenger() {
     saveHistory();
   }
 
-  /** @type {(friendId: number) => IMFriendHistory} */
+  /**
+   * @param {number} friendId
+   * @returns {IMFriendHistory}
+   */
   function handleUnseenFriend(friendId) {
     let msgs = friendMessages.get(friendId);
     if (!msgs) {
@@ -377,37 +393,44 @@ export default function instantMessenger() {
     sortIM();
   };
 
-  registerSocketListener("AccountQueryResult", (/** @type {ServerAccountQueryResponse} */ data) => {
-    if (data.Query !== "OnlineFriends") {
-      return;
-    }
-    if (data.Result && fbcSettings.instantMessenger) {
-      for (const friend of data.Result) {
-        const f = handleUnseenFriend(friend.MemberNumber);
-        f.online = true;
-        f.statusText.textContent = displayText("Online");
-        f.listElement.classList.remove(offlineClass);
-        f.listElement.classList.add(onlineClass);
+  registerSocketListener(
+    "AccountQueryResult",
+    /**
+     * @param {ServerAccountQueryResponse} data
+     * @returns {void}
+     */
+    (data) => {
+      if (data.Query !== "OnlineFriends") {
+        return;
       }
-      for (const friendId of Array.from(friendMessages.keys()).filter(f => !data.Result.some(f2 => f2.MemberNumber === f))) {
-        const f = friendMessages.get(friendId);
-        if (!f) {
-          throw new Error("this should never happen, f is null in map loop");
+      if (data.Result && fbcSettings.instantMessenger) {
+        for (const friend of data.Result) {
+          const f = handleUnseenFriend(friend.MemberNumber);
+          f.online = true;
+          f.statusText.textContent = displayText("Online");
+          f.listElement.classList.remove(offlineClass);
+          f.listElement.classList.add(onlineClass);
         }
-        f.online = false;
-        f.statusText.textContent = displayText("Offline");
-        f.listElement.classList.remove(onlineClass);
-        f.listElement.classList.add(offlineClass);
-      }
-      if (!data.Result.some(f => f.MemberNumber === activeChat)) {
-        // Disable input, current user is offline
-        messageInput.disabled = true;
-      } else {
-        // Enable input, current user is online
-        messageInput.disabled = false;
+        for (const friendId of Array.from(friendMessages.keys()).filter(f => !data.Result.some(f2 => f2.MemberNumber === f))) {
+          const f = friendMessages.get(friendId);
+          if (!f) {
+            throw new Error("this should never happen, f is null in map loop");
+          }
+          f.online = false;
+          f.statusText.textContent = displayText("Offline");
+          f.listElement.classList.remove(onlineClass);
+          f.listElement.classList.add(offlineClass);
+        }
+        if (!data.Result.some(f => f.MemberNumber === activeChat)) {
+          // Disable input, current user is offline
+          messageInput.disabled = true;
+        } else {
+          // Enable input, current user is online
+          messageInput.disabled = false;
+        }
       }
     }
-  });
+  );
 
   function sortIM() {
     [...friendList.children]
@@ -531,7 +554,10 @@ export default function instantMessenger() {
     }
   );
 
-  /** @type {(e: KeyboardEvent) => void} */
+  /**
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
   function keyHandler(e) {
     if (!fbcSettings.instantMessenger) {
       return;

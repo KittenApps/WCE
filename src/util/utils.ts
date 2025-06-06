@@ -130,8 +130,8 @@ export async function fbcNotify(text: string, options?: { duration?: number; ope
     silent: options?.silent ?? true,
     ...(options?.openFriendlist && {
       onClick: () => {
-        if (CurrentScreen !== "FriendList") ServerOpenFriendList();
         FriendListModeIndex = 0;
+        if (CurrentScreen !== "FriendList") ServerOpenFriendList();
       },
     }),
   });

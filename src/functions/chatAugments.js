@@ -13,7 +13,10 @@ const EMBED_TYPE = /** @type {const} */ ({
   Untrusted: "none-img",
 });
 
-/** @type {(word: string) => URL | false} */
+/**
+ * @param {string} word
+ * @returns {URL | false}
+ */
 function bceParseUrl(word) {
   try {
     const url = new URL(word);
@@ -29,16 +32,22 @@ function bceParseUrl(word) {
 const startSounds = ["..", "--"];
 const endSounds = ["...", "~", "~..", "~~", "..~"];
 const eggedSounds = ["ah", "aah", "mnn", "nn", "mnh", "mngh", "haa", "nng", "mnng"];
+
 /**
  * StutterWord will add s-stutters to the beginning of words and return 1-2 words, the original word with its stutters and a sound, based on arousal
- * @type {(word: string, forceStutter?: boolean) => {results: string[], stutter: boolean}}
+ * @param {string} word
+ * @param {boolean} [forceStutter]
+ * @returns {{results: string[], stutter: boolean}}
  */
 export function stutterWord(word, forceStutter) {
   if (!word?.length) {
     return { results: [word], stutter: false };
   }
 
-  /** @type {(wrd: string) => string} */
+  /**
+   * @param {string} wrd
+   * @returns {string}
+   */
   function addStutter(wrd) {
     return /^\p{L}/u.test(wrd) ? `${wrd.substring(0, /[\uD800-\uDFFF]/u.test(wrd[0]) ? 2 : 1)}-${wrd}` : wrd;
   }
@@ -73,7 +82,10 @@ export function stutterWord(word, forceStutter) {
   return { results, stutter };
 }
 
-/** @type {(url: URL) => "img" | "" | "none-img"} */
+/**
+ * @param {URL} url
+ * @returns {"img" | "" | "none-img"}
+ */
 function bceAllowedToEmbed(url) {
   const isTrustedOrigin =
     [
@@ -100,7 +112,11 @@ function bceAllowedToEmbed(url) {
   return EMBED_TYPE.None;
 }
 
-/** @type {(chatMessageElement: Element, scrollToEnd: () => void, isChat?: boolean) => void} */
+/**
+ * @param {Element} chatMessageElement
+ * @param {() => void} scrollToEnd
+ * @param {boolean} [isChat]
+ */
 export function processChatAugmentsForLine(chatMessageElement, scrollToEnd, isChat) {
   const newChildren = [];
   let originalText = "";
@@ -221,7 +237,8 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd, isCh
 }
 
 /**
- * @type {(node: HTMLElement | HTMLElement[] | string) => void}
+ * @param {HTMLElement | HTMLElement[] | string} node
+ * @returns {void}
  */
 export function augmentedChatNotify(node) {
   const div = document.createElement("div");
@@ -299,7 +316,10 @@ export default function chatAugments() {
     }
   );
 
-  /** @type {(msg: string) => {msg: string, hasStuttered: boolean}} */
+  /**
+   * @param {string} msg
+   * @returns {{msg: string, hasStuttered: boolean}}
+   */
   function bceMessageReplacements(msg) {
     const words = [msg];
     let firstStutter = true,

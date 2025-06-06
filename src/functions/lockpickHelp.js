@@ -6,7 +6,10 @@ import { debug } from "../util/logger";
 export default async function lockpickHelp() {
   await waitFor(() => !!StruggleMinigames);
 
-  /** @type {(s: number) => () => number} */
+  /**
+   * @param {number} s
+   * @returns {() => number}
+   */
   function newRand(s) {
     return () => {
       s = Math.sin(s) * 10000;

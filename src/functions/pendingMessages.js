@@ -4,7 +4,12 @@ import { isChatMessage } from "../util/utils";
 import { HIDDEN } from "../util/constants";
 
 export default function pendingMessages() {
-  /** @type {(dictionary: Record<string, unknown>[], key: string, value: unknown) => Record<string, unknown>[]} */
+  /**
+   * @param {Record<string, unknown>[]} dictionary
+   * @param {string} key
+   * @param {string} value
+   * @returns {Record<string, unknown>[]}
+   */
   function addToDictionary(dictionary, key, value) {
     if (!Array.isArray(dictionary)) {
       dictionary = [];

@@ -37,7 +37,10 @@ export default async function pastProfiles() {
     }
   }
 
-  /** @type {(num: number) => Promise<void>} */
+  /**
+   * @param {number} num
+   * @returns {Promise<void>}
+   */
   async function trimProfiles(num) {
     /** @type {FBCSavedProfile[]} */
     let list = await profiles.toArray();
@@ -58,7 +61,10 @@ export default async function pastProfiles() {
     }
   }
 
-  /** @type {(characterBundle: ServerAccountDataSynced) => Promise<void>} */
+  /**
+   * @param {ServerAccountDataSynced} characterBundle
+   * @returns {Promise<void>}
+   */
   async function saveProfile(characterBundle) {
     await quotaSafetyCheck();
 
@@ -150,7 +156,10 @@ export default async function pastProfiles() {
     }
   );
 
-  /** @type {(memberNumber: number) => Promise<void>} */
+  /**
+   * @param {number} memberNumber
+   * @returns {Promise<void>}
+   */
   async function openCharacter(memberNumber) {
     try {
       /** @type {FBCSavedProfile} */
@@ -278,7 +287,10 @@ export default async function pastProfiles() {
     inNotes = false;
   }
 
-  /** @type {(e: KeyboardEvent) => void} */
+  /**
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
   function keyHandler(e) {
     if (e.key === "Escape" && inNotes) {
       hideNoteInput();
