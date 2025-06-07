@@ -22,7 +22,7 @@
     "@stylistic/eslint-plugin": "^4.4.1",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
-    "@types/node": "^22.15.29",
+    "@types/node": "^22.15.30",
     "bc-stubs": "^116.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
     "eslint": "^9.28.0",
