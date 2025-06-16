@@ -290,8 +290,6 @@ export default async function commands(): Promise<void> {
         link.href = `#beep-${beepId}`;
         link.onclick = (e) => {
           e.preventDefault();
-          FriendListModeIndex = 1;
-          ServerOpenFriendList();
           FriendListShowBeep(beepId);
         };
         link.textContent = displayText("(Beep to $Name ($Number): $Message)", {

@@ -128,12 +128,7 @@ export async function fbcNotify(text: string, options?: { duration?: number; ope
   await waitFor(() => !!Player);
   ServerShowBeep(text, options?.duration ?? 5000, {
     silent: options?.silent ?? true,
-    ...(options?.openFriendlist && {
-      onClick: () => {
-        FriendListModeIndex = 0;
-        if (CurrentScreen !== "FriendList") ServerOpenFriendList();
-      },
-    }),
+    ...(options?.openFriendlist && { onClick: () => { FriendListShow(); } }),
   });
 }
 

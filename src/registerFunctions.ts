@@ -4,7 +4,6 @@ import { fbcSettings, postSettings, bceLoadSettings } from "./util/settings";
 import functionIntegrityCheck from "./functions/functionIntegrityCheck";
 import wceStyles from "./functions/wceStyles";
 import commonPatches from "./functions/commonPatches";
-import beepImprovements from "./functions/beepImprovements";
 import commands from "./functions/commands";
 import settingsPage from "./functions/settingsPage";
 import lockpickHelp from "./functions/lockpickHelp";
@@ -120,7 +119,6 @@ export async function registerAllFunctions(): Promise<void> {
   registerFunction(appendSocketListenersToInit, "appendSocketListenersToInit");
   debug(fbcSettings);
   registerFunction(discreetMode, "discreetMode");
-  registerFunction(beepImprovements, "beepImprovements");
   registerFunction(settingsPage, "settingsPage");
   registerFunction(alternateArousal, "alternateArousal");
   registerFunction(chatAugments, "chatAugments");
