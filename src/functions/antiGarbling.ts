@@ -142,7 +142,7 @@ export default function antiGarbling(): void {
     if (buttonGrid && !buttonGrid.querySelector(".wce-chat-room-button")) {
       ElementMenu.PrependItem(buttonGrid, ElementCreate({
         tag: "div",
-        style: { display: "none" },
+        attributes: { hidden: true },
         classList: ["wce-chat-room-select-div", "wce-chat-room-button"],
         children: [
           {
@@ -172,13 +172,13 @@ export default function antiGarbling(): void {
         "wce-chat-baby-talk",
         BabyTalkOnClick,
         { noStyling: true },
-        { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } }
+        { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true } } }
       ));
       ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
         "wce-chat-stutters",
         StutterOnClick,
         { noStyling: true },
-        { button: { classList: ["chat-room-button", "wce-chat-room-button"], style: { display: "none" } } }
+        { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true } } }
       ));
       resetChatButtonStates();
     }
