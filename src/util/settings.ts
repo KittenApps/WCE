@@ -843,7 +843,7 @@ export const defaultSettings = {
         for (const device of devices) {
           toySyncState.deviceSettings.set(device.Name, device);
         }
-      } catch (ex) {
+      } catch(ex) {
         logError(ex);
       }
     },

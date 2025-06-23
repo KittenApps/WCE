@@ -19,7 +19,7 @@ export default async function automaticReconnect() {
   let /** @type {CryptoKey} */ encKey, /** @type {{key: CryptoKey;}} */ key;
   try {
     key = await keyTable.get({ id: 1 });
-  } catch (e) {
+  } catch(e) {
     logWarn(e);
     localStorage.removeItem("bce.passwords");
     await db.delete();
@@ -57,7 +57,7 @@ export default async function automaticReconnect() {
       const s = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, data);
       // eslint-disable-next-line @typescript-eslint/return-await
       return parseJSON(decoder.decode(new Uint8Array(s))) || {};
-    } catch (e) {
+    } catch(e) {
       logWarn(e);
       localStorage.removeItem("bce.passwords");
       keyTable.clear();

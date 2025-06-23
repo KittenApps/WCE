@@ -31,7 +31,7 @@ export default async function pastProfiles() {
       const { quota, usage } = await navigator.storage.estimate();
       debug(`current quota usage ${usage?.toLocaleString() ?? "?"} out of maximum ${quota?.toLocaleString() ?? "?"}`);
       return { quota: quota ?? -1, usage: usage ?? 0 };
-    } catch (e) {
+    } catch(e) {
       logError("reading storage quota information", e);
       return { quota: -1, usage: -1 };
     }
@@ -98,7 +98,7 @@ export default async function pastProfiles() {
         seen: Date.now(),
         characterBundle: JSON.stringify(characterBundle),
       });
-    } catch (e) {
+    } catch(e) {
       const { quota, usage } = await readQuota();
       logError(`unable to save profile (${usage}/${quota}):`, e);
     }
@@ -177,7 +177,7 @@ export default async function pastProfiles() {
         }
       }
       InformationSheetLoadCharacter(C);
-    } catch (e) {
+    } catch(e) {
       fbcChatNotify(displayText("No profile found"));
       logError("reading profile", e);
     }

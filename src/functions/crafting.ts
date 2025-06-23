@@ -35,7 +35,7 @@ export default async function crafting(): Promise<void> {
           }
           CraftingSelectedItem = CraftingConvertItemToSelected(craft);
           CraftingModeSet("Name");
-        } catch (e) {
+        } catch(e) {
           logError("importing craft", e);
         }
       },

@@ -55,7 +55,7 @@ async function registerFunction(func: () => (Promise<void> | void), label: strin
       await ret;
     }
     incompleteFunctions.splice(incompleteFunctions.indexOf(label), 1);
-  } catch (err) {
+  } catch(err) {
     const e = err as Error;
     logError(`Error in ${label}: ${e?.toString()}\n${e?.stack ?? ""}`);
   }

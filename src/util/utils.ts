@@ -78,7 +78,7 @@ export function parseJSON<T>(jsonString: string | null): T {
   }
   try {
     return JSON.parse(jsonString) as T;
-  } catch (e) {
+  } catch(e) {
     logError("parsing JSON", e);
     return null;
   }

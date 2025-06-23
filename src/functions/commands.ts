@@ -240,7 +240,7 @@ export default async function commands(): Promise<void> {
               ServerAppearanceLoadFromBundle(Player, "Female3DCG", bundle, Player.MemberNumber);
               ChatRoomCharacterUpdate(Player);
               fbcChatNotify(displayText("Applied looks"));
-            } catch (e) {
+            } catch(e) {
               console.error(e);
               fbcChatNotify(displayText("Could not parse looks"));
             }

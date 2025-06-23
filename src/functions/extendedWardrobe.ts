@@ -91,7 +91,7 @@ export async function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boole
       }
       extendedWardrobeLoaded = true;
     }
-  } catch (e) {
+  } catch(e) {
     logError("Failed to load extended wardrobe", e);
     fbcBeepNotify("Wardrobe error", `Failed to load extended wardrobe.\n\nBackup: ${wData}`);
     logInfo("Backup wardrobe", wData);

@@ -52,7 +52,7 @@ export default async function toySync(): Promise<void> {
   try {
     await client.connect(connector);
     logInfo("Connected buttplug.io");
-  } catch (ex) {
+  } catch(ex) {
     FUSAM.modals.openAsync({
       prompt: displayText(
         "buttplug.io is enabled, but server could not be contacted at $toySyncAddress. Is Intiface Desktop running? Is another client connected to it?",
