@@ -19,20 +19,20 @@
     "dexie": "^4.0.11"
   },
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
-    "@stylistic/eslint-plugin": "^5.0.0",
+    "@eslint/js": "^9.30.0",
+    "@stylistic/eslint-plugin": "^5.1.0",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
-    "@types/node": "^24.0.4",
-    "@typescript/native-preview": "^7.0.0-dev.20250626.1",
+    "@types/node": "^24.0.8",
+    "@typescript/native-preview": "^7.0.0-dev.20250701.1",
     "bc-stubs": "^117.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
-    "eslint": "^9.29.0",
-    "globals": "^16.2.0",
-    "rolldown": "^1.0.0-beta.20",
+    "eslint": "^9.30.0",
+    "globals": "^16.3.0",
+    "rolldown": "^1.0.0-beta.23",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.35.0",
-    "ws": "^8.18.2"
+    "typescript-eslint": "^8.35.1",
+    "ws": "8.17.1"
   },
   "overrides": {
     "bc-stubs": {
