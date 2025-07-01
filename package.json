@@ -32,7 +32,7 @@
     "rolldown": "^1.0.0-beta.23",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.35.1",
-    "ws": "8.17.1"
+    "ws": "8.18.3"
   },
   "overrides": {
     "bc-stubs": {
