@@ -24,15 +24,15 @@
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
     "@types/node": "^24.0.10",
-    "@typescript/native-preview": "^7.0.0-dev.20250703.1",
-    "bc-stubs": "^117.0.1",
+    "@typescript/native-preview": "^7.0.0-dev.20250708.1",
+    "bc-stubs": "^118.0.0-Beta.1",
     "bondage-club-mod-sdk": "^1.2.0",
     "eslint": "^9.30.1",
     "globals": "^16.3.0",
-    "rolldown": "^1.0.0-beta.23",
+    "rolldown": "^1.0.0-beta.24",
     "socket.io-client": "4.8.1",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.35.1"
+    "typescript-eslint": "^8.36.0"
   },
   "overrides": {
     "bc-stubs": {
