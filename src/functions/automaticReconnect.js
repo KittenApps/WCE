@@ -142,7 +142,7 @@ export default async function automaticReconnect() {
         if (Object.keys(loginData.passwords).length > 0) {
           DrawText(displayText("Saved Logins (WCE)"), 170, 35, "White", "Black");
         }
-        DrawButton(1250, 387, 180, 50, displayText("Save (WCE)"), "White");
+        DrawButton(1251, 390, 180, 50, displayText("Save (WCE)"), "White");
 
         let y = 60;
         for (const user in loginData.passwords) {

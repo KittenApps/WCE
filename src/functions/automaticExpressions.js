@@ -890,7 +890,7 @@ export default async function automaticExpressions() {
           Appearance: ServerAppearanceBundle(Player.Appearance),
         });
 
-        if (desiredExpression[t].Duration < 0) {
+        if (desiredExpression[t].Duration < 0 && desiredExpression[t].Expression !== "Closed") {
           refreshExpressionScreen = true;
           Player.ActiveExpression.setWithoutReload(/** @type {ExpressionGroupName} */(t), desiredExpression[t].Expression);
         }
