@@ -9,7 +9,7 @@ export default function numericArousalMeters(): void {
     HOOK_PRIORITIES.Observe,
     (args, next) => {
       const [C] = args;
-      isExpanded = !!C.ArousalZoom;
+      isExpanded = C.ArousalZoom ?? false;
       const progressTimer = C.ArousalSettings?.ProgressTimer ?? 0;
       const activityGoing = progressTimer > 0;
       const vibratorLevel = C.ArousalSettings?.VibratorLevel ?? 0;

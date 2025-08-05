@@ -54,7 +54,7 @@ export function sendHello(target: number | null = null, requestReply = false): v
     message: {
       type: MESSAGE_TYPES.Hello,
       version: FBC_VERSION,
-      alternateArousal: !!fbcSettings.alternateArousal,
+      alternateArousal: fbcSettings.alternateArousal ?? false,
       replyRequested: requestReply,
       capabilities,
     },

@@ -23,16 +23,16 @@
     "@stylistic/eslint-plugin": "^5.2.2",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
-    "@types/node": "^24.1.0",
-    "@typescript/native-preview": "^7.0.0-dev.20250801.1",
+    "@types/node": "^24.2.0",
+    "@typescript/native-preview": "^7.0.0-dev.20250805.1",
     "bc-stubs": "^118.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
     "eslint": "^9.32.0",
     "globals": "^16.3.0",
-    "rolldown": "^1.0.0-beta.30",
+    "rolldown": "^1.0.0-beta.31",
     "socket.io-client": "4.8.1",
-    "typescript": "~5.8.3",
-    "typescript-eslint": "^8.38.0"
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.39.0"
   },
   "overrides": {
     "bc-stubs": {

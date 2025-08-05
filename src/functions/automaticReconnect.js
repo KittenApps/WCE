@@ -48,7 +48,7 @@ export default async function automaticReconnect() {
       }
       return accs;
     }
-    /** @type {{auth: Uint8Array; iv: Uint8Array; data: Uint8Array;}} */
+    /** @type {{auth: ArrayBuffer; iv: ArrayBuffer ; data: ArrayBuffer ;}} */
     const res = await accTable.get({ id: 1 });
     if (!res) return {};
     const { auth, iv, data } = res;

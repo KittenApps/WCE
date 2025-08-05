@@ -34,7 +34,7 @@ export default async function automaticExpressions() {
    * @returns {boolean}
    */
   function animationEngineEnabled() {
-    return !!fbcSettings.animationEngine;
+    return fbcSettings.animationEngine ?? false;
   }
   globalThis.bceAnimationEngineEnabled = animationEngineEnabled;
 
