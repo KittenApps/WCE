@@ -1,7 +1,7 @@
 import { SDK, HOOK_PRIORITIES } from "./util/modding";
 import { debug, logError } from "./util/logger";
 import { fbcSettings, postSettings, bceLoadSettings } from "./util/settings";
-import functionIntegrityCheck from "./functions/functionIntegrityCheck";
+// import functionIntegrityCheck from "./functions/functionIntegrityCheck";
 import wceStyles from "./functions/wceStyles";
 import commonPatches from "./functions/commonPatches";
 import commands from "./functions/commands";
@@ -107,7 +107,8 @@ export async function registerAllFunctions(): Promise<void> {
     }
   );
 
-  await Promise.all([registerFunction(functionIntegrityCheck, "functionIntegrityCheck"), fetchLocale(TranslationLanguage)]);
+  // await Promise.all([registerFunction(functionIntegrityCheck, "functionIntegrityCheck"), fetchLocale(TranslationLanguage)]);
+  await fetchLocale(TranslationLanguage);
   registerFunction(wceStyles, "wceStyles");
   registerFunction(commonPatches, "commonPatches");
   registerFunction(extendedWardrobe, "extendedWardrobe");
