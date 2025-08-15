@@ -1,14 +1,14 @@
-export const FBC_VERSION = "6.3.12";
+export const FBC_VERSION = "6.3.13";
 export const settingsVersion = 63.9;
-export const SUPPORTED_GAME_VERSIONS = ["R115", "R116", "R117"];
+export const SUPPORTED_GAME_VERSIONS = ["R115", "R116", "R117", "R118", "R119"];
 
-export const fbcChangelog = `WCE v6.3.12
-* BC R117 compatibility and other fixes
-* improved extended wardrobe safety (let's you choose when to overwrite data)
-* new imporved build system
+export const fbcChangelog = `WCE v6.3.13
+* BC R119 compatibility and other fixes
 
 WCE v6.3
 * configure layer hiding in layering menus
+* improved extended wardrobe safety (let's you choose when to overwrite data)
+* new imporved build system
 
 WCE v6.2
 * WCE 6.2 is a fork of the old FBC 5.8 and tries to bring all it's amazing features back
