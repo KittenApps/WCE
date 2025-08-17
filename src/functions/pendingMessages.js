@@ -27,10 +27,10 @@ export default function pendingMessages() {
       const ret = next(args);
       if (fbcSettings.pendingMessages && args?.length && isChatMessage(args[0]) && Array.isArray(args[0].Dictionary)) {
         const [message] = args;
-        // @ts-ignore - custom dictionary Tag
+        // @ts-expect-error - custom dictionary Tag
         const tag = message.Dictionary?.find?.(d => d.Tag === "fbc_nonce");
         if (tag) {
-          // @ts-ignore - custom dictionary Tag
+          // @ts-expect-error - custom dictionary Tag
           document.querySelector(`[data-nonce='${tag.Text}']`)?.remove();
         }
       }
@@ -52,7 +52,7 @@ export default function pendingMessages() {
       ) {
         nonce++;
         if (nonce >= Number.MAX_SAFE_INTEGER) nonce = 0;
-        // @ts-ignore - custom dictionary Tag
+        // @ts-expect-error - custom dictionary Tag
         args[1].Dictionary = addToDictionary(args[1].Dictionary, "fbc_nonce", nonce);
         const div = document.createElement("div");
         div.classList.add("ChatMessage", "bce-pending");

@@ -64,7 +64,6 @@ export default async function layeringMenu(): Promise<void> {
                 const hideForm: HTMLFormElement = document.getElementById("layering-wce-hide-div") as HTMLFormElement;
                 Layering.Item.Property.wceOverrideHide = new FormData(hideForm).getAll("checkbox-hide") as AssetGroupName[];
                 if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
-                // eslint-disable-next-line no-underscore-dangle
                 Layering._CharacterRefresh(Layering.Character, false, false);
               },
               { value: h, disabled: Layering.Readonly, checked: overrideItemHide.includes(h) },
@@ -206,7 +205,7 @@ export default async function layeringMenu(): Promise<void> {
       ) {
         const focusItem = InventoryGet(C, C.FocusGroup.Name);
         if (assetWorn(C, focusItem) && colorCopyableAssets.includes(focusItem.Asset.Name)) {
-          // @ts-ignore
+          // @ts-expect-error
           DialogMenuButton.push("Paint");
         }
       }
@@ -234,7 +233,7 @@ export default async function layeringMenu(): Promise<void> {
         for (let I = 0; I < DialogMenuButton.length; I++) {
           if (MouseIn(1885 - I * 110, 15, 90, 90)) {
             const button = DialogMenuButton[I];
-            // @ts-ignore
+            // @ts-expect-error
             if (Item && button === "Paint") {
               copyColors(C, Item);
               return false;

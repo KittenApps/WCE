@@ -1,8 +1,10 @@
 import { logWarn, logError } from "./logger";
 
 export function sleep(ms: number): Promise<number> {
-  // eslint-disable-next-line no-promise-executor-return
-  return new Promise(resolve => window.setTimeout(resolve, ms));
+  // oxlint-disable-next-line avoid-new
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 }
 
 export async function waitFor(func: () => boolean, cancelFunc: () => boolean = () => false): Promise<boolean> {

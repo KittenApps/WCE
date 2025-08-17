@@ -6,9 +6,12 @@
     "start": "rolldown --watch -c & npx -y http-server@latest ./dist -p 4000 -c-1 --cors & npm run serve:bc",
     "build": "rolldown -c",
     "test": "npm run typecheck ; npm run lint",
+    "test2": "npm run tsnative ; npm run oxlint",
     "typecheck": "tsc",
     "tsnative": "tsgo",
     "lint": "eslint ./src",
+    "oxlint": "oxlint --type-aware",
+    "oxlint2": "oxlint --type-aware --report-unused-disable-directives",
     "serve": "npm run serve:wce & npm run serve:bc",
     "serve:wce": "npm run build && npx -y http-server@latest ./dist -p 4000 -c-1 --cors",
     "serve:bc": "npx -y http-server@latest ../Bondage-College/BondageClub -s -p 3000 -c-1 --cors",
@@ -16,7 +19,7 @@
   },
   "dependencies": {
     "buttplug": "^3.2.2",
-    "dexie": "^4.0.11"
+    "dexie": "^4.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
@@ -24,12 +27,14 @@
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
     "@types/node": "^24.3.0",
-    "@typescript/native-preview": "^7.0.0-dev.20250816.1",
+    "@typescript/native-preview": "^7.0.0-dev.20250818.1",
     "bc-stubs": "^119.0.0-Beta.1",
     "bondage-club-mod-sdk": "^1.2.0",
     "eslint": "^9.33.0",
     "globals": "^16.3.0",
-    "rolldown": "^1.0.0-beta.32",
+    "oxlint": "^1.12.0",
+    "oxlint-tsgolint": "^0.0.4",
+    "rolldown": "^1.0.0-beta.33",
     "socket.io-client": "4.8.1",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.39.1"

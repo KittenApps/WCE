@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { waitFor } from "../util/utils";
 import type { BCX_ModAPI } from "../../types/bcxExternalInterface";
 

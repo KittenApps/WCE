@@ -18,7 +18,7 @@ export default async function pastProfiles() {
 
   ElementCreateTextArea("bceNoteInput");
   /** @type {HTMLTextAreaElement} */
-  // @ts-ignore
+  // @ts-expect-error
   const noteInput = document.getElementById("bceNoteInput");
   noteInput.maxLength = 10000;
   noteInput.classList.add("bce-hidden");
@@ -350,9 +350,7 @@ export default async function pastProfiles() {
           hideNoteInput();
         }
         return;
-      } else if (!inNotes && MouseIn(1620, 60, 90, 90)) {
-        showNoteInput();
-      }
+      } else if (!inNotes && MouseIn(1620, 60, 90, 90)) showNoteInput();
       next(args);
     }
   );

@@ -1,0 +1,64 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["import", "jsdoc", "promise"],
+  "ignorePatterns": ["*.d.ts"],
+  "categories": {
+     "correctness": "error",
+      "suspicious": "warn",
+      "pedantic": "warn",
+      "perf": "warn",
+      "style": "warn",
+      "restriction": "warn",
+      "nursery": "warn"
+  },
+  "env": { "browser": true },
+  "rules": {
+    "eslint/curly": "off",
+    "eslint/func-style": ["error", "declaration"],
+    "eslint/id-length": ["warn", { "min": 1 }],
+    "eslint/init-declarations": "off",
+    "eslint/max-depth": ["warn", 10],
+    "eslint/max-lines": "off",
+    "eslint/max-lines-per-function": "off",
+    "eslint/max-nested-callbacks": ["error", 10],
+    "eslint/max-params": ["warn", 6],
+    "eslint/new-cap": "off",
+    "eslint/no-bitwise": ["error", { "int32Hint": true }],
+    "eslint/no-console": "off",
+    "eslint/no-continue": "off",
+    "eslint/no-labels": "off",
+    "eslint/no-magic-numbers": "off",
+    "eslint/no-negated-condition": "off",
+    "eslint/no-plusplus": "off",
+    "eslint/no-ternary": "off",
+    "eslint/no-undef": "off",
+    "eslint/radix": ["warn", "as-needed"],
+    "eslint/sort-imports": "off",
+    "eslint/sort-keys": "off",
+    "eslint/yoda": ["warn", "never"],
+    "import/consistent-type-specifier-style": "off",
+    "import/exports-last": "off",
+    "import/group-exports": "off",
+    "import/max-dependencies": "off",
+    "import/no-cycle": "off",
+    "import/no-default-export": "off",
+    "import/no-mutable-exports": "off",
+    "jsdoc/require-param-description": "off",
+    "jsdoc/require-returns-description": "off",
+    "promise/catch-or-return": "off",
+    "promise/no-nesting": "off",
+    "promise/prefer-await-to-then": "off",
+    "typescript/ban-ts-comment": "off"
+  },
+  "overrides": [
+    {
+      "files": ["rolldown.config.js", "loaderBuilder.js", "eslint.config.js"],
+      "env": { "node": true },
+      "rules": {
+        "eslint/no-nested-ternary": "off",
+        "eslint/no-undefined": "off",
+        "import/no-anonymous-default-export": "off"
+      }
+    }
+  ]
+}

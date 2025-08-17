@@ -105,9 +105,9 @@ export default async function privateWardrobe() {
       const playerBackup = Player;
       // Replace Player with target character in rendering
       if (inCustomWardrobe) {
-        // @ts-ignore - explicitly overriding with another Character temporarily
+        // @ts-expect-error - explicitly overriding with another Character temporarily
         Player = targetCharacter;
-        // @ts-ignore
+        // @ts-expect-error
         Player.VisualSettings = { ForceFullHeight: false };
         // work around missing null checks in echo-clothing-ext
         Player.Canvas = playerBackup.Canvas;

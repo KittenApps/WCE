@@ -99,9 +99,7 @@ export async function registerAllFunctions(): Promise<void> {
   SDK.hookFunction(
     "GameRunBackground",
     HOOK_PRIORITIES.Top,
-    /**
-     * @param {Parameters<typeof GameRunBackground>} args
-     */ (args, next) => {
+    (args, next) => {
       if (funcsRegistered === "disable") return null;
       return next(args);
     }

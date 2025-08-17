@@ -23,7 +23,6 @@ globalThis.fbcChatNotify = fbcChatNotify;
 globalThis.fbcSendAction = fbcSendAction;
 globalThis.fbcSettingValue = fbcSettingValue;
 // Expressions init method for custom expressions (here to not break customizer script)
-// eslint-disable-next-line camelcase
 globalThis.bce_initializeDefaultExpression = () => null;
 globalThis.fbcDebug = fbcDebug;
 

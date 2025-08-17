@@ -1,18 +1,16 @@
 export default class LoaderBuilder {
-  #onlineMatch = `// @match https://bondageprojects.elementfx.com/*
+  constructor() {
+    this.isLocal = !process.env.NETLIFY;
+    this.matchBlock = this.isLocal ? '// @match http://localhost:*/*' : `// @match https://bondageprojects.elementfx.com/*
 // @match https://www.bondageprojects.elementfx.com/*
 // @match https://bondage-europe.com/*
 // @match https://www.bondage-europe.com/*
 // @match https://bondageprojects.com/*
 // @match https://www.bondageprojects.com/*`;
-  #localMatch = '// @match http://localhost:*/*'
-
-  constructor() {
-    this.isLocal = !process.env.NETLIFY;
     this.isBranch = !this.isLocal && process.env.BRANCH === 'main' || process.env.BRANCH === 'beta';
     this.branch = process.env.BRANCH;
     this.pr = process.env.REVIEW_ID;
-    this.label = this.isLocal ? 'local ' : (this.branch === 'main' ? '' : (this.branch.startsWith('pull/') ? `PR #${this.pr}` : this.branch) + ' ');
+    this.label = this.isLocal ? 'local ' : (this.branch === 'main' ? '' : `${this.branch.startsWith('pull/') ? `PR #${this.pr}` : this.branch} `);
     this.URL = this.isLocal ? 'http://localhost:4000' : (process.env.CONTEXT === 'production' ? process.env.URL : process.env.DEPLOY_PRIME_URL);
   }
 
@@ -24,7 +22,7 @@ export default class LoaderBuilder {
 // @description Wholesome Club Extensions (WCE) - enhancements for the bondage club - fork of FBC 5.8
 // @author Sidious, Stella
 // @supportURL https://github.com/KittenApps/WCE
-${this.isLocal ? this.#localMatch : this.#onlineMatch}
+${this.matchBlock}
 // @icon https://wce-docs.vercel.app/img/logo.png
 // @grant none
 // @run-at document-end
@@ -55,8 +53,8 @@ document.head.appendChild(dexiePreloadLink);
 
 delete fusam.enabledDistributions.FBC;
 localStorage.setItem("fusam.settings", JSON.stringify(fusam));`;
-    } else {
-      return `${this.getUserScriptMeta(true)}
+    }
+    return `${this.getUserScriptMeta(true)}
 
 import(\`https://sidiousious.gitlab.io/bc-addon-loader/fusam.js?v=\${(Date.now()/10000).toFixed(0)}\`).then(() => import("${this.URL}/wce.js"));
 
@@ -75,7 +73,6 @@ fusam.enabledDistributions ??= {};
 delete fusam.enabledDistributions.WCE;
 delete fusam.enabledDistributions.FBC;
 localStorage.setItem("fusam.settings", JSON.stringify(fusam));`;
-    }
   }
 
   generateStandaloneLoader() {

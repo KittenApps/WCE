@@ -1,6 +1,6 @@
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { waitFor } from "../util/utils";
-import { debug, logWarn } from "../util/logger";
+import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, settingsLoaded } from "../util/settings";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 import { bceStartClubSlave } from "./forcedClubSlave";
@@ -70,7 +70,7 @@ export function sendHello(target: number | null = null, requestReply = false): v
     fbcMessage.message.otherAddons = bcModSdk.getModsInfo();
   }
 
-  // @ts-ignore - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
+  // @ts-expect-error - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
   message.Dictionary.push(fbcMessage);
   ServerSend("ChatRoomChat", message);
 }
@@ -118,6 +118,8 @@ export default async function hiddenMessageHandler(): Promise<void> {
           bceStartClubSlave();
         }
         break;
+      default:
+        logError("Invalid BCE message type detected: ", message.type);
     }
   }
 
