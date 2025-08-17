@@ -110,8 +110,8 @@ export default async function privateWardrobe() {
         // @ts-ignore
         Player.VisualSettings = { ForceFullHeight: false };
         // work around missing null checks in echo-clothing-ext
-        Player.Canvas = document.createElement("canvas");
-        Player.CanvasBlink = Player.Canvas;
+        Player.Canvas = playerBackup.Canvas;
+        Player.CanvasBlink = playerBackup.CanvasBlink;
       }
       const ret = next(args);
       if (inCustomWardrobe) {
