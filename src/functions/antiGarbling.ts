@@ -87,7 +87,7 @@ export default function antiGarbling(): void {
 
   /**
    * Reset the WCE chat button state (and tooltips) to match the players `fbcSettings`
-   * @param id - The ID of the to-be updated button; update all buttons if ommited
+   * @param {string | undefined} id - The ID of the to-be updated button; update all buttons if ommited
    */
   function resetChatButtonStates(id?: string) {
     type AntiGarbleKeys = "antiGarbleChatBabyTalk" | "antiGarbleWhisperBabyTalk" | "antiGarbleChatStutter" | "antiGarbleWhisperStutter";
@@ -123,7 +123,7 @@ export default function antiGarbling(): void {
     }
   }
 
-  /** Set or remove the .wce-whisper css class on all WCE chat room buttoms and update their tooltip */
+  // Set or remove the .wce-whisper css class on all WCE chat room buttoms and update their tooltip
   function whisperUpdate(isWhisper: boolean) {
     const div = document.getElementById("chat-room-buttons") as null | HTMLDivElement;
     if (!div) return;
@@ -136,7 +136,7 @@ export default function antiGarbling(): void {
     }
   }
 
-  createChatOptions = function(div: HTMLDivElement) {
+  createChatOptions = (div: HTMLDivElement) => {
     // Only add the WCE chat room buttons if they do not yet exist
     const buttonGrid: null | HTMLDivElement = div?.querySelector("#chat-room-buttons");
     if (buttonGrid && !buttonGrid.querySelector(".wce-chat-room-button")) {

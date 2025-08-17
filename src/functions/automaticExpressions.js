@@ -339,6 +339,7 @@ export default async function automaticExpressions() {
 
   /**
    * @param {AssetPoseName} pose
+   * @returns {keyof AssetPoseMap}
    */
   function getPoseCategory(pose) {
     return PoseFemale3DCG.find(a => a.Name === pose)?.Category;
@@ -550,12 +551,9 @@ export default async function automaticExpressions() {
     }
 
     // Ensure none of the expressions have remove timers on them; we handle timers here
-    Player.Appearance.filter(a => faceComponents.includes(a.Asset.Group.Name) && a.Property?.RemoveTimer).forEach(
-      (a) => {
-        // @ts-ignore - a.Property cannot be undefined due to filter above
-        delete a.Property.RemoveTimer;
-      }
-    );
+    Player.Appearance.filter(a => faceComponents.includes(a.Asset.Group.Name) && a.Property?.RemoveTimer).forEach((a) => {
+      delete a.Property.RemoveTimer;
+    });
 
     if (!Player.ArousalSettings) {
       logWarn("Player.ArousalSettings is not defined");
@@ -691,7 +689,6 @@ export default async function automaticExpressions() {
                         idx = 0;
                       }
                       trySetNextExpression(bceExpressionModifierMap[t][idx], exp, next, t);
-                      // @ts-ignore - not undefined, ts is a derp
                       bceExpressionsQueue[j].Expression[t][i].Applied = true;
                     } else {
                       // Prevent being overridden by other expressions while also not applying a change
@@ -859,7 +856,6 @@ export default async function automaticExpressions() {
           Type: AUTOMATED_AROUSAL_EVENT_TYPE,
           Duration: -1,
           Priority: 0,
-          // @ts-ignore
           Expression: e,
         });
       }
@@ -884,7 +880,6 @@ export default async function automaticExpressions() {
         }
         setExpression(t, desiredExpression[t].Expression ?? null, desiredExpression[t].Color);
         ServerSend("ChatRoomCharacterExpressionUpdate", {
-          // @ts-ignore - null is a valid name, mistake in BC-stubs
           Name: desiredExpression[t].Expression ?? null,
           Group: t,
           Appearance: ServerAppearanceBundle(Player.Appearance),

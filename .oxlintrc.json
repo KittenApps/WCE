@@ -1,0 +1,69 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["import", "jsdoc", "promise"],
+  "ignorePatterns": ["*.d.ts"],
+  "categories": {
+     "correctness": "error",
+      "suspicious": "warn",
+      "pedantic": "warn",
+      "perf": "warn",
+      "style": "warn",
+      "restriction": "warn",
+      "nursery": "warn"
+  },
+  "env": { "browser": true },
+  "rules": {
+    "eslint/max-depth": ["warn", 10],
+    "eslint/max-lines-per-function": "off",
+    "eslint/max-nested-callbacks": ["error", 10],
+    "eslint/max-lines": "off",
+    "eslint/no-negated-condition": "off",
+    "eslint/radix": ["warn", "as-needed"],
+    "typescript/ban-ts-comment": "off",
+    "import/max-dependencies": "off",
+    "jsdoc/require-returns-description": "off",
+    "jsdoc/require-param-description": "off",
+    "eslint/no-ternary": "off",
+    "promise/prefer-await-to-then": "off",
+    "eslint/sort-keys": "off",
+    "eslint/sort-imports":"off",
+    "import/group-exports": "off",
+    "eslint/yoda": ["warn", "never"],
+    "eslint/func-style": ["error", "declaration"],
+    "eslint/no-magic-numbers": "off",
+    "eslint/no-continue": "off",
+    "import/exports-last": "off",
+    "eslint/no-labels": "off",
+    "eslint/max-params": ["warn", 6],
+    "import/consistent-type-specifier-style": "off",
+    "eslint/curly": "off",
+    "promise/no-nesting": "off",
+    "import/no-mutable-exports": "off",
+    "eslint/init-declarations": "off",
+    "import/no-default-export": "off",
+    "eslint/no-plusplus": "off",
+    "import/no-cycle": "off",
+    "eslint/no-console": "off",
+    "promise/catch-or-return": "off",
+    "eslint/no-bitwise": ["error", { "int32Hint": true }],
+    "eslint/no-undef": "off",
+    "eslint/id-length": ["warn", { "min": 1 }],
+    "eslint/new-cap": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "rolldown.config.js",
+        "loaderBuilder.js",
+        "eslint.config.js"
+      ],
+      "env": { "node": true },
+      "rules": {
+        "eslint/no-nested-ternary": "off",
+        "eslint/no-undefined": "off",
+        "import/no-anonymous-default-export": "off"
+
+      }
+    }
+  ]
+}

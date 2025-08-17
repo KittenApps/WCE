@@ -1,7 +1,8 @@
+/* eslint-disable no-promise-executor-return */
 import { logWarn, logError } from "./logger";
 
 export function sleep(ms: number): Promise<number> {
-  // eslint-disable-next-line no-promise-executor-return
+  // oxlint-disable-next-line avoid-new
   return new Promise(resolve => window.setTimeout(resolve, ms));
 }
 

@@ -23,7 +23,10 @@ async function saveLocalWardrobe(wardrobe: ServerItemBundle[][]): Promise<void> 
   await localWardrobeTable.bulkPut(wardrobe.map((appearance, id) => ({ id, appearance })));
 }
 
-/** Convert old {@link ItemProperties.Type} remnants into {@link ItemProperties.TypeRecord} in the passed item bundles. */
+/** Convert old {@link ItemProperties.Type} remnants into {@link ItemProperties.TypeRecord} in the passed item bundles.
+ * @param {ItemBundle[]} bundleList
+ * @returns {ItemBundle[]}
+ */
 function sanitizeBundles(bundleList: ItemBundle[]): ItemBundle[] {
   if (!Array.isArray(bundleList)) return bundleList;
   return bundleList.map((bundle) => {

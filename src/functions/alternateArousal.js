@@ -90,7 +90,7 @@ export default async function alternateArousal() {
           Content: BCE_MSG,
           Dictionary: [
             {
-              // @ts-ignore - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
+              // @ts-expect-error - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
               message: {
                 type: MESSAGE_TYPES.ArousalSync,
                 version: FBC_VERSION,

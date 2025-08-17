@@ -14,7 +14,7 @@ export default function confirmLeave() {
       }
       if (fbcSettings.confirmLeave) {
         e.preventDefault();
-        // @ts-ignore - TS thinks it's private, pffft we don't respect that
+        // @ts-expect-error - TS thinks it's private, pffft we don't respect that
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         ServerSocket.io.disconnect();
         CommonSetScreen("Character", "Relog");

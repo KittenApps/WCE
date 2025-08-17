@@ -77,7 +77,7 @@ declare global {
   }
 }
 
-// @ts-ignore -- this is fully initialized in loadSettings
+// @ts-expect-error -- this is fully initialized in loadSettings
 export let fbcSettings: { [Property in keyof (typeof defaultSettings)]: (typeof defaultSettings)[Property]["value"] } & { version: number } = {};
 let postSettingsHasRun = false;
 
