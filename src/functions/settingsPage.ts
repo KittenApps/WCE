@@ -256,7 +256,7 @@ export default async function settingsPage(): Promise<void> {
     }
     ctx.textAlign = "center";
   }
-  // eslint-disable-next-line complexity
+
   function PreferenceSubscreenBCESettingsClick() {
     let y = settingsYStart;
     if (MouseIn(1815, 75, 90, 90)) {

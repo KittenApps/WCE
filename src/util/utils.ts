@@ -1,9 +1,10 @@
-/* eslint-disable no-promise-executor-return */
 import { logWarn, logError } from "./logger";
 
 export function sleep(ms: number): Promise<number> {
   // oxlint-disable-next-line avoid-new
-  return new Promise(resolve => window.setTimeout(resolve, ms));
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 }
 
 export async function waitFor(func: () => boolean, cancelFunc: () => boolean = () => false): Promise<boolean> {

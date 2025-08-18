@@ -134,7 +134,6 @@ export default function instantMessenger() {
    * @param {Date} createdAt
    * @returns {void}
    */
-  // eslint-disable-next-line complexity
   function addMessage(friendId, sent, beep, skipHistory, createdAt) {
     const friend = friendMessages.get(friendId);
     if (!friend || beep.BeepType) {

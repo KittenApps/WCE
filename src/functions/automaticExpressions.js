@@ -51,10 +51,7 @@ export default async function automaticExpressions() {
     }
   );
 
-  if (!globalThis.bce_ArousalExpressionStages) {
-    // eslint-disable-next-line camelcase
-    globalThis.bce_ArousalExpressionStages = ArousalExpressionStages;
-  }
+  if (!globalThis.bce_ArousalExpressionStages) globalThis.bce_ArousalExpressionStages = ArousalExpressionStages;
 
   /** @type {{[key: string]: ExpressionName[]}} */
   const bceExpressionModifierMap = Object.freeze({ Blush: [null, "Low", "Medium", "High", "VeryHigh", "Extreme"] });
@@ -137,15 +134,8 @@ export default async function automaticExpressions() {
   }
   globalThis.fbcPushEvent = pushEvent;
 
-  if (!globalThis.bce_EventExpressions) {
-    // eslint-disable-next-line camelcase
-    globalThis.bce_EventExpressions = EventExpressions;
-  }
-
-  if (!globalThis.bce_ActivityTriggers) {
-    // eslint-disable-next-line camelcase
-    globalThis.bce_ActivityTriggers = ActivityTriggers;
-  }
+  if (!globalThis.bce_EventExpressions) globalThis.bce_EventExpressions = EventExpressions;
+  if (!globalThis.bce_ActivityTriggers) globalThis.bce_ActivityTriggers = ActivityTriggers;
 
   /**
    * @param {ChatMessageDictionary} [dict]
@@ -434,7 +424,6 @@ export default async function automaticExpressions() {
     "CharacterSetFacialExpression",
     HOOK_PRIORITIES.OverrideBehaviour,
     (args, next) => {
-      // eslint-disable-next-line prefer-const
       let [C, AssetGroup, Expression, Timer, Color] = args;
       if (
         !isCharacter(C) ||
@@ -544,7 +533,6 @@ export default async function automaticExpressions() {
   resetExpressionQueue([MANUAL_OVERRIDE_EVENT_TYPE, GAME_TIMED_EVENT_TYPE]);
 
   // This is called once per interval to check for expression changes
-  // eslint-disable-next-line complexity
   function CustomArousalExpression() {
     if (!fbcSettings.animationEngine || !Player?.AppearanceLayers) {
       return;
@@ -786,18 +774,15 @@ export default async function automaticExpressions() {
         for (let k = 0; k < qPoses.length; k++) {
           const pose = qPoses[k];
           const poseList = pose.Pose;
-          const desiredIsNewerAndInfinite = poseList.every(
-            // eslint-disable-next-line no-loop-func
-            (p) => {
-              const category = getPoseCategory(p);
-              return (
-                !!category &&
-                desiredPose[category]?.Duration < 0 &&
-                desiredPose[category]?.Id > mustNum(pose.Id) &&
-                (desiredPose[category]?.Type === MANUAL_OVERRIDE_EVENT_TYPE || bceExpressionsQueue[j].Type !== MANUAL_OVERRIDE_EVENT_TYPE)
-              );
-            }
-          );
+          const desiredIsNewerAndInfinite = poseList.every((p) => {
+            const category = getPoseCategory(p);
+            return (
+              !!category &&
+              desiredPose[category]?.Duration < 0 &&
+              desiredPose[category]?.Id > mustNum(pose.Id) &&
+              (desiredPose[category]?.Type === MANUAL_OVERRIDE_EVENT_TYPE || bceExpressionsQueue[j].Type !== MANUAL_OVERRIDE_EVENT_TYPE)
+            );
+          });
           if (pose.Duration < 0 && desiredIsNewerAndInfinite) {
             qPoses.splice(k, 1);
             k--;
