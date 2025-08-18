@@ -370,7 +370,7 @@ export default async function automaticExpressions() {
         const categories = [...new Set(PoseFemale3DCG.map(a => a.Category))];
         for (const category of categories) {
           const list = PoseFemale3DCG.filter(a => a.Category === category)?.map(a => a.Name);
-          list.sort();
+          list.sort((a, b) => a.localeCompare(b));
           fbcChatNotify(`=> ${category}:\n${list.join("\n")}\n\n`);
         }
         return;

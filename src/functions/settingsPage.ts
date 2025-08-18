@@ -62,6 +62,7 @@ export default async function settingsPage(): Promise<void> {
 
   const scanButtonPosition = [1650, 225, 150, 50] as const;
 
+  // oxlint-disable-next-line explicit-function-return-type
   function currentDefaultSettings(category: SettingsCategory) {
     return Object.entries(defaultSettings).filter(([k, v]) => v.category === category && k !== "buttplugDevices");
   }
@@ -257,7 +258,7 @@ export default async function settingsPage(): Promise<void> {
     ctx.textAlign = "center";
   }
 
-  function PreferenceSubscreenBCESettingsClick() {
+  function PreferenceSubscreenBCESettingsClick(): void {
     let y = settingsYStart;
     if (MouseIn(1815, 75, 90, 90)) {
       if (currentCategory === null) {
