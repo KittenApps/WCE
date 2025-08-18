@@ -24,7 +24,7 @@ SDK.hookFunction(
   }
 );
 
-export function fbcBeepNotify(title: string, text: string) {
+export function fbcBeepNotify(title: string, text: string): void {
   SDK.callOriginal("ServerAccountBeep", [
     {
       MemberNumber: Player.MemberNumber || -1,

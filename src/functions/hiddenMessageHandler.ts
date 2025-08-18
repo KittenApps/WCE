@@ -4,12 +4,13 @@ import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, settingsLoaded } from "../util/settings";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 import { bceStartClubSlave } from "./forcedClubSlave";
+import type { ModSDKModInfo } from "bondage-club-mod-sdk";
 
 type BCECapabilities = "clubslave" | "layeringHide" | "preventLayeringByOthers";
 declare global {
   interface Character {
     FBC: string;
-    FBCOtherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
+    FBCOtherAddons?: readonly ModSDKModInfo[];
     BCEArousal: boolean;
     BCECapabilities: readonly BCECapabilities[];
     BCEArousalProgress: number;
@@ -35,7 +36,7 @@ interface BCEMessage {
   progress?: number;
   enjoyment?: number;
   activity?: "ClubSlavery";
-  otherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
+  otherAddons?: readonly ModSDKModInfo[];
 }
 
 export function sendHello(target: number | null = null, requestReply = false): void {
@@ -123,7 +124,7 @@ export default async function hiddenMessageHandler(): Promise<void> {
     }
   }
 
-  function processHello(sender: Character, message: Partial<BCEMessage>) {
+  function processHello(sender: Character, message: Partial<BCEMessage>): void {
     sender.FBC = message.version ?? "0.0";
     sender.BCEArousal = message.alternateArousal || false;
     sender.BCEArousalProgress = message.progress || sender.ArousalSettings?.Progress || 0;

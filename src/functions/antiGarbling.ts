@@ -61,7 +61,7 @@ export default function antiGarbling(): void {
   const effectOptions = defaultSettings.antiGarbleChatBabyTalk.options;
 
   /** Click listener for managing the baby talk button. */
-  function BabyTalkOnClick(this: HTMLButtonElement) {
+  function BabyTalkOnClick(this: HTMLButtonElement): void {
     if (this.disabled || this.getAttribute("aria-disabled") === "true") return;
     const key = this.parentElement.classList.contains("wce-whisper") ? "antiGarbleWhisperBabyTalk" : "antiGarbleChatBabyTalk";
     const idx = effectOptions.indexOf(fbcSettings[key]);
@@ -70,7 +70,7 @@ export default function antiGarbling(): void {
   }
 
   /** Click listener for managing the stutter button. */
-  function StutterOnClick(this: HTMLButtonElement) {
+  function StutterOnClick(this: HTMLButtonElement): void {
     if (this.disabled || this.getAttribute("aria-disabled") === "true") return;
     const key = this.parentElement.classList.contains("wce-whisper") ? "antiGarbleWhisperStutter" : "antiGarbleChatStutter";
     const idx = effectOptions.indexOf(fbcSettings[key]);
@@ -79,7 +79,7 @@ export default function antiGarbling(): void {
   }
 
   /** Change listener for managing the garble level select. */
-  function GarbleOnChange(this: HTMLSelectElement) {
+  function GarbleOnChange(this: HTMLSelectElement): void {
     const key = this.parentElement.parentElement.classList.contains("wce-whisper") ? "antiGarbleWhisperLevel" : "antiGarbleChatLevel";
     fbcSettings[key] = this.value;
     resetChatButtonStates();
@@ -89,7 +89,7 @@ export default function antiGarbling(): void {
    * Reset the WCE chat button state (and tooltips) to match the players `fbcSettings`
    * @param {string | undefined} id - The ID of the to-be updated button; update all buttons if ommited
    */
-  function resetChatButtonStates(id?: string) {
+  function resetChatButtonStates(id?: string): void {
     type AntiGarbleKeys = "antiGarbleChatBabyTalk" | "antiGarbleWhisperBabyTalk" | "antiGarbleChatStutter" | "antiGarbleWhisperStutter";
     const buttons: Record<string, { state: AntiGarbleKeys; whisperState: AntiGarbleKeys }> = {
       "wce-chat-baby-talk": { state: "antiGarbleChatBabyTalk", whisperState: "antiGarbleWhisperBabyTalk" },
@@ -124,7 +124,7 @@ export default function antiGarbling(): void {
   }
 
   // Set or remove the .wce-whisper css class on all WCE chat room buttoms and update their tooltip
-  function whisperUpdate(isWhisper: boolean) {
+  function whisperUpdate(isWhisper: boolean): void {
     const div = document.getElementById("chat-room-buttons") as null | HTMLDivElement;
     if (!div) return;
     if (isWhisper && !div.classList.contains("wce-whisper")) {
@@ -136,7 +136,7 @@ export default function antiGarbling(): void {
     }
   }
 
-  createChatOptions = (div: HTMLDivElement) => {
+  createChatOptions = (div: HTMLDivElement): void => {
     // Only add the WCE chat room buttons if they do not yet exist
     const buttonGrid: null | HTMLDivElement = div?.querySelector("#chat-room-buttons");
     if (buttonGrid && !buttonGrid.querySelector(".wce-chat-room-button")) {

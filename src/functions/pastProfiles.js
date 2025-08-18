@@ -23,7 +23,9 @@ export default async function pastProfiles() {
   noteInput.maxLength = 10000;
   noteInput.classList.add("bce-hidden");
 
+  /** @type {import("dexie").Table<FBCSavedProfile, import("dexie").IndexableType>} */
   const profiles = db.table("profiles");
+  /** @type {import("dexie").Table<FBCNote, import("dexie").IndexableType>} */
   const notes = db.table("notes");
 
   async function readQuota() {
@@ -162,8 +164,6 @@ export default async function pastProfiles() {
    */
   async function openCharacter(memberNumber) {
     try {
-      /** @type {FBCSavedProfile} */
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const profile = await profiles.get(memberNumber);
       const C = CharacterLoadOnline(
         /** @type {ServerAccountDataSynced} */ (parseJSON(profile.characterBundle)),

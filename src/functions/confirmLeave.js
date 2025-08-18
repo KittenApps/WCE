@@ -14,11 +14,6 @@ export default function confirmLeave() {
       }
       if (fbcSettings.confirmLeave) {
         e.preventDefault();
-        // @ts-expect-error - TS thinks it's private, pffft we don't respect that
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        ServerSocket.io.disconnect();
-        CommonSetScreen("Character", "Relog");
-        ServerSocket.io.connect();
         // eslint-disable-next-line @typescript-eslint/no-deprecated
         return (e.returnValue = "Are you sure you want to leave the club?");
       }

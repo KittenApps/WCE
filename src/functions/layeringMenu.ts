@@ -16,7 +16,7 @@ export default async function layeringMenu(): Promise<void> {
   await waitFor(() => !!Player?.AppearanceLayers);
 
   // DialogCanUnlock with Player.CanInteract() requirement removed
-  function DialogCanUnlock2(C: Character, Item: Item) {
+  function DialogCanUnlock2(C: Character, Item: Item): boolean {
     if (Item?.Property?.LockedBy === "ExclusivePadlock") return (!C.IsPlayer());
     if (LogQuery("KeyDeposit", "Cell")) return false;
     if (Item?.Asset?.OwnerOnly) return Item.Asset.Enable && C.IsOwnedByPlayer();

@@ -3,8 +3,8 @@ import { waitFor } from "../util/utils";
 import { createTimer } from "../util/hooks";
 import { sendHello } from "./hiddenMessageHandler";
 
-export default function shareAddons(): void {
-  waitFor(() => ServerIsConnected && ServerPlayerIsInChatRoom());
+export default async function shareAddons(): Promise<void> {
+  await waitFor(() => ServerIsConnected && ServerPlayerIsInChatRoom());
 
   sendHello(null, true);
 

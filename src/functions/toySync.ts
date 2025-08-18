@@ -3,7 +3,7 @@ import { fbcSettings } from "../util/settings";
 import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { displayText } from "../util/localization";
 import { fbcChatNotify } from "../util/utils";
-import type { ButtplugClientDevice } from "buttplug";
+import type { ButtplugClientDevice, ButtplugClient } from "buttplug";
 
 export interface FBCToySetting {
   Name: string;
@@ -11,7 +11,7 @@ export interface FBCToySetting {
   LastIntensity?: number;
 }
 interface FBCToySyncState {
-  client?: import("buttplug").ButtplugClient;
+  client?: ButtplugClient;
   deviceSettings: Map<string, FBCToySetting>;
 }
 
@@ -114,7 +114,7 @@ export default async function toySync(): Promise<void> {
     {
       Tag: "toybatteries",
       Description: displayText("Shows the battery status of all connected buttplug.io toys"),
-      Action: () => {
+      Action: (): void => {
         if (!client.connected) {
           fbcChatNotify("buttplug.io is not connected");
           return;
@@ -135,7 +135,7 @@ export default async function toySync(): Promise<void> {
     {
       Tag: "toyscan",
       Description: displayText("Scans for connected buttplug.io toys"),
-      Action: () => {
+      Action: (): void => {
         if (!client.connected) {
           fbcChatNotify(displayText("buttplug.io is not connected"));
           return;

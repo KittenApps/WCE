@@ -43,6 +43,7 @@ declare global {
   type FBCNote = {
     note: string;
     updatedAt?: number;
+    memberNumber?: number;
   };
   type Friend = {
     MemberName: string;

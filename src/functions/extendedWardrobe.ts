@@ -14,7 +14,7 @@ export async function loadLocalWardrobe(wardrobe: ItemBundle[][]): Promise<void>
   const db = new Dexie("wce-local-wardrobe");
   db.version(1).stores({ wardrobe: "id, appearance" });
   localWardrobeTable = db.table("wardrobe");
-  const localWardrobe: { id: number; appearance: ServerItemBundle[] }[] = (await localWardrobeTable.toArray()) || [];
+  const localWardrobe = (await localWardrobeTable.toArray()) || [];
   await waitFor(() => wardrobe.length === EXPANDED_WARDROBE_SIZE);
   wardrobe.push(...localWardrobe.map(w => sanitizeBundles(w.appearance)));
 }

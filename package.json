@@ -10,8 +10,7 @@
     "typecheck": "tsc",
     "tsnative": "tsgo",
     "lint": "eslint ./src",
-    "oxlint": "oxlint --type-aware",
-    "oxlint2": "oxlint --type-aware --report-unused-disable-directives",
+    "oxlint": "oxlint --type-aware --report-unused-disable-directives",
     "serve": "npm run serve:wce & npm run serve:bc",
     "serve:wce": "npm run build && npx -y http-server@latest ./dist -p 4000 -c-1 --cors",
     "serve:bc": "npx -y http-server@latest ../Bondage-College/BondageClub -s -p 3000 -c-1 --cors",
@@ -27,7 +26,7 @@
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
     "@types/node": "^24.3.0",
-    "@typescript/native-preview": "^7.0.0-dev.20250818.1",
+    "@typescript/native-preview": "^7.0.0-dev.20250819.1",
     "bc-stubs": "^119.0.0-Beta.1",
     "bondage-club-mod-sdk": "^1.2.0",
     "eslint": "^9.33.0",
@@ -37,7 +36,7 @@
     "rolldown": "^1.0.0-beta.33",
     "socket.io-client": "4.8.1",
     "typescript": "~5.9.2",
-    "typescript-eslint": "^8.39.1"
+    "typescript-eslint": "^8.40.0"
   },
   "overrides": {
     "bc-stubs": {

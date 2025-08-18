@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { waitFor, sleep, parseJSON, isString } from "../util/utils";
@@ -13,7 +12,9 @@ export default async function automaticReconnect() {
     key: "id, key",
     accounts: "id, data, iv, auth",
   });
+  /** @type {import("dexie").Table<{ id: number; key: CryptoKey }, import("dexie").IndexableType>} */
   const keyTable = db.table("key");
+  /** @type {import("dexie").Table<{ id: number; data: Uint8Array<ArrayBuffer>; iv: Uint8Array<ArrayBuffer>; auth: Uint8Array<ArrayBuffer>; }, import("dexie").IndexableType>} */
   const accTable = db.table("accounts");
 
   let /** @type {CryptoKey} */ encKey, /** @type {{key: CryptoKey;}} */ key;
@@ -48,15 +49,13 @@ export default async function automaticReconnect() {
       }
       return accs;
     }
-    /** @type {{auth: ArrayBuffer; iv: ArrayBuffer ; data: ArrayBuffer ;}} */
     const res = await accTable.get({ id: 1 });
     if (!res) return {};
     const { auth, iv, data } = res;
     const decoder = new TextDecoder("utf8");
     try {
       const s = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, data);
-      // eslint-disable-next-line @typescript-eslint/return-await
-      return parseJSON(decoder.decode(new Uint8Array(s))) || {};
+      return await parseJSON(decoder.decode(new Uint8Array(s))) || {};
     } catch(e) {
       logWarn(e);
       localStorage.removeItem("bce.passwords");

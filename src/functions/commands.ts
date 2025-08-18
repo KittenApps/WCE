@@ -86,7 +86,7 @@ export default async function commands(): Promise<void> {
     {
       Tag: "fbcdebug",
       Description: displayText("Get debug information to share with developers."),
-      Action: () => {
+      Action: (): void => {
         fbcChatNotify("Warning: /fbcdebug is deprecated, use /wcedebug instead!");
         fbcDebug(true);
       },
@@ -94,7 +94,7 @@ export default async function commands(): Promise<void> {
     {
       Tag: "fbcchangelog",
       Description: displayText("Show recent WCE changelog"),
-      Action: () => {
+      Action: (): void => {
         augmentedChatNotify(fbcChangelog);
         fbcChatNotify("Warning: /fbcchangelog is deprecated, use /wcechangelog instead!");
       },
@@ -102,28 +102,28 @@ export default async function commands(): Promise<void> {
     {
       Tag: "wcedebug",
       Description: displayText("Get debug information to share with developers."),
-      Action: () => {
+      Action: (): void => {
         fbcDebug(true);
       },
     },
     {
       Tag: "wcechangelog",
       Description: displayText("Show recent WCE changelog"),
-      Action: () => {
+      Action: (): void => {
         augmentedChatNotify(fbcChangelog);
       },
     },
     {
       Tag: "wcegotoroom",
       Description: displayText("[room name or empty] switches to the room or leaves room if empty (ignoring all restrictions)"),
-      Action: (_, command) => {
+      Action: (_, command): void => {
         bceGotoRoom(command.substring(13).trim());
       },
     },
     {
       Tag: "exportlooks",
       Description: displayText("[target member number]: Copy your or another player's appearance in a format that can be imported with WCE or BCX"),
-      Action: (_, _command, [target]) => {
+      Action: (_, _command, [target]): void => {
         let targetCharacter: Character | null = null;
         if (!target) {
           targetCharacter = Player;
@@ -200,7 +200,7 @@ export default async function commands(): Promise<void> {
     {
       Tag: "importlooks",
       Description: displayText("Import looks from a string (BCX or WCE export)"),
-      Action: () => {
+      Action: (): void => {
         if (!Player.CanChangeOwnClothes() || !OnlineGameAllowChange()) {
           fbcChatNotify(displayText("You cannot change your appearance while bound or during online games, such as LARP."));
           return;
@@ -251,7 +251,7 @@ export default async function commands(): Promise<void> {
     {
       Tag: "beep",
       Description: displayText("[membernumber] [message]: beep someone"),
-      Action: (_, command, [target]) => {
+      Action: (_, command, [target]): void => {
         if (BCX?.getRuleState("speech_restrict_beep_send")?.isEnforced) {
           fbcChatNotify(displayText("Sending beeps is restricted by BCX rule."));
           return;
@@ -288,7 +288,7 @@ export default async function commands(): Promise<void> {
         const beepId = FriendListBeepLog.length - 1;
         const link = document.createElement("a");
         link.href = `#beep-${beepId}`;
-        link.onclick = (e) => {
+        link.onclick = (e): void => {
           e.preventDefault();
           FriendListShowBeep(beepId);
         };
@@ -306,7 +306,7 @@ export default async function commands(): Promise<void> {
       Description: displayText(
         "[target name] [message]: whisper the target player. Use first name only. Finds the first person in the room with a matching name, left-to-right, top-to-bottom."
       ),
-      Action: (_, command, args) => {
+      Action: (_, command, args): void => {
         if (args.length < 2) {
           fbcChatNotify(displayText("Whisper target or message not provided"));
           return;
@@ -342,7 +342,7 @@ export default async function commands(): Promise<void> {
     {
       Tag: "versions",
       Description: displayText("show versions of the club, WCE, BCX and other mods in use by players"),
-      Action: (_, _command, args) => {
+      Action: (_, _command, args): void => {
         function getCharacterModInfo(character: Character): string {
           const bcVersion = character.OnlineSharedSettings?.GameVersion ?? "R0";
           const BCXi = window.bcx?.getCharacterVersion(character.MemberNumber) ?
@@ -365,7 +365,7 @@ export default async function commands(): Promise<void> {
     {
       Tag: "ulistadd",
       Description: displayText("[membernumber]: adds a player to the list allowing to bypass Uwall."),
-      Action: (_, _command, args) => {
+      Action: (_, _command, args): void => {
         if (args.length < 1) {
           fbcChatNotify("The ulistadd command must be followed by the member number of the player that you allow to bypass Uwall.");
         } else {
@@ -382,7 +382,7 @@ export default async function commands(): Promise<void> {
     {
       Tag: "ulistremove",
       Description: displayText("[membernumber]: removes a player from the list allowing to bypass Uwall."),
-      Action: (_, _command, args) => {
+      Action: (_, _command, args): void => {
         if (args.length < 1) {
           fbcChatNotify("The ulistremove command must be followed by the member number of the player who is no more allowed to bypass Uwall.");
         } else {
@@ -399,7 +399,7 @@ export default async function commands(): Promise<void> {
     {
       Tag: "ulistshow",
       Description: displayText("displays the list of players allowed to bypass Uwall."),
-      Action: () => {
+      Action: (): void => {
         fbcChatNotify(`Ulist: ${JSON.stringify(Player.OnlineSharedSettings.Ulist ?? [])}`);
         if (!fbcSettings.uwall) fbcChatNotify("Warning: Uwall is not activated in WCE's settings.");
       },

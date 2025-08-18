@@ -77,8 +77,6 @@ export default function cacheClearer(): void {
   }
 
   createTimer(() => {
-    if (fbcSettings.automateCacheClear) {
-      clearCaches();
-    }
+    if (fbcSettings.automateCacheClear) clearCaches();
   }, cacheClearInterval);
 }

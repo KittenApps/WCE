@@ -73,7 +73,6 @@ export function objEntries<T>(obj: T): [keyof T, T[keyof T]][] {
   return Object.entries(obj) as [keyof T, T[keyof T]][];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function parseJSON<T>(jsonString: string | null): T {
   if (jsonString === null) {
     return null;
@@ -130,7 +129,7 @@ export async function fbcNotify(text: string, options?: { duration?: number; ope
   await waitFor(() => !!Player);
   ServerShowBeep(text, options?.duration ?? 5000, {
     silent: options?.silent ?? true,
-    ...(options?.openFriendlist && { onClick: () => { FriendListShow(); } }),
+    ...(options?.openFriendlist && { onClick: (): void => { FriendListShow(); } }),
   });
 }
 
