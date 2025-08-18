@@ -76,24 +76,6 @@ export default function commonPatches(): void {
     }
   );
 
-  PreferenceSubscreens.find(s => s.name === "Arousal").run = PreferenceSubscreenArousalRun;
-  PreferenceSubscreens.find(s => s.name === "Arousal").click = PreferenceSubscreenArousalClick;
-  PreferenceSubscreens.find(s => s.name === "Immersion").run = PreferenceSubscreenImmersionRun;
-  PreferenceSubscreens.find(s => s.name === "Immersion").click = PreferenceSubscreenImmersionClick;
-
-  // fix other addons adding multiple legacy settings screens
-  SDK.hookFunction(
-    "PreferenceLoad",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      PreferenceDidAddOldStyleScreens = false;
-      const ret = next(args);
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
-      PreferenceSubscreenList = [];
-      return ret;
-    }
-  );
-
   SDK.hookFunction(
     "InformationSheetRun",
     HOOK_PRIORITIES.AddBehaviour,
