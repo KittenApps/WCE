@@ -27,7 +27,7 @@
     "@types/events": "^3.0.3",
     "@types/node": "^24.3.0",
     "@typescript/native-preview": "^7.0.0-dev.20250819.1",
-    "bc-stubs": "^119.0.0-Beta.1",
+    "bc-stubs": "^119.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
     "eslint": "^9.33.0",
     "globals": "^16.3.0",

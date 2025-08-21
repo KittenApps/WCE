@@ -239,7 +239,10 @@ export default async function automaticExpressions() {
       })
       .filter(v => v[1] !== null)
       .map(v => [v[0], [{ Expression: v[1] }]])
-      .reduce((a, v) => ({ ...a, [/** @type {string} */ (v[0])]: v[1] }), {}),
+      .reduce((a, [k, v]) => {
+        a[/** @type {string} */ (k)] = v;
+        return a;
+      }, {}),
   });
 
   let lastOrgasm = 0,
@@ -277,7 +280,10 @@ export default async function automaticExpressions() {
       pushEvent({
         Type: MANUAL_OVERRIDE_EVENT_TYPE,
         Duration: -1,
-        Expression: objEntries(manualComponents).reduce((a, [k, v]) => ({ ...a, [k]: [{ Expression: v }] }), {}),
+        Expression: objEntries(manualComponents).reduce((a, [k, v]) => {
+          a[k] = [{ Expression: v }];
+          return a;
+        }, {}),
       });
     } else {
       for (const [k] of objEntries(manualComponents)) {
