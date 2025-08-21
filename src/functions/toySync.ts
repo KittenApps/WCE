@@ -99,7 +99,7 @@ export default async function toySync(): Promise<void> {
             debug(d.name, slot, "intensity 0.75");
             break;
           case 3:
-            d.vibrate(1.0);
+            d.vibrate(1);
             debug(d.name, slot, "intensity 1");
             break;
           default:
