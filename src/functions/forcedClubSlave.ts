@@ -29,7 +29,7 @@ export async function bceStartClubSlave(): Promise<void> {
   const room = ChatRoomData.Name;
   ChatRoomLeave(false);
   ChatRoomLeashPlayer = null;
-  CommonSetScreen("Room", "Management");
+  await CommonSetScreen("Room", "Management");
 
   await waitFor(() => !!ManagementMistress);
   if (!ManagementMistress) {
