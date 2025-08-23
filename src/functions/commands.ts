@@ -1,5 +1,5 @@
 import { skippedFunctionality, deviatingHashes } from "../util/modding";
-import { BCX } from "./hookBCXAPI";
+import { BCXgetRuleState } from "./hookBcx";
 import { waitFor, parseJSON, fbcChatNotify, objEntries } from "../util/utils";
 import { debug, logInfo, pastLogs } from "../util/logger";
 import { fbcSettings } from "../util/settings";
@@ -252,7 +252,7 @@ export default async function commands(): Promise<void> {
       Tag: "beep",
       Description: displayText("[membernumber] [message]: beep someone"),
       Action: (_, command, [target]): void => {
-        if (BCX?.getRuleState("speech_restrict_beep_send")?.isEnforced) {
+        if (BCXgetRuleState("speech_restrict_beep_send")?.isEnforced) {
           fbcChatNotify(displayText("Sending beeps is restricted by BCX rule."));
           return;
         }

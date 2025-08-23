@@ -1,6 +1,6 @@
 import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { registerSocketListener } from "./appendSocketListenersToInit";
-import { BCX } from "./hookBCXAPI";
+import { BCXgetRuleState } from "./hookBcx";
 import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 import {
@@ -866,7 +866,7 @@ export default async function automaticExpressions() {
     if (Object.keys(desiredExpression).length > 0) {
       let refreshExpressionScreen = false;
       for (const t of Object.keys(desiredExpression)) {
-        if (BCX?.getRuleState("block_changing_emoticon")?.isEnforced && t === "Emoticon") {
+        if (BCXgetRuleState("block_changing_emoticon")?.isEnforced && t === "Emoticon") {
           continue;
         }
         setExpression(t, desiredExpression[t].Expression ?? null, desiredExpression[t].Color);

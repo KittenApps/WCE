@@ -1,5 +1,5 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { BCX } from "./hookBCXAPI";
+import { BCXgetRuleState } from "./hookBcx";
 import { waitFor, isCharacter, fbcSendAction } from "../util/utils";
 import { displayText } from "../util/localization";
 import { logError } from "../util/logger";
@@ -12,7 +12,7 @@ declare global {
 }
 
 export async function bceStartClubSlave(): Promise<void> {
-  if (BCX?.getRuleState("block_club_slave_work")?.isEnforced) {
+  if (BCXgetRuleState("block_club_slave_work")?.isEnforced) {
     fbcSendAction(displayText("BCX rules forbid $PlayerName from becoming a Club Slave.", { $PlayerName: CharacterNickname(Player) }));
     return;
   }
