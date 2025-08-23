@@ -37,7 +37,7 @@ import richOnlineProfile from "./functions/richOnlineProfile";
 import numericArousalMeters from "./functions/numericArousalMeters";
 import appendSocketListenersToInit from "./functions/appendSocketListenersToInit";
 import nicknames from "./functions/nicknames";
-import hookBCXAPI from "./functions/hookBCXAPI";
+import hookBCXAPI from "./functions/hookBcx";
 import shareAddons from "./functions/shareAddons";
 import confirmLeave from "./functions/confirmLeave";
 import toySync from "./functions/toySync";
