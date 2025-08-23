@@ -168,6 +168,9 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd, isCh
             domNode = document.createTextNode(url.href);
             if (embedType !== EMBED_TYPE.None) {
               const promptTrust = document.createElement("a");
+              /**
+               * @param {PointerEvent} e
+               */
               promptTrust.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();

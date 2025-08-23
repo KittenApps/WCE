@@ -1,8 +1,10 @@
 import { logWarn, logError } from "./logger";
 
 export function sleep(ms: number): Promise<number> {
-  // eslint-disable-next-line no-promise-executor-return
-  return new Promise(resolve => window.setTimeout(resolve, ms));
+  // oxlint-disable-next-line avoid-new
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 }
 
 export async function waitFor(func: () => boolean, cancelFunc: () => boolean = () => false): Promise<boolean> {
@@ -71,7 +73,6 @@ export function objEntries<T>(obj: T): [keyof T, T[keyof T]][] {
   return Object.entries(obj) as [keyof T, T[keyof T]][];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function parseJSON<T>(jsonString: string | null): T {
   if (jsonString === null) {
     return null;
@@ -128,7 +129,7 @@ export async function fbcNotify(text: string, options?: { duration?: number; ope
   await waitFor(() => !!Player);
   ServerShowBeep(text, options?.duration ?? 5000, {
     silent: options?.silent ?? true,
-    ...(options?.openFriendlist && { onClick: () => { FriendListShow(); } }),
+    ...(options?.openFriendlist && { onClick: (): void => { FriendListShow(); } }),
   });
 }
 

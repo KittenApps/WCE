@@ -1,3 +1,4 @@
+// oxlint-disable explicit-module-boundary-types explicit-function-return-type
 import { sendHello } from "../functions/hiddenMessageHandler";
 import { toySyncState, type FBCToySetting } from "../functions/toySync";
 import { fbcBeepNotify } from "./hooks";
@@ -77,7 +78,7 @@ declare global {
   }
 }
 
-// @ts-ignore -- this is fully initialized in loadSettings
+// @ts-expect-error -- this is fully initialized in loadSettings
 export let fbcSettings: { [Property in keyof (typeof defaultSettings)]: (typeof defaultSettings)[Property]["value"] } & { version: number } = {};
 let postSettingsHasRun = false;
 
@@ -920,8 +921,7 @@ export async function bceLoadSettings(): Promise<void> {
           settings[setting] = settings.expressions;
           continue;
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        settings[setting] = defaultSettings[setting].value;
+        settings[setting] = (defaultSettings[setting] as CheckboxSetting).value;
       }
     }
     if (typeof settings.version === "undefined" || settings.version < settingsVersion) {

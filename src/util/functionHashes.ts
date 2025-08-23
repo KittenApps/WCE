@@ -1,4 +1,4 @@
-export function expectedHashes(gameVersion: string): Readonly<Record<string, string>> {
+export default function expectedHashes(gameVersion: string): Readonly<Record<string, string>> {
   switch (gameVersion.toLowerCase()) {
     default:
       return {

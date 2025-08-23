@@ -1,15 +1,16 @@
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { waitFor } from "../util/utils";
-import { debug, logWarn } from "../util/logger";
+import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, settingsLoaded } from "../util/settings";
 import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 import { bceStartClubSlave } from "./forcedClubSlave";
+import type { ModSDKModInfo } from "bondage-club-mod-sdk";
 
 type BCECapabilities = "clubslave" | "layeringHide" | "preventLayeringByOthers";
 declare global {
   interface Character {
     FBC: string;
-    FBCOtherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
+    FBCOtherAddons?: readonly ModSDKModInfo[];
     BCEArousal: boolean;
     BCECapabilities: readonly BCECapabilities[];
     BCEArousalProgress: number;
@@ -35,7 +36,7 @@ interface BCEMessage {
   progress?: number;
   enjoyment?: number;
   activity?: "ClubSlavery";
-  otherAddons?: readonly import("bondage-club-mod-sdk").ModSDKModInfo[];
+  otherAddons?: readonly ModSDKModInfo[];
 }
 
 export function sendHello(target: number | null = null, requestReply = false): void {
@@ -70,7 +71,7 @@ export function sendHello(target: number | null = null, requestReply = false): v
     fbcMessage.message.otherAddons = bcModSdk.getModsInfo();
   }
 
-  // @ts-ignore - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
+  // @ts-expect-error - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
   message.Dictionary.push(fbcMessage);
   ServerSend("ChatRoomChat", message);
 }
@@ -118,10 +119,12 @@ export default async function hiddenMessageHandler(): Promise<void> {
           bceStartClubSlave();
         }
         break;
+      default:
+        logError("Invalid BCE message type detected: ", message.type);
     }
   }
 
-  function processHello(sender: Character, message: Partial<BCEMessage>) {
+  function processHello(sender: Character, message: Partial<BCEMessage>): void {
     sender.FBC = message.version ?? "0.0";
     sender.BCEArousal = message.alternateArousal || false;
     sender.BCEArousalProgress = message.progress || sender.ArousalSettings?.Progress || 0;

@@ -55,7 +55,8 @@ const config = defineConfig({
       async generateBundle() {
         this.emitFile({ type: 'asset', fileName: 'wce-fusam-loader.user.js', source: loaderBuilder.generateFusamLoader() });
         this.emitFile({ type: 'asset', fileName: 'wce-loader.user.js', source: loaderBuilder.generateStandaloneLoader() });
-        await Promise.all((await fs.readdir('public')).map(fileName =>
+        const publicFiles = await fs.readdir('public');
+        await Promise.all(publicFiles.map(fileName =>
           fs.readFile(`public/${fileName}`).then(source => this.emitFile({ type: 'asset', fileName, source }))
         ));
       },

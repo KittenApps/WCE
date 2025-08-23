@@ -43,12 +43,9 @@ export default function customContentDomainCheck() {
     "ChatAdminRoomCustomizationProcess",
     HOOK_PRIORITIES.OverrideBehaviour,
     (args, next) => {
-      if (!fbcSettings.customContentDomainCheck) {
-        return next(args);
-      }
+      if (!fbcSettings.customContentDomainCheck) return next(args);
 
       try {
-        // @ts-ignore - the function's types are garbage
         const [{ ImageURL, MusicURL }] = args;
         const imageOrigin = ImageURL && new URL(ImageURL).origin;
         const musicOrigin = MusicURL && new URL(MusicURL).origin;

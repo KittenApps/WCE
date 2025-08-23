@@ -14,7 +14,7 @@ export async function loadLocalWardrobe(wardrobe: ItemBundle[][]): Promise<void>
   const db = new Dexie("wce-local-wardrobe");
   db.version(1).stores({ wardrobe: "id, appearance" });
   localWardrobeTable = db.table("wardrobe");
-  const localWardrobe: { id: number; appearance: ServerItemBundle[] }[] = (await localWardrobeTable.toArray()) || [];
+  const localWardrobe = (await localWardrobeTable.toArray()) || [];
   await waitFor(() => wardrobe.length === EXPANDED_WARDROBE_SIZE);
   wardrobe.push(...localWardrobe.map(w => sanitizeBundles(w.appearance)));
 }
@@ -23,7 +23,10 @@ async function saveLocalWardrobe(wardrobe: ServerItemBundle[][]): Promise<void> 
   await localWardrobeTable.bulkPut(wardrobe.map((appearance, id) => ({ id, appearance })));
 }
 
-/** Convert old {@link ItemProperties.Type} remnants into {@link ItemProperties.TypeRecord} in the passed item bundles. */
+/** Convert old {@link ItemProperties.Type} remnants into {@link ItemProperties.TypeRecord} in the passed item bundles.
+ * @param {ItemBundle[]} bundleList
+ * @returns {ItemBundle[]}
+ */
 function sanitizeBundles(bundleList: ItemBundle[]): ItemBundle[] {
   if (!Array.isArray(bundleList)) return bundleList;
   return bundleList.map((bundle) => {

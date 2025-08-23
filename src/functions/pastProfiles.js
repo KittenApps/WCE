@@ -18,12 +18,14 @@ export default async function pastProfiles() {
 
   ElementCreateTextArea("bceNoteInput");
   /** @type {HTMLTextAreaElement} */
-  // @ts-ignore
+  // @ts-expect-error
   const noteInput = document.getElementById("bceNoteInput");
   noteInput.maxLength = 10000;
   noteInput.classList.add("bce-hidden");
 
+  /** @type {import("dexie").Table<FBCSavedProfile, import("dexie").IndexableType>} */
   const profiles = db.table("profiles");
+  /** @type {import("dexie").Table<FBCNote, import("dexie").IndexableType>} */
   const notes = db.table("notes");
 
   async function readQuota() {
@@ -162,8 +164,6 @@ export default async function pastProfiles() {
    */
   async function openCharacter(memberNumber) {
     try {
-      /** @type {FBCSavedProfile} */
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const profile = await profiles.get(memberNumber);
       const C = CharacterLoadOnline(
         /** @type {ServerAccountDataSynced} */ (parseJSON(profile.characterBundle)),
@@ -350,9 +350,7 @@ export default async function pastProfiles() {
           hideNoteInput();
         }
         return;
-      } else if (!inNotes && MouseIn(1620, 60, 90, 90)) {
-        showNoteInput();
-      }
+      } else if (!inNotes && MouseIn(1620, 60, 90, 90)) showNoteInput();
       next(args);
     }
   );

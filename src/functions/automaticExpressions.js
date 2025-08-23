@@ -1,6 +1,6 @@
 import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { registerSocketListener } from "./appendSocketListenersToInit";
-import { BCX } from "./hookBCXAPI";
+import { BCXgetRuleState } from "./hookBcx";
 import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 import {
@@ -51,10 +51,7 @@ export default async function automaticExpressions() {
     }
   );
 
-  if (!globalThis.bce_ArousalExpressionStages) {
-    // eslint-disable-next-line camelcase
-    globalThis.bce_ArousalExpressionStages = ArousalExpressionStages;
-  }
+  if (!globalThis.bce_ArousalExpressionStages) globalThis.bce_ArousalExpressionStages = ArousalExpressionStages;
 
   /** @type {{[key: string]: ExpressionName[]}} */
   const bceExpressionModifierMap = Object.freeze({ Blush: [null, "Low", "Medium", "High", "VeryHigh", "Extreme"] });
@@ -137,15 +134,8 @@ export default async function automaticExpressions() {
   }
   globalThis.fbcPushEvent = pushEvent;
 
-  if (!globalThis.bce_EventExpressions) {
-    // eslint-disable-next-line camelcase
-    globalThis.bce_EventExpressions = EventExpressions;
-  }
-
-  if (!globalThis.bce_ActivityTriggers) {
-    // eslint-disable-next-line camelcase
-    globalThis.bce_ActivityTriggers = ActivityTriggers;
-  }
+  if (!globalThis.bce_EventExpressions) globalThis.bce_EventExpressions = EventExpressions;
+  if (!globalThis.bce_ActivityTriggers) globalThis.bce_ActivityTriggers = ActivityTriggers;
 
   /**
    * @param {ChatMessageDictionary} [dict]
@@ -249,7 +239,10 @@ export default async function automaticExpressions() {
       })
       .filter(v => v[1] !== null)
       .map(v => [v[0], [{ Expression: v[1] }]])
-      .reduce((a, v) => ({ ...a, [/** @type {string} */ (v[0])]: v[1] }), {}),
+      .reduce((a, [k, v]) => {
+        a[/** @type {string} */ (k)] = v;
+        return a;
+      }, {}),
   });
 
   let lastOrgasm = 0,
@@ -287,7 +280,10 @@ export default async function automaticExpressions() {
       pushEvent({
         Type: MANUAL_OVERRIDE_EVENT_TYPE,
         Duration: -1,
-        Expression: objEntries(manualComponents).reduce((a, [k, v]) => ({ ...a, [k]: [{ Expression: v }] }), {}),
+        Expression: objEntries(manualComponents).reduce((a, [k, v]) => {
+          a[k] = [{ Expression: v }];
+          return a;
+        }, {}),
       });
     } else {
       for (const [k] of objEntries(manualComponents)) {
@@ -339,6 +335,7 @@ export default async function automaticExpressions() {
 
   /**
    * @param {AssetPoseName} pose
+   * @returns {keyof AssetPoseMap}
    */
   function getPoseCategory(pose) {
     return PoseFemale3DCG.find(a => a.Name === pose)?.Category;
@@ -379,7 +376,7 @@ export default async function automaticExpressions() {
         const categories = [...new Set(PoseFemale3DCG.map(a => a.Category))];
         for (const category of categories) {
           const list = PoseFemale3DCG.filter(a => a.Category === category)?.map(a => a.Name);
-          list.sort();
+          list.sort((a, b) => a.localeCompare(b));
           fbcChatNotify(`=> ${category}:\n${list.join("\n")}\n\n`);
         }
         return;
@@ -433,7 +430,6 @@ export default async function automaticExpressions() {
     "CharacterSetFacialExpression",
     HOOK_PRIORITIES.OverrideBehaviour,
     (args, next) => {
-      // eslint-disable-next-line prefer-const
       let [C, AssetGroup, Expression, Timer, Color] = args;
       if (
         !isCharacter(C) ||
@@ -543,19 +539,15 @@ export default async function automaticExpressions() {
   resetExpressionQueue([MANUAL_OVERRIDE_EVENT_TYPE, GAME_TIMED_EVENT_TYPE]);
 
   // This is called once per interval to check for expression changes
-  // eslint-disable-next-line complexity
   function CustomArousalExpression() {
     if (!fbcSettings.animationEngine || !Player?.AppearanceLayers) {
       return;
     }
 
     // Ensure none of the expressions have remove timers on them; we handle timers here
-    Player.Appearance.filter(a => faceComponents.includes(a.Asset.Group.Name) && a.Property?.RemoveTimer).forEach(
-      (a) => {
-        // @ts-ignore - a.Property cannot be undefined due to filter above
-        delete a.Property.RemoveTimer;
-      }
-    );
+    Player.Appearance.filter(a => faceComponents.includes(a.Asset.Group.Name) && a.Property?.RemoveTimer).forEach((a) => {
+      delete a.Property.RemoveTimer;
+    });
 
     if (!Player.ArousalSettings) {
       logWarn("Player.ArousalSettings is not defined");
@@ -691,7 +683,6 @@ export default async function automaticExpressions() {
                         idx = 0;
                       }
                       trySetNextExpression(bceExpressionModifierMap[t][idx], exp, next, t);
-                      // @ts-ignore - not undefined, ts is a derp
                       bceExpressionsQueue[j].Expression[t][i].Applied = true;
                     } else {
                       // Prevent being overridden by other expressions while also not applying a change
@@ -789,18 +780,15 @@ export default async function automaticExpressions() {
         for (let k = 0; k < qPoses.length; k++) {
           const pose = qPoses[k];
           const poseList = pose.Pose;
-          const desiredIsNewerAndInfinite = poseList.every(
-            // eslint-disable-next-line no-loop-func
-            (p) => {
-              const category = getPoseCategory(p);
-              return (
-                !!category &&
-                desiredPose[category]?.Duration < 0 &&
-                desiredPose[category]?.Id > mustNum(pose.Id) &&
-                (desiredPose[category]?.Type === MANUAL_OVERRIDE_EVENT_TYPE || bceExpressionsQueue[j].Type !== MANUAL_OVERRIDE_EVENT_TYPE)
-              );
-            }
-          );
+          const desiredIsNewerAndInfinite = poseList.every((p) => {
+            const category = getPoseCategory(p);
+            return (
+              !!category &&
+              desiredPose[category]?.Duration < 0 &&
+              desiredPose[category]?.Id > mustNum(pose.Id) &&
+              (desiredPose[category]?.Type === MANUAL_OVERRIDE_EVENT_TYPE || bceExpressionsQueue[j].Type !== MANUAL_OVERRIDE_EVENT_TYPE)
+            );
+          });
           if (pose.Duration < 0 && desiredIsNewerAndInfinite) {
             qPoses.splice(k, 1);
             k--;
@@ -859,7 +847,6 @@ export default async function automaticExpressions() {
           Type: AUTOMATED_AROUSAL_EVENT_TYPE,
           Duration: -1,
           Priority: 0,
-          // @ts-ignore
           Expression: e,
         });
       }
@@ -879,12 +866,11 @@ export default async function automaticExpressions() {
     if (Object.keys(desiredExpression).length > 0) {
       let refreshExpressionScreen = false;
       for (const t of Object.keys(desiredExpression)) {
-        if (BCX?.getRuleState("block_changing_emoticon")?.isEnforced && t === "Emoticon") {
+        if (BCXgetRuleState("block_changing_emoticon")?.isEnforced && t === "Emoticon") {
           continue;
         }
         setExpression(t, desiredExpression[t].Expression ?? null, desiredExpression[t].Color);
         ServerSend("ChatRoomCharacterExpressionUpdate", {
-          // @ts-ignore - null is a valid name, mistake in BC-stubs
           Name: desiredExpression[t].Expression ?? null,
           Group: t,
           Appearance: ServerAppearanceBundle(Player.Appearance),

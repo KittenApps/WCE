@@ -1,6 +1,6 @@
 import { processChatAugmentsForLine } from "./chatAugments";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { BCX } from "./hookBCXAPI";
+import { BCXgetRuleState } from "./hookBcx";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 import { displayText } from "../util/localization";
 import { parseJSON, objEntries, isNonNullObject, isString, fbcNotify } from "../util/utils";
@@ -134,7 +134,6 @@ export default function instantMessenger() {
    * @param {Date} createdAt
    * @returns {void}
    */
-  // eslint-disable-next-line complexity
   function addMessage(friendId, sent, beep, skipHistory, createdAt) {
     const friend = friendMessages.get(friendId);
     if (!friend || beep.BeepType) {
@@ -320,7 +319,7 @@ export default function instantMessenger() {
   messageInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if (BCX?.getRuleState("speech_restrict_beep_send")?.isEnforced && !fbcSettings.allowIMBypassBCX) {
+      if (BCXgetRuleState("speech_restrict_beep_send")?.isEnforced && !fbcSettings.allowIMBypassBCX) {
         fbcNotify(displayText("Sending beeps is currently restricted by BCX rules"));
         return;
       }
@@ -496,7 +495,7 @@ export default function instantMessenger() {
       if (fbcSettings.instantMessenger) {
         if (
           !fbcSettings.allowIMBypassBCX &&
-          (BCX?.getRuleState("speech_restrict_beep_receive")?.isEnforced || (BCX?.getRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
+          (BCXgetRuleState("speech_restrict_beep_receive")?.isEnforced || (BCXgetRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
         ) {
           if (!container.classList.contains("bce-hidden")) hideIM();
           DrawButton(

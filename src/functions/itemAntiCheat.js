@@ -67,7 +67,6 @@ export default function itemAntiCheat() {
       return clone;
     }
 
-    // eslint-disable-next-line complexity
     function validateMistressLocks() {
       const sourceCanBeMistress =
         (sourceCharacter?.Reputation?.find(a => a.Type === "Dominant")?.Value ?? 0) >= 50 ||

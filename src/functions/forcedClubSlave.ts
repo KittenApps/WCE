@@ -1,5 +1,5 @@
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { BCX } from "./hookBCXAPI";
+import { BCXgetRuleState } from "./hookBcx";
 import { waitFor, isCharacter, fbcSendAction } from "../util/utils";
 import { displayText } from "../util/localization";
 import { logError } from "../util/logger";
@@ -12,7 +12,7 @@ declare global {
 }
 
 export async function bceStartClubSlave(): Promise<void> {
-  if (BCX?.getRuleState("block_club_slave_work")?.isEnforced) {
+  if (BCXgetRuleState("block_club_slave_work")?.isEnforced) {
     fbcSendAction(displayText("BCX rules forbid $PlayerName from becoming a Club Slave.", { $PlayerName: CharacterNickname(Player) }));
     return;
   }
@@ -29,7 +29,7 @@ export async function bceStartClubSlave(): Promise<void> {
   const room = ChatRoomData.Name;
   ChatRoomLeave(false);
   ChatRoomLeashPlayer = null;
-  CommonSetScreen("Room", "Management");
+  await CommonSetScreen("Room", "Management");
 
   await waitFor(() => !!ManagementMistress);
   if (!ManagementMistress) {
@@ -137,7 +137,7 @@ export default async function forcedClubSlave(): Promise<void> {
       Sender: Player.MemberNumber,
       Dictionary: [
         {
-          // @ts-ignore - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
+          // @ts-expect-error - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
           message: {
             type: MESSAGE_TYPES.Activity,
             version: FBC_VERSION,
