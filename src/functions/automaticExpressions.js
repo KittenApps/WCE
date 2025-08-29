@@ -213,9 +213,9 @@ export default async function automaticExpressions() {
   }
 
   const poseCategories = /** @type {const} */ ({
-    BodyFull: { Conflicts: ["BodyUpper", "BodyLower"] },
+    BodyFull: { Conflicts: ["BodyUpper", "BodyLower", "BodyAddon"] },
     BodyUpper: { Conflicts: ["BodyFull"] },
-    BodyLower: { Conflicts: ["BodyFull"] },
+    BodyLower: { Conflicts: ["BodyFull", "BodyAddon"] },
   });
 
   /**
@@ -324,6 +324,7 @@ export default async function automaticExpressions() {
         }
         if (args[0] === "list") {
           fbcChatNotify(displayText("Available animations: $anims", { $anims: Object.keys(globalThis.bce_EventExpressions).join(", ") }));
+          return;
         }
         const animation = Object.keys(globalThis.bce_EventExpressions).find(a => a.toLowerCase() === args[0]?.toLowerCase());
         if (animation) {
