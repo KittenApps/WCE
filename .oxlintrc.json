@@ -45,6 +45,7 @@
     "import/no-mutable-exports": "off",
     "jsdoc/require-param-description": "off",
     "jsdoc/require-returns-description": "off",
+    "promise/always-return": "off",
     "promise/catch-or-return": "off",
     "promise/no-nesting": "off",
     "promise/prefer-await-to-then": "off",
