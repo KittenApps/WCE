@@ -116,7 +116,7 @@ export default async function pastProfiles() {
           saveProfile(deepCopy(char));
         }
       }
-      next(args);
+      return next(args);
     }
   );
 
@@ -128,7 +128,7 @@ export default async function pastProfiles() {
       if (data?.Character?.MemberNumber) {
         saveProfile(deepCopy(data.Character));
       }
-      next(args);
+      return next(args);
     }
   );
 
@@ -349,9 +349,9 @@ export default async function pastProfiles() {
         } else if (MouseIn(1820, 60, 90, 90)) {
           hideNoteInput();
         }
-        return;
+        return null;
       } else if (!inNotes && MouseIn(1620, 60, 90, 90)) showNoteInput();
-      next(args);
+      return next(args);
     }
   );
 

@@ -463,7 +463,7 @@ export default function instantMessenger() {
         if (!IMloaded) loadIM();
         addMessage(beep.MemberNumber, false, beep, false, new Date());
       }
-      next(args);
+      return next(args);
     }
   );
 
@@ -491,7 +491,7 @@ export default function instantMessenger() {
     "DrawProcess",
     HOOK_PRIORITIES.AddBehaviour,
     (args, next) => {
-      next(args);
+      const ret = next(args);
       if (fbcSettings.instantMessenger) {
         if (
           !fbcSettings.allowIMBypassBCX &&
@@ -517,6 +517,7 @@ export default function instantMessenger() {
           );
         }
       }
+      return ret;
     }
   );
 
@@ -527,7 +528,7 @@ export default function instantMessenger() {
       if (fbcSettings.instantMessenger && MouseIn(...buttonPosition)) {
         if (!container.classList.contains("bce-hidden")) {
           hideIM();
-          return;
+          return null;
         }
         if (!IMloaded) loadIM();
         sortIM();
@@ -536,9 +537,9 @@ export default function instantMessenger() {
         unreadSinceOpened = 0;
         scrollToBottom();
         NotificationReset("Beep");
-        return;
+        return null;
       }
-      next(args);
+      return next(args);
     }
   );
 
