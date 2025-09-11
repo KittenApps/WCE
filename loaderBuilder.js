@@ -5,6 +5,8 @@ export default class LoaderBuilder {
 // @match https://www.bondageprojects.elementfx.com/*
 // @match https://bondage-europe.com/*
 // @match https://www.bondage-europe.com/*
+// @match https://bondage-asia.com/*
+// @match https://www.bondage-asia.com/*
 // @match https://bondageprojects.com/*
 // @match https://www.bondageprojects.com/*`;
     this.isBranch = !this.isLocal && process.env.BRANCH === 'main' || process.env.BRANCH === 'beta';
