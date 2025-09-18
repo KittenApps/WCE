@@ -228,7 +228,7 @@ export default async function pastProfiles() {
           $total: matches.toLocaleString(),
         });
         fbcChatNotify([header, ...lines, footer]);
-      })(argums);
+      })(argums.toLowerCase());
     },
   });
 
