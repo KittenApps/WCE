@@ -29,13 +29,6 @@ export default function commonPatches(): void {
     "DrawButton tooltip positions may be incorrect."
   );
 
-  // CommandExecute patch to fix /whitelistadd and /whitelistremove
-  patchFunction(
-    "CommandExecute",
-    { "key.indexOf(CommandsKey + cmd.Tag) == 0)": "key.substring(1) === cmd.Tag)" },
-    "Whitelist commands will not work."
-  );
-
   patchFunction(
     "PreferenceSubscreenArousalRun",
     {
@@ -52,15 +45,6 @@ export default function commonPatches(): void {
       if (fbcSettings.animationEngine && PreferenceArousalIsActive() && MouseIn(1250, 276, 64, 64)) return null;
       return next(args);
     }
-  );
-
-  patchFunction(
-    "PreferenceSubscreenImmersionRun",
-    {
-      'TextGet("ShowUngarbledMessages"), Player.ImmersionSettings.ShowUngarbledMessages, disableButtons);':
-        'TextGet("ShowUngarbledMessages"), Player.ImmersionSettings.ShowUngarbledMessages, false);',
-    },
-    "Can't control show ungarbled messages while in Extreme mode."
   );
 
   SDK.hookFunction(

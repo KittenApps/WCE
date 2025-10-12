@@ -11,6 +11,7 @@ const SelectButtonWidth = 200;
 // Create settings page
 export default async function settingsPage(): Promise<void> {
   await waitFor(() => !!PreferenceRegisterExtensionSetting);
+  PreferenceSubscreenImmersionCheckboxes.find(e => e.label === "ShowUngarbledMessages").disabled = (): boolean => false;
 
   debug("initializing");
 
@@ -113,8 +114,8 @@ export default async function settingsPage(): Promise<void> {
     );
     DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png");
 
+    let y = settingsYStart;
     if (currentCategory) {
-      let y = settingsYStart;
       for (const [settingName, defaultSetting] of currentDefaultSettings(currentCategory).slice(
         currentPageNumber * settingsPerPage,
         currentPageNumber * settingsPerPage + settingsPerPage
@@ -248,7 +249,6 @@ export default async function settingsPage(): Promise<void> {
         }
       }
     } else {
-      let y = settingsYStart;
       for (const category of settingsCategories) {
         DrawButton(300, y, 400, 64, "", "White");
         DrawTextFit(displayText(settingCategoryLabels[category]), 310, y + 32, 380, "Black");

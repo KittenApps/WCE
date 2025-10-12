@@ -253,7 +253,7 @@ export default async function layeringMenu(): Promise<void> {
             item.Color[i] = focusItem.Color[i % focusItem.Color.length];
           }
         } else {
-          item.Color = focusItem.Color[focusItem.Color.length - 1];
+          item.Color = focusItem.Color.at(-1);
         }
       } else if (Array.isArray(item.Color)) {
         for (let i = 0; i < item.Color.length; i++) {

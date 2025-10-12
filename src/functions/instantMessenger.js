@@ -381,13 +381,7 @@ export default function instantMessenger() {
         throw new Error("this should never happen, friend is null in map loop");
       }
       const friendName = Player.FriendNames?.get(friendId)?.toLowerCase();
-      if (search === "") {
-        friend.listElement.classList.remove("bce-hidden");
-      } else if (!friendId.toString().includes(search) && !friendName?.includes(search)) {
-        friend.listElement.classList.add("bce-hidden");
-      } else {
-        friend.listElement.classList.remove("bce-hidden");
-      }
+      friend.listElement.classList.toggle("bce-hidden", search !== "" && !friendId.toString().includes(search) && !friendName?.includes(search));
     }
     sortIM();
   };

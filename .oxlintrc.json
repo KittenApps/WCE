@@ -29,6 +29,7 @@
     "no-labels": "off",
     "no-magic-numbers": "off",
     "no-negated-condition": "off",
+    "no-param-reassign": "off",
     "no-plusplus": "off",
     "no-ternary": "off",
     "no-undef": "off",

@@ -330,12 +330,8 @@ export const defaultSettings = {
     type: "checkbox",
     value: true,
     disabled: () => false,
-    sideEffects: (newValue) => {
-      if (newValue) {
-        document.body.classList.add(BCE_COLOR_ADJUSTMENTS_CLASS_NAME);
-      } else {
-        document.body.classList.remove(BCE_COLOR_ADJUSTMENTS_CLASS_NAME);
-      }
+    sideEffects: (newValue: boolean) => {
+      document.body.classList.toggle(BCE_COLOR_ADJUSTMENTS_CLASS_NAME, newValue);
       debug("chatColors", newValue);
     },
     category: "chat",

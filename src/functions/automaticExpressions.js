@@ -265,7 +265,7 @@ export default async function automaticExpressions() {
   function resetExpressionQueue(types, skippedTypes = []) {
     delete Player.ExpressionQueue;
     bceExpressionsQueue.push(
-      ...bceExpressionsQueue.splice(0, bceExpressionsQueue.length).map((e) => {
+      ...bceExpressionsQueue.splice(0).map((e) => {
         if (
           types.includes(e.Type) ||
           (e.Duration <= 0 && e.Type !== AUTOMATED_AROUSAL_EVENT_TYPE && !skippedTypes.includes(e.Type))

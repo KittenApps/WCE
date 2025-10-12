@@ -1,9 +1,9 @@
-export const FBC_VERSION = "6.3.14";
+export const FBC_VERSION = "6.3.15";
 export const settingsVersion = 63.9;
-export const SUPPORTED_GAME_VERSIONS = ["R119", "R120"];
+export const SUPPORTED_GAME_VERSIONS = ["R121"];
 
-export const fbcChangelog = `WCE v6.3.14
-* BC R120 compatibility and other fixes
+export const fbcChangelog = `WCE v6.3.15
+* BC R121 compatibility and other fixes
 
 WCE v6.3
 * configure layer hiding in layering menus

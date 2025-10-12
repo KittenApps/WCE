@@ -54,7 +54,7 @@ export function bceGotoRoom(roomName: string): void {
   DialogLeave();
   if (CurrentScreen === "ChatRoom") ChatRoomLeave(false);
   if (roomName) {
-    ChatRoomStart("X", "", null, null, "Introduction", BackgroundsTagList);
+    ChatSearchStart("X", ["Room", "MainHall"], { Background: "Introduction", BackgroundTagList: BackgroundsTagList });
   } else {
     ChatRoomSetLastChatRoom(null);
     CommonSetScreen("Room", "MainHall");
