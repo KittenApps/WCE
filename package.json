@@ -21,22 +21,22 @@
     "dexie": "^4.2.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.37.0",
-    "@stylistic/eslint-plugin": "^5.4.0",
+    "@eslint/js": "^9.38.0",
+    "@stylistic/eslint-plugin": "^5.5.0",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
-    "@types/node": "^24.7.2",
+    "@types/node": "^24.8.1",
     "@typescript/native-preview": "^7.0.0-dev.20251012.1",
     "bc-stubs": "^121.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
-    "eslint": "^9.37.0",
+    "eslint": "^9.38.0",
     "globals": "^16.4.0",
-    "oxlint": "^1.22.0",
+    "oxlint": "^1.23.0",
     "oxlint-tsgolint": "^0.2.0",
     "rolldown": "^1.0.0-beta.42",
     "socket.io-client": "4.8.1",
     "typescript": "~5.9.2",
-    "typescript-eslint": "^8.46.0"
+    "typescript-eslint": "^8.46.1"
   },
   "overrides": {
     "bc-stubs": {
