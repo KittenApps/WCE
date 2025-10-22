@@ -102,6 +102,8 @@ function bceAllowedToEmbed(url) {
       "www.bondageprojects.elementfx.com",
       "bondage-europe.com",
       "www.bondage-europe.com",
+      "bondage-asia.com",
+      "www.bondage-asia.com",
       "bondageprojects.com",
       "www.bondageprojects.com",
     ].includes(url.host) || sessionCustomOrigins.get(url.origin) === "allowed";

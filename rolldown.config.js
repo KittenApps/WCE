@@ -32,9 +32,11 @@ const config = defineConfig({
     banner: c => c.isEntry ? LICENSE : undefined,
     minify: true,
     legalComments: 'inline',
+    cleanDir: true
   },
   transform: {
     target: 'es2022',
+    define: { PUBLIC_URL: `"${loaderBuilder.URL}"` },
   },
   resolve: {
     conditionNames: ['import'],
@@ -43,15 +45,9 @@ const config = defineConfig({
       'buttplug': 'buttplug/dist/web/buttplug.mjs',
     },
   },
-  define: {
-    PUBLIC_URL: `"${loaderBuilder.URL}"`,
-  },
   plugins: [
     {
       name: 'loader-builder-plugin',
-      async buildStart() {
-        await fs.rm('dist', { recursive: true, force: true });
-      },
       async generateBundle() {
         this.emitFile({ type: 'asset', fileName: 'wce-fusam-loader.user.js', source: loaderBuilder.generateFusamLoader() });
         this.emitFile({ type: 'asset', fileName: 'wce-loader.user.js', source: loaderBuilder.generateStandaloneLoader() });
@@ -68,7 +64,7 @@ if (process.argv.includes('--watch')){
   await build({ input: 'loaderBuilder.js', plugins: [{ generateBundle(_, b) { delete b['loaderBuilder.js']; } }, config.plugins[0]]});
   config.plugins = [];
   config.output.minify = false;
-  delete config.output.target;
+  config.output.cleanDir = false;
 }
 
 export default config;

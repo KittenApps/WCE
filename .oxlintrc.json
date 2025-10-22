@@ -109,7 +109,8 @@
       "rules": {
         "no-nested-ternary": "off",
         "no-undefined": "off",
-        "import/no-anonymous-default-export": "off"
+        "import/no-anonymous-default-export": "off",
+        "node/no-process-env": "off"
       }
     }
   ]
