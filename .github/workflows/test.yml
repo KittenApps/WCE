@@ -15,9 +15,9 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: 'npm'
       - run: npm ci
       - run: npm run typecheck
@@ -25,4 +25,4 @@ jobs:
       - run: npm run tsnative
       - run: npm run oxlint
       - run: npm run build
-      - run: npx es-check es2022 ./dist/*.js --module
+      - run: npm run escheck

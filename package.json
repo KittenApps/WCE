@@ -11,6 +11,7 @@
     "tsnative": "tsgo",
     "lint": "eslint ./src",
     "oxlint": "oxlint --type-aware --report-unused-disable-directives",
+    "escheck": "npx es-check@latest es2022 ./dist/*.js --module",
     "serve": "npm run serve:wce & npm run serve:bc",
     "serve:wce": "npm run build && npx -y http-server@latest ./dist -p 4000 -c-1 --cors",
     "serve:bc": "npx -y http-server@latest ../Bondage-College/BondageClub -s -p 3000 -c-1 --cors",
