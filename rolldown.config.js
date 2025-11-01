@@ -1,6 +1,6 @@
 import { promises as fs } from 'node:fs';
 import LoaderBuilder from './loaderBuilder.js';
-import { defineConfig, build } from 'rolldown';
+import { defineConfig } from 'rolldown';
 
 const LICENSE = `/**
 * @license GPL-3.0-or-later
@@ -32,7 +32,7 @@ const config = defineConfig({
     banner: c => c.isEntry ? LICENSE : undefined,
     minify: true,
     legalComments: 'inline',
-    cleanDir: true
+    cleanDir: true,
   },
   transform: {
     target: 'es2022',
@@ -61,7 +61,10 @@ const config = defineConfig({
 });
 
 if (process.argv.includes('--watch')){
-  await build({ input: 'loaderBuilder.js', plugins: [{ generateBundle(_, b) { delete b['loaderBuilder.js']; } }, config.plugins[0]]});
+  fs.writeFile('dist/wce-fusam-loader.user.js', loaderBuilder.generateFusamLoader());
+  fs.writeFile('dist/wce-loader.user.js', loaderBuilder.generateStandaloneLoader());
+  const publicFiles = await fs.readdir('public');
+  publicFiles.map(fileName => fs.copyFile(`public/${fileName}`, `dist/${fileName}`));
   config.plugins = [];
   config.output.minify = false;
   config.output.cleanDir = false;

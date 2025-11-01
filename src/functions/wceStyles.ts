@@ -227,6 +227,7 @@ export default function wceStyles(): void {
   }
   .bce-profile-open {
     margin-right: 0.5em;
+    user-select: none;
   }
   .bce-pending {
     opacity: 0.4;

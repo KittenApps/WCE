@@ -72,6 +72,7 @@
     "typescript/promise-function-async": "off",
     "typescript/no-unnecessary-boolean-literal-compare": "off",
     "typescript/no-unsafe-type-assertion": "off",
+    "typescript/strict-boolean-expressions": "off",
 
     "typescript/switch-exhaustiveness-check": "off",
     "typescript/no-unnecessary-type-assertion": "off",
