@@ -1,9 +1,10 @@
 import eslint from "@eslint/js";
+import { defineConfig } from 'eslint/config';
 import stylistic from '@stylistic/eslint-plugin'
 import tseslint from "typescript-eslint";
 import globals from "globals";
 
-export default tseslint.config(
+export default defineConfig(
   eslint.configs.recommended,
   stylistic.configs.customize({ quotes: "double", semi: true, jsx: false, braceStyle: "1tbs" }),
   ...tseslint.configs.strictTypeChecked,
@@ -42,7 +43,7 @@ export default tseslint.config(
       "@stylistic/switch-colon-spacing": "error",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-floating-promises": "off",
-      "@typescript-eslint/prefer-nullish-coalescing": "off", // ToDo: enable with tsconfig's strictNullChecks
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/no-confusing-void-expression": "off", // enable that too
       "@typescript-eslint/restrict-template-expressions": ["error", { allowAny: true }],
       "@typescript-eslint/no-unnecessary-condition": "off",
