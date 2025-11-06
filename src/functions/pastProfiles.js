@@ -324,7 +324,7 @@ export default async function pastProfiles() {
         DrawButton(1820, 60, 90, 90, "", "White", "Icons/Cancel.png", TextGet("LeaveNoSave"));
         return null;
       }
-      DrawButton(1620, 60, 90, 90, "", "White", "Icons/Notifications.png", displayText("[WCE] Notes"));
+      DrawButton(1520, 60, 90, 90, "", "White", "Icons/Notifications.png", displayText("[WCE] Notes"));
       return next(args);
     }
   );
@@ -350,7 +350,7 @@ export default async function pastProfiles() {
           hideNoteInput();
         }
         return null;
-      } else if (!inNotes && MouseIn(1620, 60, 90, 90)) showNoteInput();
+      } else if (!inNotes && MouseIn(1520, 60, 90, 90)) showNoteInput();
       return next(args);
     }
   );

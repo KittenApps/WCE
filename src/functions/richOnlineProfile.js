@@ -10,18 +10,14 @@ export default function richOnlineProfile() {
 
   function hideOriginalTextArea() {
     const ta = document.getElementById(descTextArea);
-    if (!ta) {
-      return;
-    }
+    if (!ta) return;
     originalShown = false;
     ta.style.display = "none";
   }
 
   function showOriginalTextArea() {
     const ta = document.getElementById(descTextArea);
-    if (!ta) {
-      return;
-    }
+    if (!ta) return;
     originalShown = true;
     ta.style.display = "";
   }
@@ -40,11 +36,18 @@ export default function richOnlineProfile() {
     div.style.border = "2px solid black";
     div.style.padding = "2px";
     div.classList.add("bce-rich-textarea");
-    div.textContent = InformationSheetSelection?.Description || "";
+    div.textContent = OnlineProfileMode === "Description" ? OnlineProfileTextDesc : OnlineProfileTextOwnersNotes;
     processChatAugmentsForLine(div, () => false);
 
     document.body.append(div);
     resizeRichTextArea();
+  }
+
+  function updateRichTextArea() {
+    const div = document.getElementById(descRich);
+    if (!div) return;
+    div.textContent = OnlineProfileMode === "Description" ? OnlineProfileTextDesc : OnlineProfileTextOwnersNotes;
+    processChatAugmentsForLine(div, () => false);
   }
 
   function resizeRichTextArea() {
@@ -53,10 +56,7 @@ export default function richOnlineProfile() {
 
   function disableRichTextArea() {
     const div = document.getElementById(descRich);
-    if (div) {
-      div.remove();
-    }
-
+    if (div) div.remove();
     showOriginalTextArea();
   }
 
@@ -67,12 +67,8 @@ export default function richOnlineProfile() {
       originalShown = true;
       const ret = next(args);
       const ta = document.getElementById(descTextArea);
-      if (!fbcSettings.richOnlineProfile || !ta) {
-        return ret;
-      }
-
+      if (!fbcSettings.richOnlineProfile || !ta) return ret;
       enableRichTextArea();
-
       return ret;
     }
   );
@@ -120,7 +116,9 @@ export default function richOnlineProfile() {
         }
         return true;
       }
-      return next(args);
+      const ret = next(args);
+      if (MouseIn(1620, 60, 90, 90)) updateRichTextArea();
+      return ret;
     }
   );
 
@@ -128,9 +126,7 @@ export default function richOnlineProfile() {
     "OnlineProfileUnload",
     HOOK_PRIORITIES.ModifyBehaviourMedium,
     (args, next) => {
-      if (!originalShown) {
-        disableRichTextArea();
-      }
+      if (!originalShown) disableRichTextArea();
       return next(args);
     }
   );
