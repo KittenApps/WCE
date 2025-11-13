@@ -20,9 +20,9 @@ jobs:
           node-version: 24
           cache: 'npm'
       - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run tsnative
+      - run: npm run tsgo
       - run: npm run oxlint
+      - run: npm run tsc
+      - run: npm run eslint
       - run: npm run build
       - run: npm run escheck

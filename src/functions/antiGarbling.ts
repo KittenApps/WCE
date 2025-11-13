@@ -140,7 +140,7 @@ export default function antiGarbling(): void {
     // Only add the WCE chat room buttons if they do not yet exist
     const buttonGrid: null | HTMLDivElement = div?.querySelector("#chat-room-buttons");
     if (buttonGrid && !buttonGrid.querySelector(".wce-chat-room-button")) {
-      ElementMenu.PrependItem(buttonGrid, ElementCreate({
+      buttonGrid.prepend(ElementCreate({
         tag: "div",
         attributes: { hidden: true },
         classList: ["wce-chat-room-select-div", "wce-chat-room-button"],
@@ -168,13 +168,13 @@ export default function antiGarbling(): void {
           },
         ],
       }));
-      ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
+      buttonGrid.append(ElementButton.Create(
         "wce-chat-baby-talk",
         BabyTalkOnClick,
         { noStyling: true },
         { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true } } }
       ));
-      ElementMenu.AppendButton(buttonGrid, ElementButton.Create(
+      buttonGrid.append(ElementButton.Create(
         "wce-chat-stutters",
         StutterOnClick,
         { noStyling: true },

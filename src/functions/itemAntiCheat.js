@@ -158,7 +158,7 @@ export default function itemAntiCheat() {
       !Player.WhiteList.includes(sourceCharacter.MemberNumber) &&
       !Player.BlackList.includes(sourceCharacter.MemberNumber)
     ) {
-      ChatRoomListManipulation(Player.BlackList, true, sourceCharacter.MemberNumber.toString());
+      ChatRoomListUpdate(Player.BlackList, true, sourceCharacter.MemberNumber);
       fbcChatNotify(displayText("[AntiCheat] $sourceName blacklisted.", { $sourceName: sourceName }));
     }
     ChatRoomCharacterUpdate(Player);

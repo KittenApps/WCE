@@ -7,11 +7,11 @@ export default async function autoGhostBroadcast(): Promise<void> {
   await waitFor(() => !!ServerSocket && ServerIsConnected);
   registerSocketListener("ChatRoomSyncMemberJoin", (data: ServerChatRoomSyncMemberJoinResponse) => {
     if (fbcSettings.ghostNewUsers && Date.now() - data.Character.Creation < 30000) {
-      ChatRoomListManipulation(Player.BlackList, true, data.Character.MemberNumber.toString());
+      ChatRoomListUpdate(Player.BlackList, true, data.Character.MemberNumber);
       if (!Player.GhostList) {
         Player.GhostList = [];
       }
-      ChatRoomListManipulation(Player.GhostList, true, data.Character.MemberNumber.toString());
+      ChatRoomListUpdate(Player.GhostList, true, data.Character.MemberNumber);
       debug(
         "Blacklisted",
         data.Character.Name,
