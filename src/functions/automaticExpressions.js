@@ -938,10 +938,8 @@ export default async function automaticExpressions() {
         },
       };
     }
-    const basePoseMatcher = /^Base(Lower|Upper)$/u;
     const newPose = Object.values(desiredPose)
-      .map(p => p.Pose)
-      .filter(p => !basePoseMatcher.test(p));
+      .map(p => p.Pose);
     if (JSON.stringify(Player.ActivePose) !== JSON.stringify(newPose)) {
       poseUpdate = newPose;
       needsRefresh = true;
