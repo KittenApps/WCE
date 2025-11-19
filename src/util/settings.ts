@@ -27,6 +27,7 @@ import {
 import { displayText } from "./localization";
 import { augmentedChatNotify } from "../functions/chatAugments";
 import { createChatOptions } from "../functions/antiGarbling";
+import { checkBlindness } from "../functions/blindWithoutGlasses";
 
 declare global {
   interface PlayerOnlineSettings {
@@ -654,6 +655,8 @@ export const defaultSettings = {
     sideEffects: (newValue) => {
       if (!newValue) {
         removeCustomEffect("BlurLight");
+      } else {
+        checkBlindness();
       }
       debug("blindWithoutGlasses", newValue);
     },
