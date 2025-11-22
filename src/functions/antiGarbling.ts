@@ -143,6 +143,7 @@ export default function antiGarbling(): void {
       buttonGrid.prepend(ElementCreate({
         tag: "div",
         attributes: { hidden: true },
+        style: { "--tooltip-gap": "var(--half-gap)" },
         classList: ["wce-chat-room-select-div", "wce-chat-room-button"],
         children: [
           {
