@@ -163,7 +163,8 @@ export default function antiGarbling(): void {
           {
             tag: "div",
             attributes: { id: "wce-chat-garble-tooltip", role: "tooltip" },
-            classList: ["button-tooltip", "button-tooltip-left"],
+            classList: ["button-tooltip"],
+            style: { top: "50%", transform: "translateY(-50%)", right: "115%" },
             children: [],
           },
         ],
@@ -171,14 +172,14 @@ export default function antiGarbling(): void {
       buttonGrid.append(ElementButton.Create(
         "wce-chat-baby-talk",
         BabyTalkOnClick,
-        { noStyling: true },
-        { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true } } }
+        { noStyling: true, tooltip: "" },
+        { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true, "aria-describedby": "wce-chat-baby-talk-tooltip" } } }
       ));
       buttonGrid.append(ElementButton.Create(
         "wce-chat-stutters",
         StutterOnClick,
-        { noStyling: true },
-        { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true } } }
+        { noStyling: true, tooltip: "" },
+        { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true, "aria-describedby": "wce-chat-stutters-tooltip" } } }
       ));
       resetChatButtonStates();
     }
