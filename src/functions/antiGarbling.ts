@@ -164,8 +164,7 @@ export default function antiGarbling(): void {
           {
             tag: "div",
             attributes: { id: "wce-chat-garble-tooltip", role: "tooltip" },
-            classList: ["button-tooltip"],
-            style: { top: "50%", transform: "translateY(-50%)", right: "115%" },
+            classList: ["button-tooltip", "button-tooltip-left"],
             children: [],
           },
         ],
