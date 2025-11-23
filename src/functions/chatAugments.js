@@ -18,6 +18,8 @@ const EMBED_TYPE = /** @type {const} */ ({
  * @returns {URL | false}
  */
 function bceParseUrl(word) {
+  const t = /^\((.+)\)$/.exec(word);
+  if (t) return bceParseUrl(t[1]);
   try {
     const url = new URL(word);
     if (!["http:", "https:"].includes(url.protocol)) {
@@ -146,7 +148,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd, isCh
       }
 
       // Handle url linking
-      const url = bceParseUrl(words[i].replace(/(^\(+|\)+$)/gu, ""));
+      const url = bceParseUrl(words[i]);
       if (url) {
         // Embed or link
         /** @type {HTMLElement | Text | null} */
@@ -368,7 +370,7 @@ export default function chatAugments() {
         inOOC = true;
       }
 
-      if (bceParseUrl(words[i]) && !inOOC) {
+      if (!inOOC && bceParseUrl(words[i])) {
         newWords.push("( ");
         newWords.push(words[i]);
         newWords.push(" )");
