@@ -24,7 +24,7 @@ const loaderBuilder = new LoaderBuilder();
 
 const config = defineConfig({
   input: 'src/index.ts',
-  output: { 
+  output: {
     dir: 'dist',
     entryFileNames: 'wce.js',
     chunkFileNames: '[name].js',
@@ -39,8 +39,7 @@ const config = defineConfig({
     define: { PUBLIC_URL: `"${loaderBuilder.URL}"` },
   },
   resolve: {
-    conditionNames: ['import'],
-    alias: { 
+    alias: {
       'dexie': 'dexie/dist/modern/dexie.mjs',
       'buttplug': 'buttplug/dist/web/buttplug.mjs',
     },
