@@ -26,6 +26,7 @@
     "no-bitwise": ["error", { "int32Hint": true }],
     "no-console": "off",
     "no-continue": "off",
+    "no-implicit-coercion": "off",
     "no-labels": "off",
     "no-magic-numbers": "off",
     "no-negated-condition": "off",
@@ -73,6 +74,7 @@
     "typescript/no-unnecessary-boolean-literal-compare": "off",
     "typescript/no-unsafe-type-assertion": "off",
     "typescript/strict-boolean-expressions": "off",
+    "typescript/prefer-nullish-coalescing": "off",
 
     "typescript/switch-exhaustiveness-check": "off",
     "typescript/no-unnecessary-type-assertion": "off",

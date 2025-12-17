@@ -781,6 +781,7 @@ export default async function automaticExpressions() {
         for (let k = 0; k < qPoses.length; k++) {
           const pose = qPoses[k];
           const poseList = pose.Pose;
+          // oxlint-disable-next-line no-loop-func
           const desiredIsNewerAndInfinite = poseList.every((p) => {
             const category = getPoseCategory(p);
             return (

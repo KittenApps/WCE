@@ -29,7 +29,7 @@ const config = defineConfig({
     entryFileNames: 'wce.js',
     chunkFileNames: '[name].js',
     sourcemap: true,
-    banner: c => c.isEntry ? LICENSE : undefined,
+    postBanner: c => c.isEntry ? LICENSE : undefined,
     minify: true,
     legalComments: 'inline',
     cleanDir: true,
