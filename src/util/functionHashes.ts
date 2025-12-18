@@ -133,7 +133,6 @@ export default function expectedHashes(gameVersion: string): Readonly<Record<str
         StruggleFlexibilityCheck: "727CE05B",
         StruggleFlexibilityProcess: "1A0B96EF", // Scripts/Struggle.js
         StruggleLockPickDraw: "6FE841B9", // Scripts/Struggle.js
-        StruggleMinigameHandleExpression: "1B3ABF55",
         StruggleMinigameStop: "FB05E8A9",
         StruggleStrengthProcess: "B1A1457D", // StruggleStrengthProcess
         TextGet: "4DDE5794",

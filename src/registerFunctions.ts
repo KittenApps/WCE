@@ -22,7 +22,6 @@ import blindWithoutGlasses from "./functions/blindWithoutGlasses";
 import friendPresenceNotifications from "./functions/friendPresenceNotifications";
 import itemAntiCheat from "./functions/itemAntiCheat";
 import forcedClubSlave from "./functions/forcedClubSlave";
-import leashFix from "./functions/leashFix";
 import instantMessenger from "./functions/instantMessenger";
 import extendedWardrobe from "./functions/extendedWardrobe";
 import customContentDomainCheck from "./functions/customContentDomainCheck";
@@ -143,7 +142,6 @@ export async function registerAllFunctions(): Promise<void> {
   registerFunction(hideHiddenItemsIcon, "hideHiddenItemsIcon");
   // registerFunction(crafting, "crafting");
   registerFunction(itemAntiCheat, "itemAntiCheat");
-  registerFunction(leashFix, "leashFix");
   registerFunction(hookBCXAPI, "hookBCXAPI");
   registerFunction(customContentDomainCheck, "customContentDomainCheck");
   registerFunction(numericArousalMeters, "numericArousalMeters");

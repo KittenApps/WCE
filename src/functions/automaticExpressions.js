@@ -24,12 +24,6 @@ export default async function automaticExpressions() {
     throw new Error("Player.ArousalSettings is not defined");
   }
 
-  patchFunction(
-    "StruggleMinigameHandleExpression",
-    { '");': '", 3);' },
-    "Resetting blush, eyes, and eyebrows after struggling"
-  );
-
   /**
    * @returns {boolean}
    */

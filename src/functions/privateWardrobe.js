@@ -18,18 +18,6 @@ export default async function privateWardrobe() {
   }
 
   patchFunction(
-    "DrawProcess",
-    { 'CurrentScreen !== "Crafting"': 'CurrentScreen !== "Crafting" && CurrentScreen !== "Wardrobe"' },
-    "Full wardrobe may display blur and blindness effects of the background"
-  );
-
-  patchFunction(
-    "DrawCharacter",
-    { '|| CurrentScreen === "Crafting"': '|| CurrentScreen === "Crafting" || CurrentScreen === "Wardrobe"' },
-    "Full wardrobe may display blur and blindness effects of the outfits"
-  );
-
-  patchFunction(
     "WardrobeLoadCharacters",
     {
       "if (WardrobeCharacter.length <= P && ((W == null) || !Fast)) {": `if (WardrobeCharacter.length <= P && ((W == null) || !Fast)) {
