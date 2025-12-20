@@ -29,7 +29,7 @@
     "bondage-club-mod-sdk": "^1.2.0",
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
-    "oxlint": "^1.33.0",
+    "oxlint": "^1.34.0",
     "oxlint-tsgolint": "^0.9.1",
     "rolldown": "^1.0.0-beta.55",
     "socket.io-client": "4.8.1",
