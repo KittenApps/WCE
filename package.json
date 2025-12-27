@@ -29,12 +29,12 @@
     "bondage-club-mod-sdk": "^1.2.0",
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
-    "oxlint": "^1.33.0",
-    "oxlint-tsgolint": "^0.9.1",
+    "oxlint": "^1.35.0",
+    "oxlint-tsgolint": "^0.10.0",
     "rolldown": "^1.0.0-beta.55",
     "socket.io-client": "4.8.1",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.50.0"
+    "typescript-eslint": "^8.50.1"
   },
   "overrides": {
     "bc-stubs": {
