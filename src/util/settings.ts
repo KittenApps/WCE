@@ -220,6 +220,7 @@ export const defaultSettings = {
         if (Player.Wardrobe) {
           WardrobeSize = LOCAL_WARDROBE_SIZE;
           loadLocalWardrobe(Player.Wardrobe);
+          WardrobeFixLength();
           // Call compress wardrobe to save existing outfits, if another addon has extended the wardrobe
           CharacterCompressWardrobe(Player.Wardrobe);
         } else {
