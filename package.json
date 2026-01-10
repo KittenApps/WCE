@@ -24,6 +24,7 @@
     "@types/node": "^25.0.5",
     "bc-stubs": "^124.0.0-Beta.2",
     "bondage-club-mod-sdk": "^1.2.0",
+    "idb": "^8.0.3",
     "oxfmt": "^0.23.0",
     "oxlint": "^1.38.0",
     "oxlint-tsgolint": "^0.11.0",
