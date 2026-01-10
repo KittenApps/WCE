@@ -22,7 +22,7 @@ export default class LoaderBuilder {
     return `// ==UserScript==
 // @name WCE ${this.label}loader${isFUSAM ? " with FUSAM" : ""}
 // @namespace https://www.bondageprojects.com/
-// @version ${isFUSAM ? "1.5" : "1.2"}
+// @version ${isFUSAM ? "1.6" : "1.3"}
 // @description Wholesome Club Extensions (WCE) - enhancements for the bondage club - fork of FBC 5.8
 // @author Sidious, Stella
 // @supportURL https://github.com/KittenApps/WCE
@@ -49,11 +49,6 @@ preloadLink.href = \`\${URL}/wce.js\`;
 preloadLink.rel = "modulepreload";
 document.head.appendChild(preloadLink);
 
-var dexiePreloadLink = document.createElement("link");
-dexiePreloadLink.href = \`\${URL}/dexie.js\`;
-dexiePreloadLink.rel = "modulepreload";
-document.head.appendChild(dexiePreloadLink);
-
 delete fusam.enabledDistributions.FBC;
 localStorage.setItem("fusam.settings", JSON.stringify(fusam));`;
     }
@@ -65,11 +60,6 @@ var preloadLink = document.createElement("link");
 preloadLink.href = "${this.URL}/wce.js";
 preloadLink.rel = "modulepreload";
 document.head.appendChild(preloadLink);
-
-var dexiePreloadLink = document.createElement("link");
-dexiePreloadLink.href = "${this.URL}/dexie.js";
-dexiePreloadLink.rel = "modulepreload";
-document.head.appendChild(dexiePreloadLink);
 
 var fusam = JSON.parse(localStorage.getItem("fusam.settings") || "{}");
 fusam.enabledDistributions ??= {};
@@ -85,11 +75,6 @@ var preloadLink = document.createElement("link");
 preloadLink.href = "${this.URL}/wce.js";
 preloadLink.rel = "modulepreload";
 document.head.appendChild(preloadLink);
-
-var dexiePreloadLink = document.createElement("link");
-dexiePreloadLink.href = "${this.URL}/dexie.js";
-dexiePreloadLink.rel = "modulepreload";
-document.head.appendChild(dexiePreloadLink);
 
 var fusam = JSON.parse(localStorage.getItem("fusam.settings") || "{}");
 fusam.enabledDistributions ??= {};
