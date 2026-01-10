@@ -8,7 +8,7 @@ import { waitFor, sleep, parseJSON, isString } from "../util/utils";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 
 export default async function automaticReconnect() {
-  /** @type {import("idb").IDBPDatabase<{key: { key: number; value: { id: number; key: CryptoKey } }; accounts: { key: number; value: { id: number; data: Uint8Array<ArrayBuffer>; iv: Uint8Array<ArrayBuffer>; auth: Uint8Array<ArrayBuffer>; } }}>}*/
+  /** @type {import("idb").IDBPDatabase<{key: { key: number; value: WCEKey }; accounts: { key: number; value: WCEAcc }}>} */
   const db = await openDB("wce-saved-accounts", 20, {
     upgrade(db) {
       if (!db.objectStoreNames.contains("key")) db.createObjectStore("key", { keyPath: "id" });
