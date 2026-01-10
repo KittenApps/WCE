@@ -1,8 +1,8 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
+import { displayText } from "../util/localization";
 import { debug } from "../util/logger";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 import { deepCopy, mustNum, fbcChatNotify, fbcSendAction } from "../util/utils";
-import { displayText } from "../util/localization";
 
 export default function itemAntiCheat() {
   /** @type {Map<number, number>} */
@@ -29,10 +29,7 @@ export default function itemAntiCheat() {
    * @returns {{ changed: number; prohibited: boolean }}
    */
   function validateSingleItemChange(sourceCharacter, oldItem, newItem, ignoreLocks, ignoreColors) {
-    const changes = {
-      changed: 0,
-      prohibited: false,
-    };
+    const changes = { changed: 0, prohibited: false };
 
     if (sourceCharacter.IsPlayer()) {
       return changes;
@@ -68,9 +65,7 @@ export default function itemAntiCheat() {
     }
 
     function validateMistressLocks() {
-      const sourceCanBeMistress =
-        (sourceCharacter?.Reputation?.find(a => a.Type === "Dominant")?.Value ?? 0) >= 50 ||
-        sourceCharacter.Title === "Mistress";
+      const sourceCanBeMistress = (sourceCharacter?.Reputation?.find(a => a.Type === "Dominant")?.Value ?? 0) >= 50 || sourceCharacter.Title === "Mistress";
 
       if (
         sourceCanBeMistress ||
@@ -148,9 +143,10 @@ export default function itemAntiCheat() {
     if (Date.now() - noticeSent > 1000 * 60 * 10) {
       noticesSent.set(sourceCharacter.MemberNumber, Date.now());
       fbcSendAction(
-        displayText(
-          "A magical shield on $playerName repelled the suspiciously magical changes attempted by $sourceName! [WCE Anti-Cheat]",
-          { $playerName: CharacterNickname(Player), $sourceName: sourceName })
+        displayText("A magical shield on $playerName repelled the suspiciously magical changes attempted by $sourceName! [WCE Anti-Cheat]", {
+          $playerName: CharacterNickname(Player),
+          $sourceName: sourceName,
+        })
       );
     }
     if (
@@ -164,148 +160,135 @@ export default function itemAntiCheat() {
     ChatRoomCharacterUpdate(Player);
   }
 
-  SDK.hookFunction(
-    "ChatRoomSyncItem",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      const [data] = args;
-      if (!fbcSettings.itemAntiCheat) {
-        return next(args);
-      }
-      const item = /** @type {{ Target: number; } & ItemBundle} */ (data?.Item);
-      if (item?.Target !== Player.MemberNumber) {
-        return next(args);
-      }
-      if (Player.WhiteList.includes(data.Source)) {
-        return next(args);
-      }
-      const sourceCharacter =
-        ChatRoomCharacter.find(a => a.MemberNumber === data.Source) ||
-        (data.Source === Player.MemberNumber ? Player : null);
-
-      if (!sourceCharacter) {
-        throw new Error("change from invalid source character not in the current room");
-      }
-
-      const ignoreLocks = Player.Appearance.some(a => a.Asset.Name === "FuturisticCollar");
-      const ignoreColors = Player.Appearance.some(a => a.Asset.Name === "FuturisticHarness") || ignoreLocks;
-      const oldItem = Player.Appearance.find(i => i.Asset.Group.Name === item.Group);
-      const oldItemBundle = oldItem ? ServerAppearanceBundle([oldItem])[0] : null;
-      const result = validateSingleItemChange(sourceCharacter, oldItemBundle, item, ignoreLocks, ignoreColors);
-      if (result.prohibited) {
-        revertChanges(sourceCharacter);
-        return null;
-      }
+  SDK.hookFunction("ChatRoomSyncItem", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    const [data] = args;
+    if (!fbcSettings.itemAntiCheat) {
       return next(args);
     }
-  );
+    const item = /** @type {{ Target: number; } & ItemBundle} */ (data?.Item);
+    if (item?.Target !== Player.MemberNumber) {
+      return next(args);
+    }
+    if (Player.WhiteList.includes(data.Source)) {
+      return next(args);
+    }
+    const sourceCharacter = ChatRoomCharacter.find(a => a.MemberNumber === data.Source) || (data.Source === Player.MemberNumber ? Player : null);
 
-  SDK.hookFunction(
-    "ChatRoomSyncSingle",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      const [data] = args;
-      if (!fbcSettings.itemAntiCheat) {
-        return next(args);
-      }
-      if (!data?.Character) {
-        return next(args);
-      }
-      if (data.Character.MemberNumber !== Player.MemberNumber) {
-        return next(args);
-      }
-      if (Player.WhiteList.includes(data.SourceMemberNumber)) {
-        return next(args);
-      }
+    if (!sourceCharacter) {
+      throw new Error("change from invalid source character not in the current room");
+    }
 
-      const sourceCharacter =
-        ChatRoomCharacter.find(a => a.MemberNumber === data.SourceMemberNumber) ||
-        (data.SourceMemberNumber === Player.MemberNumber ? Player : null);
+    const ignoreLocks = Player.Appearance.some(a => a.Asset.Name === "FuturisticCollar");
+    const ignoreColors = Player.Appearance.some(a => a.Asset.Name === "FuturisticHarness") || ignoreLocks;
+    const oldItem = Player.Appearance.find(i => i.Asset.Group.Name === item.Group);
+    const oldItemBundle = oldItem ? ServerAppearanceBundle([oldItem])[0] : null;
+    const result = validateSingleItemChange(sourceCharacter, oldItemBundle, item, ignoreLocks, ignoreColors);
+    if (result.prohibited) {
+      revertChanges(sourceCharacter);
+      return null;
+    }
+    return next(args);
+  });
 
-      if (!sourceCharacter) {
-        throw new Error("change from invalid source character not in the current room");
-      }
+  SDK.hookFunction("ChatRoomSyncSingle", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    const [data] = args;
+    if (!fbcSettings.itemAntiCheat) {
+      return next(args);
+    }
+    if (!data?.Character) {
+      return next(args);
+    }
+    if (data.Character.MemberNumber !== Player.MemberNumber) {
+      return next(args);
+    }
+    if (Player.WhiteList.includes(data.SourceMemberNumber)) {
+      return next(args);
+    }
 
-      if (sourceCharacter.IsPlayer()) {
-        return next(args);
-      }
+    const sourceCharacter =
+      ChatRoomCharacter.find(a => a.MemberNumber === data.SourceMemberNumber) || (data.SourceMemberNumber === Player.MemberNumber ? Player : null);
 
-      /**
-       * Gets the item bundles to be used for diff comparison, also making necessary changes for the purpose
-       * @param {ItemBundle[]} bundle
-       * @returns {Map<string, ItemBundle>}
-       */
-      function processItemBundleToMap(bundle) {
-        /** @type {(Map<string, ItemBundle>)} */
-        const initial = new Map();
-        return bundle.reduce((prev, cur) => {
-          // Ignoring color changes
-          cur = deepCopy(cur);
-          delete cur.Color;
-          prev.set(`${cur.Group}/${cur.Name}`, cur);
-          return prev;
-        }, initial);
-      }
+    if (!sourceCharacter) {
+      throw new Error("change from invalid source character not in the current room");
+    }
 
-      // Number of items changed in appearance
-      const oldItems = processItemBundleToMap(
-        ServerAppearanceBundle(Player.Appearance.filter(a => a.Asset.Group.Category === "Item"))
-      );
+    if (sourceCharacter.IsPlayer()) {
+      return next(args);
+    }
 
-      if (!data.Character.Appearance) {
-        throw new Error("no appearance data in sync single");
-      }
-
-      const newItems = processItemBundleToMap(
-        data.Character.Appearance.filter(a => ServerBundledItemToAppearanceItem("Female3DCG", a)?.Asset.Group.Category === "Item")
-      );
-
-      // Locks can be modified enmass with futuristic collar
-      const ignoreLocks = Array.from(oldItems.values()).some(i => i.Name === "FuturisticCollar") &&
-        Array.from(newItems.values()).some(i => i.Name === "FuturisticCollar");
-      const ignoreColors = (Array.from(oldItems.values()).some(i => i.Name === "FuturisticHarness") &&
-        Array.from(newItems.values()).some(i => i.Name === "FuturisticHarness")) ||
-        ignoreLocks;
-
-      debug("Anti-Cheat validating bulk change from", sourceCharacter.MemberNumber);
-
-      // Count number of new items
-      const newAndChanges = Array.from(newItems.keys()).reduce(
-        (changes, cur) => {
-          const newItem = newItems.get(cur);
-          if (!newItem) {
-            throw new Error("this should never happen: newItem is null inside map loop");
-          }
-          if (!oldItems.has(cur)) {
-            // Item is new, validate it and mark as new
-            if (!validateNewLockMemberNumber(sourceCharacter, newItem)) {
-              changes.prohibited = true;
-            }
-            changes.new++;
-            return changes;
-          }
-          const oldItem = oldItems.get(cur) ?? null;
-          const result = validateSingleItemChange(sourceCharacter, oldItem, newItem, ignoreLocks, ignoreColors);
-          changes.prohibited = changes.prohibited || result.prohibited;
-          changes.changed += result.changed;
-          return changes;
-        },
-        { new: 0, changed: 0, prohibited: false }
-      );
-
-      // Count number of removed items
-      const removed = Array.from(oldItems.keys()).reduce((prev, cur) => {
-        if (!newItems.has(cur)) {
-          return prev + 1;
-        }
+    /**
+     * Gets the item bundles to be used for diff comparison, also making necessary changes for the purpose
+     * @param {ItemBundle[]} bundle
+     * @returns {Map<string, ItemBundle>}
+     */
+    function processItemBundleToMap(bundle) {
+      /** @type {(Map<string, ItemBundle>)} */
+      const initial = new Map();
+      return bundle.reduce((prev, cur) => {
+        // Ignoring color changes
+        cur = deepCopy(cur);
+        delete cur.Color;
+        prev.set(`${cur.Group}/${cur.Name}`, cur);
         return prev;
-      }, 0);
-      if (newAndChanges.new + newAndChanges.changed + removed > 2 || newAndChanges.prohibited) {
-        debug("Anti-Cheat tripped on bulk change from", sourceCharacter.MemberNumber, newAndChanges, removed);
-        revertChanges(sourceCharacter);
-        return null;
-      }
-      return next(args);
+      }, initial);
     }
-  );
+
+    // Number of items changed in appearance
+    const oldItems = processItemBundleToMap(ServerAppearanceBundle(Player.Appearance.filter(a => a.Asset.Group.Category === "Item")));
+
+    if (!data.Character.Appearance) {
+      throw new Error("no appearance data in sync single");
+    }
+
+    const newItems = processItemBundleToMap(
+      data.Character.Appearance.filter(a => ServerBundledItemToAppearanceItem("Female3DCG", a)?.Asset.Group.Category === "Item")
+    );
+
+    // Locks can be modified enmass with futuristic collar
+    const ignoreLocks =
+      Array.from(oldItems.values()).some(i => i.Name === "FuturisticCollar") && Array.from(newItems.values()).some(i => i.Name === "FuturisticCollar");
+    const ignoreColors =
+      (Array.from(oldItems.values()).some(i => i.Name === "FuturisticHarness") && Array.from(newItems.values()).some(i => i.Name === "FuturisticHarness")) ||
+      ignoreLocks;
+
+    debug("Anti-Cheat validating bulk change from", sourceCharacter.MemberNumber);
+
+    // Count number of new items
+    const newAndChanges = Array.from(newItems.keys()).reduce(
+      (changes, cur) => {
+        const newItem = newItems.get(cur);
+        if (!newItem) {
+          throw new Error("this should never happen: newItem is null inside map loop");
+        }
+        if (!oldItems.has(cur)) {
+          // Item is new, validate it and mark as new
+          if (!validateNewLockMemberNumber(sourceCharacter, newItem)) {
+            changes.prohibited = true;
+          }
+          changes.new++;
+          return changes;
+        }
+        const oldItem = oldItems.get(cur) ?? null;
+        const result = validateSingleItemChange(sourceCharacter, oldItem, newItem, ignoreLocks, ignoreColors);
+        changes.prohibited = changes.prohibited || result.prohibited;
+        changes.changed += result.changed;
+        return changes;
+      },
+      { new: 0, changed: 0, prohibited: false }
+    );
+
+    // Count number of removed items
+    const removed = Array.from(oldItems.keys()).reduce((prev, cur) => {
+      if (!newItems.has(cur)) {
+        return prev + 1;
+      }
+      return prev;
+    }, 0);
+    if (newAndChanges.new + newAndChanges.changed + removed > 2 || newAndChanges.prohibited) {
+      debug("Anti-Cheat tripped on bulk change from", sourceCharacter.MemberNumber, newAndChanges, removed);
+      revertChanges(sourceCharacter);
+      return null;
+    }
+    return next(args);
+  });
 }

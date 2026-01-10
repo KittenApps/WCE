@@ -1,6 +1,6 @@
+import { displayText } from "../util/localization";
 import { SDK, HOOK_PRIORITIES, patchFunction } from "../util/modding";
 import { fbcSettings } from "../util/settings";
-import { displayText } from "../util/localization";
 import { isNonNullObject } from "../util/utils";
 
 const FBC_DEVS = [23476, 27006, 24890];
@@ -38,88 +38,65 @@ export default function commonPatches(): void {
     "disabling conflicting Player.ArousalSettings.AffectExpression when Animation Engine is active"
   );
 
-  SDK.hookFunction(
-    "PreferenceSubscreenArousalClick",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      if (fbcSettings.animationEngine && PreferenceArousalIsActive() && MouseIn(1250, 276, 64, 64)) return null;
+  SDK.hookFunction("PreferenceSubscreenArousalClick", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    if (fbcSettings.animationEngine && PreferenceArousalIsActive() && MouseIn(1250, 276, 64, 64)) return null;
+    return next(args);
+  });
+
+  SDK.hookFunction("PreferenceSubscreenImmersionClick", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    if (
+      PreferencePageCurrent === 2 &&
+      MouseIn(500, 592, 64, 64) &&
+      (Player.GetDifficulty() > 2 || (Player.GameplaySettings.ImmersionLockSetting && Player.IsRestrained()))
+    ) {
+      Player.ImmersionSettings.ShowUngarbledMessages = !Player.ImmersionSettings.ShowUngarbledMessages;
+      return null;
+    }
+    return next(args);
+  });
+
+  SDK.hookFunction("InformationSheetRun", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    if (!InformationSheetSelection?.MemberNumber) {
       return next(args);
     }
-  );
 
-  SDK.hookFunction(
-    "PreferenceSubscreenImmersionClick",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      if (PreferencePageCurrent === 2 && MouseIn(500, 592, 64, 64) &&
-        (Player.GetDifficulty() > 2 || (Player.GameplaySettings.ImmersionLockSetting && Player.IsRestrained()))) {
-        Player.ImmersionSettings.ShowUngarbledMessages = !Player.ImmersionSettings.ShowUngarbledMessages;
-        return null;
+    const ret = next(args);
+    const isFbcDev = FBC_DEVS.includes(InformationSheetSelection.MemberNumber);
+    const isWceDev = WCE_DEVS.includes(InformationSheetSelection.MemberNumber);
+
+    if (isFbcDev || isWceDev) {
+      const ctx = window.MainCanvas.getContext("2d");
+      if (!ctx) {
+        throw new Error("could not get canvas 2d context");
       }
-      return next(args);
+      ctx.textAlign = "left";
+      DrawText(isWceDev ? displayText("WCE Developer") : displayText("FBC Developer"), 550, 75, isWceDev ? "fuchsia" : "hotpink", "black");
+      ctx.textAlign = "center";
     }
-  );
 
-  SDK.hookFunction(
-    "InformationSheetRun",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      if (!InformationSheetSelection?.MemberNumber) {
-        return next(args);
-      }
-
-      const ret = next(args);
-      const isFbcDev = FBC_DEVS.includes(InformationSheetSelection.MemberNumber);
-      const isWceDev = WCE_DEVS.includes(InformationSheetSelection.MemberNumber);
-
-      if (isFbcDev || isWceDev) {
-        const ctx = window.MainCanvas.getContext("2d");
-        if (!ctx) {
-          throw new Error("could not get canvas 2d context");
-        }
-        ctx.textAlign = "left";
-        DrawText(
-          isWceDev ? displayText("WCE Developer") : displayText("FBC Developer"),
-          550,
-          75,
-          isWceDev ? "fuchsia" : "hotpink",
-          "black"
-        );
-        ctx.textAlign = "center";
-      }
-
-      return ret;
-    }
-  );
+    return ret;
+  });
 
   // Looking for settings erasure by client
-  SDK.hookFunction(
-    "ServerSend",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      const [msgType, data] = args;
-      if (msgType !== "AccountUpdate") {
-        return next(args);
-      }
-      if (!isNonNullObject(data)) {
-        return next(args);
-      }
-      if ("ExtensionSettings" in data) {
-        throw new Error("misuse of ExtensionSettings detected; write prevented");
-      }
+  SDK.hookFunction("ServerSend", HOOK_PRIORITIES.Top, (args, next) => {
+    const [msgType, data] = args;
+    if (msgType !== "AccountUpdate") {
       return next(args);
     }
-  );
+    if (!isNonNullObject(data)) {
+      return next(args);
+    }
+    if ("ExtensionSettings" in data) {
+      throw new Error("misuse of ExtensionSettings detected; write prevented");
+    }
+    return next(args);
+  });
 
   // Prevent processing of sent messages when disconnected
-  SDK.hookFunction(
-    "ServerSendQueueProcess",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      if (!ServerIsConnected) {
-        return null;
-      }
-      return next(args);
+  SDK.hookFunction("ServerSendQueueProcess", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    if (!ServerIsConnected) {
+      return null;
     }
-  );
+    return next(args);
+  });
 }

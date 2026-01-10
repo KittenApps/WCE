@@ -1,10 +1,11 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { fbcBeepNotify } from "../util/hooks";
-import { waitFor, isWardrobe, parseJSON } from "../util/utils";
-import { logInfo, logError } from "../util/logger";
-import { fbcSettings } from "../util/settings";
-import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE } from "../util/constants";
 import type { Table, IndexableType } from "dexie";
+
+import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE } from "../util/constants";
+import { fbcBeepNotify } from "../util/hooks";
+import { logInfo, logError } from "../util/logger";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
+import { fbcSettings } from "../util/settings";
+import { waitFor, isWardrobe, parseJSON } from "../util/utils";
 
 let localWardrobeTable: Table<{ id: number; appearance: ServerItemBundle[] }, IndexableType, unknown>;
 let extendedWardrobeLoaded = false;
@@ -29,7 +30,7 @@ async function saveLocalWardrobe(wardrobe: ServerItemBundle[][]): Promise<void> 
  */
 function sanitizeBundles(bundleList: ItemBundle[]): ItemBundle[] {
   if (!Array.isArray(bundleList)) return bundleList;
-  return bundleList.map((bundle) => {
+  return bundleList.map(bundle => {
     // eslint-disable-next-line @typescript-eslint/no-deprecated
     if (typeof bundle.Property?.Type === "string" && !CommonIsObject(bundle.Property?.TypeRecord)) {
       const asset = AssetGet("Female3DCG", bundle.Group, bundle.Name);
@@ -71,10 +72,12 @@ export async function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boole
   WardrobeFixLength();
 
   if (!wData) {
-    const warnNew = "Looks like you are enabling the extended wardrobe for the first time on this character. " +
+    const warnNew =
+      "Looks like you are enabling the extended wardrobe for the first time on this character. " +
       "Proceeding will create a new empty extended wardrobe for the current character. " +
       "If you expect an already existing extended wardrobe for this character to be imported from a different device: choose Cancel instead.";
-    const warnOld = "No extended wardrobe data found. Do you want to create a new empty extended wardrobe? WARNING: " +
+    const warnOld =
+      "No extended wardrobe data found. Do you want to create a new empty extended wardrobe? WARNING: " +
       "This will lead to permanent data loss of your extended wardrobe. In case of a temporary server issue you should choose Cancel here " +
       "(extended wardrobe slots will not be persistent until after a reload extended wardrobe is available again or an empty one is created).";
     const [answ] = await FUSAM.modals.openAsync({ prompt: init ? warnOld : warnNew, buttons: { cancel: "Cancel", submit: "OK" } });
@@ -94,7 +97,7 @@ export async function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boole
       }
       extendedWardrobeLoaded = true;
     }
-  } catch(e) {
+  } catch (e) {
     logError("Failed to load extended wardrobe", e);
     fbcBeepNotify("Wardrobe error", `Failed to load extended wardrobe.\n\nBackup: ${wData}`);
     logInfo("Backup wardrobe", wData);
@@ -105,41 +108,33 @@ export async function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boole
 export default async function extendedWardrobe(): Promise<void> {
   await waitFor(() => !!ServerSocket);
 
-  SDK.hookFunction(
-    "CharacterCompressWardrobe",
-    HOOK_PRIORITIES.Top,
-    ([wardrobe], next) => {
-      if (isWardrobe(wardrobe)) {
-        const additionalWardrobe = wardrobe.slice(DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE);
-        if (additionalWardrobe.length > 0 && extendedWardrobeLoaded) {
-          Player.ExtensionSettings.FBCWardrobe = LZString.compressToUTF16(JSON.stringify(additionalWardrobe));
-          const additionalLocalWardrobe = wardrobe.slice(EXPANDED_WARDROBE_SIZE);
-          if (additionalLocalWardrobe.length > 0) saveLocalWardrobe(additionalLocalWardrobe);
-          wardrobe = wardrobe.slice(0, DEFAULT_WARDROBE_SIZE);
-          ServerPlayerExtensionSettingsSync("FBCWardrobe");
-        }
+  SDK.hookFunction("CharacterCompressWardrobe", HOOK_PRIORITIES.Top, ([wardrobe], next) => {
+    if (isWardrobe(wardrobe)) {
+      const additionalWardrobe = wardrobe.slice(DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE);
+      if (additionalWardrobe.length > 0 && extendedWardrobeLoaded) {
+        Player.ExtensionSettings.FBCWardrobe = LZString.compressToUTF16(JSON.stringify(additionalWardrobe));
+        const additionalLocalWardrobe = wardrobe.slice(EXPANDED_WARDROBE_SIZE);
+        if (additionalLocalWardrobe.length > 0) saveLocalWardrobe(additionalLocalWardrobe);
+        wardrobe = wardrobe.slice(0, DEFAULT_WARDROBE_SIZE);
+        ServerPlayerExtensionSettingsSync("FBCWardrobe");
       }
-      return next([wardrobe]);
     }
-  );
+    return next([wardrobe]);
+  });
 
-  SDK.hookFunction(
-    "WardrobeLoadCharacterNames",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      if (!fbcSettings.localWardrobe) return next(args);
-      if (!Player.WardrobeCharacterNames) Player.WardrobeCharacterNames = [];
-      let Push = false;
-      while (Player.WardrobeCharacterNames.length <= WardrobeSize) {
-        if (Player.WardrobeCharacterNames.length < EXPANDED_WARDROBE_SIZE) {
-          Player.WardrobeCharacterNames.push(Player.Name);
-          Push = true;
-        } else {
-          Player.WardrobeCharacterNames.push("Local");
-        }
+  SDK.hookFunction("WardrobeLoadCharacterNames", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    if (!fbcSettings.localWardrobe) return next(args);
+    if (!Player.WardrobeCharacterNames) Player.WardrobeCharacterNames = [];
+    let Push = false;
+    while (Player.WardrobeCharacterNames.length <= WardrobeSize) {
+      if (Player.WardrobeCharacterNames.length < EXPANDED_WARDROBE_SIZE) {
+        Player.WardrobeCharacterNames.push(Player.Name);
+        Push = true;
+      } else {
+        Player.WardrobeCharacterNames.push("Local");
       }
-      if (Push) ServerAccountUpdate.QueueData({ WardrobeCharacterNames: Player.WardrobeCharacterNames.slice(0, EXPANDED_WARDROBE_SIZE) });
-      return null;
     }
-  );
+    if (Push) ServerAccountUpdate.QueueData({ WardrobeCharacterNames: Player.WardrobeCharacterNames.slice(0, EXPANDED_WARDROBE_SIZE) });
+    return null;
+  });
 }

@@ -1,5 +1,6 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import type { Socket } from "socket.io-client";
+
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 
 interface SocketReservedEvents {
   connect: () => void;
@@ -11,8 +12,11 @@ type ReservedOrUserEventNames<ReservedEventsMap, UserEvents> = EventNames<Reserv
 
 const listeners: [ReservedOrUserEventNames<SocketReservedEvents, ServerToClientEvents>, (...args: unknown[]) => unknown][] = [];
 
-// oxlint-disable-next-line prefer-await-to-callbacks
-export function registerSocketListener(event: ReservedOrUserEventNames<SocketReservedEvents, ServerToClientEvents>, cb: (...args: unknown[]) => unknown): Socket<ServerToClientEvents, ClientToServerEvents> {
+export function registerSocketListener(
+  event: ReservedOrUserEventNames<SocketReservedEvents, ServerToClientEvents>,
+  // oxlint-disable-next-line prefer-await-to-callbacks
+  cb: (...args: unknown[]) => unknown
+): Socket<ServerToClientEvents, ClientToServerEvents> {
   if (!listeners.some(l => l[1] === cb)) {
     listeners.push([event, cb]);
     return ServerSocket.on(event, cb);
@@ -22,15 +26,11 @@ export function registerSocketListener(event: ReservedOrUserEventNames<SocketRes
 
 export default function appendSocketListenersToInit(): void {
   // This will be called after reconnect, but not during initial load
-  SDK.hookFunction(
-    "ServerInit",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const ret = next(args);
-      for (const [event, cb] of listeners) {
-        ServerSocket.on(event, cb);
-      }
-      return ret;
+  SDK.hookFunction("ServerInit", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const ret = next(args);
+    for (const [event, cb] of listeners) {
+      ServerSocket.on(event, cb);
     }
-  );
+    return ret;
+  });
 }

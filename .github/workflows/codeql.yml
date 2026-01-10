@@ -3,18 +3,18 @@ name: "CodeQL"
 on:
   push:
     branches:
-      - 'main'
-      - 'beta'
-      - 'dev'
+      - "main"
+      - "beta"
+      - "dev"
   pull_request:
   schedule:
-    - cron: '25 2 * * 4'
+    - cron: "25 2 * * 4"
 
 jobs:
   analyze:
     name: Analyze WCE code
     runs-on: ubuntu-latest
-    timeout-minutes:  360
+    timeout-minutes: 360
     permissions:
       security-events: write
       packages: read
@@ -25,17 +25,17 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - language: javascript-typescript
-          build-mode: none
+          - language: javascript-typescript
+            build-mode: none
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v6
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
-      with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{matrix.language}}"
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{matrix.language}}"

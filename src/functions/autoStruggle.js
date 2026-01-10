@@ -1,21 +1,17 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { createTimer } from "../util/hooks";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 
 export default function autoStruggle() {
-  SDK.hookFunction(
-    "StruggleFlexibilityCheck",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      if (fbcSettings.autoStruggle) {
-        if (StruggleProgressFlexCircles && StruggleProgressFlexCircles.length > 0) {
-          StruggleProgressFlexCircles.splice(0, 1);
-          return true;
-        }
+  SDK.hookFunction("StruggleFlexibilityCheck", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    if (fbcSettings.autoStruggle) {
+      if (StruggleProgressFlexCircles && StruggleProgressFlexCircles.length > 0) {
+        StruggleProgressFlexCircles.splice(0, 1);
+        return true;
       }
-      return next(args);
     }
-  );
+    return next(args);
+  });
 
   createTimer(() => {
     if (!fbcSettings.autoStruggle) {
@@ -45,10 +41,7 @@ export default function autoStruggle() {
     }
     if (StruggleProgressCurrentMinigame === "Dexterity") {
       // Duplicated logic from StruggleDexterity
-      const distMult = Math.max(
-        -0.5,
-        Math.min(1, (85 - Math.abs(StruggleProgressDexTarget - StruggleProgressDexCurrent)) / 75)
-      );
+      const distMult = Math.max(-0.5, Math.min(1, (85 - Math.abs(StruggleProgressDexTarget - StruggleProgressDexCurrent)) / 75));
       if (distMult > 0.5) {
         StruggleDexterityProcess();
       }

@@ -1,10 +1,11 @@
-import { registerSocketListener } from "./appendSocketListenersToInit";
-import { waitFor } from "../util/utils";
+import type { ModSDKModInfo } from "bondage-club-mod-sdk";
+
+import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, settingsLoaded } from "../util/settings";
-import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
+import { waitFor } from "../util/utils";
+import { registerSocketListener } from "./appendSocketListenersToInit";
 import { bceStartClubSlave } from "./forcedClubSlave";
-import type { ModSDKModInfo } from "bondage-club-mod-sdk";
 
 type BCECapabilities = "clubslave" | "layeringHide" | "preventLayeringByOthers";
 declare global {
@@ -45,12 +46,7 @@ export function sendHello(target: number | null = null, requestReply = false): v
 
   const capabilities: BCECapabilities[] = ["clubslave", "layeringHide"];
   if (fbcSettings.preventLayeringByOthers) capabilities.push("preventLayeringByOthers");
-  const message: ServerChatRoomMessage = {
-    Type: HIDDEN,
-    Content: BCE_MSG,
-    Sender: Player.MemberNumber,
-    Dictionary: [],
-  };
+  const message: ServerChatRoomMessage = { Type: HIDDEN, Content: BCE_MSG, Sender: Player.MemberNumber, Dictionary: [] };
   const fbcMessage: FBCDictionaryEntry = {
     message: {
       type: MESSAGE_TYPES.Hello,

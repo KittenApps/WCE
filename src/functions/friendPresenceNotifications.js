@@ -1,8 +1,8 @@
 import { createTimer } from "../util/hooks";
-import { registerSocketListener } from "./appendSocketListenersToInit";
+import { displayText } from "../util/localization";
 import { fbcSettings } from "../util/settings";
 import { waitFor, fbcChatNotify, fbcNotify } from "../util/utils";
-import { displayText } from "../util/localization";
+import { registerSocketListener } from "./appendSocketListenersToInit";
 
 export default async function friendPresenceNotifications() {
   await waitFor(() => !!Player && ServerSocket && ServerIsConnected);
@@ -26,7 +26,7 @@ export default async function friendPresenceNotifications() {
      * @param {ServerAccountQueryResponse} data
      * @returns {string}
      */
-    (data) => {
+    data => {
       if (CurrentScreen === "FriendList" || CurrentScreen === "Relog" || CurrentScreen === "Login") {
         return;
       }
@@ -41,11 +41,8 @@ export default async function friendPresenceNotifications() {
         onlineFriends = friendMemberNumbers.filter(f => !lastFriends.some(ff => ff.MemberNumber === f));
       if (onlineFriends.length) {
         const list = onlineFriends
-          .map((f) => {
-            const { MemberNumber, MemberName } = data.Result.find(d => d.MemberNumber === f) ?? {
-              MemberName: "",
-              MemberNumber: -1,
-            };
+          .map(f => {
+            const { MemberNumber, MemberName } = data.Result.find(d => d.MemberNumber === f) ?? { MemberName: "", MemberNumber: -1 };
             return `${MemberName} (${MemberNumber})`;
           })
           .join(", ");
@@ -57,11 +54,8 @@ export default async function friendPresenceNotifications() {
       }
       if (fbcSettings.friendOfflineNotifications && offlineFriends.length) {
         const list = offlineFriends
-          .map((f) => {
-            const { MemberNumber, MemberName } = lastFriends.find(d => d.MemberNumber === f) ?? {
-              MemberName: "",
-              MemberNumber: -1,
-            };
+          .map(f => {
+            const { MemberNumber, MemberName } = lastFriends.find(d => d.MemberNumber === f) ?? { MemberName: "", MemberNumber: -1 };
             return `${MemberName} (${MemberNumber})`;
           })
           .join(", ");

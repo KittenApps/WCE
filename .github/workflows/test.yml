@@ -1,11 +1,11 @@
 name: test
 
-on: 
+on:
   push:
     branches:
-      - 'main'
-      - 'beta'
-      - 'dev'
+      - "main"
+      - "beta"
+      - "dev"
   pull_request:
 
 jobs:
@@ -18,8 +18,9 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+          cache: "npm"
       - run: npm ci
       - run: npm test
+      - run: npm run format:check
       - run: npm run build
       - run: npm run escheck

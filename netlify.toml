@@ -1,8 +1,8 @@
 [build]
-    dist = "dist"
-    command = "npm run build"
+dist = "dist"
+command = "npm run build"
 
 [[headers]]
-    for = "/*"
-    [headers.values]
-        Access-Control-Allow-Origin = "*"
+for = "/*"
+[headers.values]
+Access-Control-Allow-Origin = "*"

@@ -1,5 +1,5 @@
-import { enableLeashing, disableLeashing } from "../util/utils";
 import { fbcSettings } from "../util/settings";
+import { enableLeashing, disableLeashing } from "../util/utils";
 
 export default function leashAlways(): void {
   if (fbcSettings.leashAlways) {

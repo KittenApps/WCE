@@ -1,7 +1,7 @@
-// oxlint-disable @stylistic/quotes @stylistic/quote-props
-import { promises as fs } from 'node:fs';
-import LoaderBuilder from './loaderBuilder.js';
-import { defineConfig } from 'rolldown';
+import { promises as fs } from "node:fs";
+import { defineConfig } from "rolldown";
+
+import LoaderBuilder from "./loaderBuilder.js";
 
 const LICENSE = `/**
 * @license GPL-3.0-or-later
@@ -24,46 +24,36 @@ const LICENSE = `/**
 const loaderBuilder = new LoaderBuilder();
 
 const config = defineConfig({
-  input: 'src/index.ts',
+  input: "src/index.ts",
   output: {
-    dir: 'dist',
-    entryFileNames: 'wce.js',
-    chunkFileNames: '[name].js',
+    dir: "dist",
+    entryFileNames: "wce.js",
+    chunkFileNames: "[name].js",
     sourcemap: true,
-    postBanner: c => c.isEntry ? LICENSE : undefined,
+    postBanner: c => (c.isEntry ? LICENSE : undefined),
     minify: true,
-    legalComments: 'inline',
+    legalComments: "inline",
     cleanDir: true,
   },
-  transform: {
-    target: 'es2022',
-    define: { PUBLIC_URL: `"${loaderBuilder.URL}"` },
-  },
-  resolve: {
-    alias: {
-      'dexie': 'dexie/dist/modern/dexie.mjs',
-      'buttplug': 'buttplug/dist/web/buttplug.mjs',
-    },
-  },
+  transform: { target: "es2022", define: { PUBLIC_URL: `"${loaderBuilder.URL}"` } },
+  resolve: { alias: { dexie: "dexie/dist/modern/dexie.mjs", buttplug: "buttplug/dist/web/buttplug.mjs" } },
   plugins: [
     {
-      name: 'loader-builder-plugin',
+      name: "loader-builder-plugin",
       async generateBundle() {
-        this.emitFile({ type: 'asset', fileName: 'wce-fusam-loader.user.js', source: loaderBuilder.generateFusamLoader() });
-        this.emitFile({ type: 'asset', fileName: 'wce-loader.user.js', source: loaderBuilder.generateStandaloneLoader() });
-        const publicFiles = await fs.readdir('public');
-        await Promise.all(publicFiles.map(fileName =>
-          fs.readFile(`public/${fileName}`).then(source => this.emitFile({ type: 'asset', fileName, source }))
-        ));
+        this.emitFile({ type: "asset", fileName: "wce-fusam-loader.user.js", source: loaderBuilder.generateFusamLoader() });
+        this.emitFile({ type: "asset", fileName: "wce-loader.user.js", source: loaderBuilder.generateStandaloneLoader() });
+        const publicFiles = await fs.readdir("public");
+        await Promise.all(publicFiles.map(fileName => fs.readFile(`public/${fileName}`).then(source => this.emitFile({ type: "asset", fileName, source }))));
       },
     },
   ],
 });
 
-if (process.argv.includes('--watch')) {
-  fs.writeFile('dist/wce-fusam-loader.user.js', loaderBuilder.generateFusamLoader());
-  fs.writeFile('dist/wce-loader.user.js', loaderBuilder.generateStandaloneLoader());
-  const publicFiles = await fs.readdir('public');
+if (process.argv.includes("--watch")) {
+  fs.writeFile("dist/wce-fusam-loader.user.js", loaderBuilder.generateFusamLoader());
+  fs.writeFile("dist/wce-loader.user.js", loaderBuilder.generateStandaloneLoader());
+  const publicFiles = await fs.readdir("public");
   publicFiles.map(fileName => fs.copyFile(`public/${fileName}`, `dist/${fileName}`));
   config.plugins = [];
   config.output.minify = false;

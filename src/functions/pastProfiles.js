@@ -1,8 +1,8 @@
+import { displayText } from "../util/localization";
+import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 import { deepCopy, parseJSON, isCharacter, isNonNullObject, drawTextFitLeft, fbcChatNotify } from "../util/utils";
-import { debug, logInfo, logWarn, logError } from "../util/logger";
-import { displayText } from "../util/localization";
 
 export default async function pastProfiles() {
   if (!fbcSettings.pastProfiles) {
@@ -11,10 +11,7 @@ export default async function pastProfiles() {
 
   const { Dexie } = await import("dexie");
   const db = new Dexie("bce-past-profiles");
-  db.version(3).stores({
-    profiles: "memberNumber, name, lastNick, seen, characterBundle",
-    notes: "memberNumber, note, updatedAt",
-  });
+  db.version(3).stores({ profiles: "memberNumber, name, lastNick, seen, characterBundle", notes: "memberNumber, note, updatedAt" });
 
   ElementCreateTextArea("bceNoteInput");
   /** @type {HTMLTextAreaElement} */
@@ -33,7 +30,7 @@ export default async function pastProfiles() {
       const { quota, usage } = await navigator.storage.estimate();
       debug(`current quota usage ${usage?.toLocaleString() ?? "?"} out of maximum ${quota?.toLocaleString() ?? "?"}`);
       return { quota: quota ?? -1, usage: usage ?? 0 };
-    } catch(e) {
+    } catch (e) {
       logError("reading storage quota information", e);
       return { quota: -1, usage: -1 };
     }
@@ -56,9 +53,7 @@ export default async function pastProfiles() {
   async function quotaSafetyCheck() {
     const { quota, usage } = await readQuota();
     if (usage / quota > 0.9) {
-      logInfo(
-        `storage quota above 90% utilization (${usage}/${quota}), cleaning some of the least recently seen profiles before saving new one`
-      );
+      logInfo(`storage quota above 90% utilization (${usage}/${quota}), cleaning some of the least recently seen profiles before saving new one`);
       await trimProfiles(10);
     }
   }
@@ -100,63 +95,45 @@ export default async function pastProfiles() {
         seen: Date.now(),
         characterBundle: JSON.stringify(characterBundle),
       });
-    } catch(e) {
+    } catch (e) {
       const { quota, usage } = await readQuota();
       logError(`unable to save profile (${usage}/${quota}):`, e);
     }
   }
 
-  SDK.hookFunction(
-    "ChatRoomSync",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      const [data] = args;
-      if (data?.Character?.length) {
-        for (const char of data.Character) {
-          saveProfile(deepCopy(char));
-        }
+  SDK.hookFunction("ChatRoomSync", HOOK_PRIORITIES.Top, (args, next) => {
+    const [data] = args;
+    if (data?.Character?.length) {
+      for (const char of data.Character) {
+        saveProfile(deepCopy(char));
       }
-      return next(args);
     }
-  );
+    return next(args);
+  });
 
-  SDK.hookFunction(
-    "ChatRoomSyncSingle",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      const [data] = args;
-      if (data?.Character?.MemberNumber) {
-        saveProfile(deepCopy(data.Character));
-      }
-      return next(args);
+  SDK.hookFunction("ChatRoomSyncSingle", HOOK_PRIORITIES.Top, (args, next) => {
+    const [data] = args;
+    if (data?.Character?.MemberNumber) {
+      saveProfile(deepCopy(data.Character));
     }
-  );
+    return next(args);
+  });
 
-  SDK.hookFunction(
-    "InformationSheetRun",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      if (!InformationSheetSelection) {
-        throw new Error("InformationSheetSelection is null in InformationSheetRun");
-      }
-      if (InformationSheetSelection.BCESeen) {
-        const ctx = window.MainCanvas.getContext("2d");
-        if (!ctx) {
-          throw new Error("could not get canvas 2d context");
-        }
-        ctx.textAlign = "left";
-        DrawText(
-          displayText("Last seen: ") + new Date(InformationSheetSelection.BCESeen).toLocaleString(),
-          1200,
-          75,
-          "grey",
-          "black"
-        );
-        ctx.textAlign = "center";
-      }
-      return next(args);
+  SDK.hookFunction("InformationSheetRun", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    if (!InformationSheetSelection) {
+      throw new Error("InformationSheetSelection is null in InformationSheetRun");
     }
-  );
+    if (InformationSheetSelection.BCESeen) {
+      const ctx = window.MainCanvas.getContext("2d");
+      if (!ctx) {
+        throw new Error("could not get canvas 2d context");
+      }
+      ctx.textAlign = "left";
+      DrawText(displayText("Last seen: ") + new Date(InformationSheetSelection.BCESeen).toLocaleString(), 1200, 75, "grey", "black");
+      ctx.textAlign = "center";
+    }
+    return next(args);
+  });
 
   /**
    * @param {number} memberNumber
@@ -165,10 +142,7 @@ export default async function pastProfiles() {
   async function openCharacter(memberNumber) {
     try {
       const profile = await profiles.get(memberNumber);
-      const C = CharacterLoadOnline(
-        /** @type {ServerAccountDataSynced} */ (parseJSON(profile.characterBundle)),
-        memberNumber
-      );
+      const C = CharacterLoadOnline(/** @type {ServerAccountDataSynced} */ (parseJSON(profile.characterBundle)), memberNumber);
       C.BCESeen = profile.seen;
       if (CurrentScreen === "ChatRoom") {
         ChatRoomHideElements();
@@ -177,7 +151,7 @@ export default async function pastProfiles() {
         }
       }
       InformationSheetLoadCharacter(C);
-    } catch(e) {
+    } catch (e) {
       fbcChatNotify(displayText("No profile found"));
       logError("reading profile", e);
     }
@@ -186,21 +160,18 @@ export default async function pastProfiles() {
   CommandCombine({
     Tag: "profiles",
     Description: displayText("<filter> - List seen profiles, optionally searching by member number or name"),
-    Action: (argums) => {
-      (async(args) => {
+    Action: argums => {
+      (async args => {
         /** @type {FBCSavedProfile[]} */
         let list = await profiles.toArray();
-        list = list.filter(p =>
-          !args ||
-          p.name.toLowerCase().includes(args) ||
-          p.memberNumber.toString().includes(args) ||
-          p.lastNick?.toLowerCase().includes(args)
+        list = list.filter(
+          p => !args || p.name.toLowerCase().includes(args) || p.memberNumber.toString().includes(args) || p.lastNick?.toLowerCase().includes(args)
         );
         list.sort((a, b) => b.seen - a.seen);
         const matches = list.length;
         list = list.slice(0, 100);
         list.sort((a, b) => -(b.lastNick ?? b.name).localeCompare(a.lastNick ?? a.name));
-        const lines = list.map((p) => {
+        const lines = list.map(p => {
           const div = document.createElement("div");
           div.textContent = displayText("$nickAndName ($memberNumber) - Seen: $seen", {
             $nickAndName: p.lastNick ? `${p.lastNick} / ${p.name}` : p.name,
@@ -211,7 +182,7 @@ export default async function pastProfiles() {
           link.textContent = displayText("Open");
           link.href = "#";
           link.classList.add("bce-profile-open");
-          link.addEventListener("click", (e) => {
+          link.addEventListener("click", e => {
             e.preventDefault();
             e.stopPropagation();
             openCharacter(p.memberNumber);
@@ -254,7 +225,7 @@ export default async function pastProfiles() {
     noteInput.value = "Loading...";
     notes
       .get(InformationSheetSelection.MemberNumber)
-      .then((note) => {
+      .then(note => {
         if (isNote(note)) {
           noteInput.value = note?.note || "";
           noteUpdatedAt = note?.updatedAt || 0;
@@ -262,25 +233,21 @@ export default async function pastProfiles() {
           throw new Error("invalid note");
         }
       })
-      .catch((/** @type {unknown} */reason) => {
+      .catch((/** @type {unknown} */ reason) => {
         noteInput.value = "";
         logError("getting note", reason);
       });
   }
 
-  SDK.hookFunction(
-    "CharacterLoadOnline",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      const C = next(args);
-      if (isCharacter(C) && C.MemberNumber) {
-        notes.get(C.MemberNumber).then((note) => {
-          C.FBCNoteExists = Boolean(isNote(note) && note.note);
-        });
-      }
-      return C;
+  SDK.hookFunction("CharacterLoadOnline", HOOK_PRIORITIES.Top, (args, next) => {
+    const C = next(args);
+    if (isCharacter(C) && C.MemberNumber) {
+      notes.get(C.MemberNumber).then(note => {
+        C.FBCNoteExists = Boolean(isNote(note) && note.note);
+      });
     }
-  );
+    return C;
+  });
 
   function hideNoteInput() {
     noteInput.classList.add("bce-hidden");
@@ -302,58 +269,39 @@ export default async function pastProfiles() {
   document.addEventListener("keydown", keyHandler, true);
   document.addEventListener("keypress", keyHandler, true);
 
-  SDK.hookFunction(
-    "OnlineProfileRun",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      if (inNotes) {
-        DrawText(displayText("Personal notes (only you can read these):"), 910, 105, "Black", "Gray");
-        if (noteUpdatedAt) {
-          drawTextFitLeft(
-            displayText("Last saved: $date", { $date: new Date(noteUpdatedAt).toLocaleString() }),
-            60,
-            105,
-            400,
-            "Black",
-            "Gray"
-          );
-        }
-        ElementPositionFix("bceNoteInput", 36, 100, 160, 1790, 750);
-        // Always draw the accept button; normal method shows it when is player
-        DrawButton(1720, 60, 90, 90, "", "White", "Icons/Accept.png", TextGet("LeaveSave"));
-        DrawButton(1820, 60, 90, 90, "", "White", "Icons/Cancel.png", TextGet("LeaveNoSave"));
-        return null;
+  SDK.hookFunction("OnlineProfileRun", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    if (inNotes) {
+      DrawText(displayText("Personal notes (only you can read these):"), 910, 105, "Black", "Gray");
+      if (noteUpdatedAt) {
+        drawTextFitLeft(displayText("Last saved: $date", { $date: new Date(noteUpdatedAt).toLocaleString() }), 60, 105, 400, "Black", "Gray");
       }
-      DrawButton(1520, 60, 90, 90, "", "White", "Icons/Notifications.png", displayText("[WCE] Notes"));
-      return next(args);
+      ElementPositionFix("bceNoteInput", 36, 100, 160, 1790, 750);
+      // Always draw the accept button; normal method shows it when is player
+      DrawButton(1720, 60, 90, 90, "", "White", "Icons/Accept.png", TextGet("LeaveSave"));
+      DrawButton(1820, 60, 90, 90, "", "White", "Icons/Cancel.png", TextGet("LeaveNoSave"));
+      return null;
     }
-  );
+    DrawButton(1520, 60, 90, 90, "", "White", "Icons/Notifications.png", displayText("[WCE] Notes"));
+    return next(args);
+  });
 
-  SDK.hookFunction(
-    "OnlineProfileClick",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      if (inNotes) {
-        if (MouseIn(1720, 60, 90, 90)) {
-          quotaSafetyCheck().then(() => {
-            if (!InformationSheetSelection?.MemberNumber) {
-              throw new Error("invalid InformationSheetSelection in notes");
-            }
-            return notes.put({
-              memberNumber: InformationSheetSelection.MemberNumber,
-              note: noteInput.value,
-              updatedAt: Date.now(),
-            });
-          });
-          hideNoteInput();
-        } else if (MouseIn(1820, 60, 90, 90)) {
-          hideNoteInput();
-        }
-        return null;
-      } else if (!inNotes && MouseIn(1520, 60, 90, 90)) showNoteInput();
-      return next(args);
-    }
-  );
+  SDK.hookFunction("OnlineProfileClick", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    if (inNotes) {
+      if (MouseIn(1720, 60, 90, 90)) {
+        quotaSafetyCheck().then(() => {
+          if (!InformationSheetSelection?.MemberNumber) {
+            throw new Error("invalid InformationSheetSelection in notes");
+          }
+          return notes.put({ memberNumber: InformationSheetSelection.MemberNumber, note: noteInput.value, updatedAt: Date.now() });
+        });
+        hideNoteInput();
+      } else if (MouseIn(1820, 60, 90, 90)) {
+        hideNoteInput();
+      }
+      return null;
+    } else if (!inNotes && MouseIn(1520, 60, 90, 90)) showNoteInput();
+    return next(args);
+  });
 
   if (navigator.storage?.persisted && !(await navigator.storage.persisted())) {
     if (!(await navigator.storage.persist())) {

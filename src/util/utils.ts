@@ -2,7 +2,7 @@ import { logWarn, logError } from "./logger";
 
 export function sleep(ms: number): Promise<number> {
   // oxlint-disable-next-line avoid-new
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     window.setTimeout(resolve, ms);
   });
 }
@@ -27,18 +27,14 @@ export function isNonNullObject(o: unknown): o is Record<string, unknown> {
 }
 
 export function isChatMessage(m: unknown): m is ServerChatRoomMessage {
-  return (
-    isNonNullObject(m) &&
-    typeof m.Type === "string" &&
-    typeof m.Content === "string"
-  );
+  return isNonNullObject(m) && typeof m.Type === "string" && typeof m.Content === "string";
 }
 
 export function isCharacter(c: unknown): c is Character {
   return isNonNullObject(c) && typeof c.IsPlayer === "function";
 }
 
-export function isStringOrStringArray(c: unknown): c is (string | string[]) {
+export function isStringOrStringArray(c: unknown): c is string | string[] {
   return isString(c) || (Array.isArray(c) && c.every(isString));
 }
 
@@ -47,11 +43,7 @@ export function isWardrobe(o: unknown): o is ItemBundle[][] {
 }
 
 function isItemBundle(o: unknown): o is ItemBundle {
-  return (
-    isNonNullObject(o) &&
-    typeof o.Name === "string" &&
-    typeof o.Group === "string"
-  );
+  return isNonNullObject(o) && typeof o.Name === "string" && typeof o.Group === "string";
 }
 
 function isItemBundleArray(o: unknown): o is ItemBundle[] {
@@ -79,7 +71,7 @@ export function parseJSON<T>(jsonString: string | null): T {
   }
   try {
     return JSON.parse(jsonString) as T;
-  } catch(e) {
+  } catch (e) {
     logError("parsing JSON", e);
     return null;
   }
@@ -129,7 +121,11 @@ export async function fbcNotify(text: string, options?: { duration?: number; ope
   await waitFor(() => !!Player);
   ServerShowBeep(text, options?.duration ?? 5000, {
     silent: options?.silent ?? true,
-    ...(options?.openFriendlist && { onClick: (): void => { FriendListShow(); } }),
+    ...(options?.openFriendlist && {
+      onClick: (): void => {
+        FriendListShow();
+      },
+    }),
   });
 }
 

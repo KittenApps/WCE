@@ -1,9 +1,9 @@
-import { toySyncState } from "./toySync";
-import { waitFor, drawTooltip } from "../util/utils";
+import { BCE_LICENSE, /* DISCORD_INVITE_URL, */ WEBSITE_URL } from "../util/constants";
+import { displayText } from "../util/localization";
 import { debug, logWarn, logError } from "../util/logger";
 import { fbcSettings, defaultSettings, bceSaveSettings, isDefaultSettingKey, type SelectSetting, type SettingsCategory } from "../util/settings";
-import { displayText } from "../util/localization";
-import { BCE_LICENSE, /* DISCORD_INVITE_URL, */ WEBSITE_URL } from "../util/constants";
+import { waitFor, drawTooltip } from "../util/utils";
+import { toySyncState } from "./toySync";
 
 const SelectButtonOffset = 900;
 const SelectButtonWidth = 200;
@@ -32,17 +32,7 @@ export default async function settingsPage(): Promise<void> {
   let currentSetting = "";
 
   // Excludes hidden
-  const settingsCategories: SettingsCategory[] = [
-    "chat",
-    "activities",
-    "appearance",
-    "immersion",
-    "antigarble",
-    "performance",
-    "misc",
-    "cheats",
-    "buttplug",
-  ];
+  const settingsCategories: SettingsCategory[] = ["chat", "activities", "appearance", "immersion", "antigarble", "performance", "misc", "cheats", "buttplug"];
   const settingCategoryLabels = {
     chat: "Chat & Social",
     activities: "Activities & Arousal",
@@ -105,13 +95,7 @@ export default async function settingsPage(): Promise<void> {
     DrawButton(...licensePosition, "", "White", "");
     DrawText(displayText("License"), licensePosition[0] + 20, licensePosition[1] + licensePosition[3] / 2, "Black", "");
     DrawButton(...websitePosition, "", "White", "");
-    DrawText(
-      displayText("Information"),
-      websitePosition[0] + 20,
-      websitePosition[1] + websitePosition[3] / 2,
-      "Black",
-      ""
-    );
+    DrawText(displayText("Information"), websitePosition[0] + 20, websitePosition[1] + websitePosition[3] / 2, "Black", "");
     DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png");
 
     let y = settingsYStart;
@@ -125,13 +109,7 @@ export default async function settingsPage(): Promise<void> {
           const idx = defSetting.options.indexOf(fbcSettings[settingName] as string);
           const len = defSetting.options.length;
           const disabled = defSetting.disabled?.() || false;
-          DrawText(
-            displayText(defaultSetting.label),
-            400,
-            y + 33,
-            currentSetting === settingName ? "Red" : "Black",
-            "Gray"
-          );
+          DrawText(displayText(defaultSetting.label), 400, y + 33, currentSetting === settingName ? "Red" : "Black", "Gray");
           DrawBackNextButton(
             SelectButtonOffset,
             y,
@@ -159,13 +137,7 @@ export default async function settingsPage(): Promise<void> {
         y += settingsYIncrement;
       }
       if (currentCategory === "buttplug") {
-        DrawText(
-          displayText("This page allows configuration of the synchronization of bluetooth connected toys."),
-          300,
-          350,
-          "Black",
-          "Gray"
-        );
+        DrawText(displayText("This page allows configuration of the synchronization of bluetooth connected toys."), 300, 350, "Black", "Gray");
         ElementPosition("WceIntifaceAddress", 1300, settingsYStart + 32, 550);
         if (fbcSettings.toySync) {
           if (!toySyncState.client?.connected) {
@@ -189,10 +161,7 @@ export default async function settingsPage(): Promise<void> {
             for (const d of toySyncState.client.devices.filter(dev => dev.vibrateAttributes.length > 0)) {
               let deviceSettings = toySyncState.deviceSettings.get(d.name);
               if (!deviceSettings) {
-                deviceSettings = {
-                  Name: d.name,
-                  SlotName: "None",
-                };
+                deviceSettings = { Name: d.name, SlotName: "None" };
                 toySyncState.deviceSettings.set(d.name, deviceSettings);
               }
               const currentIdx = vibratingSlots.indexOf(deviceSettings.SlotName);
@@ -269,7 +238,7 @@ export default async function settingsPage(): Promise<void> {
       }
     } else if (MouseIn(...licensePosition)) {
       open(BCE_LICENSE, "_blank");
-    /* } else if (MouseIn(...discordInvitePosition)) {
+      /* } else if (MouseIn(...discordInvitePosition)) {
       open(DISCORD_INVITE_URL, "_blank"); */
     } else if (MouseIn(...websitePosition)) {
       open(WEBSITE_URL, "_blank");
@@ -287,12 +256,12 @@ export default async function settingsPage(): Promise<void> {
             const segWidth = SelectButtonWidth / 2;
             const idx = defSetting.options.indexOf(fbcSettings[settingName] as string);
             const len = defSetting.options.length;
-            if (MouseIn(SelectButtonOffset + segWidth, y, segWidth, 64) && (!defSetting.disabled?.())) {
+            if (MouseIn(SelectButtonOffset + segWidth, y, segWidth, 64) && !defSetting.disabled?.()) {
               fbcSettings[settingName] = defSetting.options[(idx + 1 + len) % len];
-            } else if (MouseIn(SelectButtonOffset, y, segWidth, 64) && (!defSetting.disabled?.())) {
+            } else if (MouseIn(SelectButtonOffset, y, segWidth, 64) && !defSetting.disabled?.()) {
               fbcSettings[settingName] = defSetting.options[(idx - 1 + len) % len];
             }
-          } else if (MouseIn(300, y, 64, 64) && (!defaultSetting.disabled?.())) {
+          } else if (MouseIn(300, y, 64, 64) && !defaultSetting.disabled?.()) {
             fbcSettings[settingName] = !fbcSettings[settingName];
             defaultSetting.sideEffects(fbcSettings[settingName], false);
           }

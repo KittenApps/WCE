@@ -1,9 +1,9 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { BCXgetRuleState } from "./hookBcx";
-import { waitFor, isCharacter, fbcSendAction } from "../util/utils";
+import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
 import { displayText } from "../util/localization";
 import { logError } from "../util/logger";
-import { HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
+import { waitFor, isCharacter, fbcSendAction } from "../util/utils";
+import { BCXgetRuleState } from "./hookBcx";
 
 declare global {
   interface DialogLine {
@@ -63,9 +63,8 @@ export function bceGotoRoom(roomName: string): void {
 
 export default async function forcedClubSlave(): Promise<void> {
   async function patchDialog(): Promise<void> {
-    await waitFor(() =>
-      !!CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"] &&
-      CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"].length > 150
+    await waitFor(
+      () => !!CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"] && CommonCSVCache["Screens/Online/ChatRoom/Dialog_Online.csv"].length > 150
     );
 
     const clubSlaveDialog = [
@@ -116,16 +115,12 @@ export default async function forcedClubSlave(): Promise<void> {
     }
 
     // Delay any reloads until all other hooks have finished running
-    SDK.hookFunction(
-      "CharacterBuildDialog",
-      HOOK_PRIORITIES.AddBehaviour,
-      ([C, CSV, functionPrefix, reload], next) => {
-        const ret = next([C, CSV, functionPrefix, false]);
-        if (isCharacter(C) && C.IsOnline()) appendDialog(C);
-        if (reload && DialogMenuMode === "dialog") DialogMenuMapping.dialog.Reload(null, { reset: true });
-        return ret;
-      }
-    );
+    SDK.hookFunction("CharacterBuildDialog", HOOK_PRIORITIES.AddBehaviour, ([C, CSV, functionPrefix, reload], next) => {
+      const ret = next([C, CSV, functionPrefix, false]);
+      if (isCharacter(C) && C.IsOnline()) appendDialog(C);
+      if (reload && DialogMenuMode === "dialog") DialogMenuMapping.dialog.Reload(null, { reset: true });
+      return ret;
+    });
   }
 
   const patch = patchDialog();
@@ -138,11 +133,7 @@ export default async function forcedClubSlave(): Promise<void> {
       Dictionary: [
         {
           // @ts-expect-error - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
-          message: {
-            type: MESSAGE_TYPES.Activity,
-            version: FBC_VERSION,
-            activity: "ClubSlavery",
-          },
+          message: { type: MESSAGE_TYPES.Activity, version: FBC_VERSION, activity: "ClubSlavery" },
         },
       ],
     };

@@ -5,58 +5,60 @@ import { stutterWord } from "./chatAugments";
 export let createChatOptions: (div: HTMLDivElement) => void;
 
 export default function antiGarbling(): void {
-  SDK.hookFunction(
-    "ChatRoomGenerateChatRoomChatMessage",
-    HOOK_PRIORITIES.Top,
-    ([type, msg, replyId, ...args], next) => {
-      if (!fbcSettings.antiGarble || type === "Emote") return next([type, msg, replyId, ...args]);
+  SDK.hookFunction("ChatRoomGenerateChatRoomChatMessage", HOOK_PRIORITIES.Top, ([type, msg, replyId, ...args], next) => {
+    if (!fbcSettings.antiGarble || type === "Emote") return next([type, msg, replyId, ...args]);
 
-      const lastRange = SpeechGetOOCRanges(msg).pop();
-      if (Player.ChatSettings.OOCAutoClose && typeof lastRange === "object" && msg.charAt(lastRange.start + lastRange.length - 1) !== ")" &&
-        lastRange.start + lastRange.length === msg.length && lastRange.length !== 1) {
-        msg += ")";
-      }
+    const lastRange = SpeechGetOOCRanges(msg).pop();
+    if (
+      Player.ChatSettings.OOCAutoClose &&
+      typeof lastRange === "object" &&
+      msg.charAt(lastRange.start + lastRange.length - 1) !== ")" &&
+      lastRange.start + lastRange.length === msg.length &&
+      lastRange.length !== 1
+    ) {
+      msg += ")";
+    }
 
-      let process: { effects: SpeechTransformName[]; text: string } = { effects: [], text: msg };
-      let originalMsg: string | undefined;
+    let process: { effects: SpeechTransformName[]; text: string } = { effects: [], text: msg };
+    let originalMsg: string | undefined;
 
-      if (type !== "Whisper" || fbcSettings.antiGarbleWhisperLevel !== "off") {
-        process = SpeechTransformProcess(Player, msg, SpeechTransformSenderEffects);
-        const shouldBabyTalk = SpeechTransformShouldBabyTalk(Player);
-        const gagIntensity = SpeechTransformGagGarbleIntensity(Player);
-        const stutterIntensity = SpeechTransformStutterIntensity(Player);
-        if (gagIntensity > 0 ||
-          (fbcSettings[`antiGarble${type}BabyTalk`] === "remove" && shouldBabyTalk) ||
-          (fbcSettings[`antiGarble${type}Stutter`] === "remove" && stutterIntensity > 0)
-        ) {
-          if (Player.RestrictionSettings?.NoSpeechGarble) {
-            originalMsg = msg;
-          } else if (fbcSettings[`antiGarble${type}Level`] !== "full") {
-            originalMsg = msg;
-            if (fbcSettings[`antiGarble${type}BabyTalk`] === "preserve" && shouldBabyTalk) {
-              originalMsg = SpeechTransformBabyTalk(originalMsg);
-            }
-            if (["low", "medium", "high"].includes(fbcSettings[`antiGarble${type}Level`])) {
-              const int = Math.min(gagIntensity, { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]);
-              originalMsg = SpeechTransformGagGarble(originalMsg, int);
-            }
-            if (fbcSettings[`antiGarble${type}Stutter`] === "preserve" && stutterIntensity > 0) {
-              originalMsg = fbcSettings.stutters ? stutterWord(originalMsg, true).results.join("") : SpeechTransformStutter(originalMsg, stutterIntensity);
-            }
+    if (type !== "Whisper" || fbcSettings.antiGarbleWhisperLevel !== "off") {
+      process = SpeechTransformProcess(Player, msg, SpeechTransformSenderEffects);
+      const shouldBabyTalk = SpeechTransformShouldBabyTalk(Player);
+      const gagIntensity = SpeechTransformGagGarbleIntensity(Player);
+      const stutterIntensity = SpeechTransformStutterIntensity(Player);
+      if (
+        gagIntensity > 0 ||
+        (fbcSettings[`antiGarble${type}BabyTalk`] === "remove" && shouldBabyTalk) ||
+        (fbcSettings[`antiGarble${type}Stutter`] === "remove" && stutterIntensity > 0)
+      ) {
+        if (Player.RestrictionSettings?.NoSpeechGarble) {
+          originalMsg = msg;
+        } else if (fbcSettings[`antiGarble${type}Level`] !== "full") {
+          originalMsg = msg;
+          if (fbcSettings[`antiGarble${type}BabyTalk`] === "preserve" && shouldBabyTalk) {
+            originalMsg = SpeechTransformBabyTalk(originalMsg);
+          }
+          if (["low", "medium", "high"].includes(fbcSettings[`antiGarble${type}Level`])) {
+            const int = Math.min(gagIntensity, { low: 1, medium: 3, high: 5 }[fbcSettings[`antiGarble${type}Level`]]);
+            originalMsg = SpeechTransformGagGarble(originalMsg, int);
+          }
+          if (fbcSettings[`antiGarble${type}Stutter`] === "preserve" && stutterIntensity > 0) {
+            originalMsg = fbcSettings.stutters ? stutterWord(originalMsg, true).results.join("") : SpeechTransformStutter(originalMsg, stutterIntensity);
           }
         }
-        // eslint-disable-next-line no-undefined
-        if (process.text === originalMsg) originalMsg = undefined;
       }
-
-      const Dictionary: ChatMessageDictionary = [{ Effects: process.effects, Original: originalMsg }];
-      if (replyId) {
-        Dictionary.push({ ReplyId: replyId, Tag: "ReplyId" });
-        ChatRoomMessageReplyStop();
-      }
-      return { Content: process.text, Type: type, Dictionary };
+      // eslint-disable-next-line no-undefined
+      if (process.text === originalMsg) originalMsg = undefined;
     }
-  );
+
+    const Dictionary: ChatMessageDictionary = [{ Effects: process.effects, Original: originalMsg }];
+    if (replyId) {
+      Dictionary.push({ ReplyId: replyId, Tag: "ReplyId" });
+      ChatRoomMessageReplyStop();
+    }
+    return { Content: process.text, Type: type, Dictionary };
+  });
 
   const effectOptions = defaultSettings.antiGarbleChatBabyTalk.options;
 
@@ -140,90 +142,78 @@ export default function antiGarbling(): void {
     // Only add the WCE chat room buttons if they do not yet exist
     const buttonGrid: null | HTMLDivElement = div?.querySelector("#chat-room-buttons");
     if (buttonGrid && !buttonGrid.querySelector(".wce-chat-room-button")) {
-      buttonGrid.prepend(ElementCreate({
-        tag: "div",
-        attributes: { hidden: true },
-        style: { "--tooltip-gap": "var(--half-gap)" },
-        classList: ["wce-chat-room-select-div", "wce-chat-room-button"],
-        children: [
+      buttonGrid.prepend(
+        ElementCreate({
+          tag: "div",
+          attributes: { hidden: true },
+          style: { "--tooltip-gap": "var(--half-gap)" },
+          classList: ["wce-chat-room-select-div", "wce-chat-room-button"],
+          children: [
+            { tag: "label", attributes: { id: "wce-chat-garble-label", for: "wce-chat-garble" } },
+            {
+              tag: "select",
+              attributes: { id: "wce-chat-garble", "aria-describedby": "wce-chat-garble-tooltip" },
+              classList: ["wce-chat-room-select"],
+              eventListeners: { change: GarbleOnChange },
+              children: defaultSettings.antiGarbleWhisperLevel.options.map(option => ({ tag: "option", attributes: { value: option }, children: [option] })),
+            },
+            { tag: "div", attributes: { id: "wce-chat-garble-tooltip", role: "tooltip" }, classList: ["button-tooltip", "button-tooltip-left"], children: [] },
+          ],
+        })
+      );
+      buttonGrid.append(
+        ElementButton.Create(
+          "wce-chat-baby-talk",
+          BabyTalkOnClick,
+          { noStyling: true, tooltip: "" },
           {
-            tag: "label",
-            attributes: { id: "wce-chat-garble-label", for: "wce-chat-garble" },
-          },
-          {
-            tag: "select",
-            attributes: { id: "wce-chat-garble", "aria-describedby": "wce-chat-garble-tooltip" },
-            classList: ["wce-chat-room-select"],
-            eventListeners: { change: GarbleOnChange },
-            children: defaultSettings.antiGarbleWhisperLevel.options.map(option => ({
-              tag: "option",
-              attributes: { value: option },
-              children: [option],
-            })),
-          },
-          {
-            tag: "div",
-            attributes: { id: "wce-chat-garble-tooltip", role: "tooltip" },
-            classList: ["button-tooltip", "button-tooltip-left"],
-            children: [],
-          },
-        ],
-      }));
-      buttonGrid.append(ElementButton.Create(
-        "wce-chat-baby-talk",
-        BabyTalkOnClick,
-        { noStyling: true, tooltip: "" },
-        { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true, "aria-describedby": "wce-chat-baby-talk-tooltip" } } }
-      ));
-      buttonGrid.append(ElementButton.Create(
-        "wce-chat-stutters",
-        StutterOnClick,
-        { noStyling: true, tooltip: "" },
-        { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true, "aria-describedby": "wce-chat-stutters-tooltip" } } }
-      ));
+            button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true, "aria-describedby": "wce-chat-baby-talk-tooltip" } },
+          }
+        )
+      );
+      buttonGrid.append(
+        ElementButton.Create(
+          "wce-chat-stutters",
+          StutterOnClick,
+          { noStyling: true, tooltip: "" },
+          { button: { classList: ["chat-room-button", "wce-chat-room-button"], attributes: { hidden: true, "aria-describedby": "wce-chat-stutters-tooltip" } } }
+        )
+      );
       resetChatButtonStates();
     }
   };
 
   let registeredChatInputListener = false;
   // Attach extra DOM buttons to the chat button grid for managing stuttering, garbling and babytalk
-  SDK.hookFunction(
-    "ChatRoomCreateElement",
-    HOOK_PRIORITIES.ModifyBehaviourHigh,
-    (args, next) => {
-      if (!fbcSettings.antiGarbleChatOptions) return next(args);
-      // Event listener for attaching the .wce-whisper css class to the chat buttons while whispering
-      // Make sure this is only done the very first time the input chat is created
-      if (!registeredChatInputListener) {
-        const chatInput = document.getElementById("InputChat") as null | HTMLInputElement;
-        const chatButtonArrow = document.getElementById("chat-room-buttons-collapse") as null | HTMLButtonElement;
-        if (chatInput && chatButtonArrow) {
-          chatInput.addEventListener("input", function WceInputChatListener() {
-            const isWhisper = this.value.startsWith("/w ") || this.value.startsWith("/whisper ");
-            whisperUpdate(isWhisper);
-          });
-          chatButtonArrow.addEventListener("click", (e) => {
-            ChatRoomChatInputChangeHandler.call(chatInput, e);
-          });
-          registeredChatInputListener = true;
-        }
+  SDK.hookFunction("ChatRoomCreateElement", HOOK_PRIORITIES.ModifyBehaviourHigh, (args, next) => {
+    if (!fbcSettings.antiGarbleChatOptions) return next(args);
+    // Event listener for attaching the .wce-whisper css class to the chat buttons while whispering
+    // Make sure this is only done the very first time the input chat is created
+    if (!registeredChatInputListener) {
+      const chatInput = document.getElementById("InputChat") as null | HTMLInputElement;
+      const chatButtonArrow = document.getElementById("chat-room-buttons-collapse") as null | HTMLButtonElement;
+      if (chatInput && chatButtonArrow) {
+        chatInput.addEventListener("input", function WceInputChatListener() {
+          const isWhisper = this.value.startsWith("/w ") || this.value.startsWith("/whisper ");
+          whisperUpdate(isWhisper);
+        });
+        chatButtonArrow.addEventListener("click", e => {
+          ChatRoomChatInputChangeHandler.call(chatInput, e);
+        });
+        registeredChatInputListener = true;
       }
-      const div = next(args);
-      createChatOptions(div);
-      return div;
     }
-  );
+    const div = next(args);
+    createChatOptions(div);
+    return div;
+  });
 
   // Attach the .wce-whisper css class to the wce chat buttons while whispering
-  SDK.hookFunction(
-    "ChatRoomSetTarget",
-    HOOK_PRIORITIES.ModifyBehaviourHigh,
-    ([memberNumer, ...args], next) => {
-      const isWhisper = Number.isInteger(memberNumer) && memberNumer !== -1;
-      whisperUpdate(isWhisper);
-      return next([memberNumer, ...args]);
-    }
-  );
+  SDK.hookFunction("ChatRoomSetTarget", HOOK_PRIORITIES.ModifyBehaviourHigh, ([memberNumer, ...args], next) => {
+    const isWhisper = Number.isInteger(memberNumer) && memberNumer !== -1;
+    whisperUpdate(isWhisper);
+    return next([memberNumer, ...args]);
+  });
 
   ChatRoomRegisterMessageHandler({
     Description: "show OriginalMsg while deafened",

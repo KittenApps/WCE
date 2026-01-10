@@ -1,7 +1,7 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { waitFor, fbcChatNotify, addCustomEffect, removeCustomEffect } from "../util/utils";
-import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
+import { fbcSettings } from "../util/settings";
+import { waitFor, fbcChatNotify, addCustomEffect, removeCustomEffect } from "../util/utils";
 
 export function checkBlindness(): void {
   const glasses = [
@@ -46,12 +46,8 @@ export function checkBlindness(): void {
 export default async function blindWithoutGlasses(): Promise<void> {
   await waitFor(() => !!Player && !!Player.Appearance);
 
-  SDK.hookFunction(
-    "CharacterAppearanceBuildCanvas",
-    HOOK_PRIORITIES.Observe,
-    (args, next) => {
-      if (fbcSettings.blindWithoutGlasses && args[0].IsPlayer()) checkBlindness();
-      return next(args);
-    }
-  );
+  SDK.hookFunction("CharacterAppearanceBuildCanvas", HOOK_PRIORITIES.Observe, (args, next) => {
+    if (fbcSettings.blindWithoutGlasses && args[0].IsPlayer()) checkBlindness();
+    return next(args);
+  });
 }

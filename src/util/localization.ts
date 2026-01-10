@@ -4,9 +4,11 @@ const locales = ["CN"];
 export async function fetchLocale(locale: string): Promise<void> {
   if (locales.includes(locale) && !Object.hasOwn(translations, locale)) {
     translations[locale] = {};
-    await fetch(`${PUBLIC_URL}/${locale}.json`).then(res => res.json()).then((json: Record<string, string>) => {
-      translations[locale] = json;
-    });
+    await fetch(`${PUBLIC_URL}/${locale}.json`)
+      .then(res => res.json())
+      .then((json: Record<string, string>) => {
+        translations[locale] = json;
+      });
   }
 }
 

@@ -1,7 +1,7 @@
-import { processChatAugmentsForLine } from "./chatAugments";
+import { displayText } from "../util/localization";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
-import { displayText } from "../util/localization";
+import { processChatAugmentsForLine } from "./chatAugments";
 
 export default function richOnlineProfile() {
   const descTextArea = "DescriptionInput";
@@ -60,74 +60,54 @@ export default function richOnlineProfile() {
     showOriginalTextArea();
   }
 
-  SDK.hookFunction(
-    "OnlineProfileLoad",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      originalShown = true;
-      const ret = next(args);
-      const ta = document.getElementById(descTextArea);
-      if (!fbcSettings.richOnlineProfile || !ta) return ret;
-      enableRichTextArea();
-      return ret;
-    }
-  );
+  SDK.hookFunction("OnlineProfileLoad", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    originalShown = true;
+    const ret = next(args);
+    const ta = document.getElementById(descTextArea);
+    if (!fbcSettings.richOnlineProfile || !ta) return ret;
+    enableRichTextArea();
+    return ret;
+  });
 
-  SDK.hookFunction(
-    "ChatRoomHideElements",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      disableRichTextArea();
-      return next(args);
-    }
-  );
+  SDK.hookFunction("ChatRoomHideElements", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    disableRichTextArea();
+    return next(args);
+  });
 
   const toggleEditButtonPos = /** @type {const} */ ([90, 60, 90, 90]);
-  SDK.hookFunction(
-    "OnlineProfileRun",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      if (!fbcSettings.richOnlineProfile) {
-        return next(args);
-      }
-      DrawButton(...toggleEditButtonPos, "", "White", "Icons/Crafting.png", displayText("Toggle Editing Mode"));
-
-      const ret = next(args);
-      if (!originalShown) {
-        hideOriginalTextArea();
-        resizeRichTextArea();
-      }
-      return ret;
-    }
-  );
-
-  SDK.hookFunction(
-    "OnlineProfileClick",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      if (!fbcSettings.richOnlineProfile) {
-        return next(args);
-      }
-      if (MouseIn(...toggleEditButtonPos)) {
-        if (originalShown) {
-          enableRichTextArea();
-        } else {
-          disableRichTextArea();
-        }
-        return true;
-      }
-      const ret = next(args);
-      if (MouseIn(1620, 60, 90, 90)) updateRichTextArea();
-      return ret;
-    }
-  );
-
-  SDK.hookFunction(
-    "OnlineProfileUnload",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      if (!originalShown) disableRichTextArea();
+  SDK.hookFunction("OnlineProfileRun", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    if (!fbcSettings.richOnlineProfile) {
       return next(args);
     }
-  );
+    DrawButton(...toggleEditButtonPos, "", "White", "Icons/Crafting.png", displayText("Toggle Editing Mode"));
+
+    const ret = next(args);
+    if (!originalShown) {
+      hideOriginalTextArea();
+      resizeRichTextArea();
+    }
+    return ret;
+  });
+
+  SDK.hookFunction("OnlineProfileClick", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    if (!fbcSettings.richOnlineProfile) {
+      return next(args);
+    }
+    if (MouseIn(...toggleEditButtonPos)) {
+      if (originalShown) {
+        enableRichTextArea();
+      } else {
+        disableRichTextArea();
+      }
+      return true;
+    }
+    const ret = next(args);
+    if (MouseIn(1620, 60, 90, 90)) updateRichTextArea();
+    return ret;
+  });
+
+  SDK.hookFunction("OnlineProfileUnload", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    if (!originalShown) disableRichTextArea();
+    return next(args);
+  });
 }

@@ -1,11 +1,11 @@
-import { toySyncState } from "./toySync";
 import { fbcSettings } from "../util/settings";
+import { toySyncState } from "./toySync";
 
 export default function confirmLeave() {
   // Confirm leaving the page to prevent accidental back button, refresh, or other navigation-related disruptions
   window.addEventListener(
     "beforeunload",
-    (e) => {
+    e => {
       if (toySyncState.client?.connected) {
         // Stop vibrating toys
         for (const device of toySyncState.client.devices.filter(d => d.vibrateAttributes.length > 0)) {

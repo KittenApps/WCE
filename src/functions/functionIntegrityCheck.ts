@@ -1,7 +1,7 @@
+import expectedHashes from "../util/functionHashes";
+import { logInfo, logWarn } from "../util/logger";
 import { SDK, deviatingHashes } from "../util/modding";
 import { waitFor } from "../util/utils";
-import { logInfo, logWarn } from "../util/logger";
-import expectedHashes from "../util/functionHashes";
 
 export default async function functionIntegrityCheck(): Promise<void> {
   await waitFor(() => GameVersion !== "R0" && typeof ServerIsConnected === "boolean" && ServerIsConnected);

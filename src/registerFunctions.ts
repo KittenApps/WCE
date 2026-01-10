@@ -1,52 +1,52 @@
-import { SDK, HOOK_PRIORITIES } from "./util/modding";
-import { debug, logError } from "./util/logger";
-import { fbcSettings, postSettings, bceLoadSettings } from "./util/settings";
-// import functionIntegrityCheck from "./functions/functionIntegrityCheck";
-import wceStyles from "./functions/wceStyles";
-import commonPatches from "./functions/commonPatches";
-import commands from "./functions/commands";
-import settingsPage from "./functions/settingsPage";
-import lockpickHelp from "./functions/lockpickHelp";
-import automaticReconnect from "./functions/automaticReconnect";
-import chatAugments from "./functions/chatAugments";
-import layeringMenu from "./functions/layeringMenu";
-import cacheClearer from "./functions/cacheClearer";
-import chatRoomOverlay from "./functions/chatRoomOverlay";
-import hiddenMessageHandler from "./functions/hiddenMessageHandler";
-import privateWardrobe from "./functions/privateWardrobe";
-import antiGarbling from "./functions/antiGarbling";
-import automaticExpressions from "./functions/automaticExpressions";
+import allowCustomEffect from "./functions/allowCustomEffects";
 import alternateArousal from "./functions/alternateArousal";
+import antiGarbling from "./functions/antiGarbling";
+import appendSocketListenersToInit from "./functions/appendSocketListenersToInit";
 import autoGhostBroadcast from "./functions/autoGhostBroadcast";
+import automaticExpressions from "./functions/automaticExpressions";
+import automaticReconnect from "./functions/automaticReconnect";
+import autoStruggle from "./functions/autoStruggle";
 import blindWithoutGlasses from "./functions/blindWithoutGlasses";
-import friendPresenceNotifications from "./functions/friendPresenceNotifications";
-import itemAntiCheat from "./functions/itemAntiCheat";
-import forcedClubSlave from "./functions/forcedClubSlave";
-import instantMessenger from "./functions/instantMessenger";
-import extendedWardrobe from "./functions/extendedWardrobe";
+import cacheClearer from "./functions/cacheClearer";
+import chatAugments from "./functions/chatAugments";
+import chatRoomOverlay from "./functions/chatRoomOverlay";
+import chatRoomWhisperFixes from "./functions/chatRoomWhisperFixes";
+import commands from "./functions/commands";
+import commonPatches from "./functions/commonPatches";
+import confirmLeave from "./functions/confirmLeave";
 import customContentDomainCheck from "./functions/customContentDomainCheck";
 import discreetMode from "./functions/discreetMode";
-import autoStruggle from "./functions/autoStruggle";
-import leashAlways from "./functions/leashAlways";
-import pastProfiles from "./functions/pastProfiles";
-import pendingMessages from "./functions/pendingMessages";
+import extendedWardrobe from "./functions/extendedWardrobe";
+import forcedClubSlave from "./functions/forcedClubSlave";
+import friendPresenceNotifications from "./functions/friendPresenceNotifications";
+import hiddenMessageHandler from "./functions/hiddenMessageHandler";
 import hideHiddenItemsIcon from "./functions/hideHiddenItemsIcon";
-import richOnlineProfile from "./functions/richOnlineProfile";
+import hookBCXAPI from "./functions/hookBcx";
+import instantMessenger from "./functions/instantMessenger";
+import itemAntiCheat from "./functions/itemAntiCheat";
+import layeringMenu from "./functions/layeringMenu";
+import leashAlways from "./functions/leashAlways";
+import lockpickHelp from "./functions/lockpickHelp";
+import nicknames from "./functions/nicknames";
 // import crafting from "./functions/crafting";
 import numericArousalMeters from "./functions/numericArousalMeters";
-import appendSocketListenersToInit from "./functions/appendSocketListenersToInit";
-import nicknames from "./functions/nicknames";
-import hookBCXAPI from "./functions/hookBcx";
+import pastProfiles from "./functions/pastProfiles";
+import pendingMessages from "./functions/pendingMessages";
+import privateWardrobe from "./functions/privateWardrobe";
+import richOnlineProfile from "./functions/richOnlineProfile";
+import settingsPage from "./functions/settingsPage";
 import shareAddons from "./functions/shareAddons";
-import confirmLeave from "./functions/confirmLeave";
 import toySync from "./functions/toySync";
-import chatRoomWhisperFixes from "./functions/chatRoomWhisperFixes";
-import allowCustomEffect from "./functions/allowCustomEffects";
+// import functionIntegrityCheck from "./functions/functionIntegrityCheck";
+import wceStyles from "./functions/wceStyles";
 import { fetchLocale } from "./util/localization";
+import { debug, logError } from "./util/logger";
+import { SDK, HOOK_PRIORITIES } from "./util/modding";
+import { fbcSettings, postSettings, bceLoadSettings } from "./util/settings";
 
 export const incompleteFunctions: string[] = [];
 
-async function registerFunction(func: () => (Promise<void> | void), label: string): Promise<void> {
+async function registerFunction(func: () => Promise<void> | void, label: string): Promise<void> {
   incompleteFunctions.push(label);
   try {
     const ret = func();
@@ -54,7 +54,7 @@ async function registerFunction(func: () => (Promise<void> | void), label: strin
       await ret;
     }
     incompleteFunctions.splice(incompleteFunctions.indexOf(label), 1);
-  } catch(err) {
+  } catch (err) {
     const e = err as Error;
     logError(`Error in ${label}: ${e?.toString()}\n${e?.stack ?? ""}`);
   }
@@ -64,45 +64,29 @@ export async function registerAllFunctions(): Promise<void> {
   // Delay game processes until registration is complete
   let funcsRegistered: "init" | "enable" | "disable" = "init";
 
-  SDK.hookFunction(
-    "LoginResponse",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      if (funcsRegistered === "init") {
-        funcsRegistered = "disable";
-      }
-      return next(args);
+  SDK.hookFunction("LoginResponse", HOOK_PRIORITIES.Top, (args, next) => {
+    if (funcsRegistered === "init") {
+      funcsRegistered = "disable";
     }
-  );
-  SDK.hookFunction(
-    "LoginStatusReset",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      if (funcsRegistered === "disable") {
-        funcsRegistered = "init";
-      }
-      return next(args);
+    return next(args);
+  });
+  SDK.hookFunction("LoginStatusReset", HOOK_PRIORITIES.Top, (args, next) => {
+    if (funcsRegistered === "disable") {
+      funcsRegistered = "init";
     }
-  );
-  SDK.hookFunction(
-    "GameRun",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      if (funcsRegistered === "disable") {
-        GameAnimationFrameId = requestAnimationFrame(GameRun);
-        return null;
-      }
-      return next(args);
+    return next(args);
+  });
+  SDK.hookFunction("GameRun", HOOK_PRIORITIES.Top, (args, next) => {
+    if (funcsRegistered === "disable") {
+      GameAnimationFrameId = requestAnimationFrame(GameRun);
+      return null;
     }
-  );
-  SDK.hookFunction(
-    "GameRunBackground",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      if (funcsRegistered === "disable") return null;
-      return next(args);
-    }
-  );
+    return next(args);
+  });
+  SDK.hookFunction("GameRunBackground", HOOK_PRIORITIES.Top, (args, next) => {
+    if (funcsRegistered === "disable") return null;
+    return next(args);
+  });
 
   // await Promise.all([registerFunction(functionIntegrityCheck, "functionIntegrityCheck"), fetchLocale(TranslationLanguage)]);
   await fetchLocale(TranslationLanguage);

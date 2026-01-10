@@ -1,7 +1,7 @@
-import { registerSocketListener } from "./appendSocketListenersToInit";
-import { waitFor } from "../util/utils";
 import { debug } from "../util/logger";
 import { fbcSettings } from "../util/settings";
+import { waitFor } from "../util/utils";
+import { registerSocketListener } from "./appendSocketListenersToInit";
 
 export default async function autoGhostBroadcast(): Promise<void> {
   await waitFor(() => !!ServerSocket && ServerIsConnected);

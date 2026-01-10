@@ -1,10 +1,10 @@
-import { waitFor, fbcChatNotify, fbcNotify, fbcSendAction } from "./util/utils";
-import { fbcSettingValue } from "./util/settings";
-import { displayText } from "./util/localization";
+import { fbcDebug } from "./functions/commands";
 import { registerAllFunctions } from "./registerFunctions";
 import { FBC_VERSION } from "./util/constants";
-import { fbcDebug } from "./functions/commands";
+import { displayText } from "./util/localization";
 import { pushLog } from "./util/logger";
+import { fbcSettingValue } from "./util/settings";
+import { waitFor, fbcChatNotify, fbcNotify, fbcSendAction } from "./util/utils";
 
 await waitFor(() => typeof FUSAM === "object" && FUSAM?.present && typeof bcModSdk === "object" && !!bcModSdk);
 
@@ -35,6 +35,6 @@ await fbcNotify(`Wholesome Club Extensions v${globalThis.FBC_VERSION} loaded!`);
 
 Player.FBC = FBC_VERSION;
 
-window.addEventListener("error", (e) => {
+window.addEventListener("error", e => {
   pushLog("error", e.message, `${e.filename} (${e.lineno}:${e.colno})`, e.error);
 });

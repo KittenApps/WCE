@@ -1,5 +1,5 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { displayText } from "../util/localization";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 
 /** @type {Map<string, "allowed" | "denied">} */
@@ -24,7 +24,7 @@ export default function customContentDomainCheck() {
         $origin: origin,
         $trusted: trustedOrigins.includes(origin) ? displayText("(This origin is trusted by authors of WCE)") : "",
       }),
-      callback: (act) => {
+      callback: act => {
         open = false;
         if (act === "submit") {
           sessionCustomOrigins.set(origin, "allowed");
@@ -32,54 +32,43 @@ export default function customContentDomainCheck() {
           sessionCustomOrigins.set(origin, "denied");
         }
       },
-      buttons: {
-        cancel: displayText("Deny for session"),
-        submit: displayText("Allow for session"),
-      },
+      buttons: { cancel: displayText("Deny for session"), submit: displayText("Allow for session") },
     });
   }
 
-  SDK.hookFunction(
-    "ChatAdminRoomCustomizationProcess",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      if (!fbcSettings.customContentDomainCheck) return next(args);
+  SDK.hookFunction("ChatAdminRoomCustomizationProcess", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    if (!fbcSettings.customContentDomainCheck) return next(args);
 
+    try {
+      const [{ ImageURL, MusicURL }] = args;
+      const imageOrigin = ImageURL && new URL(ImageURL).origin;
+      const musicOrigin = MusicURL && new URL(MusicURL).origin;
+
+      if (imageOrigin && !sessionCustomOrigins.has(imageOrigin)) {
+        showCustomContentDomainCheckWarning(imageOrigin, "image");
+      } else if (musicOrigin && !sessionCustomOrigins.has(musicOrigin)) {
+        showCustomContentDomainCheckWarning(musicOrigin, "music");
+      }
+
+      if ((!ImageURL || sessionCustomOrigins.get(imageOrigin) === "allowed") && (!MusicURL || sessionCustomOrigins.get(musicOrigin) === "allowed")) {
+        return next(args);
+      }
+    } catch {
+      // Don't care
+    }
+
+    return null;
+  });
+
+  SDK.hookFunction("ChatAdminRoomCustomizationClick", HOOK_PRIORITIES.Observe, (args, next) => {
+    for (const s of [ElementValue("InputImageURL").trim(), ElementValue("InputMusicURL").trim()]) {
       try {
-        const [{ ImageURL, MusicURL }] = args;
-        const imageOrigin = ImageURL && new URL(ImageURL).origin;
-        const musicOrigin = MusicURL && new URL(MusicURL).origin;
-
-        if (imageOrigin && !sessionCustomOrigins.has(imageOrigin)) {
-          showCustomContentDomainCheckWarning(imageOrigin, "image");
-        } else if (musicOrigin && !sessionCustomOrigins.has(musicOrigin)) {
-          showCustomContentDomainCheckWarning(musicOrigin, "music");
-        }
-
-        if ((!ImageURL || sessionCustomOrigins.get(imageOrigin) === "allowed") && (!MusicURL || sessionCustomOrigins.get(musicOrigin) === "allowed")) {
-          return next(args);
-        }
+        const url = new URL(s);
+        sessionCustomOrigins.set(url.origin, "allowed");
       } catch {
         // Don't care
       }
-
-      return null;
     }
-  );
-
-  SDK.hookFunction(
-    "ChatAdminRoomCustomizationClick",
-    HOOK_PRIORITIES.Observe,
-    (args, next) => {
-      for (const s of [ElementValue("InputImageURL").trim(), ElementValue("InputMusicURL").trim()]) {
-        try {
-          const url = new URL(s);
-          sessionCustomOrigins.set(url.origin, "allowed");
-        } catch {
-          // Don't care
-        }
-      }
-      return next(args);
-    }
-  );
+    return next(args);
+  });
 }

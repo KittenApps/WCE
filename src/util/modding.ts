@@ -1,6 +1,7 @@
-import { logWarn } from "./logger";
-import { SUPPORTED_GAME_VERSIONS, FBC_VERSION } from "./constants";
 import type { ModSDKModAPI } from "bondage-club-mod-sdk";
+
+import { SUPPORTED_GAME_VERSIONS, FBC_VERSION } from "./constants";
+import { logWarn } from "./logger";
 
 export const deviatingHashes: string[] = [];
 export const skippedFunctionality: string[] = [];
@@ -15,12 +16,7 @@ export const HOOK_PRIORITIES = {
 } as const;
 
 export const SDK: ModSDKModAPI = bcModSdk.registerMod(
-  {
-    name: "WCE",
-    version: FBC_VERSION,
-    fullName: "Wholesome Club Extensions",
-    repository: "https://github.com/KittenApps/WCE.git",
-  },
+  { name: "WCE", version: FBC_VERSION, fullName: "Wholesome Club Extensions", repository: "https://github.com/KittenApps/WCE.git" },
   { allowReplace: false }
 );
 

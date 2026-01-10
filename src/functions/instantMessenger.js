@@ -1,11 +1,11 @@
-import { processChatAugmentsForLine } from "./chatAugments";
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { BCXgetRuleState } from "./hookBcx";
-import { registerSocketListener } from "./appendSocketListenersToInit";
 import { displayText } from "../util/localization";
-import { parseJSON, objEntries, isNonNullObject, isString, fbcNotify } from "../util/utils";
 import { debug } from "../util/logger";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
+import { parseJSON, objEntries, isNonNullObject, isString, fbcNotify } from "../util/utils";
+import { registerSocketListener } from "./appendSocketListenersToInit";
+import { processChatAugmentsForLine } from "./chatAugments";
+import { BCXgetRuleState } from "./hookBcx";
 
 // BcUtil-compatible instant messaging with friends
 export default function instantMessenger() {
@@ -33,7 +33,7 @@ export default function instantMessenger() {
   const messageInput = document.createElement("textarea");
   messageInput.id = "bce-message-input";
   messageInput.setAttribute("maxlength", "2000");
-  messageInput.addEventListener("keydown", (e) => {
+  messageInput.addEventListener("keydown", e => {
     // MBCHC compatibility: prevent chatroom keydown events from triggering at document level
     e.stopPropagation();
   });
@@ -42,7 +42,7 @@ export default function instantMessenger() {
   friendSearch.id = "bce-friend-search";
   friendSearch.setAttribute("placeholder", displayText("Search for a friend"));
   friendSearch.autocomplete = "off";
-  friendSearch.addEventListener("keydown", (e) => {
+  friendSearch.addEventListener("keydown", e => {
     // MBCHC compatibility: prevent chatroom keydown events from triggering at document level
     e.stopPropagation();
   });
@@ -154,7 +154,10 @@ export default function instantMessenger() {
     /** @type {"Message" | "Emote" | "Action"} */
     const messageType = ["Message", "Emote", "Action"].includes(details.messageType) ? details.messageType : "Message";
     const messageColor = details?.messageColor ?? "#ffffff";
-    const messageText = beep.Message?.split("\n").filter(line => !line.startsWith("\uf124")).join("\n").trimEnd();
+    const messageText = beep.Message?.split("\n")
+      .filter(line => !line.startsWith("\uf124"))
+      .join("\n")
+      .trimEnd();
 
     if (!messageText) {
       debug("skipped empty beep", friendId, beep, sent, skipHistory);
@@ -168,7 +171,7 @@ export default function instantMessenger() {
     message.classList.add(`bce-message-${messageType}`);
     message.setAttribute("data-time", createdAt.toLocaleString());
 
-    const author = sent ? CharacterNickname(Player) : beep.MemberName ?? "<Unknown>";
+    const author = sent ? CharacterNickname(Player) : (beep.MemberName ?? "<Unknown>");
 
     switch (messageType) {
       case "Emote":
@@ -207,14 +210,7 @@ export default function instantMessenger() {
     }
 
     if (!skipHistory) {
-      friend.historyRaw.push({
-        author,
-        authorId,
-        message: messageText,
-        type: messageType,
-        color: messageColor,
-        createdAt: Date.now(),
-      });
+      friend.historyRaw.push({ author, authorId, message: messageText, type: messageType, color: messageColor, createdAt: Date.now() });
 
       friend.listElement.setAttribute("data-last-updated", Date.now().toString());
 
@@ -289,7 +285,7 @@ export default function instantMessenger() {
   // ToDo: migrate to IndexedDB
   function loadIM() {
     IMloaded = true;
-    const history = /** @type {Record<string, {historyRaw: RawHistory[]}>} */(parseJSON(localStorage.getItem(storageKey()) || "{}"));
+    const history = /** @type {Record<string, {historyRaw: RawHistory[]}>} */ (parseJSON(localStorage.getItem(storageKey()) || "{}"));
     for (const [friendIdStr, friendHistory] of objEntries(history)) {
       const friendId = parseInt(friendIdStr);
       const friend = handleUnseenFriend(friendId);
@@ -299,10 +295,7 @@ export default function instantMessenger() {
           friendId,
           hist.authorId === Player.MemberNumber,
           {
-            Message: `${hist.message}\n\n\uf124${JSON.stringify({
-              messageType: hist.type,
-              messageColor: hist.color,
-            })}`,
+            Message: `${hist.message}\n\n\uf124${JSON.stringify({ messageType: hist.type, messageColor: hist.color })}`,
             MemberNumber: hist.authorId,
             MemberName: hist.author,
           },
@@ -316,7 +309,7 @@ export default function instantMessenger() {
     }
   }
 
-  messageInput.addEventListener("keydown", (e) => {
+  messageInput.addEventListener("keydown", e => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (BCXgetRuleState("speech_restrict_beep_send")?.isEnforced && !fbcSettings.allowIMBypassBCX) {
@@ -356,19 +349,10 @@ export default function instantMessenger() {
         BeepType: "",
         MemberNumber: activeChat,
         IsSecret: true,
-        Message: `${messageText}\n\n\uf124${JSON.stringify({
-          messageType,
-          messageColor: Player.LabelColor,
-        })}`,
+        Message: `${messageText}\n\n\uf124${JSON.stringify({ messageType, messageColor: Player.LabelColor })}`,
       };
       addMessage(activeChat, true, message, false, new Date());
-      FriendListBeepLog.push({
-        ...message,
-        MemberName: Player.FriendNames?.get(activeChat) || "aname",
-        Sent: true,
-        Private: false,
-        Time: new Date(),
-      });
+      FriendListBeepLog.push({ ...message, MemberName: Player.FriendNames?.get(activeChat) || "aname", Sent: true, Private: false, Time: new Date() });
       ServerSend("AccountBeep", message);
     }
   });
@@ -392,7 +376,7 @@ export default function instantMessenger() {
      * @param {ServerAccountQueryResponse} data
      * @returns {void}
      */
-    (data) => {
+    data => {
       if (data.Query !== "OnlineFriends") {
         return;
       }
@@ -442,111 +426,77 @@ export default function instantMessenger() {
         }
         return -1;
       })
-      .forEach((node) => {
+      .forEach(node => {
         friendList.removeChild(node);
         friendList.appendChild(node);
       });
   }
 
-  SDK.hookFunction(
-    "ServerAccountBeep",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      const [beep] = args;
-      if (beep && isNonNullObject(beep) && !beep.BeepType && fbcSettings.instantMessenger) {
-        if (!IMloaded) loadIM();
-        addMessage(beep.MemberNumber, false, beep, false, new Date());
-      }
-      return next(args);
+  SDK.hookFunction("ServerAccountBeep", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    const [beep] = args;
+    if (beep && isNonNullObject(beep) && !beep.BeepType && fbcSettings.instantMessenger) {
+      if (!IMloaded) loadIM();
+      addMessage(beep.MemberNumber, false, beep, false, new Date());
     }
-  );
+    return next(args);
+  });
 
-  SDK.hookFunction(
-    "ServerSend",
-    HOOK_PRIORITIES.Observe,
-    (args, next) => {
-      const [command, b] = args;
-      if (command !== "AccountBeep") {
-        return next(args);
-      }
-      const beep = /** @type {ServerAccountBeepRequest} */ (b);
-      if (!beep?.BeepType && isString(beep?.Message) && !beep.Message.includes("\uf124")) {
-        if (!IMloaded) loadIM();
-        addMessage(beep.MemberNumber, true, beep, false, new Date());
-      }
+  SDK.hookFunction("ServerSend", HOOK_PRIORITIES.Observe, (args, next) => {
+    const [command, b] = args;
+    if (command !== "AccountBeep") {
       return next(args);
     }
-  );
+    const beep = /** @type {ServerAccountBeepRequest} */ (b);
+    if (!beep?.BeepType && isString(beep?.Message) && !beep.Message.includes("\uf124")) {
+      if (!IMloaded) loadIM();
+      addMessage(beep.MemberNumber, true, beep, false, new Date());
+    }
+    return next(args);
+  });
 
   /** @type {[number, number, number, number]} */
   const buttonPosition = [70, 905, 60, 60];
 
-  SDK.hookFunction(
-    "DrawProcess",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const ret = next(args);
-      if (fbcSettings.instantMessenger) {
-        if (
-          !fbcSettings.allowIMBypassBCX &&
-          (BCXgetRuleState("speech_restrict_beep_receive")?.isEnforced || (BCXgetRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
-        ) {
-          if (!container.classList.contains("bce-hidden")) hideIM();
-          DrawButton(
-            ...buttonPosition,
-            "",
-            "Gray",
-            "Icons/Small/Chat.png",
-            displayText("Instant Messenger (Disabled by BCX)"),
-            false
-          );
-        } else {
-          DrawButton(
-            ...buttonPosition,
-            "",
-            unreadSinceOpened ? "Red" : "White",
-            "Icons/Small/Chat.png",
-            displayText("Instant Messenger"),
-            false
-          );
-        }
+  SDK.hookFunction("DrawProcess", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const ret = next(args);
+    if (fbcSettings.instantMessenger) {
+      if (
+        !fbcSettings.allowIMBypassBCX &&
+        (BCXgetRuleState("speech_restrict_beep_receive")?.isEnforced || (BCXgetRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
+      ) {
+        if (!container.classList.contains("bce-hidden")) hideIM();
+        DrawButton(...buttonPosition, "", "Gray", "Icons/Small/Chat.png", displayText("Instant Messenger (Disabled by BCX)"), false);
+      } else {
+        DrawButton(...buttonPosition, "", unreadSinceOpened ? "Red" : "White", "Icons/Small/Chat.png", displayText("Instant Messenger"), false);
       }
-      return ret;
     }
-  );
+    return ret;
+  });
 
-  SDK.hookFunction(
-    "CommonClick",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      if (fbcSettings.instantMessenger && MouseIn(...buttonPosition)) {
-        if (!container.classList.contains("bce-hidden")) {
-          hideIM();
-          return null;
-        }
-        if (!IMloaded) loadIM();
-        sortIM();
-        container.classList.toggle("bce-hidden");
-        ServerSend("AccountQuery", { Query: "OnlineFriends" });
-        unreadSinceOpened = 0;
-        scrollToBottom();
-        NotificationReset("Beep");
+  SDK.hookFunction("CommonClick", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    if (fbcSettings.instantMessenger && MouseIn(...buttonPosition)) {
+      if (!container.classList.contains("bce-hidden")) {
+        hideIM();
         return null;
       }
-      return next(args);
+      if (!IMloaded) loadIM();
+      sortIM();
+      container.classList.toggle("bce-hidden");
+      ServerSend("AccountQuery", { Query: "OnlineFriends" });
+      unreadSinceOpened = 0;
+      scrollToBottom();
+      NotificationReset("Beep");
+      return null;
     }
-  );
+    return next(args);
+  });
 
-  SDK.hookFunction(
-    "NotificationRaise",
-    HOOK_PRIORITIES.ModifyBehaviourHigh,
-    (args, next) => {
-      if (args[0] === "Beep" && args[1]?.body) {
-        args[1].body = stripBeepMetadata(args[1].body);
-      }
-      return next(args);
+  SDK.hookFunction("NotificationRaise", HOOK_PRIORITIES.ModifyBehaviourHigh, (args, next) => {
+    if (args[0] === "Beep" && args[1]?.body) {
+      args[1].body = stripBeepMetadata(args[1].body);
     }
-  );
+    return next(args);
+  });
 
   /**
    * @param {KeyboardEvent} e

@@ -1,7 +1,7 @@
-import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
-import { waitFor, isCharacter, deepCopy, fbcSendAction, parseJSON } from "../util/utils";
-import { fbcSettings } from "../util/settings";
 import { displayText } from "../util/localization";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
+import { fbcSettings } from "../util/settings";
+import { waitFor, isCharacter, deepCopy, fbcSendAction, parseJSON } from "../util/utils";
 
 declare global {
   interface ItemProperties {
@@ -17,7 +17,7 @@ export default async function layeringMenu(): Promise<void> {
 
   // DialogCanUnlock with Player.CanInteract() requirement removed
   function DialogCanUnlock2(C: Character, Item: Item): boolean {
-    if (Item?.Property?.LockedBy === "ExclusivePadlock") return (!C.IsPlayer());
+    if (Item?.Property?.LockedBy === "ExclusivePadlock") return !C.IsPlayer();
     if (LogQuery("KeyDeposit", "Cell")) return false;
     if (Item?.Asset?.OwnerOnly) return Item.Asset.Enable && C.IsOwnedByPlayer();
     if (Item?.Asset?.LoverOnly) return Item.Asset.Enable && C.IsLoverOfPlayer();
@@ -25,75 +25,57 @@ export default async function layeringMenu(): Promise<void> {
     return DialogHasKey(C, Item);
   }
 
-  SDK.hookFunction(
-    "Layering.Load",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(Layering.Item, "Lock") || DialogCanUnlock2(Layering.Character, Layering.Item))) {
-        Layering.Readonly = false;
-      }
-      if (!Layering.Character.IsPlayer() && Layering.Character.BCECapabilities?.includes("preventLayeringByOthers")) {
-        Layering.Readonly = true;
-      }
-      if (!fbcSettings.layeringHide || CurrentScreen === "Crafting" || !Layering.Character.BCECapabilities?.includes("layeringHide")) return next(args);
-      const ret = next(args);
-      const defaultItemHide = Layering.Asset.Hide || [];
-      if (defaultItemHide.length === 0) return ret;
-      const overrideItemHide = Layering.Item.Property.wceOverrideHide || defaultItemHide;
-      const root = document.getElementById(Layering.ID.root);
-      root.classList.add("scroll-box");
-      root.querySelector("#layering-layer-div")?.classList.remove("scroll-box");
-      ElementCreate({
-        tag: "h1",
-        attributes: { id: "layering-hide-header" },
-        parent: root,
-        children: [displayText("[WCE] Configure layer hiding")],
-      });
-      ElementCreate({
-        tag: "form",
-        attributes: { id: "layering-wce-hide-div" },
-        classList: ["layering-layer-inner-grid"],
-        parent: root,
-        children: defaultItemHide.map(h => ({
-          tag: "div",
-          classList: ["layering-pair"],
-          children: [
-            ElementCheckbox.Create(
-              `layering-wce-hide-cb-${h}`,
-              () => {
-                const hideForm: HTMLFormElement = document.getElementById("layering-wce-hide-div") as HTMLFormElement;
-                Layering.Item.Property.wceOverrideHide = new FormData(hideForm).getAll("checkbox-hide") as AssetGroupName[];
-                if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
-                Layering._CharacterRefresh(Layering.Character, false, false);
-              },
-              { value: h, disabled: Layering.Readonly, checked: overrideItemHide.includes(h) },
-              { checkbox: { attributes: { name: "checkbox-hide" } } }
-            ),
-            {
-              tag: "span",
-              classList: ["layering-pair-text"],
-              children: [h],
+  SDK.hookFunction("Layering.Load", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(Layering.Item, "Lock") || DialogCanUnlock2(Layering.Character, Layering.Item))) {
+      Layering.Readonly = false;
+    }
+    if (!Layering.Character.IsPlayer() && Layering.Character.BCECapabilities?.includes("preventLayeringByOthers")) {
+      Layering.Readonly = true;
+    }
+    if (!fbcSettings.layeringHide || CurrentScreen === "Crafting" || !Layering.Character.BCECapabilities?.includes("layeringHide")) return next(args);
+    const ret = next(args);
+    const defaultItemHide = Layering.Asset.Hide || [];
+    if (defaultItemHide.length === 0) return ret;
+    const overrideItemHide = Layering.Item.Property.wceOverrideHide || defaultItemHide;
+    const root = document.getElementById(Layering.ID.root);
+    root.classList.add("scroll-box");
+    root.querySelector("#layering-layer-div")?.classList.remove("scroll-box");
+    ElementCreate({ tag: "h1", attributes: { id: "layering-hide-header" }, parent: root, children: [displayText("[WCE] Configure layer hiding")] });
+    ElementCreate({
+      tag: "form",
+      attributes: { id: "layering-wce-hide-div" },
+      classList: ["layering-layer-inner-grid"],
+      parent: root,
+      children: defaultItemHide.map(h => ({
+        tag: "div",
+        classList: ["layering-pair"],
+        children: [
+          ElementCheckbox.Create(
+            `layering-wce-hide-cb-${h}`,
+            () => {
+              const hideForm: HTMLFormElement = document.getElementById("layering-wce-hide-div") as HTMLFormElement;
+              Layering.Item.Property.wceOverrideHide = new FormData(hideForm).getAll("checkbox-hide") as AssetGroupName[];
+              if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
+              Layering._CharacterRefresh(Layering.Character, false, false);
             },
-          ],
+            { value: h, disabled: Layering.Readonly, checked: overrideItemHide.includes(h) },
+            { checkbox: { attributes: { name: "checkbox-hide" } } }
+          ),
+          { tag: "span", classList: ["layering-pair-text"], children: [h] },
+        ],
+      })),
+    });
+    return ret;
+  });
 
-        })),
-      });
-      return ret;
-    }
-  );
-
-  SDK.hookFunction(
-    "Layering._ResetClickListener",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      if (!fbcSettings.layeringHide || CurrentScreen === "Crafting") return next(args);
-      delete Layering.Item.Property.wceOverrideHide;
-      document.querySelectorAll("input[name=checkbox-hide]").forEach((e: HTMLInputElement) => {
-        e.checked = true;
-      });
-      return next(args);
-    }
-  );
+  SDK.hookFunction("Layering._ResetClickListener", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    if (!fbcSettings.layeringHide || CurrentScreen === "Crafting") return next(args);
+    delete Layering.Item.Property.wceOverrideHide;
+    document.querySelectorAll("input[name=checkbox-hide]").forEach((e: HTMLInputElement) => {
+      e.checked = true;
+    });
+    return next(args);
+  });
 
   patchFunction(
     "CharacterAppearanceVisible",
@@ -123,127 +105,97 @@ export default async function layeringMenu(): Promise<void> {
 
   patchFunction(
     "ServerPlayerAppearanceSync",
-    {
-      "D.Appearance = ServerAppearanceBundle(Player.Appearance);":
-        "D.Appearance = wceServerAppearance(ServerAppearanceBundle(Player.Appearance));",
-    },
+    { "D.Appearance = ServerAppearanceBundle(Player.Appearance);": "D.Appearance = wceServerAppearance(ServerAppearanceBundle(Player.Appearance));" },
     "wceOverrideHide would be stored in the BC database"
   );
 
-  SDK.hookFunction(
-    "ServerAppearanceLoadFromBundle",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      const ret = next(args);
-      const [C] = args;
-      if (C.IsPlayer() && Array.isArray(C.Appearance)) {
-        let updated = false;
-        const WCEOverrides: WCEOverrideSetting = parseJSON(LZString.decompressFromUTF16(Player.ExtensionSettings.WCEOverrides));
-        for (const [Group, Hide] of Object.entries(WCEOverrides?.Hide || {})) {
-          const item = InventoryGet(C, Group as AssetGroupName);
-          if (item && !Array.isArray(item.Property?.wceOverrideHide)) {
-            item.Property ??= {};
-            item.Property.wceOverrideHide = Hide;
-            updated = true;
-          }
+  SDK.hookFunction("ServerAppearanceLoadFromBundle", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    const ret = next(args);
+    const [C] = args;
+    if (C.IsPlayer() && Array.isArray(C.Appearance)) {
+      let updated = false;
+      const WCEOverrides: WCEOverrideSetting = parseJSON(LZString.decompressFromUTF16(Player.ExtensionSettings.WCEOverrides));
+      for (const [Group, Hide] of Object.entries(WCEOverrides?.Hide || {})) {
+        const item = InventoryGet(C, Group as AssetGroupName);
+        if (item && !Array.isArray(item.Property?.wceOverrideHide)) {
+          item.Property ??= {};
+          item.Property.wceOverrideHide = Hide;
+          updated = true;
         }
-        if (updated) ChatRoomCharacterUpdate(C);
       }
-      return ret;
+      if (updated) ChatRoomCharacterUpdate(C);
     }
-  );
+    return ret;
+  });
 
-  SDK.hookFunction(
-    "ChatRoomSyncMemberJoin",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const ret = next(args);
-      if (Player.Appearance.some(a => Array.isArray(a.Property?.wceOverrideHide))) ChatRoomCharacterUpdate(Player);
-      return ret;
-    }
-  );
+  SDK.hookFunction("ChatRoomSyncMemberJoin", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const ret = next(args);
+    if (Player.Appearance.some(a => Array.isArray(a.Property?.wceOverrideHide))) ChatRoomCharacterUpdate(Player);
+    return ret;
+  });
 
-  SDK.hookFunction(
-    "PreferenceExit",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const test = PreferenceSubscreen.name === "Main";
-      const ret = next(args);
-      if (test && Player.Appearance.some(a => Array.isArray(a.Property?.wceOverrideHide))) ChatRoomCharacterUpdate(Player);
-      return ret;
-    }
-  );
+  SDK.hookFunction("PreferenceExit", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const test = PreferenceSubscreen.name === "Main";
+    const ret = next(args);
+    if (test && Player.Appearance.some(a => Array.isArray(a.Property?.wceOverrideHide))) ChatRoomCharacterUpdate(Player);
+    return ret;
+  });
 
   // Pseudo-items that we do not want to process for color copying
-  const ignoredColorCopyableAssets = [
-    "LeatherCrop",
-    "LeatherWhip",
-    "ShockCollarRemote",
-    "SpankingToys",
-    "VibratorRemote",
-  ];
-  const colorCopyableAssets = Asset.filter(ass =>
-    AssetGroup.filter(a => a.Name.startsWith("Item") && !/\d$/u.test(a.Name) && a.Asset.find(b => b.Name === ass.Name)).length > 1
-  ).filter((v, i, a) => a.findIndex(as => as.Name === v.Name) === i).map(a => a.Name).filter(a => !ignoredColorCopyableAssets.includes(a));
+  const ignoredColorCopyableAssets = ["LeatherCrop", "LeatherWhip", "ShockCollarRemote", "SpankingToys", "VibratorRemote"];
+  const colorCopyableAssets = Asset.filter(
+    ass => AssetGroup.filter(a => a.Name.startsWith("Item") && !/\d$/u.test(a.Name) && a.Asset.find(b => b.Name === ass.Name)).length > 1
+  )
+    .filter((v, i, a) => a.findIndex(as => as.Name === v.Name) === i)
+    .map(a => a.Name)
+    .filter(a => !ignoredColorCopyableAssets.includes(a));
 
   function assetWorn(C: Character, item?: Item): boolean {
     return !!item && !!C.Appearance.find(a => a === item);
   }
 
-  SDK.hookFunction(
-    "DialogMenuButtonBuild",
-    HOOK_PRIORITIES.AddBehaviour,
-    ([C], next) => {
-      const ret = next([C]);
-      if (
-        isCharacter(C) &&
-        fbcSettings.copyColor &&
-        Player.CanInteract() &&
-        C?.FocusGroup?.Name &&
-        !InventoryGroupIsBlocked(C, C.FocusGroup.Name) &&
-        DialogMenuMode === "items"
-      ) {
-        const focusItem = InventoryGet(C, C.FocusGroup.Name);
-        if (assetWorn(C, focusItem) && colorCopyableAssets.includes(focusItem.Asset.Name)) {
-          // @ts-expect-error
-          DialogMenuButton.push("Paint");
-        }
+  SDK.hookFunction("DialogMenuButtonBuild", HOOK_PRIORITIES.AddBehaviour, ([C], next) => {
+    const ret = next([C]);
+    if (
+      isCharacter(C) &&
+      fbcSettings.copyColor &&
+      Player.CanInteract() &&
+      C?.FocusGroup?.Name &&
+      !InventoryGroupIsBlocked(C, C.FocusGroup.Name) &&
+      DialogMenuMode === "items"
+    ) {
+      const focusItem = InventoryGet(C, C.FocusGroup.Name);
+      if (assetWorn(C, focusItem) && colorCopyableAssets.includes(focusItem.Asset.Name)) {
+        // @ts-expect-error
+        DialogMenuButton.push("Paint");
       }
-      return ret;
     }
-  );
+    return ret;
+  });
 
-  SDK.hookFunction(
-    "InterfaceTextGet",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      if (args[0] === "DialogMenuPaint") return displayText("[WCE] Copy colors to other items of same type");
-      return next(args);
-    }
-  );
+  SDK.hookFunction("InterfaceTextGet", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    if (args[0] === "DialogMenuPaint") return displayText("[WCE] Copy colors to other items of same type");
+    return next(args);
+  });
 
-  SDK.hookFunction(
-    "DialogMenuButtonClick",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const ret = next(args);
-      if (!ret && !["colorExpression", "colorItem", "extended", "layering", "tighten"].includes(DialogMenuMode)) {
-        const C = CharacterGetCurrent();
-        const Item = C.FocusGroup ? InventoryGet(C, C.FocusGroup.Name) : null;
-        for (let I = 0; I < DialogMenuButton.length; I++) {
-          if (MouseIn(1885 - I * 110, 15, 90, 90)) {
-            const button = DialogMenuButton[I];
-            // @ts-expect-error
-            if (Item && button === "Paint") {
-              copyColors(C, Item);
-              return false;
-            }
+  SDK.hookFunction("DialogMenuButtonClick", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const ret = next(args);
+    if (!ret && !["colorExpression", "colorItem", "extended", "layering", "tighten"].includes(DialogMenuMode)) {
+      const C = CharacterGetCurrent();
+      const Item = C.FocusGroup ? InventoryGet(C, C.FocusGroup.Name) : null;
+      for (let I = 0; I < DialogMenuButton.length; I++) {
+        if (MouseIn(1885 - I * 110, 15, 90, 90)) {
+          const button = DialogMenuButton[I];
+          // @ts-expect-error
+          if (Item && button === "Paint") {
+            copyColors(C, Item);
+            return false;
           }
         }
       }
-      return ret;
     }
-  );
+    return ret;
+  });
 
   function copyColorTo(item: Item, focusItem: Item): void {
     if (item.Asset.Name === focusItem.Asset.Name) {
@@ -259,7 +211,8 @@ export default async function layeringMenu(): Promise<void> {
         for (let i = 0; i < item.Color.length; i++) {
           item.Color[i] = focusItem.Color ?? "Default";
         }
-      } else { // Both are array
+      } else {
+        // Both are array
         item.Color = deepCopy(focusItem.Color);
       }
     }
@@ -272,7 +225,8 @@ export default async function layeringMenu(): Promise<void> {
       InventoryGroupIsBlocked(C, C.FocusGroup.Name) ||
       !assetWorn(C, focusItem) ||
       !colorCopyableAssets.includes(focusItem.Asset.Name)
-    ) return;
+    )
+      return;
     for (const item of C.Appearance) {
       copyColorTo(item, focusItem);
     }

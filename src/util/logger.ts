@@ -6,19 +6,21 @@ export function pushLog(level: LogLevel, ...args: unknown[]): void {
   pastLogs.shift();
   pastLogs.push({
     level,
-    message: args.map((v) => {
-      if (typeof v === "string") {
-        return v;
-      }
-      if (v instanceof Error) {
-        return v.stack;
-      }
-      try {
-        return JSON.stringify(v);
-      } catch {
-        return (v as bigint)?.toString();
-      }
-    }).join(", "),
+    message: args
+      .map(v => {
+        if (typeof v === "string") {
+          return v;
+        }
+        if (v instanceof Error) {
+          return v.stack;
+        }
+        try {
+          return JSON.stringify(v);
+        } catch {
+          return (v as bigint)?.toString();
+        }
+      })
+      .join(", "),
   });
 }
 

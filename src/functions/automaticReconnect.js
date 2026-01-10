@@ -1,17 +1,14 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
-import { registerSocketListener } from "./appendSocketListenersToInit";
-import { waitFor, sleep, parseJSON, isString } from "../util/utils";
-import { debug, logWarn } from "../util/logger";
 import { displayText } from "../util/localization";
+import { debug, logWarn } from "../util/logger";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
+import { waitFor, sleep, parseJSON, isString } from "../util/utils";
+import { registerSocketListener } from "./appendSocketListenersToInit";
 
 export default async function automaticReconnect() {
   const { Dexie } = await import("dexie");
   const db = new Dexie("wce-saved-accounts");
-  db.version(2).stores({
-    key: "id, key",
-    accounts: "id, data, iv, auth",
-  });
+  db.version(2).stores({ key: "id, key", accounts: "id, data, iv, auth" });
   /** @type {import("dexie").Table<{ id: number; key: CryptoKey }, import("dexie").IndexableType>} */
   const keyTable = db.table("key");
   /** @type {import("dexie").Table<{ id: number; data: Uint8Array<ArrayBuffer>; iv: Uint8Array<ArrayBuffer>; auth: Uint8Array<ArrayBuffer>; }, import("dexie").IndexableType>} */
@@ -20,7 +17,7 @@ export default async function automaticReconnect() {
   let /** @type {CryptoKey} */ encKey, /** @type {{key: CryptoKey;}} */ key;
   try {
     key = await keyTable.get({ id: 1 });
-  } catch(e) {
+  } catch (e) {
     logWarn(e);
     localStorage.removeItem("bce.passwords");
     await db.delete();
@@ -55,8 +52,8 @@ export default async function automaticReconnect() {
     const decoder = new TextDecoder("utf8");
     try {
       const s = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, data);
-      return await parseJSON(decoder.decode(new Uint8Array(s))) || {};
-    } catch(e) {
+      return (await parseJSON(decoder.decode(new Uint8Array(s)))) || {};
+    } catch (e) {
       logWarn(e);
       localStorage.removeItem("bce.passwords");
       keyTable.clear();
@@ -84,11 +81,9 @@ export default async function automaticReconnect() {
       const auth = window.crypto.getRandomValues(new Uint8Array(16));
       const encoder = new TextEncoder();
       accounts = accs;
-      window.crypto.subtle.encrypt(
-        { name: "AES-GCM", iv, additionalData: auth, tagLength: 128 },
-        encKey,
-        encoder.encode(JSON.stringify(accs))
-      ).then(s => accTable.put({ id: 1, iv, auth, data: new Uint8Array(s) }, [1]));
+      window.crypto.subtle
+        .encrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, encoder.encode(JSON.stringify(accs)))
+        .then(s => accTable.put({ id: 1, iv, auth, data: new Uint8Array(s) }, [1]));
     } else {
       localStorage.removeItem("bce.passwords");
     }
@@ -133,61 +128,53 @@ export default async function automaticReconnect() {
     /** @type {{ passwords: Passwords, posMaps: Record<string, string> }} */
     const loginData = { passwords: loadPasswords(), posMaps: {} };
 
-    SDK.hookFunction(
-      "LoginRun",
-      HOOK_PRIORITIES.Top,
-      (args, next) => {
-        const ret = next(args);
-        if (Object.keys(loginData.passwords).length > 0) {
-          DrawText(displayText("Saved Logins (WCE)"), 170, 35, "White", "Black");
-        }
-        DrawButton(1251, 390, 180, 50, displayText("Save (WCE)"), "White");
+    SDK.hookFunction("LoginRun", HOOK_PRIORITIES.Top, (args, next) => {
+      const ret = next(args);
+      if (Object.keys(loginData.passwords).length > 0) {
+        DrawText(displayText("Saved Logins (WCE)"), 170, 35, "White", "Black");
+      }
+      DrawButton(1251, 390, 180, 50, displayText("Save (WCE)"), "White");
 
-        let y = 60;
-        for (const user in loginData.passwords) {
-          if (!Object.hasOwn(loginData.passwords, user)) {
-            continue;
-          }
-          loginData.posMaps[y] = user;
-          DrawButton(10, y, 350, 60, user, "White");
-          DrawButton(355, y, 60, 60, "X", "White");
-          y += 70;
+      let y = 60;
+      for (const user in loginData.passwords) {
+        if (!Object.hasOwn(loginData.passwords, user)) {
+          continue;
         }
+        loginData.posMaps[y] = user;
+        DrawButton(10, y, 350, 60, user, "White");
+        DrawButton(355, y, 60, 60, "X", "White");
+        y += 70;
+      }
+      return ret;
+    });
+
+    SDK.hookFunction("LoginClick", HOOK_PRIORITIES.Top, (args, next) => {
+      const ret = next(args);
+      if (MouseIn(1250, 385, 180, 60)) {
+        updatePasswordForReconnect();
+        loginData.posMaps = {};
+        loginData.passwords = loadPasswords();
+      }
+      const now = Date.now();
+      if (now - lastClick < 150) {
         return ret;
       }
-    );
-
-    SDK.hookFunction(
-      "LoginClick",
-      HOOK_PRIORITIES.Top,
-      (args, next) => {
-        const ret = next(args);
-        if (MouseIn(1250, 385, 180, 60)) {
-          updatePasswordForReconnect();
+      lastClick = now;
+      for (const pos in loginData.posMaps) {
+        if (!Object.hasOwn(loginData.posMaps, pos)) {
+          continue;
+        }
+        const idx = parseInt(pos);
+        if (MouseIn(10, idx, 350, 60)) {
+          LoginDoLogin(loginData.posMaps[idx], loginData.passwords[loginData.posMaps[idx]]);
+        } else if (MouseIn(355, idx, 60, 60)) {
+          clearPassword(loginData.posMaps[idx]);
           loginData.posMaps = {};
           loginData.passwords = loadPasswords();
         }
-        const now = Date.now();
-        if (now - lastClick < 150) {
-          return ret;
-        }
-        lastClick = now;
-        for (const pos in loginData.posMaps) {
-          if (!Object.hasOwn(loginData.posMaps, pos)) {
-            continue;
-          }
-          const idx = parseInt(pos);
-          if (MouseIn(10, idx, 350, 60)) {
-            LoginDoLogin(loginData.posMaps[idx], loginData.passwords[loginData.posMaps[idx]]);
-          } else if (MouseIn(355, idx, 60, 60)) {
-            clearPassword(loginData.posMaps[idx]);
-            loginData.posMaps = {};
-            loginData.passwords = loadPasswords();
-          }
-        }
-        return ret;
       }
-    );
+      return ret;
+    });
 
     CurrentScreenFunctions.Run = LoginRun;
     CurrentScreenFunctions.Click = LoginClick;
@@ -199,15 +186,7 @@ export default async function automaticReconnect() {
   let loginError = null;
 
   async function relog() {
-    if (
-      !Player?.AccountName ||
-      !ServerIsConnected ||
-      LoginSubmitted ||
-      !ServerSocket.connected ||
-      breakCircuit ||
-      breakCircuitFull ||
-      !fbcSettings.relogin
-    ) {
+    if (!Player?.AccountName || !ServerIsConnected || LoginSubmitted || !ServerSocket.connected || breakCircuit || breakCircuitFull || !fbcSettings.relogin) {
       return;
     }
     breakCircuit = true;
@@ -241,73 +220,59 @@ export default async function automaticReconnect() {
     ]);
   }
 
-  SDK.hookFunction(
-    "RelogRun",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      if (loginError !== "ErrorDuplicatedLogin") {
-        relog();
-      } else if (!breakCircuit) {
-        SDK.callOriginal("ServerAccountBeep", [
-          {
-            MemberNumber: Player.MemberNumber || -1,
-            BeepType: "",
-            MemberName: Player.Name,
-            ChatRoomName: displayText("ERROR"),
-            Private: true,
-            Message: displayText(
-              "Signed in from a different location! Refresh the page to re-enable relogin in this tab."
-            ),
-            ChatRoomSpace: "",
-          },
-        ]);
-        breakCircuit = true;
-        breakCircuitFull = true;
-      }
-      return next(args);
+  SDK.hookFunction("RelogRun", HOOK_PRIORITIES.Top, (args, next) => {
+    if (loginError !== "ErrorDuplicatedLogin") {
+      relog();
+    } else if (!breakCircuit) {
+      SDK.callOriginal("ServerAccountBeep", [
+        {
+          MemberNumber: Player.MemberNumber || -1,
+          BeepType: "",
+          MemberName: Player.Name,
+          ChatRoomName: displayText("ERROR"),
+          Private: true,
+          Message: displayText("Signed in from a different location! Refresh the page to re-enable relogin in this tab."),
+          ChatRoomSpace: "",
+        },
+      ]);
+      breakCircuit = true;
+      breakCircuitFull = true;
     }
-  );
+    return next(args);
+  });
 
-  SDK.hookFunction(
-    "RelogExit",
-    HOOK_PRIORITIES.Top,
-    (args, next) => {
-      breakCircuit = false;
-      breakCircuitFull = false;
-      loginError = null;
-      return next(args);
-    }
-  );
+  SDK.hookFunction("RelogExit", HOOK_PRIORITIES.Top, (args, next) => {
+    breakCircuit = false;
+    breakCircuitFull = false;
+    loginError = null;
+    return next(args);
+  });
 
   registerSocketListener("connect", () => {
     breakCircuit = false;
     loginError = null;
   });
 
-  SDK.hookFunction(
-    "ServerDisconnect",
-    HOOK_PRIORITIES.ModifyBehaviourHigh,
-    ([error, force], next) => {
-      const ret = next([error, false]);
-      if (force) {
-        logWarn("Forcefully disconnected", error);
-        ServerSocket.disconnect();
-        if (isString(error) && ["ErrorRateLimited", "ErrorDuplicatedLogin"].includes(error)) {
-          loginError = error;
-          // Reconnect after 3-6 seconds if rate limited
-          logWarn("Reconnecting...");
-          setTimeout(
-            () => {
-              logWarn("Connecting...");
-              ServerInit();
-            },
-            3000 + Math.round(Math.random() * 3000)
-          );
-        } else {
-          logWarn("Disconnected.");
-        }
+  SDK.hookFunction("ServerDisconnect", HOOK_PRIORITIES.ModifyBehaviourHigh, ([error, force], next) => {
+    const ret = next([error, false]);
+    if (force) {
+      logWarn("Forcefully disconnected", error);
+      ServerSocket.disconnect();
+      if (isString(error) && ["ErrorRateLimited", "ErrorDuplicatedLogin"].includes(error)) {
+        loginError = error;
+        // Reconnect after 3-6 seconds if rate limited
+        logWarn("Reconnecting...");
+        setTimeout(
+          () => {
+            logWarn("Connecting...");
+            ServerInit();
+          },
+          3000 + Math.round(Math.random() * 3000)
+        );
+      } else {
+        logWarn("Disconnected.");
       }
-      return ret;
     }
-  );
+    return ret;
+  });
 }

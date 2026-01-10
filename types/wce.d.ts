@@ -18,16 +18,8 @@ declare global {
   type FUSAMPublicAPI = {
     present: true;
     addons: Record<string, FUSAMAddonState>;
-    registerDebugMethod: (
-      name: string,
-      method: () => string | Promise<string>
-    ) => void;
-    modals: {
-      open: (options: ModalOptions) => void
-      openAsync: (
-        options: Omit<ModalOptions, "callback">
-      ) => Promise<[string, string | null]>
-    }; 
+    registerDebugMethod: (name: string, method: () => string | Promise<string>) => void;
+    modals: { open: (options: ModalOptions) => void; openAsync: (options: Omit<ModalOptions, "callback">) => Promise<[string, string | null]> };
   };
   type ModalOptions = {
     prompt: string | Node;
@@ -35,25 +27,12 @@ declare global {
     callback: (action: string, inputValue?: string) => void;
     buttons?: { submit: string } & Record<string, string>;
   };
-  type FUSAMAddonState = {
-    distribution: string;
-    status: "loading" | "loaded" | "error";
-  };
+  type FUSAMAddonState = { distribution: string; status: "loading" | "loaded" | "error" };
 
-  type FBCNote = {
-    note: string;
-    updatedAt?: number;
-    memberNumber?: number;
-  };
-  type Friend = {
-    MemberName: string;
-    MemberNumber: number;
-  };
+  type FBCNote = { note: string; updatedAt?: number; memberNumber?: number };
+  type Friend = { MemberName: string; MemberNumber: number };
   type Passwords = Record<string, string>;
-  type ArousalExpressionStage = {
-    Expression: ExpressionName;
-    Limit: number;
-  };
+  type ArousalExpressionStage = { Expression: ExpressionName; Limit: number };
   type ArousalExpressionStages = Record<string, ArousalExpressionStage[]>;
   type ExpressionStage = {
     Id?: number;
@@ -65,48 +44,16 @@ declare global {
     Color?: ItemColor;
     Applied?: boolean;
   };
-  type Expression = {
-    Type: string;
-    Duration: number;
-    Priority?: number;
-    Expression?: ExpressionStages;
-    Poses?: FBCPose[];
-  };
-  type FBCPose = {
-    Id?: number;
-    Pose: AssetPoseName[];
-    Duration: number;
-    Priority?: number;
-  };
-  type PoseEx = {
-    Pose: string;
-    Category?: string;
-  };
+  type Expression = { Type: string; Duration: number; Priority?: number; Expression?: ExpressionStages; Poses?: FBCPose[] };
+  type FBCPose = { Id?: number; Pose: AssetPoseName[]; Duration: number; Priority?: number };
+  type PoseEx = { Pose: string; Category?: string };
   type ExpressionStages = Record<string, ExpressionStage[]>;
-  type EventParams = {
-    At?: number;
-    Until?: number;
-    Id?: number;
-  };
+  type EventParams = { At?: number; Until?: number; Id?: number };
   type ExpressionEvent = Expression & EventParams;
   type ActivityTriggerMatcher = {
     Tester: RegExp;
-    Criteria?: {
-      TargetIsPlayer?: boolean;
-      SenderIsPlayer?: boolean;
-      DictionaryMatchers?: Record<string, string>[];
-    };
+    Criteria?: { TargetIsPlayer?: boolean; SenderIsPlayer?: boolean; DictionaryMatchers?: Record<string, string>[] };
   };
-  type ActivityTrigger = {
-    Event: string;
-    Type: string;
-    Matchers: ActivityTriggerMatcher[];
-  };
-  type FBCSavedProfile = {
-    memberNumber: number;
-    name: string;
-    lastNick?: string;
-    seen: number;
-    characterBundle: string;
-  };
+  type ActivityTrigger = { Event: string; Type: string; Matchers: ActivityTriggerMatcher[] };
+  type FBCSavedProfile = { memberNumber: number; name: string; lastNick?: string; seen: number; characterBundle: string };
 }

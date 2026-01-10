@@ -1,6 +1,6 @@
+import { createTimer } from "../util/hooks";
 import { fbcSettings } from "../util/settings";
 import { waitFor } from "../util/utils";
-import { createTimer } from "../util/hooks";
 import { sendHello } from "./hiddenMessageHandler";
 
 export default async function shareAddons(): Promise<void> {
@@ -10,12 +10,7 @@ export default async function shareAddons(): Promise<void> {
 
   createTimer(() => {
     const loadedAddons = bcModSdk.getModsInfo();
-    if (
-      fbcSettings.shareAddons &&
-      JSON.stringify(loadedAddons) !== JSON.stringify(Player.FBCOtherAddons) &&
-      ServerIsConnected &&
-      ServerPlayerIsInChatRoom()
-    ) {
+    if (fbcSettings.shareAddons && JSON.stringify(loadedAddons) !== JSON.stringify(Player.FBCOtherAddons) && ServerIsConnected && ServerPlayerIsInChatRoom()) {
       Player.FBCOtherAddons = loadedAddons;
       sendHello(null, true);
     }

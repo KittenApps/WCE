@@ -28,9 +28,5 @@ export const DEFAULT_WARDROBE_SIZE = 24;
 export const EXPANDED_WARDROBE_SIZE = 96;
 export const LOCAL_WARDROBE_SIZE = EXPANDED_WARDROBE_SIZE * 4;
 export const HIDDEN = "Hidden";
-export const MESSAGE_TYPES = Object.freeze({
-  Activity: "Activity",
-  ArousalSync: "ArousalSync",
-  Hello: "Hello",
-});
+export const MESSAGE_TYPES = Object.freeze({ Activity: "Activity", ArousalSync: "ArousalSync", Hello: "Hello" });
 export const WHISPER_CLASS = "bce-whisper-input";

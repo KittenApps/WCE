@@ -1,9 +1,9 @@
-import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
-import { registerSocketListener } from "./appendSocketListenersToInit";
-import { waitFor, isCharacter } from "../util/utils";
-import { logWarn } from "../util/logger";
-import { fbcSettings } from "../util/settings";
 import { BCE_MAX_AROUSAL, HIDDEN, BCE_MSG, MESSAGE_TYPES, FBC_VERSION } from "../util/constants";
+import { logWarn } from "../util/logger";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
+import { fbcSettings } from "../util/settings";
+import { waitFor, isCharacter } from "../util/utils";
+import { registerSocketListener } from "./appendSocketListenersToInit";
 
 export default async function alternateArousal() {
   await waitFor(() => !!ServerSocket && ServerIsConnected);
@@ -18,7 +18,7 @@ export default async function alternateArousal() {
      * @param {ServerCharacterArousalResponse} data
      * @returns {void}
      */
-    (data) => {
+    data => {
       // Skip player's own sync messages since we're tracking locally
       if (data.MemberNumber === Player.MemberNumber) return;
 
@@ -78,86 +78,70 @@ export default async function alternateArousal() {
     "Alternate arousal algorithm will be incorrect."
   );
 
-  SDK.hookFunction(
-    "ActivityChatRoomArousalSync",
-    HOOK_PRIORITIES.Observe,
-    (args, next) => {
-      const [C] = args;
-      if (isCharacter(C) && C.IsPlayer() && CurrentScreen === "ChatRoom") {
-        /** @type {ServerChatRoomMessage} */
-        const message = {
-          Type: HIDDEN,
-          Content: BCE_MSG,
-          Dictionary: [
-            {
-              // @ts-expect-error - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
-              message: {
-                type: MESSAGE_TYPES.ArousalSync,
-                version: FBC_VERSION,
-                alternateArousal: fbcSettings.alternateArousal,
-                progress: C.BCEArousalProgress,
-                enjoyment: C.BCEEnjoyment,
-              },
+  SDK.hookFunction("ActivityChatRoomArousalSync", HOOK_PRIORITIES.Observe, (args, next) => {
+    const [C] = args;
+    if (isCharacter(C) && C.IsPlayer() && CurrentScreen === "ChatRoom") {
+      /** @type {ServerChatRoomMessage} */
+      const message = {
+        Type: HIDDEN,
+        Content: BCE_MSG,
+        Dictionary: [
+          {
+            // @ts-expect-error - cannot extend valid dictionary entries to add our type to it, but this is possible within the game's wire format
+            message: {
+              type: MESSAGE_TYPES.ArousalSync,
+              version: FBC_VERSION,
+              alternateArousal: fbcSettings.alternateArousal,
+              progress: C.BCEArousalProgress,
+              enjoyment: C.BCEEnjoyment,
             },
-          ],
-        };
-        ServerSend("ChatRoomChat", message);
-      }
-      return next(args);
+          },
+        ],
+      };
+      ServerSend("ChatRoomChat", message);
     }
-  );
+    return next(args);
+  });
 
-  SDK.hookFunction(
-    "ActivitySetArousal",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const [C, Progress] = args;
-      const ret = next(args);
-      if (isCharacter(C) && typeof Progress === "number" && Math.abs(C.BCEArousalProgress - Progress) > 3) {
-        C.BCEArousalProgress = Math.min(BCE_MAX_AROUSAL, Progress);
-      }
-      return ret;
+  SDK.hookFunction("ActivitySetArousal", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const [C, Progress] = args;
+    const ret = next(args);
+    if (isCharacter(C) && typeof Progress === "number" && Math.abs(C.BCEArousalProgress - Progress) > 3) {
+      C.BCEArousalProgress = Math.min(BCE_MAX_AROUSAL, Progress);
     }
-  );
+    return ret;
+  });
 
-  SDK.hookFunction(
-    "ActivitySetArousalTimer",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const [C, , , Factor] = args;
-      if (isCharacter(C) && typeof Factor === "number") {
-        C.BCEEnjoyment = 1 + (Factor > 1 ? Math.round(Math.log2(Factor)) : 0);
-      }
-      return next(args);
+  SDK.hookFunction("ActivitySetArousalTimer", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const [C, , , Factor] = args;
+    if (isCharacter(C) && typeof Factor === "number") {
+      C.BCEEnjoyment = 1 + (Factor > 1 ? Math.round(Math.log2(Factor)) : 0);
     }
-  );
+    return next(args);
+  });
 
-  SDK.hookFunction(
-    "ActivityTimerProgress",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const [C, progress] = args;
-      if (isCharacter(C) && typeof progress === "number") {
-        if (!C.BCEArousalProgress) {
-          C.BCEArousalProgress = 0;
-        }
-        if (!C.BCEEnjoyment) {
-          C.BCEEnjoyment = 1;
-        }
-        C.BCEArousalProgress += progress * (progress > 0 ? C.BCEEnjoyment * enjoymentMultiplier : 1);
-        C.BCEArousalProgress = Math.min(BCE_MAX_AROUSAL, C.BCEArousalProgress);
-        if (C.BCEArousal) {
-          if (!C.ArousalSettings) {
-            throw new Error(`No arousal settings found for ${C.Name}`);
-          }
-          C.ArousalSettings.Progress = Math.round(C.BCEArousalProgress);
-          args[1] = 0;
-          return next(args);
-        }
+  SDK.hookFunction("ActivityTimerProgress", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const [C, progress] = args;
+    if (isCharacter(C) && typeof progress === "number") {
+      if (!C.BCEArousalProgress) {
+        C.BCEArousalProgress = 0;
       }
-      return next(args);
+      if (!C.BCEEnjoyment) {
+        C.BCEEnjoyment = 1;
+      }
+      C.BCEArousalProgress += progress * (progress > 0 ? C.BCEEnjoyment * enjoymentMultiplier : 1);
+      C.BCEArousalProgress = Math.min(BCE_MAX_AROUSAL, C.BCEArousalProgress);
+      if (C.BCEArousal) {
+        if (!C.ArousalSettings) {
+          throw new Error(`No arousal settings found for ${C.Name}`);
+        }
+        C.ArousalSettings.Progress = Math.round(C.BCEArousalProgress);
+        args[1] = 0;
+        return next(args);
+      }
     }
-  );
+    return next(args);
+  });
 
   patchFunction(
     "TimerProcess",

@@ -31,7 +31,10 @@ export const ArousalExpressionStages: ArousalExpressionStages = {
     { Expression: null, Limit: 0 },
   ],
   // Pussy group includes Penis, which is the only type of "pussy" with expressions and controls erections.
-  Pussy: [{ Expression: "Hard", Limit: 50 }, { Expression: null, Limit: 0 }],
+  Pussy: [
+    { Expression: "Hard", Limit: 50 },
+    { Expression: null, Limit: 0 },
+  ],
 };
 
 export const EventExpressions: Record<string, Expression> = {
@@ -132,11 +135,7 @@ export const EventExpressions: Record<string, Expression> = {
   },
   Chuckle: { Type: "Chuckle", Duration: 4000, Expression: { Mouth: [{ Expression: "Grin", Duration: 4000 }] } },
   Smile: { Type: "Smile", Duration: -1, Expression: { Mouth: [{ Expression: "Grin", Duration: -1 }] } },
-  Blink: {
-    Type: "Blink",
-    Duration: 200,
-    Expression: { Eyes: [{ Expression: "Closed", Duration: 200 }], Eyes2: [{ Expression: "Closed", Duration: 200 }] },
-  },
+  Blink: { Type: "Blink", Duration: 200, Expression: { Eyes: [{ Expression: "Closed", Duration: 200 }], Eyes2: [{ Expression: "Closed", Duration: 200 }] } },
   Grin: {
     Type: "Grin",
     Duration: -1,
@@ -164,8 +163,14 @@ export const EventExpressions: Record<string, Expression> = {
     Priority: 150,
     Expression: {
       Blush: [{ ExpressionModifier: 3, Duration: 4000 }],
-      Eyes: [{ Expression: "VeryLewd", Duration: 3000 }, { Expression: "Sad", Duration: 1000 }],
-      Eyes2: [{ Expression: "VeryLewd", Duration: 3000 }, { Expression: "Sad", Duration: 1000 }],
+      Eyes: [
+        { Expression: "VeryLewd", Duration: 3000 },
+        { Expression: "Sad", Duration: 1000 },
+      ],
+      Eyes2: [
+        { Expression: "VeryLewd", Duration: 3000 },
+        { Expression: "Sad", Duration: 1000 },
+      ],
       Eyebrows: [{ Expression: "Harsh", Duration: 4000 }],
     },
   },
@@ -175,8 +180,14 @@ export const EventExpressions: Record<string, Expression> = {
     Priority: 400,
     Expression: {
       Blush: [{ ExpressionModifier: 2, Duration: 5000 }],
-      Eyes: [{ Expression: "VeryLewd", Duration: 4000 }, { Expression: "Sad", Duration: 1000 }],
-      Eyes2: [{ Expression: "VeryLewd", Duration: 4000 }, { Expression: "Sad", Duration: 1000 }],
+      Eyes: [
+        { Expression: "VeryLewd", Duration: 4000 },
+        { Expression: "Sad", Duration: 1000 },
+      ],
+      Eyes2: [
+        { Expression: "VeryLewd", Duration: 4000 },
+        { Expression: "Sad", Duration: 1000 },
+      ],
       Eyebrows: [{ Expression: "Soft", Duration: 5000 }],
     },
   },
@@ -192,10 +203,21 @@ export const EventExpressions: Record<string, Expression> = {
         { ExpressionModifier: -1, Duration: 2000 },
         { ExpressionModifier: -1, Duration: 1000 },
       ],
-      Eyes: [{ Expression: "Dizzy", Duration: 1000 }, { Expression: "Scared", Duration: 8000 }, { Expression: "Surprised", Duration: 7000 }],
-      Eyes2: [{ Expression: "Dizzy", Duration: 1000 }, { Expression: "Scared", Duration: 8000 }, { Expression: "Surprised", Duration: 7000 }],
+      Eyes: [
+        { Expression: "Dizzy", Duration: 1000 },
+        { Expression: "Scared", Duration: 8000 },
+        { Expression: "Surprised", Duration: 7000 },
+      ],
+      Eyes2: [
+        { Expression: "Dizzy", Duration: 1000 },
+        { Expression: "Scared", Duration: 8000 },
+        { Expression: "Surprised", Duration: 7000 },
+      ],
       Eyebrows: [{ Expression: "Soft", Duration: 15000 }],
-      Mouth: [{ Expression: "Pained", Duration: 10000 }, { Expression: "Angry", Duration: 5000 }],
+      Mouth: [
+        { Expression: "Pained", Duration: 10000 },
+        { Expression: "Angry", Duration: 5000 },
+      ],
     },
   },
   ShockLight: {
@@ -204,8 +226,14 @@ export const EventExpressions: Record<string, Expression> = {
     Priority: 900,
     Expression: {
       Blush: [{ ExpressionModifier: 2, Duration: 5000 }],
-      Eyes: [{ Expression: "Dizzy", Duration: 2000 }, { Expression: "Surprised", Duration: 3000 }],
-      Eyes2: [{ Expression: "Dizzy", Duration: 2000 }, { Expression: "Surprised", Duration: 3000 }],
+      Eyes: [
+        { Expression: "Dizzy", Duration: 2000 },
+        { Expression: "Surprised", Duration: 3000 },
+      ],
+      Eyes2: [
+        { Expression: "Dizzy", Duration: 2000 },
+        { Expression: "Surprised", Duration: 3000 },
+      ],
       Eyebrows: [{ Expression: "Soft", Duration: 5000 }],
       Mouth: [{ Expression: "Angry", Duration: 5000 }],
     },
@@ -216,8 +244,16 @@ export const EventExpressions: Record<string, Expression> = {
     Priority: 500,
     Expression: {
       Blush: [{ Expression: "VeryHigh", Duration: 7000 }],
-      Eyes: [{ Expression: "Daydream", Duration: 1000 }, { Expression: "Closed", Duration: 3000 }, { Expression: "Daydream", Duration: 3000 }],
-      Eyes2: [{ Expression: "Daydream", Duration: 1000 }, { Expression: "Closed", Duration: 3000 }, { Expression: "Daydream", Duration: 3000 }],
+      Eyes: [
+        { Expression: "Daydream", Duration: 1000 },
+        { Expression: "Closed", Duration: 3000 },
+        { Expression: "Daydream", Duration: 3000 },
+      ],
+      Eyes2: [
+        { Expression: "Daydream", Duration: 1000 },
+        { Expression: "Closed", Duration: 3000 },
+        { Expression: "Daydream", Duration: 3000 },
+      ],
       Eyebrows: [{ Expression: "Soft", Duration: 7000 }],
     },
   },
@@ -240,7 +276,10 @@ export const EventExpressions: Record<string, Expression> = {
       Eyes: [{ Expression: "Closed", Duration: 2000 }],
       Eyes2: [{ Expression: "Closed", Duration: 2000 }],
       Mouth: [{ Expression: "HalfOpen", Duration: 2000 }],
-      Blush: [{ Skip: true, Duration: 1000 }, { ExpressionModifier: 1, Duration: 1000 }],
+      Blush: [
+        { Skip: true, Duration: 1000 },
+        { ExpressionModifier: 1, Duration: 1000 },
+      ],
     },
   },
   LongKiss: {
@@ -251,7 +290,11 @@ export const EventExpressions: Record<string, Expression> = {
       Eyes: [{ Expression: "Closed", Duration: 4000 }],
       Eyes2: [{ Expression: "Closed", Duration: 4000 }],
       Mouth: [{ Expression: "Open", Duration: 4000 }],
-      Blush: [{ Skip: true, Duration: 1000 }, { ExpressionModifier: 1, Duration: 1000 }, { ExpressionModifier: 1, Duration: 2000 }],
+      Blush: [
+        { Skip: true, Duration: 1000 },
+        { ExpressionModifier: 1, Duration: 1000 },
+        { ExpressionModifier: 1, Duration: 2000 },
+      ],
     },
   },
   Disoriented: {
@@ -336,11 +379,7 @@ export const EventExpressions: Record<string, Expression> = {
     Duration: -1,
     Expression: { Eyes: [{ Expression: "Horny", Duration: -1 }], Eyes2: [{ Expression: "Horny", Duration: -1 }] },
   },
-  OpenEyes: {
-    Type: "OpenEyes",
-    Duration: -1,
-    Expression: { Eyes: [{ Expression: null, Duration: -1 }], Eyes2: [{ Expression: null, Duration: -1 }] },
-  },
+  OpenEyes: { Type: "OpenEyes", Duration: -1, Expression: { Eyes: [{ Expression: null, Duration: -1 }], Eyes2: [{ Expression: null, Duration: -1 }] } },
   CloseEyes: {
     Type: "CloseEyes",
     Duration: -1,
@@ -362,7 +401,10 @@ export const EventExpressions: Record<string, Expression> = {
     Expression: {
       Eyes: [{ Expression: "Lewd", Duration: 4000 }],
       Eyes2: [{ Expression: "Lewd", Duration: 4000 }],
-      Blush: [{ ExpressionModifier: 2, Duration: 2000 }, { ExpressionModifier: -1, Duration: 2000 }],
+      Blush: [
+        { ExpressionModifier: 2, Duration: 2000 },
+        { ExpressionModifier: -1, Duration: 2000 },
+      ],
     },
   },
   Iced: {
@@ -370,8 +412,14 @@ export const EventExpressions: Record<string, Expression> = {
     Duration: 4000,
     Priority: 500,
     Expression: {
-      Eyes: [{ Expression: "Surprised", Duration: 3000 }, { Expression: null, Duration: 1000 }],
-      Eyes2: [{ Expression: "Surprised", Duration: 3000 }, { Expression: null, Duration: 1000 }],
+      Eyes: [
+        { Expression: "Surprised", Duration: 3000 },
+        { Expression: null, Duration: 1000 },
+      ],
+      Eyes2: [
+        { Expression: "Surprised", Duration: 3000 },
+        { Expression: null, Duration: 1000 },
+      ],
       Mouth: [{ Expression: "Angry", Duration: 4000 }],
     },
   },
@@ -453,7 +501,8 @@ export const ActivityTriggers: ActivityTrigger[] = [
     Type: "Action",
     Matchers: [
       {
-        Tester: /^(ActionActivityShockItem|FuturisticVibratorShockTrigger|FuturisticChastityBeltShock\w+|(TriggerShock|(ShockCollar|Collar(Auto)?ShockUnit|(LoveChastityBelt|SciFiPleasurePanties)Shock)Trigger)(1|2))$/u,
+        Tester:
+          /^(ActionActivityShockItem|FuturisticVibratorShockTrigger|FuturisticChastityBeltShock\w+|(TriggerShock|(ShockCollar|Collar(Auto)?ShockUnit|(LoveChastityBelt|SciFiPleasurePanties)Shock)Trigger)(1|2))$/u,
         Criteria: { TargetIsPlayer: true },
       },
     ],
@@ -472,10 +521,7 @@ export const ActivityTriggers: ActivityTrigger[] = [
   {
     Event: "Spank",
     Type: "Activity",
-    Matchers: [
-      { Tester: /^ChatOther-ItemButt-Spank$/u, Criteria: { TargetIsPlayer: true } },
-      { Tester: /^ChatSelf-ItemButt-Spank$/u },
-    ],
+    Matchers: [{ Tester: /^ChatOther-ItemButt-Spank$/u, Criteria: { TargetIsPlayer: true } }, { Tester: /^ChatSelf-ItemButt-Spank$/u }],
   },
   { Event: "Cuddle", Type: "Activity", Matchers: [{ Tester: /^ChatOther-.*-Cuddle$/u }, { Tester: /^ChatSelf-.*-Cuddle$/u }] },
   { Event: "Stimulated", Type: "Action", Matchers: [{ Tester: /^ActionActivityMasturbateItem$/u, Criteria: { TargetIsPlayer: true } }] },

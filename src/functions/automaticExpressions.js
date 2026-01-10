@@ -1,22 +1,12 @@
-import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
-import { registerSocketListener } from "./appendSocketListenersToInit";
-import { BCXgetRuleState } from "./hookBcx";
+import { ActivityTriggers, ArousalExpressionStages, EventExpressions } from "../util/expressions";
 import { createTimer } from "../util/hooks";
-import { fbcSettings } from "../util/settings";
-import {
-  waitFor,
-  fbcChatNotify,
-  deepCopy,
-  isString,
-  objEntries,
-  isCharacter,
-  isNonNullObject,
-  isStringOrStringArray,
-  mustNum,
-} from "../util/utils";
 import { displayText } from "../util/localization";
 import { logWarn } from "../util/logger";
-import { ActivityTriggers, ArousalExpressionStages, EventExpressions } from "../util/expressions";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
+import { fbcSettings } from "../util/settings";
+import { waitFor, fbcChatNotify, deepCopy, isString, objEntries, isCharacter, isNonNullObject, isStringOrStringArray, mustNum } from "../util/utils";
+import { registerSocketListener } from "./appendSocketListenersToInit";
+import { BCXgetRuleState } from "./hookBcx";
 
 export default async function automaticExpressions() {
   await waitFor(() => CurrentScreen === "ChatRoom" && !!Player.ArousalSettings);
@@ -32,18 +22,14 @@ export default async function automaticExpressions() {
   }
   globalThis.bceAnimationEngineEnabled = animationEngineEnabled;
 
-  SDK.hookFunction(
-    "StruggleMinigameStop",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    (args, next) => {
-      if (fbcSettings.animationEngine) {
-        // eslint-disable-next-line no-undefined
-        StruggleExpressionStore = undefined;
-        resetExpressionQueue([GAME_TIMED_EVENT_TYPE], [MANUAL_OVERRIDE_EVENT_TYPE]);
-      }
-      return next(args);
+  SDK.hookFunction("StruggleMinigameStop", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
+    if (fbcSettings.animationEngine) {
+      // eslint-disable-next-line no-undefined
+      StruggleExpressionStore = undefined;
+      resetExpressionQueue([GAME_TIMED_EVENT_TYPE], [MANUAL_OVERRIDE_EVENT_TYPE]);
     }
-  );
+    return next(args);
+  });
 
   if (!globalThis.bce_ArousalExpressionStages) globalThis.bce_ArousalExpressionStages = ArousalExpressionStages;
 
@@ -145,7 +131,7 @@ export default async function automaticExpressions() {
      * @param {ServerChatRoomMessage} data
      * @returns {void}
      */
-    (data) => {
+    data => {
       activityTriggers: for (const trigger of globalThis.bce_ActivityTriggers.filter(t => t.Type === data.Type)) {
         for (const matcher of trigger.Matchers) {
           if (matcher.Tester.test(data.Content)) {
@@ -227,7 +213,7 @@ export default async function automaticExpressions() {
     Type: MANUAL_OVERRIDE_EVENT_TYPE,
     Duration: -1,
     Expression: faceComponents
-      .map((t) => {
+      .map(t => {
         const [expr] = expression(t);
         return [t, expr];
       })
@@ -245,11 +231,7 @@ export default async function automaticExpressions() {
 
   let PreviousArousal = Player.ArousalSettings;
 
-  const ArousalMeterDirection = {
-    None: 0,
-    Down: 1,
-    Up: 2,
-  };
+  const ArousalMeterDirection = { None: 0, Down: 1, Up: 2 };
   let PreviousDirection = ArousalMeterDirection.Up;
 
   /**
@@ -259,11 +241,8 @@ export default async function automaticExpressions() {
   function resetExpressionQueue(types, skippedTypes = []) {
     delete Player.ExpressionQueue;
     bceExpressionsQueue.push(
-      ...bceExpressionsQueue.splice(0).map((e) => {
-        if (
-          types.includes(e.Type) ||
-          (e.Duration <= 0 && e.Type !== AUTOMATED_AROUSAL_EVENT_TYPE && !skippedTypes.includes(e.Type))
-        ) {
+      ...bceExpressionsQueue.splice(0).map(e => {
+        if (types.includes(e.Type) || (e.Duration <= 0 && e.Type !== AUTOMATED_AROUSAL_EVENT_TYPE && !skippedTypes.includes(e.Type))) {
           delete e.Expression;
         }
         return e;
@@ -290,7 +269,7 @@ export default async function automaticExpressions() {
     {
       Tag: "r",
       Description: displayText("[part of face or 'all']: resets expression overrides on part of or all of face"),
-      Action: (args) => {
+      Action: args => {
         if (args.length === 0 || args === "all") {
           resetExpressionQueue([MANUAL_OVERRIDE_EVENT_TYPE]);
           fbcChatNotify(displayText("Reset all expressions"));
@@ -341,11 +320,11 @@ export default async function automaticExpressions() {
    */
   function setPoses(poses) {
     poses = poses.filter(p => p).map(p => p.toLowerCase());
-    bceExpressionsQueue.forEach((e) => {
+    bceExpressionsQueue.forEach(e => {
       if (e.Type === MANUAL_OVERRIDE_EVENT_TYPE) {
         e.Poses = [];
       } else if (e.Poses && e.Poses.length > 0) {
-        e.Poses.forEach((p) => {
+        e.Poses.forEach(p => {
           if (p.Pose.length === 0) {
             return;
           }
@@ -378,9 +357,7 @@ export default async function automaticExpressions() {
       }
       if (!fbcSettings.animationEngine) {
         fbcChatNotify(
-          displayText(
-            "Warning: animation engine in WCE is disabled. Pose may not be synchronized or set. Enable animation engine in WCE settings."
-          )
+          displayText("Warning: animation engine in WCE is disabled. Pose may not be synchronized or set. Enable animation engine in WCE settings.")
         );
       }
       setPoses(poses);
@@ -421,84 +398,57 @@ export default async function automaticExpressions() {
     "Prevent animation engine from getting into an endless loop when another addon includes an invalid expression"
   );
 
-  SDK.hookFunction(
-    "CharacterSetFacialExpression",
-    HOOK_PRIORITIES.OverrideBehaviour,
-    (args, next) => {
-      let [C, AssetGroup, Expression, Timer, Color] = args;
-      if (
-        !isCharacter(C) ||
-        !isString(AssetGroup) ||
-        (!isString(Expression) && Expression !== null) ||
-        !C.IsPlayer() ||
-        !fbcSettings.animationEngine
-      ) {
-        return next(args);
-      }
-
-      const duration = typeof Timer === "number" && Timer > 0 ? Timer * 1000 : -1;
-      /** @type {Record<string, ExpressionStage[]>} */
-      const e = {};
-      /** @type {(keyof typeof manualComponents)[]} */
-      let types = [];
-
-      if (AssetGroup === "Eyes") {
-        types = ["Eyes", "Eyes2"];
-      } else if (AssetGroup === "Eyes1") {
-        types = ["Eyes"];
-      } else {
-        types = [AssetGroup];
-      }
-
-      if (!Color || !isStringOrStringArray(Color) || !CommonColorIsValid(Color)) {
-        // eslint-disable-next-line no-undefined
-        Color = undefined;
-      }
-
-      for (const t of types) {
-        e[t] = [{ Expression, Duration: duration, Color }];
-        if (duration < 0) {
-          manualComponents[t] = Expression;
-        }
-      }
-
-      const evt = {
-        Type: MANUAL_OVERRIDE_EVENT_TYPE,
-        Duration: duration,
-        Expression: e,
-      };
-      pushEvent(evt);
-      return CustomArousalExpression();
+  SDK.hookFunction("CharacterSetFacialExpression", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+    let [C, AssetGroup, Expression, Timer, Color] = args;
+    if (!isCharacter(C) || !isString(AssetGroup) || (!isString(Expression) && Expression !== null) || !C.IsPlayer() || !fbcSettings.animationEngine) {
+      return next(args);
     }
-  );
+
+    const duration = typeof Timer === "number" && Timer > 0 ? Timer * 1000 : -1;
+    /** @type {Record<string, ExpressionStage[]>} */
+    const e = {};
+    /** @type {(keyof typeof manualComponents)[]} */
+    let types = [];
+
+    if (AssetGroup === "Eyes") {
+      types = ["Eyes", "Eyes2"];
+    } else if (AssetGroup === "Eyes1") {
+      types = ["Eyes"];
+    } else {
+      types = [AssetGroup];
+    }
+
+    if (!Color || !isStringOrStringArray(Color) || !CommonColorIsValid(Color)) {
+      // eslint-disable-next-line no-undefined
+      Color = undefined;
+    }
+
+    for (const t of types) {
+      e[t] = [{ Expression, Duration: duration, Color }];
+      if (duration < 0) {
+        manualComponents[t] = Expression;
+      }
+    }
+
+    const evt = { Type: MANUAL_OVERRIDE_EVENT_TYPE, Duration: duration, Expression: e };
+    pushEvent(evt);
+    return CustomArousalExpression();
+  });
 
   const poseFuncs = /** @type {const} */ (["CharacterSetActivePose", "PoseSetActive"]);
   for (const poseFunc of poseFuncs) {
-    SDK.hookFunction(
-      poseFunc,
-      HOOK_PRIORITIES.OverrideBehaviour,
-      (args, next) => {
-        const [C, Pose] = args;
-        if (
-          !isCharacter(C) ||
-          (!isStringOrStringArray(Pose) && Pose !== null) ||
-          !C.IsPlayer() ||
-          !fbcSettings.animationEngine
-        ) {
-          return next(args);
-        }
-
-        /** @type {AssetPoseName[]} */
-        const p = (!Pose || (Array.isArray(Pose) && Pose.every(pp => !pp))) ? ["BaseUpper", "BaseLower"] : [Pose];
-        const evt = {
-          Type: MANUAL_OVERRIDE_EVENT_TYPE,
-          Duration: -1,
-          Poses: [{ Pose: p, Duration: -1 }],
-        };
-        pushEvent(evt);
-        return CustomArousalExpression();
+    SDK.hookFunction(poseFunc, HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
+      const [C, Pose] = args;
+      if (!isCharacter(C) || (!isStringOrStringArray(Pose) && Pose !== null) || !C.IsPlayer() || !fbcSettings.animationEngine) {
+        return next(args);
       }
-    );
+
+      /** @type {AssetPoseName[]} */
+      const p = !Pose || (Array.isArray(Pose) && Pose.every(pp => !pp)) ? ["BaseUpper", "BaseLower"] : [Pose];
+      const evt = { Type: MANUAL_OVERRIDE_EVENT_TYPE, Duration: -1, Poses: [{ Pose: p, Duration: -1 }] };
+      pushEvent(evt);
+      return CustomArousalExpression();
+    });
   }
 
   registerSocketListener(
@@ -507,7 +457,7 @@ export default async function automaticExpressions() {
      * @param {ServerCharacterPoseResponse} data
      * @returns {void}
      */
-    (data) => {
+    data => {
       if (data === null || !isNonNullObject(data)) return;
       if (!Array.isArray(data.Pose)) {
         logWarn(`data.Pose in ChatRoomSyncPose for ${data.MemberNumber?.toString()} is not an array`);
@@ -524,7 +474,7 @@ export default async function automaticExpressions() {
      * @param {ServerChatRoomSyncCharacterResponse} data
      * @returns {void}
      */
-    (data) => {
+    data => {
       if (data === null || !isNonNullObject(data)) return;
       if (!fbcSettings.animationEngine) return;
       if (data.Character?.MemberNumber === Player.MemberNumber) setPoses(data.Character.ActivePose ?? []);
@@ -540,7 +490,7 @@ export default async function automaticExpressions() {
     }
 
     // Ensure none of the expressions have remove timers on them; we handle timers here
-    Player.Appearance.filter(a => faceComponents.includes(a.Asset.Group.Name) && a.Property?.RemoveTimer).forEach((a) => {
+    Player.Appearance.filter(a => faceComponents.includes(a.Asset.Group.Name) && a.Property?.RemoveTimer).forEach(a => {
       delete a.Property.RemoveTimer;
     });
 
@@ -639,13 +589,7 @@ export default async function automaticExpressions() {
     function trySetNextExpression(e, exp, next, t) {
       const priority = exp.Priority || next.Priority || 0;
       if (!nextExpression[t] || (nextExpression[t].Priority ?? 0) <= priority) {
-        nextExpression[t] = {
-          Id: exp.Id,
-          Expression: e,
-          Duration: exp.Duration,
-          Priority: priority,
-          Color: exp.Color,
-        };
+        nextExpression[t] = { Id: exp.Id, Expression: e, Duration: exp.Duration, Priority: priority, Color: exp.Color };
       }
     }
 
@@ -712,14 +656,7 @@ export default async function automaticExpressions() {
                 }
 
                 if (!desiredPose[category] || desiredPose[category].Priority <= priority) {
-                  desiredPose[category] = {
-                    Id: pose.Id,
-                    Pose: p,
-                    Category: category,
-                    Duration: pose.Duration,
-                    Priority: priority,
-                    Type: next.Type,
-                  };
+                  desiredPose[category] = { Id: pose.Id, Pose: p, Category: category, Duration: pose.Duration, Priority: priority, Type: next.Type };
                 }
               }
               break;
@@ -732,16 +669,7 @@ export default async function automaticExpressions() {
         j--;
         if (!fbcSettings.expressions && last.length > 0 && last[0].Expression) {
           for (const t of Object.keys(last[0].Expression)) {
-            trySetNextExpression(
-              null,
-              { Duration: -1 },
-              {
-                Priority: 0,
-                Type: DEFAULT_EVENT_TYPE,
-                Duration: 500,
-              },
-              t
-            );
+            trySetNextExpression(null, { Duration: -1 }, { Priority: 0, Type: DEFAULT_EVENT_TYPE, Duration: 500 }, t);
           }
         }
       }
@@ -776,7 +704,7 @@ export default async function automaticExpressions() {
           const pose = qPoses[k];
           const poseList = pose.Pose;
           // oxlint-disable-next-line no-loop-func
-          const desiredIsNewerAndInfinite = poseList.every((p) => {
+          const desiredIsNewerAndInfinite = poseList.every(p => {
             const category = getPoseCategory(p);
             return (
               !!category &&
@@ -791,10 +719,7 @@ export default async function automaticExpressions() {
           }
         }
       }
-      if (
-        Object.keys(bceExpressionsQueue[j].Expression || {}).length === 0 &&
-        bceExpressionsQueue[j].Poses?.length === 0
-      ) {
+      if (Object.keys(bceExpressionsQueue[j].Expression || {}).length === 0 && bceExpressionsQueue[j].Poses?.length === 0) {
         bceExpressionsQueue.splice(j, 1);
         j--;
       }
@@ -838,21 +763,13 @@ export default async function automaticExpressions() {
       if (expressionChosen) {
         /** @type {ExpressionStages} */
         const e = { t: [{ Expression: chosenExpression, Duration: -1, Priority: 0 }] };
-        pushEvent({
-          Type: AUTOMATED_AROUSAL_EVENT_TYPE,
-          Duration: -1,
-          Priority: 0,
-          Expression: e,
-        });
+        pushEvent({ Type: AUTOMATED_AROUSAL_EVENT_TYPE, Duration: -1, Priority: 0, Expression: e });
       }
     }
 
     for (const t of faceComponents) {
       const [exp] = expression(t),
-        nextExp = nextExpression[t] || {
-          Duration: -1,
-          Expression: null,
-        };
+        nextExp = nextExpression[t] || { Duration: -1, Expression: null };
       if (nextExp.Expression !== exp && typeof nextExp.Expression !== "undefined") {
         desiredExpression[t] = { ...nextExp };
       }
@@ -873,7 +790,7 @@ export default async function automaticExpressions() {
 
         if (desiredExpression[t].Duration < 0 && desiredExpression[t].Expression !== "Closed") {
           refreshExpressionScreen = true;
-          Player.ActiveExpression.setWithoutReload(/** @type {ExpressionGroupName} */(t), desiredExpression[t].Expression);
+          Player.ActiveExpression.setWithoutReload(/** @type {ExpressionGroupName} */ (t), desiredExpression[t].Expression);
         }
       }
 
@@ -916,24 +833,11 @@ export default async function automaticExpressions() {
 
     if (Object.keys(desiredPose).length === 0) {
       desiredPose = {
-        BodyUpper: {
-          Pose: "BaseUpper",
-          Duration: -1,
-          Id: newUniqueId(),
-          Priority: 0,
-          Type: DEFAULT_EVENT_TYPE,
-        },
-        BodyLower: {
-          Pose: "BaseLower",
-          Duration: -1,
-          Id: newUniqueId(),
-          Priority: 0,
-          Type: DEFAULT_EVENT_TYPE,
-        },
+        BodyUpper: { Pose: "BaseUpper", Duration: -1, Id: newUniqueId(), Priority: 0, Type: DEFAULT_EVENT_TYPE },
+        BodyLower: { Pose: "BaseLower", Duration: -1, Id: newUniqueId(), Priority: 0, Type: DEFAULT_EVENT_TYPE },
       };
     }
-    const newPose = Object.values(desiredPose)
-      .map(p => p.Pose);
+    const newPose = Object.values(desiredPose).map(p => p.Pose);
     if (JSON.stringify(Player.ActivePose) !== JSON.stringify(newPose)) {
       poseUpdate = newPose;
       needsRefresh = true;

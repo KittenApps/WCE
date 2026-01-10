@@ -1,17 +1,13 @@
-import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { createTimer } from "../util/hooks";
-import { debug } from "../util/logger";
 import { displayText } from "../util/localization";
+import { debug } from "../util/logger";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
-import { sessionCustomOrigins } from "./customContentDomainCheck";
 import { fbcChatNotify } from "../util/utils";
+import { sessionCustomOrigins } from "./customContentDomainCheck";
 
 const CLOSINGBRACKETINDICATOR = "\\uf130\\u005d";
-const EMBED_TYPE = /** @type {const} */ ({
-  Image: "img",
-  None: "",
-  Untrusted: "none-img",
-});
+const EMBED_TYPE = /** @type {const} */ ({ Image: "img", None: "", Untrusted: "none-img" });
 
 /**
  * @param {string} word
@@ -54,10 +50,7 @@ export function stutterWord(word, forceStutter) {
     return /^\p{L}/u.test(wrd) ? `${wrd.substring(0, /[\uD800-\uDFFF]/u.test(wrd[0]) ? 2 : 1)}-${wrd}` : wrd;
   }
 
-  const maxIntensity = Math.max(
-    0,
-    ...Player.Appearance.filter(a => (a.Property?.Intensity ?? -1) > -1).map(a => a.Property?.Intensity ?? 0)
-  );
+  const maxIntensity = Math.max(0, ...Player.Appearance.filter(a => (a.Property?.Intensity ?? -1) > -1).map(a => a.Property?.Intensity ?? 0));
 
   const playerArousal = Player.ArousalSettings?.Progress ?? 0;
   const eggedBonus = maxIntensity * 5;
@@ -110,7 +103,7 @@ function bceAllowedToEmbed(url) {
       "www.bondageprojects.com",
     ].includes(url.host) || sessionCustomOrigins.get(url.origin) === "allowed";
 
-  if (/\/[^/]+\.(png|jpe?g|webp|gif)$/ui.test(url.pathname)) {
+  if (/\/[^/]+\.(png|jpe?g|webp|gif)$/iu.test(url.pathname)) {
     return isTrustedOrigin ? EMBED_TYPE.Image : EMBED_TYPE.Untrusted;
   }
   return EMBED_TYPE.None;
@@ -175,14 +168,14 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd, isCh
               /**
                * @param {PointerEvent} e
                */
-              promptTrust.onclick = (e) => {
+              promptTrust.onclick = e => {
                 e.preventDefault();
                 e.stopPropagation();
                 // eslint-disable-next-line prefer-destructuring
                 const target = /** @type {HTMLAnchorElement} */ (e.target);
                 FUSAM.modals.open({
                   prompt: displayText("Do you want to add $origin to trusted origins?", { $origin: url.origin }),
-                  callback: (act) => {
+                  callback: act => {
                     if (act === "submit") {
                       sessionCustomOrigins.set(url.origin, "allowed");
 
@@ -223,7 +216,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd, isCh
         linkNode.title = url.href;
         linkNode.target = "_blank";
         linkNode.appendChild(domNode);
-      // oxlint-disable-next-line branches-sharing-code
+        // oxlint-disable-next-line branches-sharing-code
       } else if (/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/u.test(words[i])) {
         const color = document.createElement("span");
         color.classList.add("bce-color");
@@ -268,61 +261,49 @@ export function augmentedChatNotify(node) {
 
 export default function chatAugments() {
   // CTRL+Enter OOC implementation
-  SDK.hookFunction(
-    "ChatRoomKeyDown",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    ([event], next) => {
-      const inputChat = /** @type {HTMLInputElement} */(document.getElementById("InputChat"));
-      if (inputChat && document.activeElement === inputChat) {
-        if (event.key === "Enter" && !event.shiftKey) {
-          if (fbcSettings.ctrlEnterOoc && event.ctrlKey && inputChat.value.trim().length !== 0) {
-            let text = inputChat.value;
-            let prefix = "";
-            if (!text) {
-              fbcChatNotify("Nothing to send!");
-              return true;
-            }
-            // Whisper command
-            if (text.startsWith("/w ")) {
-              const textParts = text.split(" ");
-              text = textParts.slice(2).join(" ");
-              prefix = `${textParts.slice(0, 2).join(" ")} `;
-            } else if (text.startsWith("/") && !text.startsWith("//")) {
-              fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
-              return true;
-            }
-            inputChat.value = `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`;
+  SDK.hookFunction("ChatRoomKeyDown", HOOK_PRIORITIES.ModifyBehaviourMedium, ([event], next) => {
+    const inputChat = /** @type {HTMLInputElement} */ (document.getElementById("InputChat"));
+    if (inputChat && document.activeElement === inputChat) {
+      if (event.key === "Enter" && !event.shiftKey) {
+        if (fbcSettings.ctrlEnterOoc && event.ctrlKey && inputChat.value.trim().length !== 0) {
+          let text = inputChat.value;
+          let prefix = "";
+          if (!text) {
+            fbcChatNotify("Nothing to send!");
+            return true;
           }
-          ChatRoomSendChat();
-          return true;
+          // Whisper command
+          if (text.startsWith("/w ")) {
+            const textParts = text.split(" ");
+            text = textParts.slice(2).join(" ");
+            prefix = `${textParts.slice(0, 2).join(" ")} `;
+          } else if (text.startsWith("/") && !text.startsWith("//")) {
+            fbcChatNotify("Tried to OOC send a command. Use double // to confirm sending to chat.");
+            return true;
+          }
+          inputChat.value = `${prefix}(${text.replace(/\)/g, CLOSINGBRACKETINDICATOR)}`;
         }
-        if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
-          ChatRoomScrollHistory(event.key === "ArrowUp");
-          return true;
-        }
+        ChatRoomSendChat();
+        return true;
       }
-      return next([event]);
+      if (event.metaKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+        ChatRoomScrollHistory(event.key === "ArrowUp");
+        return true;
+      }
     }
+    return next([event]);
+  });
+
+  SDK.hookFunction("ChatRoomMessageDisplay", HOOK_PRIORITIES.ModifyBehaviourMedium, ([data, msg, SenderCharacter, metadata], next) =>
+    next([data, msg.replace(new RegExp(CLOSINGBRACKETINDICATOR, "g"), ")"), SenderCharacter, metadata])
   );
 
-  SDK.hookFunction(
-    "ChatRoomMessageDisplay",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    ([data, msg, SenderCharacter, metadata], next) => next(
-      [data, msg.replace(new RegExp(CLOSINGBRACKETINDICATOR, "g"), ")"), SenderCharacter, metadata]
-    )
-  );
-
-  SDK.hookFunction(
-    "SpeechTransformProcess",
-    HOOK_PRIORITIES.ModifyBehaviourMedium,
-    ([C, m, effects, ignoreOOC], next) => {
-      const { msg, hasStuttered } = bceMessageReplacements(m || "");
-      const result = next([C, msg, effects.filter(f => f !== "stutter" || !fbcSettings.stutters), ignoreOOC]);
-      if (hasStuttered) result.effects.push("stutter");
-      return result;
-    }
-  );
+  SDK.hookFunction("SpeechTransformProcess", HOOK_PRIORITIES.ModifyBehaviourMedium, ([C, m, effects, ignoreOOC], next) => {
+    const { msg, hasStuttered } = bceMessageReplacements(m || "");
+    const result = next([C, msg, effects.filter(f => f !== "stutter" || !fbcSettings.stutters), ignoreOOC]);
+    if (hasStuttered) result.effects.push("stutter");
+    return result;
+  });
 
   /**
    * @param {string} msg
@@ -403,14 +384,19 @@ export default function chatAugments() {
       const chatContent = chatMessageElement.querySelector(".chat-room-message-content");
       if (
         (chatMessageElement.classList.contains("ChatMessageChat") || chatMessageElement.classList.contains("ChatMessageWhisper")) &&
-        !chatMessageElement.classList.contains("bce-pending") && chatContent
+        !chatMessageElement.classList.contains("bce-pending") &&
+        chatContent
       ) {
         const scrolledToEnd = ElementIsScrolledToEnd(chatLogContainerId);
-        processChatAugmentsForLine(chatContent, () => {
-          if (scrolledToEnd) {
-            ElementScrollToEnd(chatLogContainerId);
-          }
-        }, true);
+        processChatAugmentsForLine(
+          chatContent,
+          () => {
+            if (scrolledToEnd) {
+              ElementScrollToEnd(chatLogContainerId);
+            }
+          },
+          true
+        );
         if (scrolledToEnd) {
           ElementScrollToEnd(chatLogContainerId);
         }

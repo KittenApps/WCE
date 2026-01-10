@@ -1,40 +1,32 @@
-import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { createTimer } from "../util/hooks";
+import { debug } from "../util/logger";
+import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 import { waitFor } from "../util/utils";
-import { debug } from "../util/logger";
 
 type ChatRoomMenuButtonsWCE = (ChatRoomMenuButton | "clearCache")[];
 
 export default function cacheClearer(): void {
   const cacheClearInterval = 1 * 60 * 60 * 1000;
 
-  SDK.hookFunction(
-    "ChatRoomMenuBuild",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const ret = next(args);
-      if (fbcSettings.manualCacheClear) (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE).splice(ChatRoomMenuButtons.indexOf("Cut"), 0, "clearCache");
-      return ret;
-    }
-  );
+  SDK.hookFunction("ChatRoomMenuBuild", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const ret = next(args);
+    if (fbcSettings.manualCacheClear) (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE).splice(ChatRoomMenuButtons.indexOf("Cut"), 0, "clearCache");
+    return ret;
+  });
 
-  SDK.hookFunction(
-    "ChatRoomMenuClick",
-    HOOK_PRIORITIES.AddBehaviour,
-    (args, next) => {
-      const ret = next(args);
-      if (fbcSettings.manualCacheClear) {
-        const Space = 992 / ChatRoomMenuButtons.length;
-        for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
-          if (MouseXIn(1005 + Space * B, Space - 2) && (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE)[B] === "clearCache") {
-            doClearCaches();
-          }
+  SDK.hookFunction("ChatRoomMenuClick", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    const ret = next(args);
+    if (fbcSettings.manualCacheClear) {
+      const Space = 992 / ChatRoomMenuButtons.length;
+      for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
+        if (MouseXIn(1005 + Space * B, Space - 2) && (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE)[B] === "clearCache") {
+          doClearCaches();
         }
       }
-      return ret;
     }
-  );
+    return ret;
+  });
 
   patchFunction(
     "ChatRoomMenuDraw",

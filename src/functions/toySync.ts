@@ -1,9 +1,10 @@
-import { createTimer } from "../util/hooks";
-import { fbcSettings } from "../util/settings";
-import { debug, logInfo, logWarn, logError } from "../util/logger";
-import { displayText } from "../util/localization";
-import { fbcChatNotify } from "../util/utils";
 import type { ButtplugClientDevice, ButtplugClient } from "buttplug";
+
+import { createTimer } from "../util/hooks";
+import { displayText } from "../util/localization";
+import { debug, logInfo, logWarn, logError } from "../util/logger";
+import { fbcSettings } from "../util/settings";
+import { fbcChatNotify } from "../util/utils";
 
 export interface FBCToySetting {
   Name: string;
@@ -28,23 +29,17 @@ export default async function toySync(): Promise<void> {
   logInfo("Loaded Buttplug.io");
 
   const client = new ButtplugClient("WCE Toy Sync");
-  client.addListener(
-    "deviceadded",
-    (device: ButtplugClientDevice) => {
-      debug("Device connected", device);
-      fbcChatNotify(displayText("Vibrator connected: $DeviceName", { $DeviceName: device.name }));
-      const deviceSettings = toySyncState.deviceSettings.get(device.name);
-      if (deviceSettings) delete deviceSettings.LastIntensity;
-    }
-  );
-  client.addListener(
-    "deviceremoved",
-    (device: ButtplugClientDevice) => {
-      debug("Device disconnected", device);
-      fbcChatNotify(displayText("Vibrator disconnected: $DeviceName", { $DeviceName: device.name }));
-    }
-  );
-  client.addListener("scanningfinished", (data) => {
+  client.addListener("deviceadded", (device: ButtplugClientDevice) => {
+    debug("Device connected", device);
+    fbcChatNotify(displayText("Vibrator connected: $DeviceName", { $DeviceName: device.name }));
+    const deviceSettings = toySyncState.deviceSettings.get(device.name);
+    if (deviceSettings) delete deviceSettings.LastIntensity;
+  });
+  client.addListener("deviceremoved", (device: ButtplugClientDevice) => {
+    debug("Device disconnected", device);
+    fbcChatNotify(displayText("Vibrator disconnected: $DeviceName", { $DeviceName: device.name }));
+  });
+  client.addListener("scanningfinished", data => {
     debug("Scanning finished", data);
   });
 
@@ -52,7 +47,7 @@ export default async function toySync(): Promise<void> {
   try {
     await client.connect(connector);
     logInfo("Connected buttplug.io");
-  } catch(ex) {
+  } catch (ex) {
     FUSAM.modals.openAsync({
       prompt: displayText(
         "buttplug.io is enabled, but server could not be contacted at $toySyncAddress. Is Intiface Desktop running? Is another client connected to it?",
