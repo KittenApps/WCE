@@ -1,3 +1,4 @@
+// oxlint-disable no-immediate-mutation
 import { skippedFunctionality, deviatingHashes } from "../util/modding";
 import { BCXgetRuleState } from "./hookBcx";
 import { waitFor, parseJSON, fbcChatNotify, objEntries } from "../util/utils";

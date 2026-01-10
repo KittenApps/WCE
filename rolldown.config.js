@@ -1,3 +1,4 @@
+// oxlint-disable @stylistic/quotes @stylistic/quote-props
 import { promises as fs } from 'node:fs';
 import LoaderBuilder from './loaderBuilder.js';
 import { defineConfig } from 'rolldown';
@@ -19,7 +20,7 @@ const LICENSE = `/**
 *
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/`
+*/`;
 const loaderBuilder = new LoaderBuilder();
 
 const config = defineConfig({
@@ -59,7 +60,7 @@ const config = defineConfig({
   ],
 });
 
-if (process.argv.includes('--watch')){
+if (process.argv.includes('--watch')) {
   fs.writeFile('dist/wce-fusam-loader.user.js', loaderBuilder.generateFusamLoader());
   fs.writeFile('dist/wce-loader.user.js', loaderBuilder.generateStandaloneLoader());
   const publicFiles = await fs.readdir('public');

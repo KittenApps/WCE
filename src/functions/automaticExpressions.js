@@ -837,8 +837,7 @@ export default async function automaticExpressions() {
       }
       if (expressionChosen) {
         /** @type {ExpressionStages} */
-        const e = {};
-        e[t] = [{ Expression: chosenExpression, Duration: -1, Priority: 0 }];
+        const e = { t: [{ Expression: chosenExpression, Duration: -1, Priority: 0 }] };
         pushEvent({
           Type: AUTOMATED_AROUSAL_EVENT_TYPE,
           Duration: -1,

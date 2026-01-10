@@ -6,9 +6,6 @@
     "start": "rolldown --watch -c & npx -y http-server@latest ./dist -p 4000 -c-1 --cors & npm run serve:bc",
     "build": "rolldown -c",
     "test": "oxlint --type-aware --type-check --report-unused-disable-directives",
-    "test2": "npm run tsc ; npm run eslint",
-    "tsc": "tsc",
-    "eslint": "eslint ./src",
     "escheck": "npx es-check@latest es2022 ./dist/*.js --module",
     "serve": "npm run serve:wce & npm run serve:bc",
     "serve:wce": "npm run build && npx -y http-server@latest ./dist -p 4000 -c-1 --cors",
@@ -20,21 +17,16 @@
     "dexie": "^4.2.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@stylistic/eslint-plugin": "^5.6.1",
+    "@stylistic/eslint-plugin": "^5.7.0",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
-    "@types/node": "^25.0.3",
+    "@types/node": "^25.0.5",
     "bc-stubs": "^123.0.0-Beta.3",
     "bondage-club-mod-sdk": "^1.2.0",
-    "eslint": "^9.39.2",
-    "globals": "^16.5.0",
-    "oxlint": "^1.33.0",
-    "oxlint-tsgolint": "^0.9.1",
-    "rolldown": "^1.0.0-beta.55",
-    "socket.io-client": "4.8.1",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.50.0"
+    "oxlint": "^1.38.0",
+    "oxlint-tsgolint": "^0.11.0",
+    "rolldown": "^1.0.0-beta.59",
+    "socket.io-client": "4.8.1"
   },
   "overrides": {
     "bc-stubs": {

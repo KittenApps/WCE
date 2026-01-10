@@ -1,3 +1,4 @@
+// oxlint-disable @stylistic/quotes @stylistic/multiline-ternary
 export default class LoaderBuilder {
   constructor() {
     this.isLocal = !process.env.NETLIFY;
@@ -9,7 +10,7 @@ export default class LoaderBuilder {
 // @match https://www.bondage-asia.com/*
 // @match https://bondageprojects.com/*
 // @match https://www.bondageprojects.com/*`;
-    this.isBranch = !this.isLocal && process.env.BRANCH === 'main' || process.env.BRANCH === 'beta';
+    this.isBranch = !this.isLocal && (process.env.BRANCH === 'main' || process.env.BRANCH === 'beta');
     this.branch = process.env.BRANCH;
     this.pr = process.env.REVIEW_ID;
     this.label = this.isLocal ? 'local ' : (this.branch === 'main' ? '' : `${this.branch.startsWith('pull/') ? `PR #${this.pr}` : this.branch} `);
@@ -30,7 +31,6 @@ ${this.matchBlock}
 // @run-at document-end
 // ==/UserScript==`;
   }
-
 
   generateFusamLoader() {
     if (this.isBranch) {
@@ -109,6 +109,6 @@ if (typeof FUSAM === "object" && FUSAM?.present) {
       return storeFUSAM;
     },
   });
-}`
+}`;
   }
 }
