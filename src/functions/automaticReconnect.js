@@ -1,3 +1,5 @@
+import { openDB, deleteDB } from "idb";
+
 import { displayText } from "../util/localization";
 import { debug, logWarn } from "../util/logger";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
@@ -6,26 +8,26 @@ import { waitFor, sleep, parseJSON, isString } from "../util/utils";
 import { registerSocketListener } from "./appendSocketListenersToInit";
 
 export default async function automaticReconnect() {
-  const { Dexie } = await import("dexie");
-  const db = new Dexie("wce-saved-accounts");
-  db.version(2).stores({ key: "id, key", accounts: "id, data, iv, auth" });
-  /** @type {import("dexie").Table<{ id: number; key: CryptoKey }, import("dexie").IndexableType>} */
-  const keyTable = db.table("key");
-  /** @type {import("dexie").Table<{ id: number; data: Uint8Array<ArrayBuffer>; iv: Uint8Array<ArrayBuffer>; auth: Uint8Array<ArrayBuffer>; }, import("dexie").IndexableType>} */
-  const accTable = db.table("accounts");
+  /** @type {import("idb").IDBPDatabase<{key: { key: number; value: { id: number; key: CryptoKey } }; accounts: { key: number; value: { id: number; data: Uint8Array<ArrayBuffer>; iv: Uint8Array<ArrayBuffer>; auth: Uint8Array<ArrayBuffer>; } }}>}*/
+  const db = await openDB("wce-saved-accounts", 20, {
+    upgrade(db) {
+      if (!db.objectStoreNames.contains("key")) db.createObjectStore("key", { keyPath: "id" });
+      if (!db.objectStoreNames.contains("accounts")) db.createObjectStore("accounts", { keyPath: "id" });
+    },
+  });
 
   let /** @type {CryptoKey} */ encKey, /** @type {{key: CryptoKey;}} */ key;
   try {
-    key = await keyTable.get({ id: 1 });
+    key = await db.get("key", 1);
   } catch (e) {
     logWarn(e);
     localStorage.removeItem("bce.passwords");
-    await db.delete();
+    await deleteDB("wce-saved-accounts");
     window.location.reload();
   }
   if (!key) {
     encKey = await window.crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
-    await keyTable.put({ id: 1, key: encKey });
+    await db.put("key", { id: 1, key: encKey });
   } else {
     encKey = key.key;
   }
@@ -46,7 +48,7 @@ export default async function automaticReconnect() {
       }
       return accs;
     }
-    const res = await accTable.get({ id: 1 });
+    const res = await db.get("accounts", 1);
     if (!res) return {};
     const { auth, iv, data } = res;
     const decoder = new TextDecoder("utf8");
@@ -56,8 +58,8 @@ export default async function automaticReconnect() {
     } catch (e) {
       logWarn(e);
       localStorage.removeItem("bce.passwords");
-      keyTable.clear();
-      accTable.clear();
+      db.clear("key");
+      db.clear("accounts");
       return {};
     }
   }
@@ -83,7 +85,7 @@ export default async function automaticReconnect() {
       accounts = accs;
       window.crypto.subtle
         .encrypt({ name: "AES-GCM", iv, additionalData: auth, tagLength: 128 }, encKey, encoder.encode(JSON.stringify(accs)))
-        .then(s => accTable.put({ id: 1, iv, auth, data: new Uint8Array(s) }, [1]));
+        .then(s => db.put("accounts", { id: 1, iv, auth, data: new Uint8Array(s) }));
     } else {
       localStorage.removeItem("bce.passwords");
     }
