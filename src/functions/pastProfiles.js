@@ -1,3 +1,5 @@
+import { openDB } from "idb";
+
 import { displayText } from "../util/localization";
 import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
@@ -9,9 +11,13 @@ export default async function pastProfiles() {
     return;
   }
 
-  const { Dexie } = await import("dexie");
-  const db = new Dexie("bce-past-profiles");
-  db.version(3).stores({ profiles: "memberNumber, name, lastNick, seen, characterBundle", notes: "memberNumber, note, updatedAt" });
+  /** @type {import("idb").IDBPDatabase<{profiles: { key: number; value: FBCSavedProfile }; notes: { key: number; value: FBCNote }}>}*/
+  const db = await openDB("bce-past-profiles", 30, {
+    upgrade(db) {
+      if (!db.objectStoreNames.contains("profiles")) db.createObjectStore("profiles", { keyPath: "memberNumber" });
+      if (!db.objectStoreNames.contains("notes")) db.createObjectStore("notes", { keyPath: "memberNumber" });
+    },
+  });
 
   ElementCreateTextArea("bceNoteInput");
   /** @type {HTMLTextAreaElement} */
@@ -19,11 +25,6 @@ export default async function pastProfiles() {
   const noteInput = document.getElementById("bceNoteInput");
   noteInput.maxLength = 10000;
   noteInput.classList.add("bce-hidden");
-
-  /** @type {import("dexie").Table<FBCSavedProfile, import("dexie").IndexableType>} */
-  const profiles = db.table("profiles");
-  /** @type {import("dexie").Table<FBCNote, import("dexie").IndexableType>} */
-  const notes = db.table("notes");
 
   async function readQuota() {
     try {
@@ -42,12 +43,13 @@ export default async function pastProfiles() {
    */
   async function trimProfiles(num) {
     /** @type {FBCSavedProfile[]} */
-    let list = await profiles.toArray();
+    let list = await db.getAll("profiles");
     // Oldest first
     list.sort((a, b) => a.seen - b.seen);
     list = list.slice(0, num);
     debug("deleting", list);
-    await profiles.bulkDelete(list.map(p => p.memberNumber));
+    const store = db.transaction("profiles", "readwrite").objectStore("profiles");
+    await Promise.all(list.map(p => store.delete(p.memberNumber)));
   }
 
   async function quotaSafetyCheck() {
@@ -88,7 +90,7 @@ export default async function pastProfiles() {
 
     debug(`saving profile of ${nick ?? name} (${name})`);
     try {
-      await profiles.put({
+      await db.put("profiles", {
         memberNumber: characterBundle.MemberNumber,
         name,
         lastNick: nick,
@@ -141,7 +143,7 @@ export default async function pastProfiles() {
    */
   async function openCharacter(memberNumber) {
     try {
-      const profile = await profiles.get(memberNumber);
+      const profile = await db.get("profiles", memberNumber);
       const C = CharacterLoadOnline(/** @type {ServerAccountDataSynced} */ (parseJSON(profile.characterBundle)), memberNumber);
       C.BCESeen = profile.seen;
       if (CurrentScreen === "ChatRoom") {
@@ -163,7 +165,7 @@ export default async function pastProfiles() {
     Action: argums => {
       (async args => {
         /** @type {FBCSavedProfile[]} */
-        let list = await profiles.toArray();
+        let list = await db.getAll("profiles");
         list = list.filter(
           p => !args || p.name.toLowerCase().includes(args) || p.memberNumber.toString().includes(args) || p.lastNick?.toLowerCase().includes(args)
         );
@@ -223,8 +225,7 @@ export default async function pastProfiles() {
     inNotes = true;
     noteInput.classList.remove("bce-hidden");
     noteInput.value = "Loading...";
-    notes
-      .get(InformationSheetSelection.MemberNumber)
+    db.get("notes", InformationSheetSelection.MemberNumber)
       .then(note => {
         if (isNote(note)) {
           noteInput.value = note?.note || "";
@@ -242,7 +243,7 @@ export default async function pastProfiles() {
   SDK.hookFunction("CharacterLoadOnline", HOOK_PRIORITIES.Top, (args, next) => {
     const C = next(args);
     if (isCharacter(C) && C.MemberNumber) {
-      notes.get(C.MemberNumber).then(note => {
+      db.get("notes", C.MemberNumber).then(note => {
         C.FBCNoteExists = Boolean(isNote(note) && note.note);
       });
     }
@@ -292,7 +293,7 @@ export default async function pastProfiles() {
           if (!InformationSheetSelection?.MemberNumber) {
             throw new Error("invalid InformationSheetSelection in notes");
           }
-          return notes.put({ memberNumber: InformationSheetSelection.MemberNumber, note: noteInput.value, updatedAt: Date.now() });
+          return db.put("notes", { memberNumber: InformationSheetSelection.MemberNumber, note: noteInput.value, updatedAt: Date.now() });
         });
         hideNoteInput();
       } else if (MouseIn(1820, 60, 90, 90)) {
