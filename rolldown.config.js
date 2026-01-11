@@ -36,13 +36,14 @@ const config = defineConfig({
     cleanDir: true,
   },
   transform: { target: "es2022", define: { PUBLIC_URL: `"${loaderBuilder.URL}"` } },
-  resolve: { alias: { dexie: "dexie/dist/modern/dexie.mjs", buttplug: "buttplug/dist/web/buttplug.mjs" } },
+  resolve: { alias: { buttplug: "buttplug/dist/web/buttplug.mjs" } },
   plugins: [
     {
       name: "loader-builder-plugin",
       async generateBundle() {
         this.emitFile({ type: "asset", fileName: "wce-fusam-loader.user.js", source: loaderBuilder.generateFusamLoader() });
         this.emitFile({ type: "asset", fileName: "wce-loader.user.js", source: loaderBuilder.generateStandaloneLoader() });
+        this.emitFile({ type: "asset", fileName: "dexie.js", source: "" });
         const publicFiles = await fs.readdir("public");
         await Promise.all(publicFiles.map(fileName => fs.readFile(`public/${fileName}`).then(source => this.emitFile({ type: "asset", fileName, source }))));
       },
