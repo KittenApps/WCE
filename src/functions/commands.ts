@@ -28,7 +28,9 @@ export async function fbcDebug(copy: boolean): Promise<string> {
   if (toySyncState.client?.connected) {
     info.set(
       "Buttplug.io Devices",
-      toySyncState.client.devices.map(d => `${d.name} (${d.vibrateAttributes.map(a => a.FeatureDescriptor).join(",")})`).join(", ")
+      Array.from(toySyncState.client.devices.values())
+        .map(d => `${d.displayName} (${d.eventNames().join(",")})`)
+        .join(", ")
     );
   }
   info.set(

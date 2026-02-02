@@ -24,7 +24,7 @@ export default async function toySync(): Promise<void> {
     return;
   }
 
-  const { ButtplugClient, ButtplugBrowserWebsocketClientConnector } = await import("buttplug");
+  const { ButtplugClient, ButtplugBrowserWebsocketClientConnector, DeviceOutput, InputType, OutputType } = await import("buttplug");
 
   logInfo("Loaded Buttplug.io");
 
@@ -67,7 +67,7 @@ export default async function toySync(): Promise<void> {
       removeTimer();
       return;
     }
-    for (const d of client.devices.filter(dev => dev.vibrateAttributes.length > 0)) {
+    for (const d of Array.from(client.devices.values()).filter(dev => dev.hasOutput(OutputType.Vibrate))) {
       const deviceSettings = toySyncState.deviceSettings?.get(d.name);
       if (!deviceSettings) continue;
 
@@ -78,23 +78,23 @@ export default async function toySync(): Promise<void> {
       deviceSettings.LastIntensity = intensity;
 
       if (typeof intensity !== "number" || intensity < 0) {
-        d.vibrate(0);
+        d.runOutput(DeviceOutput.Vibrate.percent(0));
       } else {
         switch (intensity) {
           case 0:
-            d.vibrate(0.1);
+            d.runOutput(DeviceOutput.Vibrate.percent(0.1));
             debug(d.name, slot, "intensity 0.1");
             break;
           case 1:
-            d.vibrate(0.4);
+            d.runOutput(DeviceOutput.Vibrate.percent(0.4));
             debug(d.name, slot, "intensity 0.4");
             break;
           case 2:
-            d.vibrate(0.75);
+            d.runOutput(DeviceOutput.Vibrate.percent(0.75));
             debug(d.name, slot, "intensity 0.75");
             break;
           case 3:
-            d.vibrate(1);
+            d.runOutput(DeviceOutput.Vibrate.percent(1));
             debug(d.name, slot, "intensity 1");
             break;
           default:
@@ -114,7 +114,7 @@ export default async function toySync(): Promise<void> {
           fbcChatNotify("buttplug.io is not connected");
           return;
         }
-        const batteryDevices: ButtplugClientDevice[] = client.devices.filter(dev => dev.hasBattery);
+        const batteryDevices: ButtplugClientDevice[] = Array.from(client.devices.values()).filter(dev => dev.hasInput(InputType.Battery));
         if (batteryDevices.length === 0) {
           fbcChatNotify("No battery devices connected");
           return;
