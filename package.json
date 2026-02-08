@@ -15,7 +15,7 @@
     "update:bc": "(cd ../Bondage-College/ && git pull origin master)"
   },
   "dependencies": {
-    "buttplug": "^3.2.2",
+    "buttplug": "^4.0.0",
     "idb": "^8.0.3",
     "rolldown": "^1.0.0-rc.3"
   },
