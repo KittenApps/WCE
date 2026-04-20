@@ -7,28 +7,6 @@ const FBC_DEVS = [23476, 27006, 24890];
 const WCE_DEVS = [129178];
 
 export default function commonPatches(): void {
-  // DrawBackNextButton patch to allow overriding hover text position
-  patchFunction(
-    "DrawBackNextButton",
-    {
-      "Disabled=false, ArrowWidth=null": "Disabled=false, ArrowWidth=null, tooltipPosition=null",
-      "DrawButtonHover(Left, Top, Width, Height,":
-        "DrawButtonHover(tooltipPosition?.X || Left, tooltipPosition?.Y || Top, tooltipPosition?.Width || Width, tooltipPosition?.Height || Height,",
-    },
-    "DrawBackNextButton tooltip positions may be incorrect."
-  );
-
-  // DrawButton patch to allow overriding hover text position
-  patchFunction(
-    "DrawButton",
-    {
-      "HoveringText=null, Disabled=false": "HoveringText=null, Disabled=false, tooltipPosition=null",
-      "DrawButtonHover(Left, Top, Width, Height,":
-        "DrawButtonHover(tooltipPosition?.X || Left, tooltipPosition?.Y || Top, tooltipPosition?.Width || Width, tooltipPosition?.Height || Height,",
-    },
-    "DrawButton tooltip positions may be incorrect."
-  );
-
   patchFunction(
     "PreferenceSubscreenArousalRun",
     {
