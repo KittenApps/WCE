@@ -30,31 +30,46 @@ export default function cacheClearer(): void {
     return ret;
   });
 
-  SDK.hookFunction("ChatRoomMenuClick", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
-    const ret = next(args);
-    if (fbcSettings.manualCacheClear) {
-      const Space = 992 / ChatRoomMenuButtons.length;
-      for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
-        if (MouseXIn(1005 + Space * B, Space - 2) && (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE)[B] === "clearCache") {
-          doClearCaches();
+  if (GameVersion === "R127") {
+    SDK.hookFunction("ChatRoomMenuClick", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+      const ret = next(args);
+      if (fbcSettings.manualCacheClear) {
+        const Space = 992 / ChatRoomMenuButtons.length;
+        for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
+          if (MouseXIn(1005 + Space * B, Space - 2) && (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE)[B] === "clearCache") {
+            doClearCaches();
+          }
         }
       }
-    }
-    return ret;
-  });
+      return ret;
+    });
 
-  patchFunction(
-    "ChatRoomMenuDraw",
-    {
-      'let suffix = "";': `let suffix = "";
-        if (name === "clearCache") {
-          DrawButton(1005 + Space * Number(idx), 2, Space - 2, 60, "", color, null, "[WCE] clear and reload the drawing cache of all characters");
-          DrawImage("Icons/Small/Reset.png", 976 + Space * Number(idx) + Space / 2, 4);
-          continue;
-        }`,
-    },
-    "manual clearing and reloading of drawing cache"
-  );
+    patchFunction(
+      "ChatRoomMenuDraw",
+      {
+        'let suffix = "";': `let suffix = "";
+          if (name === "clearCache") {
+            DrawButton(1005 + Space * Number(idx), 2, Space - 2, 60, "", color, null, "[WCE] clear and reload the drawing cache of all characters");
+            DrawImage("Icons/Small/Reset.png", 976 + Space * Number(idx) + Space / 2, 4);
+            continue;
+          }`,
+      },
+      "manual clearing and reloading of drawing cache"
+    );
+  } else {
+    // @ts-expect-error bc-stubs doesn't have this function yet
+    SDK.hookFunction("ChatRoomMenuButtonVisualState", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+      if (args[0] !== "clearCache") return next(args);
+
+      return { image: "Icons/Small/Reset.png", state: "Default", hoverText: "[WCE] clear and reload the drawing cache of all characters" };
+    });
+
+    // @ts-expect-error bc-stubs doesn't have this function yet
+    SDK.hookFunction("ChatRoomMenuPerformAction", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+      if (args[0] !== "clearCache") return next(args);
+      return doClearCaches();
+    });
+  }
 
   async function clearCaches(): Promise<void> {
     const start = Date.now();
