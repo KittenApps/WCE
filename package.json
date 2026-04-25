@@ -25,9 +25,9 @@
     "@types/node": "^25.6.0",
     "bc-stubs": "^127.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
-    "oxfmt": "^0.45.0",
-    "oxlint": "^1.60.0",
-    "oxlint-tsgolint": "^0.21.1",
+    "oxfmt": "^0.46.0",
+    "oxlint": "^1.61.0",
+    "oxlint-tsgolint": "^0.22.0",
     "socket.io-client": "4.8.1"
   },
   "overrides": {
