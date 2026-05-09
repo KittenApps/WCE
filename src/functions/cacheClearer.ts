@@ -4,7 +4,7 @@ import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 import { waitFor } from "../util/utils";
 
-type ChatRoomMenuButtonsWCE = (ChatRoomMenuButton | "clearCache")[];
+type ChatRoomMenuButtonWCE = ChatRoomMenuButton | "clearCache";
 
 export default function cacheClearer(): void {
   const cacheClearInterval = 1 * 60 * 60 * 1000;
@@ -26,17 +26,18 @@ export default function cacheClearer(): void {
 
   SDK.hookFunction("ChatRoomMenuBuild", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
     const ret = next(args);
-    if (fbcSettings.manualCacheClear) (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE).splice(ChatRoomMenuButtons.indexOf("Cut"), 0, "clearCache");
+    if (fbcSettings.manualCacheClear) (ChatRoomMenuButtons as ChatRoomMenuButtonWCE[]).splice(ChatRoomMenuButtons.indexOf("Cut"), 0, "clearCache");
     return ret;
   });
 
+  // ToDo: remove once R128 is out
   if (GameVersion === "R127") {
     SDK.hookFunction("ChatRoomMenuClick", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
       const ret = next(args);
       if (fbcSettings.manualCacheClear) {
         const Space = 992 / ChatRoomMenuButtons.length;
         for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
-          if (MouseXIn(1005 + Space * B, Space - 2) && (ChatRoomMenuButtons as ChatRoomMenuButtonsWCE)[B] === "clearCache") {
+          if (MouseXIn(1005 + Space * B, Space - 2) && ChatRoomMenuButtons[B] as ChatRoomMenuButtonWCE === "clearCache") {
             doClearCaches();
           }
         }
@@ -57,16 +58,14 @@ export default function cacheClearer(): void {
       "manual clearing and reloading of drawing cache"
     );
   } else {
-    // @ts-expect-error bc-stubs doesn't have this function yet
     SDK.hookFunction("ChatRoomMenuButtonVisualState", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
-      if (args[0] !== "clearCache") return next(args);
-
-      return { image: "Icons/Small/Reset.png", state: "Default", hoverText: "[WCE] clear and reload the drawing cache of all characters" };
+      if (args[0] as ChatRoomMenuButtonWCE !== "clearCache") return next(args);
+      const state = "Default" as const;
+      return { image: "Icons/Small/Reset.png", state, hoverText: "[WCE] clear and reload the drawing cache of all characters" };
     });
 
-    // @ts-expect-error bc-stubs doesn't have this function yet
     SDK.hookFunction("ChatRoomMenuPerformAction", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
-      if (args[0] !== "clearCache") return next(args);
+      if (args[0] as ChatRoomMenuButtonWCE !== "clearCache") return next(args);
       return doClearCaches();
     });
   }
