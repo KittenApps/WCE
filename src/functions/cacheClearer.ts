@@ -37,7 +37,7 @@ export default function cacheClearer(): void {
       if (fbcSettings.manualCacheClear) {
         const Space = 992 / ChatRoomMenuButtons.length;
         for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
-          if (MouseXIn(1005 + Space * B, Space - 2) && ChatRoomMenuButtons[B] as ChatRoomMenuButtonWCE === "clearCache") {
+          if (MouseXIn(1005 + Space * B, Space - 2) && (ChatRoomMenuButtons[B] as ChatRoomMenuButtonWCE) === "clearCache") {
             doClearCaches();
           }
         }
@@ -59,13 +59,13 @@ export default function cacheClearer(): void {
     );
   } else {
     SDK.hookFunction("ChatRoomMenuButtonVisualState", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
-      if (args[0] as ChatRoomMenuButtonWCE !== "clearCache") return next(args);
+      if ((args[0] as ChatRoomMenuButtonWCE) !== "clearCache") return next(args);
       const state = "Default" as const;
       return { image: "Icons/Small/Reset.png", state, hoverText: "[WCE] clear and reload the drawing cache of all characters" };
     });
 
     SDK.hookFunction("ChatRoomMenuPerformAction", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
-      if (args[0] as ChatRoomMenuButtonWCE !== "clearCache") return next(args);
+      if ((args[0] as ChatRoomMenuButtonWCE) !== "clearCache") return next(args);
       return doClearCaches();
     });
   }
