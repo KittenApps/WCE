@@ -1,6 +1,6 @@
 import { createTimer } from "../util/hooks";
 import { debug } from "../util/logger";
-import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
+import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 import { waitFor } from "../util/utils";
 
@@ -30,45 +30,16 @@ export default function cacheClearer(): void {
     return ret;
   });
 
-  // ToDo: remove once R128 is out
-  if (GameVersion === "R127") {
-    SDK.hookFunction("ChatRoomMenuClick", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
-      const ret = next(args);
-      if (fbcSettings.manualCacheClear) {
-        const Space = 992 / ChatRoomMenuButtons.length;
-        for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
-          if (MouseXIn(1005 + Space * B, Space - 2) && (ChatRoomMenuButtons[B] as ChatRoomMenuButtonWCE) === "clearCache") {
-            doClearCaches();
-          }
-        }
-      }
-      return ret;
-    });
+  SDK.hookFunction("ChatRoomMenuButtonVisualState", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    if ((args[0] as ChatRoomMenuButtonWCE) !== "clearCache") return next(args);
+    const state = "Default" as const;
+    return { image: "Icons/Small/Reset.png", state, hoverText: "[WCE] clear and reload the drawing cache of all characters" };
+  });
 
-    patchFunction(
-      "ChatRoomMenuDraw",
-      {
-        'let suffix = "";': `let suffix = "";
-          if (name === "clearCache") {
-            DrawButton(1005 + Space * Number(idx), 2, Space - 2, 60, "", color, null, "[WCE] clear and reload the drawing cache of all characters");
-            DrawImage("Icons/Small/Reset.png", 976 + Space * Number(idx) + Space / 2, 4);
-            continue;
-          }`,
-      },
-      "manual clearing and reloading of drawing cache"
-    );
-  } else {
-    SDK.hookFunction("ChatRoomMenuButtonVisualState", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
-      if ((args[0] as ChatRoomMenuButtonWCE) !== "clearCache") return next(args);
-      const state = "Default" as const;
-      return { image: "Icons/Small/Reset.png", state, hoverText: "[WCE] clear and reload the drawing cache of all characters" };
-    });
-
-    SDK.hookFunction("ChatRoomMenuPerformAction", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
-      if ((args[0] as ChatRoomMenuButtonWCE) !== "clearCache") return next(args);
-      return doClearCaches();
-    });
-  }
+  SDK.hookFunction("ChatRoomMenuPerformAction", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+    if ((args[0] as ChatRoomMenuButtonWCE) !== "clearCache") return next(args);
+    return doClearCaches();
+  });
 
   async function clearCaches(): Promise<void> {
     const start = Date.now();
