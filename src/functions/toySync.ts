@@ -30,17 +30,17 @@ export default async function toySync(): Promise<void> {
 
   const client = new ButtplugClient(fbcSettings.toySyncAddress || "ws://127.0.0.1:12345", { autoReconnect: true, logger: consoleLogger });
 
-  client.on("deviceAdded", ({ data: { device } }) => {
+  client.on("device.added", ({ data: { device } }) => {
     debug("Device connected", device);
     fbcChatNotify(displayText("Vibrator connected: $DeviceName", { $DeviceName: device.displayName }));
     const deviceSettings = toySyncState.deviceSettings.get(device.name);
     if (deviceSettings) delete deviceSettings.LastIntensity;
   });
-  client.on("deviceRemoved", ({ data: { device } }) => {
+  client.on("device.removed", ({ data: { device } }) => {
     debug("Device disconnected", device);
     fbcChatNotify(displayText("Vibrator disconnected: $DeviceName", { $DeviceName: device.displayName }));
   });
-  client.on("scanningFinished", () => {
+  client.on("scan.finished", () => {
     debug("Scanning finished");
   });
 
