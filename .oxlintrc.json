@@ -112,7 +112,8 @@
     "unicorn/prefer-set-has": "off",
     "unicorn/prefer-type-error": "off",
     "unicorn/prefer-array-some": "off",
-    "unicorn/no-lonely-if": "off"
+    "unicorn/no-lonely-if": "off",
+    "prefer-named-capture-group": "off"
   },
   "overrides": [
     {
