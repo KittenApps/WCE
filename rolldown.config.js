@@ -29,7 +29,7 @@ const config = defineConfig({
   output: {
     dir: "dist",
     entryFileNames: "wce.js",
-    chunkFileNames: "buttplug.js",
+    chunkFileNames: "[name].js",
     sourcemap: true,
     postBanner: c => (c.isEntry ? LICENSE : undefined),
     minify: true,
@@ -38,6 +38,22 @@ const config = defineConfig({
   },
   transform: { target: "es2022", define: { PUBLIC_URL: `"${loaderBuilder.URL}"` } },
   plugins: [
+    {
+      name: "buttplug-wasm-blob-plugin",
+      load: {
+        filter: { id: /buttplug-wasm-blob\/dist\/buttplug-wasm-blob\.mjs$/u },
+        async handler(id) {
+          if (id.endsWith("buttplug-wasm-blob/dist/buttplug-wasm-blob.mjs")) {
+            const blob = "buttplug_wasm-D4Fg5s29.js";
+            if (!(await fs.stat(id.replace("buttplug-wasm-blob.mjs", blob)).catch(() => false)))
+              throw new Error("Error: Could not find buttplug wasm blob! Please update the path in rolldown.config.js.");
+            return `import loadButtplugWasm, { buttplug_create_embedded_wasm_server, buttplug_free_embedded_wasm_server, buttplug_client_send_json_message, buttplug_activate_env_logger } from './${blob}';
+                    export { loadButtplugWasm, buttplug_create_embedded_wasm_server as createServer, buttplug_free_embedded_wasm_server as freeServer, buttplug_client_send_json_message as sendMessage, buttplug_activate_env_logger as activateLogging };`;
+          }
+          return null;
+        },
+      },
+    },
     {
       name: "loader-builder-plugin",
       async generateBundle() {
@@ -55,7 +71,7 @@ if (process.argv.includes("--watch")) {
   fs.writeFile("dist/wce-loader.user.js", loaderBuilder.generateStandaloneLoader());
   // oxlint-disable-next-line unicorn/prefer-top-level-await
   fs.readdir("public").then(files => files.map(fileName => fs.copyFile(`public/${fileName}`, `dist/${fileName}`)));
-  config.plugins = [];
+  config.plugins = config.plugins.filter(p => p.name !== "loader-builder-plugin");
   config.output.minify = false;
   config.output.cleanDir = false;
 }
