@@ -29,7 +29,7 @@ const config = defineConfig({
   output: {
     dir: "dist",
     entryFileNames: "wce.js",
-    chunkFileNames: "buttplug.js",
+    chunkFileNames: "[name].js",
     sourcemap: true,
     postBanner: c => (c.isEntry ? LICENSE : undefined),
     minify: true,

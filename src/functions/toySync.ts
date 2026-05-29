@@ -1,4 +1,5 @@
 import type { ButtplugClient } from "@zendrex/buttplug.js";
+import type { WasmTransport } from "@zendrex/buttplug.js/wasm";
 
 import { createTimer } from "../util/hooks";
 import { displayText } from "../util/localization";
@@ -24,11 +25,17 @@ export default async function toySync(): Promise<void> {
     return;
   }
 
-  const { ButtplugClient, consoleLogger, ConnectionError } = await import("@zendrex/buttplug.js");
+  const { ButtplugClient, consoleLogger, ConnectionError } = await import("../util/buttplug");
 
   logInfo("Loaded Buttplug.io");
 
-  const client = new ButtplugClient(fbcSettings.toySyncAddress || "ws://127.0.0.1:12345", { autoReconnect: true, logger: consoleLogger });
+  let target: string | WasmTransport = fbcSettings.toySyncAddress || "ws://127.0.0.1:12345";
+  if (target === "wasm" || target === "local") {
+    const { WasmTransport } = await import("../util/buttplug");
+    target = new WasmTransport();
+  }
+
+  const client = new ButtplugClient(target, { autoReconnect: true, logger: consoleLogger });
 
   client.on("device.added", ({ data: { device } }) => {
     debug("Device connected", device);
@@ -146,6 +153,4 @@ export default async function toySync(): Promise<void> {
       },
     },
   ]);
-
-  await client.startScanning();
 }
