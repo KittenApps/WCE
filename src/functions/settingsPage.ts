@@ -154,7 +154,7 @@ export default async function settingsPage(): Promise<void> {
             );
             ctx.textAlign = "left";
             DrawText(displayText("Device Name"), 300, 420, "Black", "Gray");
-            DrawText(displayText("Synchronized Slot"), 800, 420, "Black", "Gray");
+            DrawText(displayText("Synchronized Slot"), 1200, 420, "Black", "Gray");
             y = 500;
             for (const d of toySyncState.client.devices.filter(dev => dev.canOutput("Vibrate"))) {
               let deviceSettings = toySyncState.deviceSettings.get(d.name);
@@ -166,11 +166,11 @@ export default async function settingsPage(): Promise<void> {
 
               const previousIdx = currentIdx <= 0 ? vibratingSlots.length - 1 : currentIdx - 1;
               const nextIdx = currentIdx === vibratingSlots.length - 1 ? 0 : currentIdx + 1;
-              DrawText(d.name, 300, y, "Black", "Gray");
+              DrawText(`${d.displayName} (${d.name})`, 300, y, "Black", "Gray");
 
               ctx.textAlign = "center";
               DrawBackNextButton(
-                800,
+                1200,
                 y - 32,
                 450,
                 64,
@@ -273,7 +273,7 @@ export default async function settingsPage(): Promise<void> {
         }
         y = 500;
         for (const d of toySyncState.client.devices.filter(dev => dev.canOutput("Vibrate"))) {
-          if (!MouseIn(800, y - 32, 450, 64)) {
+          if (!MouseIn(1200, y - 32, 450, 64)) {
             y += settingsYIncrement;
             continue;
           }
@@ -286,7 +286,7 @@ export default async function settingsPage(): Promise<void> {
           const currentIdx = vibratingSlots.indexOf(deviceSettings.SlotName);
           const previousIdx = currentIdx <= 0 ? vibratingSlots.length - 1 : currentIdx - 1;
           const nextIdx = currentIdx === vibratingSlots.length - 1 ? 0 : currentIdx + 1;
-          deviceSettings.SlotName = MouseX < 800 + 450 / 2 ? vibratingSlots[previousIdx] : vibratingSlots[nextIdx];
+          deviceSettings.SlotName = MouseX < 1200 + 450 / 2 ? vibratingSlots[previousIdx] : vibratingSlots[nextIdx];
 
           y += settingsYIncrement;
           if (y > 950) {

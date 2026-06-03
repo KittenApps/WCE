@@ -47,6 +47,7 @@ export default async function toySync(): Promise<void> {
   try {
     await client.connect();
     await client.startScanning();
+    await client.requestDeviceList();
   } catch (err) {
     if (err instanceof ConnectionError) {
       FUSAM.modals.openAsync({
@@ -83,19 +84,19 @@ export default async function toySync(): Promise<void> {
       } else {
         switch (intensity) {
           case 0:
-            d.vibrate(10);
+            d.vibrate(0.1);
             debug(d.name, slot, "intensity 10");
             break;
           case 1:
-            d.vibrate(40);
+            d.vibrate(0.4);
             debug(d.name, slot, "intensity 40");
             break;
           case 2:
-            d.vibrate(75);
+            d.vibrate(0.75);
             debug(d.name, slot, "intensity 75");
             break;
           case 3:
-            d.vibrate(100);
+            d.vibrate(1);
             debug(d.name, slot, "intensity 100");
             break;
           default:

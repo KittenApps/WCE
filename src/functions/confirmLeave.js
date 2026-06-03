@@ -9,6 +9,7 @@ export default function confirmLeave() {
       if (toySyncState.client?.connected) {
         // Stop vibrating toys
         toySyncState.client.stopAll();
+        // toySyncState.client.disconnect();
       }
       if (fbcSettings.confirmLeave) {
         e.preventDefault();
