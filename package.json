@@ -15,18 +15,18 @@
     "update:bc": "(cd ../Bondage-College/ && git pull origin master)"
   },
   "dependencies": {
-    "@zendrex/buttplug.js": "^0.4.0",
+    "@zendrex/buttplug.js": "^0.5.0",
     "idb": "^8.0.3",
     "rolldown": "^1.1.0"
   },
   "devDependencies": {
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
-    "@types/node": "^25.9.1",
-    "bc-stubs": "^128.0.0",
+    "@types/node": "^25.9.2",
+    "bc-stubs": "^129.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
-    "oxfmt": "^0.53.0",
-    "oxlint": "^1.68.0",
+    "oxfmt": "^0.54.0",
+    "oxlint": "^1.69.0",
     "oxlint-tsgolint": "^0.23.0",
     "socket.io-client": "4.8.1"
   },
