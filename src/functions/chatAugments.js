@@ -207,8 +207,7 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd, isCh
               promptTrust.href = "#";
               promptTrust.title = displayText("Trust this session");
               promptTrust.textContent = displayText("(embed)");
-              newChildren.push(document.createTextNode(" "));
-              newChildren.push(promptTrust);
+              newChildren.push(document.createTextNode(" "), promptTrust);
             }
             break;
         }
@@ -216,13 +215,11 @@ export function processChatAugmentsForLine(chatMessageElement, scrollToEnd, isCh
         linkNode.title = url.href;
         linkNode.target = "_blank";
         linkNode.appendChild(domNode);
-        // oxlint-disable-next-line branches-sharing-code
       } else if (/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/u.test(words[i])) {
         const color = document.createElement("span");
         color.classList.add("bce-color");
         color.style.background = words[i];
-        newChildren.push(color);
-        newChildren.push(document.createTextNode(words[i]));
+        newChildren.push(color, document.createTextNode(words[i]));
       } else {
         newChildren.push(document.createTextNode(words[i]));
       }
@@ -352,9 +349,7 @@ export default function chatAugments() {
       }
 
       if (!inOOC && bceParseUrl(words[i])) {
-        newWords.push("( ");
-        newWords.push(words[i]);
-        newWords.push(" )");
+        newWords.push("( ", words[i], " )");
       } else if (fbcSettings.stutters && !inOOC) {
         const { results, stutter } = stutterWord(words[i], firstStutter);
         hasStuttered ||= stutter;

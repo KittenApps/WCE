@@ -166,9 +166,7 @@ export default function instantMessenger() {
 
     const scrolledToEnd = friend.history.scrollHeight - friend.history.scrollTop - friend.history.clientHeight < 1;
     const message = document.createElement("div");
-    message.classList.add("bce-message");
-    message.classList.add(sent ? "bce-message-sent" : "bce-message-received");
-    message.classList.add(`bce-message-${messageType}`);
+    message.classList.add(sent ? "bce-message-sent" : "bce-message-received", "bce-message", `bce-message-${messageType}`);
     message.setAttribute("data-time", createdAt.toLocaleString());
 
     const author = sent ? CharacterNickname(Player) : (beep.MemberName ?? "<Unknown>");
