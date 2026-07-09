@@ -346,6 +346,7 @@ export default function wceStyles(): void {
     --button-color: #666;
   }
   `;
+  // ToDo: remove once R130 is out
   if (GameVersion === "R129") {
     css += `
     #layering {

@@ -38,6 +38,7 @@ export default async function layeringMenu(): Promise<void> {
     if (defaultItemHide.length === 0) return ret;
     const overrideItemHide = Layering.Item.Property.wceOverrideHide || defaultItemHide;
     const root = document.getElementById(Layering.ID.root);
+    // ToDo: remove once R130 is out
     if (GameVersion === "R129") {
       root.classList.add("scroll-box");
       root.querySelector("#layering-layer-div")?.classList.remove("scroll-box");
@@ -69,46 +70,44 @@ export default async function layeringMenu(): Promise<void> {
       });
     } else {
       // >= R130Beta1
-      root.querySelector(".screen-main")?.append(
-        ElementCreate({
-          tag: "fieldset",
-          attributes: { name: "wce-hide", id: "layering-wce-hide-div", "aria-labelledby": "layering-hide-header", disabled: Layering.Readonly },
-          children: [
-            { tag: "h2", attributes: { id: "layering-hide-header" }, children: [displayText("[WCE] Configure layer hiding")] },
-            {
-              tag: "fieldset",
-              classList: ["layering-layer-inner-grid"],
-              children: [
-                { tag: "legend" as const, children: ["Layers"] },
-                ...defaultItemHide.map(h => ({
-                  tag: "div" as const,
-                  classList: ["layering-pair"],
-                  children: [
-                    ElementCheckbox.Create(
-                      `layering-wce-hide-cb-${h}`,
-                      () => {
-                        const hidingInputs = Array.from(
-                          document.getElementById("layering-wce-hide-div")?.querySelectorAll<HTMLInputElement>("input[type='checkbox']") ?? []
-                        );
-                        const hiddenGroups = hidingInputs.filter(inp => inp.checked).map(inp => inp.value as AssetGroupName);
-                        Layering.Item.Property.wceOverrideHide = hiddenGroups;
-                        if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
-                        // oxlint-disable-next-line no-underscore-dangle
-                        Layering._CharacterRefresh(Layering.Character, false, false);
-                      },
-                      { value: h, checked: overrideItemHide.includes(h) },
-                      { checkbox: { attributes: { name: "checkbox-hide" } } }
-                    ),
-                    { tag: "label" as const, classList: ["layering-pair-text"], children: [h], attributes: { for: `layering-wce-hide-cb-${h}` } },
-                  ],
-                })),
-              ],
-            },
-          ],
-        })
-      );
+      console.log(root);
+      ElementCreate({
+        tag: "fieldset",
+        attributes: { name: "wce-hide", id: "layering-wce-hide-div", "aria-labelledby": "layering-hide-header", disabled: Layering.Readonly },
+        parent: root.querySelector(".screen-main"),
+        children: [
+          { tag: "h2", attributes: { id: "layering-hide-header" }, children: [displayText("[WCE] Configure layer hiding")] },
+          {
+            tag: "fieldset",
+            classList: ["layering-layer-inner-grid"],
+            children: [
+              { tag: "legend" as const, children: ["Layers"] },
+              ...defaultItemHide.map(h => ({
+                tag: "div" as const,
+                classList: ["layering-pair"],
+                children: [
+                  ElementCheckbox.Create(
+                    `layering-wce-hide-cb-${h}`,
+                    () => {
+                      const hidingInputs = document
+                        .getElementById("layering-wce-hide-div")
+                        ?.querySelectorAll<HTMLInputElement>("input[type='checkbox']:checked");
+                      Layering.Item.Property.wceOverrideHide = Array.from(hidingInputs).map(inp => inp.value as AssetGroupName);
+                      if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
+                      // oxlint-disable-next-line no-underscore-dangle
+                      Layering._CharacterRefresh(Layering.Character, false, false);
+                    },
+                    { value: h, checked: overrideItemHide.includes(h) },
+                    { checkbox: { attributes: { name: "checkbox-hide" } } }
+                  ),
+                  { tag: "label" as const, classList: ["layering-pair-text"], children: [h], attributes: { for: `layering-wce-hide-cb-${h}` } },
+                ],
+              })),
+            ],
+          },
+        ],
+      });
     }
-
     return ret;
   });
 
