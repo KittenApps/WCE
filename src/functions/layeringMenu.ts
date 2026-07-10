@@ -70,7 +70,6 @@ export default async function layeringMenu(): Promise<void> {
       });
     } else {
       // >= R130Beta1
-      console.log(root);
       ElementCreate({
         tag: "fieldset",
         attributes: { name: "wce-hide", id: "layering-wce-hide-div", "aria-labelledby": "layering-hide-header", disabled: Layering.Readonly },

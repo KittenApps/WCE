@@ -55,7 +55,7 @@ export default function discreetMode(): void {
           blur: Player.GetBlurLevel(),
           darken: DrawGetDarkFactor(),
           tints: Player.GetTints(),
-          sizeMode: ChatRoomData.Custom?.SizeMode,
+          sizeMode: ChatRoomData.Custom?.SizeMode as DrawingResizeMode,
         };
 
         // Loop over the room's characters to draw each of them
