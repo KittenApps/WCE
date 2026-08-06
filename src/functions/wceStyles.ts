@@ -3,7 +3,7 @@ import { BCE_COLOR_ADJUSTMENTS_CLASS_NAME, DARK_INPUT_CLASS, WHISPER_CLASS } fro
 const INPUT_WARN_CLASS = "bce-input-warn";
 
 export default function wceStyles(): void {
-  let css = /* CSS */ `
+  const css = /* CSS */ `
   .bce-beep-link {
     text-decoration: none;
   }
@@ -346,38 +346,6 @@ export default function wceStyles(): void {
     --button-color: #666;
   }
   `;
-  // ToDo: remove once R130 is out
-  if (GameVersion === "R129") {
-    css += `
-    #layering {
-      grid-template:
-        "asset-header button-grid" min-content
-        "asset-grid asset-grid" min-content
-        "layer-header layer-header" min-content
-        "layer-grid layer-grid" auto
-        "layer-hide-header layer-hide-header" min-content
-        "layer-hide-grid layer-hide-grid" auto
-        / auto min-content
-      ;
-    }
-    #layering-button-grid {
-      top: 0;
-      position: sticky;
-    }
-    #layering-hide-header {
-      grid-area: layer-hide-header;
-    }
-    #layering-wce-hide-div {
-      box-sizing: border-box;
-      grid-area: layer-hide-grid;
-      width: 100%;
-      height: calc(100% - min(2vh, 1vw));
-      padding-left: min(2vh, 1vw);
-      padding-right: min(2vh, 1vw);
-      align-self: self-start;
-    }
-    `;
-  }
   const head = document.head || document.getElementsByTagName("head")[0];
   const style = document.createElement("style");
   style.appendChild(document.createTextNode(css));
