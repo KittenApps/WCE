@@ -42,6 +42,7 @@
     "radix": "off",
     "sort-imports": "off",
     "sort-keys": "off",
+    "one-var": "off",
     "yoda": ["warn", "never"],
     "import/consistent-type-specifier-style": "off",
     "import/exports-last": "off",

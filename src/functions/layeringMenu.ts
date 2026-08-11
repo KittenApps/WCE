@@ -1,7 +1,7 @@
 import { displayText } from "../util/localization";
 import { patchFunction, SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
-import { waitFor, isCharacter, deepCopy, fbcSendAction, parseJSON } from "../util/utils";
+import { waitFor, isCharacter, fbcSendAction, parseJSON } from "../util/utils";
 
 declare global {
   interface ItemProperties {
@@ -25,7 +25,7 @@ export default async function layeringMenu(): Promise<void> {
     return DialogHasKey(C, Item);
   }
 
-  SDK.hookFunction("Layering.Load", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
+  SDK.hookFunction("Layering.Load", HOOK_PRIORITIES.AddBehaviour, async (args, next) => {
     if (fbcSettings.allowLayeringWhileBound && (!InventoryItemHasEffect(Layering.Item, "Lock") || DialogCanUnlock2(Layering.Character, Layering.Item))) {
       Layering.Readonly = false;
     }
@@ -33,45 +33,64 @@ export default async function layeringMenu(): Promise<void> {
       Layering.Readonly = true;
     }
     if (!fbcSettings.layeringHide || CurrentScreen === "Crafting" || !Layering.Character.BCECapabilities?.includes("layeringHide")) return next(args);
-    const ret = next(args);
-    const defaultItemHide = Layering.Asset.Hide || [];
-    if (defaultItemHide.length === 0) return ret;
-    const overrideItemHide = Layering.Item.Property.wceOverrideHide || defaultItemHide;
-    const root = document.getElementById(Layering.ID.root);
-    ElementCreate({
-      tag: "fieldset",
-      attributes: { name: "wce-hide", id: "layering-wce-hide-div", "aria-labelledby": "layering-hide-header", disabled: Layering.Readonly },
-      parent: root.querySelector(".screen-main"),
-      children: [
-        { tag: "h2", attributes: { id: "layering-hide-header" }, children: [displayText("[WCE] Configure layer hiding")] },
-        {
-          tag: "fieldset",
-          classList: ["layering-layer-inner-grid"],
-          children: [
-            { tag: "legend" as const, children: ["Layers"] },
-            ...defaultItemHide.map(h => ({
-              tag: "div" as const,
-              classList: ["layering-pair"],
-              children: [
-                ElementCheckbox.Create(
-                  `layering-wce-hide-cb-${h}`,
-                  () => {
-                    const hidingInputs = document.getElementById("layering-wce-hide-div")?.querySelectorAll<HTMLInputElement>("input[type='checkbox']:checked");
-                    Layering.Item.Property.wceOverrideHide = Array.from(hidingInputs).map(inp => inp.value as AssetGroupName);
-                    if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
-                    // oxlint-disable-next-line no-underscore-dangle
-                    Layering._CharacterRefresh(Layering.Character, false, false);
-                  },
-                  { value: h, checked: overrideItemHide.includes(h) },
-                  { checkbox: { attributes: { name: "checkbox-hide" } } }
-                ),
-                { tag: "label" as const, classList: ["layering-pair-text"], children: [h], attributes: { for: `layering-wce-hide-cb-${h}` } },
-              ],
-            })),
-          ],
-        },
-      ],
-    });
+
+    const ret = await next(args);
+
+    const btn = ElementButton.Create(
+      "layering-tab-wce-hide",
+      () => {
+        Layering.activeTab = "wce-hide";
+        const container = document.getElementById("layering-content-container");
+        if (container) {
+          container.innerHTML = "";
+          const defaultItemHide = Layering.Asset.Hide || [];
+          if (defaultItemHide.length === 0) return ret;
+          const overrideItemHide = Layering.Item.Property.wceOverrideHide || defaultItemHide;
+          const content = ElementCreate({
+            tag: "fieldset",
+            attributes: { name: "wce-hide", id: "layering-wce-hide-div", "aria-labelledby": "layering-hide-header", disabled: Layering.Readonly },
+            children: [
+              { tag: "h2", attributes: { id: "layering-hide-header" }, children: [displayText("[WCE] Configure layer hiding")] },
+              {
+                tag: "fieldset",
+                classList: ["layering-layer-inner-grid"],
+                children: [
+                  { tag: "legend" as const, children: ["Layers"] },
+                  ...defaultItemHide.map(h => ({
+                    tag: "div" as const,
+                    classList: ["layering-pair"],
+                    children: [
+                      ElementCheckbox.Create(
+                        `layering-wce-hide-cb-${h}`,
+                        () => {
+                          const hidingInputs = document
+                            .getElementById("layering-wce-hide-div")
+                            ?.querySelectorAll<HTMLInputElement>("input[type='checkbox']:checked");
+                          Layering.Item.Property.wceOverrideHide = Array.from(hidingInputs).map(inp => inp.value as AssetGroupName);
+                          if (defaultItemHide.length === Layering.Item.Property.wceOverrideHide.length) delete Layering.Item.Property.wceOverrideHide;
+                          // oxlint-disable-next-line no-underscore-dangle
+                          Layering._CharacterRefresh(Layering.Character, false, false);
+                        },
+                        { value: h, checked: overrideItemHide.includes(h) },
+                        { checkbox: { attributes: { name: "checkbox-hide" } } }
+                      ),
+                      { tag: "label" as const, classList: ["layering-pair-text"], children: [h], attributes: { for: `layering-wce-hide-cb-${h}` } },
+                    ],
+                  })),
+                ],
+              },
+            ],
+          });
+          container.appendChild(content);
+        }
+        return null;
+      },
+      { ariaChecked: Layering.activeTab === "wce-hide", role: "menuitemradio" }
+    );
+    btn.classList.add("layering-tab-button");
+    btn.innerText = "Hide";
+    document.getElementById("layering-tab-rotate").after(btn);
+
     return ret;
   });
 
@@ -187,21 +206,8 @@ export default async function layeringMenu(): Promise<void> {
 
   function copyColorTo(item: Item, focusItem: Item): void {
     if (item.Asset.Name === focusItem.Asset.Name) {
-      if (Array.isArray(focusItem.Color)) {
-        if (Array.isArray(item.Color)) {
-          for (let i = item.Color.length - 1; i >= 0; i--) {
-            item.Color[i] = focusItem.Color[i % focusItem.Color.length];
-          }
-        } else {
-          item.Color = focusItem.Color.at(-1);
-        }
-      } else if (Array.isArray(item.Color)) {
-        for (let i = 0; i < item.Color.length; i++) {
-          item.Color[i] = focusItem.Color ?? "Default";
-        }
-      } else {
-        // Both are array
-        item.Color = deepCopy(focusItem.Color);
+      for (let i = item.Color.length - 1; i >= 0; i--) {
+        item.Color[i] = focusItem.Color[i % focusItem.Color.length];
       }
     }
   }

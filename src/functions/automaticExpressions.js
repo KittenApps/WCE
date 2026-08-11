@@ -186,7 +186,7 @@ export default async function automaticExpressions() {
         }
         appearance.Property.Expression = n;
         if (color) {
-          appearance.Color = color;
+          appearance.Color = Array.isArray(color) ? color : [color];
         }
         break;
       }

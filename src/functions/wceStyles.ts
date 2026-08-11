@@ -345,6 +345,9 @@ export default function wceStyles(): void {
   #wce-chat-stutters[data-state="preserve"]::before {
     --button-color: #666;
   }
+  #layering-wce-hide-div .layering-pair {
+    justify-content: start;
+  }
   `;
   const head = document.head || document.getElementsByTagName("head")[0];
   const style = document.createElement("style");
