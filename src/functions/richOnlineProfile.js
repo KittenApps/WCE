@@ -1,5 +1,6 @@
 import { displayText } from "../util/localization";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
+import { createPositionableButton, WCE_NAMESPACE } from "../util/publicApi";
 import { fbcSettings } from "../util/settings";
 import { processChatAugmentsForLine } from "./chatAugments";
 
@@ -74,12 +75,16 @@ export default function richOnlineProfile() {
     return next(args);
   });
 
-  const toggleEditButtonPos = /** @type {const} */ ([90, 60, 90, 90]);
+  const { api: editButtonApi, getPosition: getEditButtonPosition, isHidden: isEditButtonHidden } = createPositionableButton([90, 60, 90, 90]);
+  WCE_NAMESPACE.Button = { ...WCE_NAMESPACE.Button, EditProfile: editButtonApi };
+
   SDK.hookFunction("OnlineProfileRun", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
     if (!fbcSettings.richOnlineProfile) {
       return next(args);
     }
-    DrawButton(...toggleEditButtonPos, "", "White", "Icons/Crafting.png", displayText("Toggle Editing Mode"));
+    if (!isEditButtonHidden()) {
+      DrawButton(...getEditButtonPosition(), "", "White", "Icons/Crafting.png", displayText("Toggle Editing Mode"));
+    }
 
     const ret = next(args);
     if (!originalShown) {
@@ -93,7 +98,7 @@ export default function richOnlineProfile() {
     if (!fbcSettings.richOnlineProfile) {
       return next(args);
     }
-    if (MouseIn(...toggleEditButtonPos)) {
+    if (!isEditButtonHidden() && MouseIn(...getEditButtonPosition())) {
       if (originalShown) {
         enableRichTextArea();
       } else {

@@ -1,6 +1,7 @@
 import { displayText } from "../util/localization";
 import { debug } from "../util/logger";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
+import { createPositionableButton, WCE_NAMESPACE } from "../util/publicApi";
 import { fbcSettings } from "../util/settings";
 import { parseJSON, objEntries, isNonNullObject, isString, fbcNotify } from "../util/utils";
 import { registerSocketListener } from "./appendSocketListenersToInit";
@@ -446,27 +447,27 @@ export default function instantMessenger() {
     return next(args);
   });
 
-  /** @type {[number, number, number, number]} */
-  const buttonPosition = [70, 905, 60, 60];
+  const { api: messengerButtonApi, getPosition: getButtonPosition, isHidden: isButtonHidden } = createPositionableButton([70, 905, 60, 60]);
+  WCE_NAMESPACE.Button = { ...WCE_NAMESPACE.Button, Messenger: messengerButtonApi };
 
   SDK.hookFunction("DrawProcess", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
     const ret = next(args);
-    if (fbcSettings.instantMessenger) {
+    if (fbcSettings.instantMessenger && !isButtonHidden()) {
       if (
         !fbcSettings.allowIMBypassBCX &&
         (BCXgetRuleState("speech_restrict_beep_receive")?.isEnforced || (BCXgetRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
       ) {
         if (!container.classList.contains("bce-hidden")) hideIM();
-        DrawButton(...buttonPosition, "", "Gray", "Icons/Small/Chat.png", displayText("Instant Messenger (Disabled by BCX)"), false);
+        DrawButton(...getButtonPosition(), "", "Gray", "Icons/Small/Chat.png", displayText("Instant Messenger (Disabled by BCX)"), false);
       } else {
-        DrawButton(...buttonPosition, "", unreadSinceOpened ? "Red" : "White", "Icons/Small/Chat.png", displayText("Instant Messenger"), false);
+        DrawButton(...getButtonPosition(), "", unreadSinceOpened ? "Red" : "White", "Icons/Small/Chat.png", displayText("Instant Messenger"), false);
       }
     }
     return ret;
   });
 
   SDK.hookFunction("CommonClick", HOOK_PRIORITIES.OverrideBehaviour, (args, next) => {
-    if (fbcSettings.instantMessenger && MouseIn(...buttonPosition)) {
+    if (fbcSettings.instantMessenger && !isButtonHidden() && MouseIn(...getButtonPosition())) {
       if (!container.classList.contains("bce-hidden")) {
         hideIM();
         return null;

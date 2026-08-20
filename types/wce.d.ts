@@ -15,6 +15,55 @@ declare global {
   var bcx: import("./bcxExternalInterface").BCX_ConsoleInterface | undefined;
   var bcModSdk: import("bondage-club-mod-sdk").ModSDKGlobalAPI | undefined;
   var FUSAM: FUSAMPublicAPI | undefined;
+
+  /**
+   * WCE's public JS API, exposed as `window.WCE`, so other addons/userscripts can integrate with
+   * it without hooking its internals directly. Sub-namespaces are added by the feature that owns
+   * them (e.g. `WCE.Messenger`), so this type grows as more features expose an API.
+   */
+  var WCE: WCEPublicAPI;
+  type WCEPublicAPI = {
+    /** WCE-drawn screen buttons that other addons can reposition or temporarily hide. */
+    Button?: {
+      /**
+       * The instant messenger toggle button. Default position/size (in game canvas coordinates)
+       * is `[x, y, w, h] = [70, 905, 60, 60]`.
+       */
+      Messenger?: WCEPositionableButtonAPI;
+      /**
+       * The "Toggle Editing Mode" (rich BIO) button on the online profile screen. Default
+       * position/size (in game canvas coordinates) is `[x, y, w, h] = [90, 60, 90, 90]`.
+       */
+      EditProfile?: WCEPositionableButtonAPI;
+      /**
+       * The "[WCE] Notes" toggle button on the online profile screen. Default position/size (in
+       * game canvas coordinates) is `[x, y, w, h] = [1520, 60, 90, 90]`.
+       */
+      pastProfiles?: WCEPositionableButtonAPI;
+    };
+    /** Reads and writes the per-member personal notes saved by the past-profiles feature. */
+    pastProfiles?: {
+      /** Returns the saved note for a member number, or `undefined` if none exists. */
+      get: (memberNumber: number) => Promise<FBCNote | undefined>;
+      /** Saves (overwriting) the note for a member number. */
+      set: (memberNumber: number, note: string) => Promise<void>;
+    };
+  };
+  /** Generic API for a WCE-drawn screen button that other addons can move or hide. */
+  type WCEPositionableButtonAPI = {
+    /** Returns the current `[x, y, w, h]` of the button in game canvas coordinates. */
+    getPosition: () => [number, number, number, number];
+    /** Moves the button to a new `x, y, w, h` position in game canvas coordinates. */
+    setPosition: (x: number, y: number, w: number, h: number) => void;
+    /** Restores the button to its default position. */
+    resetPosition: () => void;
+    /** Hides the button (and disables its click area) until `show()` is called. */
+    hide: () => void;
+    /** Reveals the button again after a previous `hide()` call. */
+    show: () => void;
+    /** Whether the button is currently hidden via this API. */
+    isHidden: () => boolean;
+  };
   type FUSAMPublicAPI = {
     present: true;
     addons: Record<string, FUSAMAddonState>;

@@ -3,6 +3,7 @@ import { openDB } from "idb";
 import { displayText } from "../util/localization";
 import { debug, logInfo, logWarn, logError } from "../util/logger";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
+import { createPositionableButton, WCE_NAMESPACE } from "../util/publicApi";
 import { fbcSettings } from "../util/settings";
 import { deepCopy, parseJSON, isCharacter, isNonNullObject, drawTextFitLeft, fbcChatNotify } from "../util/utils";
 
@@ -219,6 +220,47 @@ export default async function pastProfiles() {
     return isNonNullObject(n) && typeof n.note === "string";
   }
 
+  /**
+   * Reads the saved note for a member number. Part of the public `WCE.PastProfiles.Notes` API.
+   * @param {number} memberNumber
+   * @returns {Promise<FBCNote | undefined>}
+   */
+  async function getNote(memberNumber) {
+    if (typeof memberNumber !== "number" || !Number.isFinite(memberNumber)) {
+      throw new TypeError("WCE.PastProfiles.Notes.get: memberNumber must be a finite number");
+    }
+    const note = await db.get("notes", memberNumber);
+    return isNote(note) ? note : undefined;
+  }
+
+  /**
+   * Writes (or overwrites) the saved note for a member number. Part of the public
+   * `WCE.PastProfiles.Notes` API. Keeps the note editor in sync if it's currently open for
+   * that same member.
+   * @param {number} memberNumber
+   * @param {string} note
+   * @returns {Promise<void>}
+   */
+  async function setNote(memberNumber, note) {
+    if (typeof memberNumber !== "number" || !Number.isFinite(memberNumber)) {
+      throw new TypeError("WCE.PastProfiles.Notes.set: memberNumber must be a finite number");
+    }
+    if (typeof note !== "string") {
+      throw new TypeError("WCE.PastProfiles.Notes.set: note must be a string");
+    }
+    await quotaSafetyCheck();
+    const updatedAt = Date.now();
+    await db.put("notes", { memberNumber, note, updatedAt });
+    if (inNotes && InformationSheetSelection?.MemberNumber === memberNumber) {
+      noteInput.value = note;
+      noteUpdatedAt = updatedAt;
+    }
+  }
+
+  const { api: notesButtonApi, getPosition: getNotesButtonPosition, isHidden: isNotesButtonHidden } = createPositionableButton([1520, 60, 90, 90]);
+  WCE_NAMESPACE.Button = { ...WCE_NAMESPACE.Button, pastProfiles: notesButtonApi };
+  WCE_NAMESPACE.pastProfiles = { get: getNote, set: setNote };
+
   function showNoteInput() {
     if (!InformationSheetSelection?.MemberNumber) {
       throw new Error("invalid InformationSheetSelection in notes");
@@ -284,7 +326,9 @@ export default async function pastProfiles() {
       DrawButton(1820, 60, 90, 90, "", "White", "Icons/Cancel.png", TextGet("LeaveNoSave"));
       return null;
     }
-    DrawButton(1520, 60, 90, 90, "", "White", "Icons/Notifications.png", displayText("[WCE] Notes"));
+    if (!isNotesButtonHidden()) {
+      DrawButton(...getNotesButtonPosition(), "", "White", "Icons/Notifications.png", displayText("[WCE] Notes"));
+    }
     return next(args);
   });
 
@@ -302,7 +346,7 @@ export default async function pastProfiles() {
         hideNoteInput();
       }
       return null;
-    } else if (!inNotes && MouseIn(1520, 60, 90, 90)) showNoteInput();
+    } else if (!inNotes && !isNotesButtonHidden() && MouseIn(...getNotesButtonPosition())) showNoteInput();
     return next(args);
   });
 
