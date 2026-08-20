@@ -18,9 +18,11 @@ export function createPositionableButton(defaultPosition: [number, number, numbe
   api: WCEPositionableButtonAPI;
   getPosition: () => [number, number, number, number];
   isHidden: () => boolean;
+  isVisualHidden: () => boolean;
 } {
   let position: [number, number, number, number] = [...defaultPosition];
   let hidden = false;
+  let visualHidden = false;
 
   function setPosition(x: number, y: number, w: number, h: number): void {
     for (const n of [x, y, w, h]) {
@@ -44,7 +46,14 @@ export function createPositionableButton(defaultPosition: [number, number, numbe
       hidden = false;
     },
     isHidden: () => hidden,
+    hideVisual: () => {
+      visualHidden = true;
+    },
+    showVisual: () => {
+      visualHidden = false;
+    },
+    isVisualHidden: () => visualHidden,
   };
 
-  return { api, getPosition: () => position, isHidden: () => hidden };
+  return { api, getPosition: () => position, isHidden: () => hidden, isVisualHidden: () => visualHidden };
 }

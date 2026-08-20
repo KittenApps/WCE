@@ -29,7 +29,16 @@ declare global {
        * The instant messenger toggle button. Default position/size (in game canvas coordinates)
        * is `[x, y, w, h] = [70, 905, 60, 60]`.
        */
-      Messenger?: WCEPositionableButtonAPI;
+      Messenger?: WCEPositionableButtonAPI & {
+        /** Whether WCE's instant messenger feature is enabled in the user's settings. */
+        isEnabled: () => boolean;
+        /** Returns the CSS z-index of the instant messenger window. */
+        getZIndex: () => number;
+        /** Changes the CSS z-index of the instant messenger window. */
+        setZIndex: (zIndex: number) => void;
+        /** Restores the instant messenger window's default z-index (`100`). */
+        resetZIndex: () => void;
+      };
       /**
        * The "Toggle Editing Mode" (rich BIO) button on the online profile screen. Default
        * position/size (in game canvas coordinates) is `[x, y, w, h] = [90, 60, 90, 90]`.
@@ -63,6 +72,12 @@ declare global {
     show: () => void;
     /** Whether the button is currently hidden via this API. */
     isHidden: () => boolean;
+    /** Hides only the button drawing while preserving its click area. */
+    hideVisual: () => void;
+    /** Draws the button again after `hideVisual()` was called. */
+    showVisual: () => void;
+    /** Whether only the button drawing is currently hidden. */
+    isVisualHidden: () => boolean;
   };
   type FUSAMPublicAPI = {
     present: true;

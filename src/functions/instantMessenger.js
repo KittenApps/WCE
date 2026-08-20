@@ -222,7 +222,9 @@ export default function instantMessenger() {
         friend.history.appendChild(divider);
       }
 
-      if (container.classList.contains("bce-hidden")) {
+      // A visually hidden button is commonly covered by another addon's button. Do not retain a
+      // red unread state that suddenly appears when WCE's own button is shown again.
+      if (container.classList.contains("bce-hidden") && !isButtonHidden() && !isButtonVisualHidden()) {
         unreadSinceOpened++;
       }
     }
@@ -447,12 +449,37 @@ export default function instantMessenger() {
     return next(args);
   });
 
-  const { api: messengerButtonApi, getPosition: getButtonPosition, isHidden: isButtonHidden } = createPositionableButton([70, 905, 60, 60]);
-  WCE_NAMESPACE.Button = { ...WCE_NAMESPACE.Button, Messenger: messengerButtonApi };
+  const DEFAULT_MESSENGER_Z_INDEX = 100;
+  const {
+    api: messengerButtonApi,
+    getPosition: getButtonPosition,
+    isHidden: isButtonHidden,
+    isVisualHidden: isButtonVisualHidden,
+  } = createPositionableButton([70, 905, 60, 60]);
+  WCE_NAMESPACE.Button = {
+    ...WCE_NAMESPACE.Button,
+    Messenger: {
+      ...messengerButtonApi,
+      isEnabled: () => fbcSettings.instantMessenger,
+      getZIndex: () => {
+        const zIndex = Number(container.style.zIndex || getComputedStyle(container).zIndex);
+        return Number.isFinite(zIndex) ? zIndex : DEFAULT_MESSENGER_Z_INDEX;
+      },
+      setZIndex: zIndex => {
+        if (typeof zIndex !== "number" || !Number.isFinite(zIndex)) {
+          throw new TypeError("setZIndex: zIndex must be a finite number");
+        }
+        container.style.zIndex = String(zIndex);
+      },
+      resetZIndex: () => {
+        container.style.zIndex = String(DEFAULT_MESSENGER_Z_INDEX);
+      },
+    },
+  };
 
   SDK.hookFunction("DrawProcess", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
     const ret = next(args);
-    if (fbcSettings.instantMessenger && !isButtonHidden()) {
+    if (fbcSettings.instantMessenger && !isButtonHidden() && !isButtonVisualHidden()) {
       if (
         !fbcSettings.allowIMBypassBCX &&
         (BCXgetRuleState("speech_restrict_beep_receive")?.isEnforced || (BCXgetRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
