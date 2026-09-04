@@ -197,10 +197,7 @@ export default async function pastProfiles() {
     if (!profile?.characterBundle) return false;
     const payload = {
       sharedAt: Date.now(),
-      from: {
-        memberNumber: Player?.MemberNumber,
-        name: Player?.Nickname || Player?.Name || String(Player?.MemberNumber),
-      },
+      from: { memberNumber: Player?.MemberNumber, name: Player?.Nickname || Player?.Name || String(Player?.MemberNumber) },
       profile: {
         memberNumber: profile.memberNumber,
         name: profile.name,
@@ -220,10 +217,7 @@ export default async function pastProfiles() {
       });
     }
     const name = profile.lastNick || profile.name || String(memberNumber);
-    fbcChatNotify(displayText("Shared profile: $name ($memberNumber)", {
-      $name: name,
-      $memberNumber: String(memberNumber),
-    }));
+    fbcChatNotify(displayText("Shared profile: $name ($memberNumber)", { $name: name, $memberNumber: String(memberNumber) }));
     return true;
   }
 
@@ -234,13 +228,15 @@ export default async function pastProfiles() {
   function validSharedPayload(payload) {
     if (!isNonNullObject(payload) || !isNonNullObject(payload.profile)) return false;
     const profile = payload?.profile;
-    return Number.isSafeInteger(Number(payload?.sharedAt))
-      && Number.isSafeInteger(Number(profile?.memberNumber))
-      && Number(profile.memberNumber) > 0
-      && typeof profile.name === "string"
-      && Number.isFinite(Number(profile.seen))
-      && typeof profile.characterBundle === "string"
-      && profile.characterBundle.length <= PROFILE_SHARE_MAX_BYTES;
+    return (
+      Number.isSafeInteger(Number(payload?.sharedAt)) &&
+      Number.isSafeInteger(Number(profile?.memberNumber)) &&
+      Number(profile.memberNumber) > 0 &&
+      typeof profile.name === "string" &&
+      Number.isFinite(Number(profile.seen)) &&
+      typeof profile.characterBundle === "string" &&
+      profile.characterBundle.length <= PROFILE_SHARE_MAX_BYTES
+    );
   }
 
   /** @param {WCEProfileSharePayload} payload */
@@ -252,11 +248,13 @@ export default async function pastProfiles() {
     const from = payload.from?.name || payload.from?.memberNumber || "Someone";
     const name = profile.lastNick || profile.name || profile.memberNumber;
     const date = new Date(profile.seen).toLocaleDateString();
-    fbcChatNotify(displayText("$from shared a profile: $profile - Saved: $date", {
-      $from: String(from),
-      $profile: `[${PROFILE_SHARE_OPEN} ${payload.sharedAt} ${profile.memberNumber}] ${name} (${profile.memberNumber})`,
-      $date: date,
-    }));
+    fbcChatNotify(
+      displayText("$from shared a profile: $profile - Saved: $date", {
+        $from: String(from),
+        $profile: `[${PROFILE_SHARE_OPEN} ${payload.sharedAt} ${profile.memberNumber}] ${name} (${profile.memberNumber})`,
+        $date: date,
+      })
+    );
   }
 
   /**
@@ -272,20 +270,41 @@ export default async function pastProfiles() {
       const [index, total] = (parts[2] || "").split("/").map(Number);
       const chunk = parts.slice(3).join(" ");
       const sender = data.Sender || 0;
-      if (!/^[a-z0-9-]{6,64}$/iu.test(shareId || "") || !Number.isSafeInteger(index)
-        || !Number.isSafeInteger(total) || total < 1 || total > PROFILE_SHARE_MAX_CHUNKS
-        || index < 1 || index > total || !chunk || chunk.length > PROFILE_SHARE_CHUNK_SIZE
-        || !/^[A-Za-z0-9+/=]+$/u.test(chunk)) return true;
+      if (
+        !/^[a-z0-9-]{6,64}$/iu.test(shareId || "") ||
+        !Number.isSafeInteger(index) ||
+        !Number.isSafeInteger(total) ||
+        total < 1 ||
+        total > PROFILE_SHARE_MAX_CHUNKS ||
+        index < 1 ||
+        index > total ||
+        !chunk ||
+        chunk.length > PROFILE_SHARE_CHUNK_SIZE ||
+        !/^[A-Za-z0-9+/=]+$/u.test(chunk)
+      )
+        return true;
       if (!incomingShares.has(shareId)) {
         const senderEntries = [...incomingShares.values()].filter(entry => entry.sender === sender).length;
         if (incomingShares.size >= PROFILE_SHARE_MAX_INCOMING || senderEntries >= PROFILE_SHARE_MAX_PER_SENDER) return true;
         incomingShares.set(shareId, { total, sender, chunks: Array.from({ length: total }), count: 0, bytes: 0, updatedAt: Date.now() });
       }
       const entry = incomingShares.get(shareId);
-      if (entry.total !== total || entry.sender !== sender) { incomingShares.delete(shareId); return true; }
-      if (entry.chunks[index - 1] && entry.chunks[index - 1] !== chunk) { incomingShares.delete(shareId); return true; }
-      if (!entry.chunks[index - 1]) { entry.count++; entry.bytes += chunk.length; }
-      if (entry.bytes > PROFILE_SHARE_MAX_BYTES) { incomingShares.delete(shareId); return true; }
+      if (entry.total !== total || entry.sender !== sender) {
+        incomingShares.delete(shareId);
+        return true;
+      }
+      if (entry.chunks[index - 1] && entry.chunks[index - 1] !== chunk) {
+        incomingShares.delete(shareId);
+        return true;
+      }
+      if (!entry.chunks[index - 1]) {
+        entry.count++;
+        entry.bytes += chunk.length;
+      }
+      if (entry.bytes > PROFILE_SHARE_MAX_BYTES) {
+        incomingShares.delete(shareId);
+        return true;
+      }
       entry.chunks[index - 1] = chunk;
       entry.updatedAt = Date.now();
       if (entry.count === entry.total) {
@@ -309,18 +328,20 @@ export default async function pastProfiles() {
     if (replaced === element.innerHTML) return;
     element.innerHTML = replaced;
     element.dataset.wceProfileShareProcessed = "1";
-    element.querySelectorAll(".profiles_share_open").forEach(link => link.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (!(link instanceof HTMLElement)) return;
-      const entry = sharedProfiles.get(link.dataset.key);
-      if (!entry) return;
-      const profile = entry.payload.profile;
-      const character = CharacterLoadOnline(parseJSON(profile.characterBundle), profile.memberNumber);
-      character.BCESeen = profile.seen;
-      InformationSheetLoadCharacter(character);
-      saveSharedProfile(profile).catch(error => logError("saving shared profile", error));
-    }));
+    element.querySelectorAll(".profiles_share_open").forEach(link =>
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!(link instanceof HTMLElement)) return;
+        const entry = sharedProfiles.get(link.dataset.key);
+        if (!entry) return;
+        const profile = entry.payload.profile;
+        const character = CharacterLoadOnline(parseJSON(profile.characterBundle), profile.memberNumber);
+        character.BCESeen = profile.seen;
+        InformationSheetLoadCharacter(character);
+        saveSharedProfile(profile).catch(error => logError("saving shared profile", error));
+      })
+    );
   }
 
   SDK.hookFunction("ChatRoomMessage", HOOK_PRIORITIES.Observe, (args, next) => {
@@ -330,12 +351,13 @@ export default async function pastProfiles() {
   });
 
   const profileShareObserver = new MutationObserver(records => {
-    for (const record of records) for (const node of record.addedNodes) {
-      const element = node instanceof HTMLElement ? node : node.parentElement;
-      if (!(element instanceof HTMLElement)) continue;
-      if (element.matches(".ChatMessageLocalMessage,.bce-notification")) processSharedProfileLink(element);
-      element.querySelectorAll?.(".ChatMessageLocalMessage,.bce-notification").forEach(processSharedProfileLink);
-    }
+    for (const record of records)
+      for (const node of record.addedNodes) {
+        const element = node instanceof HTMLElement ? node : node.parentElement;
+        if (!(element instanceof HTMLElement)) continue;
+        if (element.matches(".ChatMessageLocalMessage,.bce-notification")) processSharedProfileLink(element);
+        element.querySelectorAll?.(".ChatMessageLocalMessage,.bce-notification").forEach(processSharedProfileLink);
+      }
   });
   profileShareObserver.observe(document.body, { childList: true, subtree: true });
 

@@ -56,11 +56,7 @@ declare global {
   };
   type ActivityTrigger = { Event: string; Type: string; Matchers: ActivityTriggerMatcher[] };
   type FBCSavedProfile = { memberNumber: number; name: string; lastNick?: string; seen: number; characterBundle: string };
-  type WCEProfileSharePayload = {
-    sharedAt: number;
-    from: { memberNumber?: number; name?: string };
-    profile: FBCSavedProfile;
-  };
+  type WCEProfileSharePayload = { sharedAt: number; from: { memberNumber?: number; name?: string }; profile: FBCSavedProfile };
   type WCEKey = { id: number; key: CryptoKey };
   type WCEAcc = { id: number; data: Uint8Array<ArrayBuffer>; iv: Uint8Array<ArrayBuffer>; auth: Uint8Array<ArrayBuffer> };
 }
