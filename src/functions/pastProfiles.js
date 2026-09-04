@@ -6,6 +6,15 @@ import { SDK, HOOK_PRIORITIES } from "../util/modding";
 import { fbcSettings } from "../util/settings";
 import { deepCopy, parseJSON, isCharacter, isNonNullObject, drawTextFitLeft, fbcChatNotify } from "../util/utils";
 
+const PROFILE_SHARE_PREFIX = "[PROFILESHARE]";
+const PROFILE_SHARE_OPEN = "PROFILESHARE_OPEN";
+const PROFILE_SHARE_CHUNK_SIZE = 800;
+const PROFILE_SHARE_MAX_CHUNKS = 512;
+const PROFILE_SHARE_MAX_BYTES = PROFILE_SHARE_CHUNK_SIZE * PROFILE_SHARE_MAX_CHUNKS;
+const PROFILE_SHARE_MAX_INCOMING = 24;
+const PROFILE_SHARE_MAX_PER_SENDER = 4;
+const PROFILE_SHARE_TTL = 2 * 60 * 1000;
+
 export default async function pastProfiles() {
   if (!fbcSettings.pastProfiles) {
     return;
@@ -20,6 +29,11 @@ export default async function pastProfiles() {
       for (const idx of tx.objectStore("notes").indexNames) tx.objectStore("notes").deleteIndex(idx);
     },
   });
+
+  /** @type {Map<string, {total: number; sender: number; chunks: (string | undefined)[]; count: number; bytes: number; updatedAt: number}>} */
+  const incomingShares = new Map();
+  /** @type {Map<string, {payload: WCEProfileSharePayload; receivedAt: number}>} */
+  const sharedProfiles = new Map();
 
   ElementCreateTextArea("bceNoteInput");
   /** @type {HTMLTextAreaElement} */
@@ -161,6 +175,170 @@ export default async function pastProfiles() {
     }
   }
 
+  function pruneProfileShares() {
+    const now = Date.now();
+    for (const [key, entry] of incomingShares) {
+      if (now - entry.updatedAt > PROFILE_SHARE_TTL) incomingShares.delete(key);
+    }
+    for (const [key, entry] of sharedProfiles) {
+      if (now - entry.receivedAt > PROFILE_SHARE_TTL * 15) sharedProfiles.delete(key);
+    }
+  }
+
+  /** @param {FBCSavedProfile} profile */
+  async function saveSharedProfile(profile) {
+    const local = await db.get("profiles", profile.memberNumber);
+    if (!local || profile.seen > local.seen) await db.put("profiles", profile);
+  }
+
+  async function shareProfile(memberNumber) {
+    if (CurrentScreen !== "ChatRoom" || typeof ServerSend !== "function") return false;
+    const profile = await db.get("profiles", memberNumber);
+    if (!profile?.characterBundle) return false;
+    const payload = {
+      sharedAt: Date.now(),
+      from: {
+        memberNumber: Player?.MemberNumber,
+        name: Player?.Nickname || Player?.Name || String(Player?.MemberNumber),
+      },
+      profile: {
+        memberNumber: profile.memberNumber,
+        name: profile.name,
+        lastNick: profile.lastNick,
+        seen: profile.seen,
+        characterBundle: profile.characterBundle,
+      },
+    };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    const total = Math.ceil(encoded.length / PROFILE_SHARE_CHUNK_SIZE);
+    if (!total || total > PROFILE_SHARE_MAX_CHUNKS || encoded.length > PROFILE_SHARE_MAX_BYTES) return false;
+    const shareId = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    for (let i = 0; i < total; i++) {
+      ServerSend("ChatRoomChat", {
+        Type: "Hidden",
+        Content: `${PROFILE_SHARE_PREFIX} ${shareId} ${i + 1}/${total} ${encoded.slice(i * PROFILE_SHARE_CHUNK_SIZE, (i + 1) * PROFILE_SHARE_CHUNK_SIZE)}`,
+      });
+    }
+    const name = profile.lastNick || profile.name || String(memberNumber);
+    fbcChatNotify(displayText("Shared profile: $name ($memberNumber)", {
+      $name: name,
+      $memberNumber: String(memberNumber),
+    }));
+    return true;
+  }
+
+  /**
+   * @param {unknown} payload
+   * @returns {payload is WCEProfileSharePayload}
+   */
+  function validSharedPayload(payload) {
+    if (!isNonNullObject(payload) || !isNonNullObject(payload.profile)) return false;
+    const profile = payload?.profile;
+    return Number.isSafeInteger(Number(payload?.sharedAt))
+      && Number.isSafeInteger(Number(profile?.memberNumber))
+      && Number(profile.memberNumber) > 0
+      && typeof profile.name === "string"
+      && Number.isFinite(Number(profile.seen))
+      && typeof profile.characterBundle === "string"
+      && profile.characterBundle.length <= PROFILE_SHARE_MAX_BYTES;
+  }
+
+  /** @param {WCEProfileSharePayload} payload */
+  function showSharedProfile(payload) {
+    const profile = payload.profile;
+    if (payload.from.memberNumber === Player?.MemberNumber) return;
+    const key = `${payload.sharedAt}:${profile.memberNumber}`;
+    sharedProfiles.set(key, { payload, receivedAt: Date.now() });
+    const from = payload.from?.name || payload.from?.memberNumber || "Someone";
+    const name = profile.lastNick || profile.name || profile.memberNumber;
+    const date = new Date(profile.seen).toLocaleDateString();
+    fbcChatNotify(displayText("$from shared a profile: $profile - Saved: $date", {
+      $from: String(from),
+      $profile: `[${PROFILE_SHARE_OPEN} ${payload.sharedAt} ${profile.memberNumber}] ${name} (${profile.memberNumber})`,
+      $date: date,
+    }));
+  }
+
+  /**
+   * @param {ServerChatRoomMessage | undefined} data
+   * @returns {boolean}
+   */
+  function handleProfileShare(data) {
+    if (data?.Type !== "Hidden" || !data.Content?.startsWith(PROFILE_SHARE_PREFIX)) return false;
+    try {
+      pruneProfileShares();
+      const parts = data.Content.split(" ");
+      const shareId = parts[1];
+      const [index, total] = (parts[2] || "").split("/").map(Number);
+      const chunk = parts.slice(3).join(" ");
+      const sender = data.Sender || 0;
+      if (!/^[a-z0-9-]{6,64}$/iu.test(shareId || "") || !Number.isSafeInteger(index)
+        || !Number.isSafeInteger(total) || total < 1 || total > PROFILE_SHARE_MAX_CHUNKS
+        || index < 1 || index > total || !chunk || chunk.length > PROFILE_SHARE_CHUNK_SIZE
+        || !/^[A-Za-z0-9+/=]+$/u.test(chunk)) return true;
+      if (!incomingShares.has(shareId)) {
+        const senderEntries = [...incomingShares.values()].filter(entry => entry.sender === sender).length;
+        if (incomingShares.size >= PROFILE_SHARE_MAX_INCOMING || senderEntries >= PROFILE_SHARE_MAX_PER_SENDER) return true;
+        incomingShares.set(shareId, { total, sender, chunks: Array.from({ length: total }), count: 0, bytes: 0, updatedAt: Date.now() });
+      }
+      const entry = incomingShares.get(shareId);
+      if (entry.total !== total || entry.sender !== sender) { incomingShares.delete(shareId); return true; }
+      if (entry.chunks[index - 1] && entry.chunks[index - 1] !== chunk) { incomingShares.delete(shareId); return true; }
+      if (!entry.chunks[index - 1]) { entry.count++; entry.bytes += chunk.length; }
+      if (entry.bytes > PROFILE_SHARE_MAX_BYTES) { incomingShares.delete(shareId); return true; }
+      entry.chunks[index - 1] = chunk;
+      entry.updatedAt = Date.now();
+      if (entry.count === entry.total) {
+        incomingShares.delete(shareId);
+        const payload = JSON.parse(decodeURIComponent(escape(atob(entry.chunks.join("")))));
+        if (validSharedPayload(payload)) showSharedProfile(payload);
+      }
+    } catch (e) {
+      logWarn("Unable to parse shared profile", e);
+    }
+    return true;
+  }
+
+  /** @param {HTMLElement} element */
+  function processSharedProfileLink(element) {
+    if (element.dataset.wceProfileShareProcessed === "1" || !element.innerHTML.includes(PROFILE_SHARE_OPEN)) return;
+    const replaced = element.innerHTML.replace(/\[PROFILESHARE_OPEN\s+(\d+)\s+(\d+)\]/gu, (match, sharedAt, memberNumber) => {
+      const key = `${sharedAt}:${memberNumber}`;
+      return sharedProfiles.has(key) ? `<a href="#" class="profiles_share_open" data-key="${key}">${displayText("Open")}</a>` : match;
+    });
+    if (replaced === element.innerHTML) return;
+    element.innerHTML = replaced;
+    element.dataset.wceProfileShareProcessed = "1";
+    element.querySelectorAll(".profiles_share_open").forEach(link => link.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!(link instanceof HTMLElement)) return;
+      const entry = sharedProfiles.get(link.dataset.key);
+      if (!entry) return;
+      const profile = entry.payload.profile;
+      const character = CharacterLoadOnline(parseJSON(profile.characterBundle), profile.memberNumber);
+      character.BCESeen = profile.seen;
+      InformationSheetLoadCharacter(character);
+      saveSharedProfile(profile).catch(error => logError("saving shared profile", error));
+    }));
+  }
+
+  SDK.hookFunction("ChatRoomMessage", HOOK_PRIORITIES.Observe, (args, next) => {
+    const [data] = args;
+    if (handleProfileShare(data)) return;
+    return next(args);
+  });
+
+  const profileShareObserver = new MutationObserver(records => {
+    for (const record of records) for (const node of record.addedNodes) {
+      const element = node instanceof HTMLElement ? node : node.parentElement;
+      if (!(element instanceof HTMLElement)) continue;
+      if (element.matches(".ChatMessageLocalMessage,.bce-notification")) processSharedProfileLink(element);
+      element.querySelectorAll?.(".ChatMessageLocalMessage,.bce-notification").forEach(processSharedProfileLink);
+    }
+  });
+  profileShareObserver.observe(document.body, { childList: true, subtree: true });
+
   CommandCombine({
     Tag: "profiles",
     Description: displayText("<filter> - List seen profiles, optionally searching by member number or name"),
@@ -191,6 +369,17 @@ export default async function pastProfiles() {
             e.stopPropagation();
             openCharacter(p.memberNumber);
           });
+          const share = document.createElement("a");
+          share.textContent = displayText("Share");
+          share.title = displayText("Share this saved profile with everyone in the current room");
+          share.href = "#";
+          share.classList.add("profiles_share");
+          share.addEventListener("click", e => {
+            e.preventDefault();
+            e.stopPropagation();
+            shareProfile(p.memberNumber).catch(error => logError("sharing profile", error));
+          });
+          div.prepend(share);
           div.prepend(link);
           return div;
         });

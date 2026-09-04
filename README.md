@@ -20,3 +20,13 @@ _this BC addon started as a fork of [FBC](https://sidiousious.gitlab.io/bce/) cr
 ## Installation
 
 see: https://wce-docs.vercel.app/docs/installation
+
+## Profiles integration
+
+Enabling **Save & browse seen profiles** also enables profile sending
+and receiving. Other addons can detect that WCE owns profile-share parsing via
+the existing settings API:
+
+```js
+globalThis.fbcSettingValue?.("pastProfiles") === true
+```

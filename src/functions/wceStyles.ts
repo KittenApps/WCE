@@ -225,7 +225,9 @@ export default function wceStyles(): void {
     background-color: #222;
     color: #eee;
   }
-  .bce-profile-open {
+  .bce-profile-open,
+  .profiles_share,
+  .profiles_share_open {
     margin-right: 0.5em;
     user-select: none;
   }

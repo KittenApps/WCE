@@ -319,5 +319,9 @@
   "buttplug.io is enabled, but server could not be contacted at $toySyncAddress. Is Intiface Desktop running? Is another client connected to it?": "buttplug.io 已启用，但无法联系到服务器 $toySyncAddress。Intiface Desktop 是否正在运行？是否有其他客户端已连接？",
   "Shows the battery status of all connected buttplug.io toys": "显示所有已连接 buttplug.io 玩具的电池状态",
   "WCE has received significant updates since you last used it. See /wcechangelog in a chatroom.": "自您上次使用以来，WCE 已收到重大更新。请在聊天室中查看 /wcechangelog。",
-  "Do you want to allow 3rd party $content to be loaded from $origin? $trusted": "您是否允许第三方 $content 从 $origin 加载？$trusted"
+  "Do you want to allow 3rd party $content to be loaded from $origin? $trusted": "您是否允许第三方 $content 从 $origin 加载？$trusted",
+  "Share": "分享",
+  "Share this saved profile with everyone in the current room": "与当前房间内的所有人分享这份已保存的个人资料",
+  "Shared profile: $name ($memberNumber)": "已分享个人资料：$name ($memberNumber)",
+  "$from shared a profile: $profile - Saved: $date": "$from 分享了个人资料：$profile - 保存于：$date"
 }
