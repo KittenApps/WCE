@@ -458,16 +458,14 @@ export default function instantMessenger() {
   SDK.hookFunction("DrawProcess", HOOK_PRIORITIES.AddBehaviour, (args, next) => {
     const ret = next(args);
     if (fbcSettings.instantMessenger) {
-      // ToDo: remove once R132 is out
-      const icon = GameVersion === "R131" ? "Icons/Small/Chat.png" : "Icons/Chat.png";
       if (
         !fbcSettings.allowIMBypassBCX &&
         (BCXgetRuleState("speech_restrict_beep_receive")?.isEnforced || (BCXgetRuleState("alt_hide_friends")?.isEnforced && Player.GetBlindLevel() >= 3))
       ) {
         if (!container.classList.contains("bce-hidden")) hideIM();
-        DrawButton(...buttonPosition, "", "Gray", icon, displayText("Instant Messenger (Disabled by BCX)"), false);
+        DrawButton(...buttonPosition, "", "Gray", "Icons/Chat.png", displayText("Instant Messenger (Disabled by BCX)"), false);
       } else {
-        DrawButton(...buttonPosition, "", unreadSinceOpened ? "Red" : "White", icon, displayText("Instant Messenger"), false);
+        DrawButton(...buttonPosition, "", unreadSinceOpened ? "Red" : "White", "Icons/Chat.png", displayText("Instant Messenger"), false);
       }
     }
     return ret;

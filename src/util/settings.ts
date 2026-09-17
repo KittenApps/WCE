@@ -194,7 +194,6 @@ export const defaultSettings = {
         fbcSettings.localWardrobe = false;
         WardrobeSize = DEFAULT_WARDROBE_SIZE;
         WardrobeFixLength();
-        CharacterAppearanceWardrobeOffset = 0;
       }
     },
     category: "appearance",
@@ -220,24 +219,11 @@ export const defaultSettings = {
         // Restore original size
         WardrobeSize = EXPANDED_WARDROBE_SIZE;
         WardrobeFixLength();
-        CharacterAppearanceWardrobeOffset = 0;
       }
     },
     category: "appearance",
     description:
       "Enables the Local Wardrobe - save 288 additional outfits on your device (not synced between devices, but shared between alts on the same device).",
-  },
-  // ToDO: ToDo: remove once R132 is out
-  privateWardrobe: {
-    label: "Replace wardrobe list with character previews",
-    type: "checkbox",
-    value: false,
-    disabled: () => GameVersion !== "R131",
-    sideEffects: newValue => {
-      debug("privateWardrobe", newValue);
-    },
-    category: "appearance",
-    description: "Allows you to preview all saved outfits at a glance, no more having to remember names.",
   },
   confirmWardrobeSave: {
     label: "Confirm overriding wardrobe outfits",

@@ -77,11 +77,4 @@ export default function commonPatches(): void {
     }
     return next(args);
   });
-
-  // ToDO: remove once R132 is out (https://gitgud.io/BondageProjects/Bondage-College/-/merge_requests/6649)
-  patchFunction(
-    "StruggleMinigameHandleExpression",
-    { "for (const item of Player.ExpressionQueue) {": "for (const item of Player.ExpressionQueue ?? []) {" },
-    "fix crash when changing items on other players while struggling"
-  );
 }

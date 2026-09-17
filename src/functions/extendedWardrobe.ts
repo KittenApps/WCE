@@ -1,6 +1,6 @@
 import { openDB, type IDBPDatabase } from "idb";
 
-import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE } from "../util/constants";
+import { DEFAULT_WARDROBE_SIZE, EXPANDED_WARDROBE_SIZE, LOCAL_WARDROBE_SIZE } from "../util/constants";
 import { fbcBeepNotify } from "../util/hooks";
 import { logInfo, logError } from "../util/logger";
 import { SDK, HOOK_PRIORITIES } from "../util/modding";
@@ -37,6 +37,11 @@ export async function loadLocalWardrobe(wardrobe: ItemBundle[][]): Promise<void>
   const localWardrobe = (await localWardrobeDB.getAll("wardrobe")) || [];
   await waitFor(() => wardrobe.length === EXPANDED_WARDROBE_SIZE);
   wardrobe.push(...localWardrobe.map(w => sanitizeBundles(w.appearance)));
+  Player.WardrobeCharacterNames.splice(
+    EXPANDED_WARDROBE_SIZE,
+    Infinity,
+    ...Array.from({ length: LOCAL_WARDROBE_SIZE - EXPANDED_WARDROBE_SIZE }, () => "[WCE] local")
+  );
 }
 
 async function saveLocalWardrobe(wardrobe: ServerItemBundle[][]): Promise<void> {
@@ -98,6 +103,11 @@ export async function loadExtendedWardrobe(wardrobe: ItemBundle[][], init: boole
         }
         wardrobe[i] = sanitizeBundles(additionalItemBundle[additionalIdx]);
       }
+      Player.WardrobeCharacterNames.splice(
+        DEFAULT_WARDROBE_SIZE,
+        Infinity,
+        ...Array.from({ length: EXPANDED_WARDROBE_SIZE - DEFAULT_WARDROBE_SIZE }, () => "[WCE] extended")
+      );
       extendedWardrobeLoaded = true;
     }
   } catch (e) {
@@ -123,21 +133,5 @@ export default async function extendedWardrobe(): Promise<void> {
       }
     }
     return next([wardrobe]);
-  });
-
-  SDK.hookFunction("WardrobeLoadCharacterNames", HOOK_PRIORITIES.ModifyBehaviourMedium, (args, next) => {
-    if (!fbcSettings.localWardrobe) return next(args);
-    if (!Player.WardrobeCharacterNames) Player.WardrobeCharacterNames = [];
-    let Push = false;
-    while (Player.WardrobeCharacterNames.length <= WardrobeSize) {
-      if (Player.WardrobeCharacterNames.length < EXPANDED_WARDROBE_SIZE) {
-        Player.WardrobeCharacterNames.push(Player.Name);
-        Push = true;
-      } else {
-        Player.WardrobeCharacterNames.push("Local");
-      }
-    }
-    if (Push) ServerAccountUpdate.QueueData({ WardrobeCharacterNames: Player.WardrobeCharacterNames.slice(0, EXPANDED_WARDROBE_SIZE) });
-    return null;
   });
 }

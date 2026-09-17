@@ -12,17 +12,10 @@ declare global {
 }
 
 export function bceGotoRoom(roomName: string): void {
-  // @ts-expect-error
-  ChatRoomJoinLeash = roomName;
   DialogLeave();
   if (CurrentScreen === "ChatRoom") ChatRoomLeave(false);
   if (roomName) {
-    // ToDo: remove once R132 is out
-    if (GameVersion === "R131") {
-      ChatSearchStart("X", ["Room", "MainHall"], { Background: "Introduction", BackgroundTagList: BackgroundsTagList });
-    } else {
-      CommonSetScreen("Online", "ChatSearch").then(() => ServerRoomJoin(roomName));
-    }
+    CommonSetScreen("Online", "ChatSearch").then(() => ServerRoomJoin(roomName));
   } else {
     ChatRoomSetLastChatRoom(null);
     CommonSetScreen("Room", "MainHall");

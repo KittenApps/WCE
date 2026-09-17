@@ -327,7 +327,7 @@ export default function chatAugments() {
         // Insert remainder into list of words
         words.splice(i + 1, 0, words[i].substring(oocIdx + 1));
         // Insert OOC marker into list of words, before remainder
-        words.splice(i + 1, 0, words[i].substring(oocIdx, oocIdx + 1));
+        words.splice(i + 1, 0, words[i].at(oocIdx));
         // Truncate current word to OOC
         words[i] = words[i].substring(0, oocIdx);
       } else if (oocIdx === 0 && words[i].length > 1) {

@@ -32,7 +32,6 @@ import nicknames from "./functions/nicknames";
 import numericArousalMeters from "./functions/numericArousalMeters";
 import pastProfiles from "./functions/pastProfiles";
 import pendingMessages from "./functions/pendingMessages";
-import privateWardrobe from "./functions/privateWardrobe";
 import richOnlineProfile from "./functions/richOnlineProfile";
 import settingsPage from "./functions/settingsPage";
 import toySync from "./functions/toySync";
@@ -109,8 +108,6 @@ export async function registerAllFunctions(): Promise<void> {
   registerFunction(lockpickHelp, "lockpickHelp");
   registerFunction(commands, "commands");
   registerFunction(chatRoomOverlay, "chatRoomOverlay");
-  // ToDo: remove once R132 is out
-  if (GameVersion === "R131") registerFunction(privateWardrobe, "privateWardrobe");
   registerFunction(antiGarbling, "antiGarbling");
   registerFunction(autoGhostBroadcast, "autoGhostBroadcast");
   registerFunction(blindWithoutGlasses, "blindWithoutGlasses");
