@@ -372,7 +372,14 @@ export default function instantMessenger() {
         Message: `${messageText}\n\n\uf124${JSON.stringify({ messageType, messageColor: Player.LabelColor })}`,
       };
       addMessage(activeChat, true, message, false, new Date());
-      FriendListBeepLog.push({ ...message, MemberName: Player.FriendNames?.get(activeChat) || "aname", Sent: true, Private: false, Time: new Date() });
+      FriendListBeepLog.push({
+        ...message,
+        MemberName: Player.FriendNames?.get(activeChat) || "aname",
+        Sent: true,
+        Private: false,
+        Time: new Date(),
+        Read: false,
+      });
       ServerSend("AccountBeep", message);
     }
   });

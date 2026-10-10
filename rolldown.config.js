@@ -33,7 +33,7 @@ const config = defineConfig({
     sourcemap: true,
     postBanner: c => (c.isEntry ? LICENSE : undefined),
     minify: true,
-    comments: { legal: true },
+    comments: { legal: true, annotation: false },
     cleanDir: true,
   },
   transform: { target: "es2022", define: { PUBLIC_URL: `"${loaderBuilder.URL}"` } },

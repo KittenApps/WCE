@@ -84,6 +84,11 @@ function findDrawnCharacters(target?: string, limitVisible = false): Character[]
   return targetMembers.filter(Boolean);
 }
 
+// ToDo: remove once r133 is out
+if (typeof ItemPropertiesCompress !== "function") {
+  Reflect.set(globalThis, "ItemPropertiesCompress", (item: ItemBundle): ItemPropertiesMinimized | undefined => ({ ...item.Property }));
+}
+
 export default async function commands(): Promise<void> {
   await waitFor(() => !!Commands);
   debug("registering additional commands");
@@ -162,7 +167,7 @@ export default async function commands(): Promise<void> {
             if (includeBase) appearance.push(...base);
 
             const looks: ItemBundle[] = appearance.map(i => {
-              const property = i.Property ? { ...i.Property } : {};
+              const property = i.Property ? ItemPropertiesCompress(i, { omit: ["TypeRecord"] }) : {};
               if (!includeLocks && property.LockedBy) {
                 delete property.LockedBy;
                 delete property.LockMemberNumber;
@@ -218,7 +223,7 @@ export default async function commands(): Promise<void> {
                     Name: item.Asset.Name,
                     Color: item.Color,
                     Difficulty: item.Difficulty,
-                    Property: item.Property,
+                    Property: ItemPropertiesCompress(item, { omit: ["TypeRecord"] }),
                   };
                   const idx = bundle.findIndex(v => v.Group === item.Asset.Group.Name);
                   if (idx < 0) {
@@ -269,6 +274,7 @@ export default async function commands(): Promise<void> {
           Private: false,
           Time: new Date(),
           Message: msg,
+          Read: false,
         });
 
         const beepId = FriendListBeepLog.length - 1;

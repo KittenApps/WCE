@@ -12,9 +12,7 @@ export default function cacheClearer(): void {
   function doClearCaches(): void {
     debug("Clearing caches");
     if (GLDrawCanvas) {
-      if (GLDrawCanvas.GL?.textureCache) {
-        GLDrawCanvas.GL.textureCache.clear();
-      }
+      (GLDrawCanvas.GL as WebGL2RenderingContext & { textureCache?: { clear: () => void } })?.textureCache?.clear();
       GLDrawResetCanvas();
     }
 
