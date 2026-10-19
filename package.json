@@ -18,16 +18,16 @@
     "@zendrex/buttplug.js": "^0.5.0",
     "buttplug-wasm-blob": "^3.0.0",
     "idb": "^8.0.4",
-    "rolldown": "^1.2.13"
+    "rolldown": "^1.2.14"
   },
   "devDependencies": {
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/events": "^3.0.3",
     "@types/node": "^26.6.5",
-    "bc-stubs": "^133.0.0-Beta.1",
+    "bc-stubs": "^133.0.0",
     "bondage-club-mod-sdk": "^1.2.0",
-    "oxfmt": "^0.72.0",
-    "oxlint": "^1.87.0",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
     "oxlint-tsgolint": "^7.0.2004",
     "socket.io-client": "4.8.1"
   },

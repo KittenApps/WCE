@@ -11,11 +11,7 @@ export default function cacheClearer(): void {
 
   function doClearCaches(): void {
     debug("Clearing caches");
-    if (GLDrawCanvas) {
-      (GLDrawCanvas.GL as WebGL2RenderingContext & { textureCache?: { clear: () => void } })?.textureCache?.clear();
-      GLDrawResetCanvas();
-    }
-
+    GLDrawResetCanvas();
     debug("Clearing old characters from cache");
     const oldOnlineCharacters = Character.filter(c => c.IsOnline?.() && !ChatRoomCharacter.some(cc => cc.MemberNumber === c.MemberNumber));
     oldOnlineCharacters.forEach(c => CharacterDelete(c));

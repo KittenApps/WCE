@@ -84,11 +84,6 @@ function findDrawnCharacters(target?: string, limitVisible = false): Character[]
   return targetMembers.filter(Boolean);
 }
 
-// ToDo: remove once r133 is out
-if (typeof ItemPropertiesCompress !== "function") {
-  Reflect.set(globalThis, "ItemPropertiesCompress", (item: ItemBundle): ItemPropertiesMinimized | undefined => ({ ...item.Property }));
-}
-
 export default async function commands(): Promise<void> {
   await waitFor(() => !!Commands);
   debug("registering additional commands");
