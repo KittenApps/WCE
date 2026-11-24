@@ -19,6 +19,15 @@ interface FBCToySyncState {
 
 export const toySyncState: FBCToySyncState = { deviceSettings: new Map() };
 
+// Fixed modes can have a stale Intensity in Bondage Club R134.
+const fixedModeIntensities = new Map<VibratorMode, VibratorIntensity>([
+  ["Off", -1],
+  ["Low", 0],
+  ["Medium", 1],
+  ["High", 2],
+  ["Maximum", 3],
+]);
+
 export default async function toySync(): Promise<void> {
   // Handles synchronizing in-game vibrators with real bluetooth devices via buttplut.io
   if (!fbcSettings.toySync) {
@@ -81,7 +90,8 @@ export default async function toySync(): Promise<void> {
       if (!deviceSettings) continue;
 
       const slot = deviceSettings.SlotName;
-      const intensity = Player.Appearance.find(a => a.Asset.Group.Name === slot)?.Property?.Intensity;
+      const property = Player.Appearance.find(a => a.Asset.Group.Name === slot)?.Property;
+      const intensity = fixedModeIntensities.get(property?.Mode) ?? property?.Intensity;
 
       if (deviceSettings.LastIntensity === intensity) continue;
       deviceSettings.LastIntensity = intensity;
